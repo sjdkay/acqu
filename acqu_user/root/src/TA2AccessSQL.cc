@@ -19,6 +19,26 @@
 ClassImp(TA2AccessSQL)
 
 
+
+Int_t	TA2AccessSQL::GetRunNumber()
+{
+	char*	str	= strpbrk(gAR->GetFileName(),".");
+	while(strpbrk(str+1,"."))
+		str	= strpbrk(str+1,".");
+	
+	*str	= '\0';
+	str	= str-1;
+	while(*str == '0' || *str == '1' || *str == '2' || *str == '3' || *str == '4' || *str == '5' || *str == '6' || *str == '7' || *str == '8' || *str == '9')
+		str	= str-1;
+	str	= str+1;
+	
+	fRunNumber	= atoi(str);
+	printf("RunNumber : %d\n",fRunNumber);
+	return fRunNumber;
+}
+
+
+
 //______________________________________________________________________________
 TA2AccessSQL::TA2AccessSQL(const char* name, TA2Analysis* analysis)	: TA2Physics(name, analysis), fCaLibReader(0), fRunNumber(0)
 {
@@ -34,7 +54,7 @@ TA2AccessSQL::~TA2AccessSQL()
 
 void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
 {
-    /*switch (key)
+    switch (key)
     {
     case ESQL_USE_CALIB:
         {   
@@ -47,7 +67,7 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
 				//Int_t	len = strlen(gAR->GetFileName()) - 1;
 				//while(len
 				
-				strcpy(gAR->GetFileName(), "scratch/CB_%d.dat", &fRunNumber);
+				GetRunNumber();
 				
                 // create the CaLib reader
                 fCaLibReader = new CaLibReader_t(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], fRunNumber);
@@ -214,7 +234,7 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
             TA2Physics::SetConfig(line, key);
             break;
         }
-    }*/
+    }
 }
 
 

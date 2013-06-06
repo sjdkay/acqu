@@ -51,7 +51,8 @@ private:
 	CaLibReader_t*	fCaLibReader;                            // CaLib reader
 	Int_t			fRunNumber;
 	
-	void ApplyCaLib();
+	void 	ApplyCaLib();
+	Int_t	GetRunNumber();
 
 public:
     TA2AccessSQL(const char* name, TA2Analysis* analysis);
