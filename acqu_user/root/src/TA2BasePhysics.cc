@@ -20,7 +20,7 @@ ClassImp(TA2BasePhysics)
 
 //-----------------------------------------------------------------------------
 
-TA2BasePhysics::TA2BasePhysics(const char* Name, TA2Analysis* Analysis) : TA2Physics(Name, Analysis)
+TA2BasePhysics::TA2BasePhysics(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, Analysis)
 {
   //Pointers are declared in TA2Physics, but no memory is allocated. So, here 'dummy' content is
   //produced to avoid error messages in Analysis.log due to null pointers used in LoadVariable()
@@ -167,7 +167,7 @@ void TA2BasePhysics::SetConfig(Char_t* line, Int_t key)
       break;
     default:
       //Call default SetConfig()
-      TA2Physics::SetConfig(line, key);
+      TA2AccessSQL::SetConfig(line, key);
       break;
   }
 }
@@ -177,7 +177,7 @@ void TA2BasePhysics::SetConfig(Char_t* line, Int_t key)
 void TA2BasePhysics::LoadVariable()
 {
   //Call default LoadVariable()
-  TA2Physics::LoadVariable();
+  TA2AccessSQL::LoadVariable();
 
   //Trigger histograms
   TA2DataManager::LoadVariable("ESum", &ESum, EDSingleX);
@@ -196,6 +196,9 @@ void TA2BasePhysics::LoadVariable()
 
 void TA2BasePhysics::PostInit()
 {
+  //Call default PostInit()
+  TA2AccessSQL::PostInit();
+
   Int_t nChilds;
   
   //'Permutations:' line in configuration file gives maximum number of particles to be processed
@@ -298,6 +301,9 @@ void TA2BasePhysics::PostInit()
 
 void TA2BasePhysics::Reconstruct()
 {
+  //Call default Reconstruct()
+  TA2AccessSQL::Reconstruct();
+
   nPhoton = 0;
   nProton = 0;
   nPiPlus = 0;

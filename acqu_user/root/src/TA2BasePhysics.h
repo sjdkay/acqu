@@ -3,7 +3,7 @@
 
 #include "TAcquRoot.h"
 #include "TA2Analysis.h"
-#include "TA2Physics.h"
+#include "TA2AccessSQL.h"
 #include "TA2Particle.h"
 #include "TA2Tagger.h"
 #include "TA2CrystalBall.h"
@@ -20,7 +20,7 @@ class TA2Apparatus;
 
 //-----------------------------------------------------------------------------
 
-class TA2BasePhysics : public TA2Physics
+class TA2BasePhysics : public TA2AccessSQL
 {
   protected:
     //ROOT file output (carrying TA2Particles)

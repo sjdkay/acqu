@@ -18,8 +18,6 @@
 
 ClassImp(TA2AccessSQL)
 
-
-
 Int_t	TA2AccessSQL::GetRunNumber()
 {
 	char*	str	= strpbrk(gAR->GetFileName(),".");
@@ -36,7 +34,6 @@ Int_t	TA2AccessSQL::GetRunNumber()
 	printf("RunNumber : %d\n",fRunNumber);
 	return fRunNumber;
 }
-
 
 
 //______________________________________________________________________________
@@ -242,12 +239,29 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
 
 void TA2AccessSQL::PostInit()
 {
+	TA2Physics::PostInit();
+	
+	LoadDetectors(fParent, 0);
+	
+	if(fCaLibReader)
+	{
+		ApplyCaLib();
+        	fCaLibReader->Deconnect();
+	}
+	
+	if(CBEnergyPerRunCorrection)
+	{
+		for(int i=0; i<fNaI->GetNelement(); i++)
+			fNaI->GetElement(i)->SetA1(CBEnergyPerRunCorrectionFactor * (fNaI->GetElement(i)->GetA1()));
+	}
 }
 
 void TA2AccessSQL::LoadVariable()
 {
+	TA2Physics::LoadVariable();
 }
 
 void TA2AccessSQL::Reconstruct()
 {
+	TA2Physics::Reconstruct();
 }
