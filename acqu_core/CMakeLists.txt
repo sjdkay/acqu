@@ -58,7 +58,7 @@ endif()
 
 # install some scripts to the bin directory
 # misuse the configure_file for that...
-file(GLOB CORE_EXTRA_SCRIPTS "bin/*")
+file(GLOB CORE_EXTRA_SCRIPTS "scripts/*")
 foreach(f ${CORE_EXTRA_SCRIPTS})
   get_filename_component(f_name ${f} NAME)
   configure_file(${f} "${EXECUTABLE_OUTPUT_PATH}/${f_name}" COPY_ONLY)
