@@ -54,8 +54,8 @@ ARFile_t::ARFile_t( const Char_t* name, Int_t flags, mode_t mode,
 // or open pipe from shell uncompress command
 // failure is judged fatal and causes the program to exit
 //
-  const Char_t* extension[] = {".zip", ".bz2", ".gz", NULL};
-  const Char_t* command[] = {"unzip -p ", "bzcat ", "zcat ", NULL };
+  const Char_t* extension[] = {".zip", ".bz2", ".gz", ".xz", NULL};
+  const Char_t* command[] = {"unzip -p ", "bzcat ", "zcat ", "xzcat ", NULL};
   Char_t com[64];
   Int_t i;
   fSys = sys;
@@ -75,6 +75,7 @@ ARFile_t::ARFile_t( const Char_t* name, Int_t flags, mode_t mode,
   case EZiped:
   case EBZiped:
   case EGZiped:
+  case EXZiped:
     strcpy(com, command[i]);
     strcat(com, name);
     fStart = popen( com, "r" );

@@ -58,7 +58,8 @@ void TA2FileSource::Process()
     for(;;){
       // Check if current sub-buffer is empty, if not wait until it is
       fBuffer->WaitEmpty();
-      fNbyte = read(fInPath,fBuffer->GetStore(),fInRecLen);
+      if (fInPath == -2) fNbyte = fread(fBuffer->GetStore(),1,fInRecLen,datafile->GetStart());
+      else fNbyte = read(fInPath,fBuffer->GetStore(),fInRecLen);
       if( fNbyte != fInRecLen ) break;
       fNrecord++;
       if( fNrecord > stopRec ){
