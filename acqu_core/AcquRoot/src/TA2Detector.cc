@@ -328,6 +328,25 @@ void TA2Detector::SetConfig( char* line, int key )
     // Only if detector has time
     ParseMultihit( line );
     break;
+   case EDetectorIgnoreElement:
+    // Ignore a number of elements from read-out.
+    UInt_t elem;
+    Char_t tmp[256];
+    if( sscanf( line, "%d", &elem ) != 1 ){
+      PrintError(line,"<Ignore element parse>");
+    }
+    else
+    {
+      // check element index
+      if( elem >= fNelement ){
+        PrintError(line,"<Ignored detector element index out of range>");
+        break;
+      }
+      fElement[elem]->SetIgnored(kTRUE);
+      sprintf(tmp, "Ignoring detector element %d\n", elem);
+      PrintMessage(tmp);
+    }
+    break;
   default:
     // Pass on any unrecognised line
     PrintError( line, "<Unrecognised Configuration keyword>" );

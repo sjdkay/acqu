@@ -52,7 +52,7 @@ enum {
   EDetectorEndOfFile, EDetectorFinish, EDetectorEnergyScale,
   EDetectorEnergyRandom, EDetectorShiftCoord, EDetectorMultihit,
   EDetectorEnergy, EDetectorTime, EDetectorHits, EDetectorMulti,
-  EDetectorTotalEnergy, EDetectorTimeOR,
+  EDetectorTotalEnergy, EDetectorTimeOR, EDetectorIgnoreElement
 };
 
 // Coordinate transformation operator identities
@@ -80,6 +80,7 @@ static const Map_t kDetectorDefaultKeys[] = {
   {"Energy-Random:",EDetectorEnergyRandom},
   {"Shift-Coord:",  EDetectorShiftCoord},
   {"Multi-hit:",    EDetectorMultihit},
+  {"Ignore-Elem:",  EDetectorIgnoreElement},
   {NULL,          -1}
 };
 
@@ -237,6 +238,7 @@ inline void TA2Detector::DecodeBasic( )
   
   for(j=0; j<fNelem; j++){
     elem = fElement[j];
+    if (elem->IsIgnored()) continue;
     if( fIsRawHits ){
       if( fIsEnergy ){
 	datum = elem->GetRawADCValue();
