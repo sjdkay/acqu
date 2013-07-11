@@ -190,6 +190,8 @@ public:
   Bool_t IsTime(){ return fIsTime; }
   Bool_t IsPos(){ return fIsPos; }
   Bool_t IsRawHits(){ return fIsRawHits; }
+ 
+  void SetEnergyScale(Double_t s) { fEnergyScale = s; }
 
   ClassDef(TA2Detector,1)
 };
