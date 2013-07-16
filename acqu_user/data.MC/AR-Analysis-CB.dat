@@ -140,5 +140,7 @@ Misc: AngleLimits 15.0 15.0 10.0
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Display phi correlation between PID and NaI for charged particles
 Display: 1D DeltaPhi 360 -180 180
+Display: 2D PID_Hits 24 0 24 -1              NaI_ClPhi 180 -180 180 -1
+Display: 1D NCharged 10 0 10 -1
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
