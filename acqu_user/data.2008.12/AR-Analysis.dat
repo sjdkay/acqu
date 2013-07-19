@@ -43,7 +43,8 @@ BitPattern:  AR-Analysis-TriggerPat.dat
 ## Raw analysis may be performed without Apparati
 ##              Name            Class           	Setup file
 Apparatus:	TAGG		TA2Tagger		AR-Analysis-Tagger.dat
-Apparatus:	CB		TA2CrystalBall		AR-Analysis-CB.dat
+#Apparatus:	CB		TA2CrystalBall		AR-Analysis-CB.dat
+Apparatus:	CB		TA2CentralApparatus	AR-Analysis-CentApp.dat
 Apparatus:	TAPS		TA2Taps			AR-Analysis-TAPS.dat
 ##
 ## Turn on apparatus-level reconstruction
@@ -64,7 +65,7 @@ Period:	10000	PeriodMacro.C	PeriodMacro()
 #Period:	100000	PeriodMacro.C	PeriodMacro()
 ##
 ## Finish...when all input data files processed
-Finish:		FinishTree.C	FinishTree()
+Finish:		FinishTree.C	FinishTree("ARHistograms_2008.root")
 ##
 ## Save all accepted events (ie those which pass all data cuts) to a
 ## ROOT file. Data saved in RAW format (ie ADC indices and values

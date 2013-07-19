@@ -910,9 +910,9 @@ Plane-Drift: +0.0
 #Simulation parameters. SimulateProton enables tracks for MC protons obtained
 #from smearing of proton direction (kinematics) within angular resolutions.
 Plane-Wire: SimulateProton
-Plane-Wire: EfficiencyFile data/MWPC_Eff.txt
-Plane-Wire: SigmaPhiFile   data/MWPC_Res_Phi.txt
-Plane-Wire: SigmaThetaFile data/MWPC_Res_Theta.txt
+Plane-Wire: EfficiencyFile data/MWPC_inputs/MWPC_Eff.txt
+Plane-Wire: SigmaPhiFile   data/MWPC_inputs/MWPC_Res_Phi.txt
+Plane-Wire: SigmaThetaFile data/MWPC_inputs/MWPC_Res_Theta.txt
 Plane-Wire: ReadParamFiles()
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #

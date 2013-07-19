@@ -54,11 +54,7 @@ Initialise:
 #        No. of events  Macro file name             Macro function
 Period:  10000         root/macros/PeriodMacro.C   PeriodMacro()
 #        Macro file name              Macro funcion
-#EndFile: root/macros/EndFileMacro.C   EndFileMacro()
-#        Macro file name              Macro funcion
-#Finish:  root/macros/FinishMacro.C    FinishMacro()
-#Finish:  root/macros/FinishTest.C    FinishTest()
-Finish:		FinishTree.C	FinishTree()
+Finish:		FinishTree.C	FinishTree("ARHistograms_MC.root")
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
