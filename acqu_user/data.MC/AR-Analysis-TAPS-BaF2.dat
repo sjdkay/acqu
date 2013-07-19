@@ -16,6 +16,11 @@ Energy-Scale:   1.000
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#MC resolution parameters
+Energy-Resolution:	0.015	0	1
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Configuration of detector elements.
 #Block A
 #          ADC chan.  Low thres. [MeV]  High thres.[MeV]  Pedestal [chan.]  MeV/Chan.  TDC chan.  Low thres. [ns]  High thres.[MeV]  Offset [chan.]  ns/Chan.  Position [x,y,z]

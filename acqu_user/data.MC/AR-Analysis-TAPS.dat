@@ -1,16 +1,16 @@
 #------------------------------------------------------------------------------
-#   Configuration file for TA2Taps
+#                       Configuration file for TA2Taps
+#             (AcquRoot 4v4 user package TAPS apparatus class)
 #------------------------------------------------------------------------------
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Detector systems in TAPS apparatus
-#
 # No Cherenkov
-#Detector: Veto          TA2TAPS_Veto		AR-Analysis-TAPS-Veto.dat
-#Detector: BaF2          TA2TAPS_BaF2		AR-Analysis-TAPS-BaF2.dat
+Detector: Veto          TA2TAPS_Veto		AR-Analysis-TAPS-Veto.dat
+Detector: BaF2          TA2TAPS_BaF2		AR-Analysis-TAPS-BaF2.dat
 # With Cherenkov
-Detector: Veto          TA2TAPS_Veto		AR-Analysis-TAPS-VetoCh.dat
-Detector: BaF2          TA2TAPS_BaF2		AR-Analysis-TAPS-BaF2Ch.dat
+#Detector: Veto          TA2TAPS_Veto		AR-Analysis-TAPS-VetoCh.dat
+#Detector: BaF2          TA2TAPS_BaF2		AR-Analysis-TAPS-BaF2Ch.dat
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,8 +83,8 @@ TAPSVetoBaF2TimeCut:  0        -10.0   +15.0
 #boris.lemmer@exp2.physik.uni-giessen.de
 TAPSRingEnergyCorr1:  1  1  1  1  1  1  1  1  1  1  1
 TAPSRingEnergyCorr2:  0  0  0  0  0  0  0  0  0  0  0
-#TAPSRingEnergyCorr1:  1.000000  1.000000  0.979259  0.988492  0.987351  0.987491  0.983632  0.984127  0.983974  0.977034  0.934262
-#TAPSRingEnergyCorr2: -0.000000 -0.000000  0.000002 -0.000031 -0.000029 -0.000060 -0.000052 -0.000053 -0.000119 -0.000112  0.000008
+*TAPSRingEnergyCorr1:  1.000000  1.000000  0.979259  0.988492  0.987351  0.987491  0.983632  0.984127  0.983974  0.977034  0.934262
+*TAPSRingEnergyCorr2: -0.000000 -0.000000  0.000002 -0.000031 -0.000029 -0.000060 -0.000052 -0.000053 -0.000119 -0.000112  0.000008
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
