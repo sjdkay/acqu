@@ -12,7 +12,7 @@ void MissingMass(UInt_t DATA = 2012) {
 	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2008.root");
 	}
 	else if (DATA == 2012) {
-	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012_CB_NoTAPS.root");
+	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012.root");
 	}
 	else if (DATA == 0) {
 	Char_t* filename = Form("/work0/cristina/TA2Pi0ComptonMC.root");
@@ -90,9 +90,9 @@ void MissingMass(UInt_t DATA = 2012) {
 		}
 
 		Bool_t KinCutsPi0 == kFALSE;
-//		if (NPi0 == 1 && NProton == 1){
+		if (NPi0 == 1 && NProton == 1){
 			KinCutsPi0 = kTRUE;
-//		}
+		}
 
 		if (DATA == 2012 || DATA == 2008) {
 

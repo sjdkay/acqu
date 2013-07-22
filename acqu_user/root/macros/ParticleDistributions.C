@@ -31,7 +31,6 @@ void PhotonDistributions(Char_t* name = "TA2Pi0Compton2012.root") {
 
 
 	Int_t nentries = (Int_t)tree1->GetEntries();
-	nentries = 50000;
 	for (Int_t i=0;i<nentries;i++) {
 
 		tree1->GetEntry(i);
@@ -88,7 +87,6 @@ void Pi0Distributions(Char_t* name = "TA2Pi0Compton2012.root") {
 
 
 	Int_t nentries = (Int_t)tree1->GetEntries();
-	nentries = 50000;
 	for (Int_t i=0;i<nentries;i++) {
 
 		tree1->GetEntry(i);
@@ -145,7 +143,6 @@ void ProtonDistributions(Char_t* name = "TA2Pi0Compton2012.root") {
 
 
 	Int_t nentries = (Int_t)tree1->GetEntries();
-	nentries = 50000;
 	for (Int_t i=0;i<nentries;i++) {
 
 		tree1->GetEntry(i);
