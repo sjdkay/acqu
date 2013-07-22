@@ -200,8 +200,8 @@ void TA2Pi0Compton::PostInit()
 	if ( !fLADD) PrintError( "", "<No Ladder class found>", EErrFatal);
 
 	// Central Apparatus
-//	fCB = (TA2CrystalBall*)((TA2Analysis*)fParent)->GetChild("CB");
-	fCB = (TA2CentralApparatus*)((TA2Analysis*)fParent)->GetChild("CB");	
+	fCB = (TA2CrystalBall*)((TA2Analysis*)fParent)->GetChild("CB");
+//	fCB = (TA2CentralApparatus*)((TA2Analysis*)fParent)->GetChild("CB");	
 	if (!fCB) PrintError( "", "<No Central Apparatus/CB class found>", EErrFatal);
 	else {  printf("CB system included in analysis\n");
 		fCBParticles  = fCB->GetParticles(); }

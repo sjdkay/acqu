@@ -96,7 +96,7 @@ void MissingMass2008() {
 
 void MissingMass2012() {
 
-	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012-373.root");
+	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012.root");
 	TFile *file1 = new TFile(filename);
 	TTree *tree1 = (TTree*)file1->Get("Pi0ComptonTree");
 

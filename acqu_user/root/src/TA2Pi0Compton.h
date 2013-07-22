@@ -37,8 +37,8 @@ class TA2Pi0Compton : public TA2Physics {
 // Begin by initialising Detectors
 	TA2Tagger*	fTAGG;		// Glasgow photon tagger
 	TA2Ladder*	fLADD;		// Ladder
-//	TA2CrystalBall*	fCB;		// CB (PID, MWPCs, NaI)
-	TA2CentralApparatus*	fCB;	// CentApp (PID, MWPCs, NaI)
+	TA2CrystalBall*	fCB;		// CB (PID, MWPCs, NaI)
+//	TA2CentralApparatus*	fCB;	// CentApp (PID, MWPCs, NaI)
 	TA2Taps*	fTAPS;  	// TAPS
 
 	TA2CalArray	*fNaI;		// NaI 

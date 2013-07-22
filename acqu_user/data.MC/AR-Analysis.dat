@@ -24,8 +24,8 @@ MultiADC:       3            5000          5319        30    30    30
 #           Name     Class		           Configuration file
 Apparatus:  TAGG     TA2Tagger       		   AR-Analysis-Tagger.dat
 Apparatus:  CB       TA2CentralApparatus           AR-Analysis-CentApp.dat
-#Apparatus:  CB       TA2CrystalBall	           CB_MC.dat
-Apparatus:  TAPS     TA2Taps         		   AR-Analysis-TAPS.dat
+#Apparatus:  CB       TA2CrystalBall	           AR-Analysis-CB.dat
+#Apparatus:  TAPS     TA2Taps         		   AR-Analysis-TAPS.dat
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
