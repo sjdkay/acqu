@@ -105,6 +105,8 @@ TA2Pi0Compton::TA2Pi0Compton( const char* name, TA2Analysis* analysis )
 
 	// Trigger Variables
 	fCBESum			= 0.0;
+	fNaINCluster		= 0;
+	fBaF2NCluster		= 0;
 
 	AddCmdList(kInputs);
 }
@@ -217,7 +219,11 @@ void TA2Pi0Compton::PostInit()
 	fTAPS = (TA2Taps*)((TA2Analysis*)fParent)->GetChild("TAPS");
 	if ( !fTAPS) printf("TAPS *NOT* included in analysis\n");
 	else {  printf("TAPS included in analysis\n");
-		fTAPSParticles = fTAPS->GetParticles(); }
+		fTAPSParticles = fTAPS->GetParticles();
+
+	        fBaF2 = (TA2TAPS_BaF2*)((TA2Analysis*)fParent)->GetGrandChild("BaF2");
+	        if (!fBaF2) PrintError( "", "<No BaF2 class found>", EErrFatal);
+	}
 
 	printf("\n");
 
@@ -351,6 +357,8 @@ void TA2Pi0Compton::PostInit()
 	fTree->Branch("Pi0PhiRandom",		fPi0PhiRandom, 		"Pi0PhiRandom[NRandomPi0]/D");
 
         fTree->Branch("CBESum",  		&fCBESum,		"CBESum/D");
+        fTree->Branch("NaINCluster",            &fNaINCluster,          "NaINCluster/I");
+        fTree->Branch("BaF2NCluster",           &fBaF2NCluster,         "BaF2NCluster/I");
 
 	gROOT->cd();
 	}
@@ -644,7 +652,34 @@ void TA2Pi0Compton::Reconstruct()
 
 	// Trigger Variables
 	fCBESum = (Float_t)(fNaI->GetTotalEnergy());
-	
+
+	fNaINCluster	= 0;
+	fBaF2NCluster	= 0;
+
+	for (i = 0; i < 45; i++) { 
+
+		Bool_t Mult = kFALSE;
+
+		for (j = 0; j < 16; j++) {
+			if ((fNaI->GetEnergyAll(i*16 + j)) >= (fNaI->GetClusterThreshold())) Mult = kTRUE;
+		}
+
+		if (Mult == kTRUE) fNaINCluster++; 		
+	}
+
+	if (fTAPS) {
+	for (i = 0; i < 6; i++) { 
+
+		Bool_t Mult = kFALSE;
+
+		for (j = 0; j < 64; j++) { 
+			if ((fBaF2->GetEnergyAll(i*64 + j)) >= (fBaF2->GetClusterThreshold())) Mult = kTRUE;
+		}
+
+		if (Mult == kTRUE) fBaF2NCluster++; 		
+	}
+	}
+
 
 // Apply BufferEnd to the end of all arrays
 	fPhotonEnergy[fNPhoton]			= EBufferEnd;

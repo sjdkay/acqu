@@ -80,7 +80,8 @@ class TA2CalArray : public TA2ClusterDetector
   HitCluster_t*  GetClusterUCLA(UInt_t i){ return (HitCluster_t*)fClusterUCLA[i]; }
   UInt_t    IsUCLAClustering()           { return fUseClusterDecodeUCLA; }
   UInt_t*   GetTempHits2()               { return fTempHits2; }
-  ClassDef(TA2CalArray,1)
+  Double_t GetClusterThreshold()	 { return fClEthresh; } //*** 
+ ClassDef(TA2CalArray,1)
 };
 
 //---------------------------------------------------------------------------

@@ -517,8 +517,8 @@ Element:   25264    4.0 2000.0  106.00 0.322779   25464 -1000.0  1000.0  3030.19
 ##      Setup of Clustering
 ##			     
 ## Max # clusters to analyse    ClusterMinEnergy
-#Max-Cluster:    8      20
-Max-Cluster:    32      15
+Max-Cluster:    6      15
+#Max-Cluster:    32      15
 ##
 #RandomHitPosition: 12345
 ##
