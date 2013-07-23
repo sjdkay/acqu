@@ -419,6 +419,8 @@ void TA2Pi0Compton::LoadVariable( )
 	TA2DataManager::LoadVariable("Pi0PhiRandom",		fPi0PhiRandom, 			EDMultiX);
 
 	TA2DataManager::LoadVariable("CBESum",			&fCBESum,			EDSingleX);
+	TA2DataManager::LoadVariable("NaINCluster",		&fNaINCluster,			EISingleX);
+	TA2DataManager::LoadVariable("BaF2NCluster",		&fBaF2NCluster,			EISingleX);
 
 	return;
 }
