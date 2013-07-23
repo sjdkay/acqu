@@ -156,6 +156,8 @@ class TA2Pi0Compton : public TA2Physics {
 	Double_t*	fPi0PhiPrompt;
 	Double_t*	fPi0PhiRandom;
 
+	Double_t	fCBESum;
+
 	public:
 
 	TA2Pi0Compton( const char*, TA2Analysis* );

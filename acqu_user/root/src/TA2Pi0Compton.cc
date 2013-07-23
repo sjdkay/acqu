@@ -103,6 +103,9 @@ TA2Pi0Compton::TA2Pi0Compton( const char* name, TA2Analysis* analysis )
 	fPi0PhiPrompt		= NULL;
 	fPi0PhiRandom		= NULL;
 
+	// Trigger Variables
+	fCBESum			= 0.0;
+
 	AddCmdList(kInputs);
 }
 
@@ -205,6 +208,10 @@ void TA2Pi0Compton::PostInit()
 	if (!fCB) PrintError( "", "<No Central Apparatus/CB class found>", EErrFatal);
 	else {  printf("CB system included in analysis\n");
 		fCBParticles  = fCB->GetParticles(); }
+
+        // NaI
+        fNaI = (TA2CalArray*)((TA2Analysis*)fParent)->GetGrandChild("NaI");
+        if ( !fNaI) PrintError( "", "<No NaI class found>", EErrFatal);
 
 	// TAPS
 	fTAPS = (TA2Taps*)((TA2Analysis*)fParent)->GetChild("TAPS");
@@ -342,7 +349,9 @@ void TA2Pi0Compton::PostInit()
 	fTree->Branch("Pi0ThetaRandom",		fPi0ThetaRandom, 	"Pi0ThetaRandom[NRandomPi0]/D");
 	fTree->Branch("Pi0PhiPrompt",		fPi0PhiPrompt, 		"Pi0PhiPrompt[NPromptPi0]/D");
 	fTree->Branch("Pi0PhiRandom",		fPi0PhiRandom, 		"Pi0PhiRandom[NRandomPi0]/D");
-	
+
+        fTree->Branch("CBESum",  		&fCBESum,		"CBESum/D");
+
 	gROOT->cd();
 	}
 	// Default physics initialisation
@@ -401,6 +410,7 @@ void TA2Pi0Compton::LoadVariable( )
 	TA2DataManager::LoadVariable("Pi0PhiPrompt",		fPi0PhiPrompt, 			EDMultiX);
 	TA2DataManager::LoadVariable("Pi0PhiRandom",		fPi0PhiRandom, 			EDMultiX);
 
+	TA2DataManager::LoadVariable("CBESum",			&fCBESum,			EDSingleX);
 
 	return;
 }
@@ -631,6 +641,10 @@ void TA2Pi0Compton::Reconstruct()
 			fNTaggNPi0++;
 		}
 	}
+
+	// Trigger Variables
+	fCBESum = (Float_t)(fNaI->GetTotalEnergy());
+	
 
 // Apply BufferEnd to the end of all arrays
 	fPhotonEnergy[fNPhoton]			= EBufferEnd;

@@ -39,3 +39,5 @@ Display: 1D TaggerPi0Time 	1400 -700 700 -1 -1
 #Display: 1D ProtonTheta		90 0 180 -1
 #Display: 1D ProtonPhi		190 -190 190 -1
 #Display: 1D ProtonTime		100 -100 100 -1
+#
+Display: 1D CBESum		900 0 900 -1
