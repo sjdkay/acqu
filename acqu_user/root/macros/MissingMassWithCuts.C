@@ -12,7 +12,7 @@
 
 void Main(){
 
-	MissingMass(2012); // Get real data
+	MissingMass(2008); // Get real data
 	TH1D *a2012 = new TH1D("Missing-Mass-Compton-2012","Missing-Mass-Compton-2012",200,850,1050);
 	TH1D *b2012 = new TH1D("Missing-Mass-Pi0-2012",    "Missing-Mass-Pi0-2012",    200,850,1050);
 
@@ -49,8 +49,8 @@ void Main(){
 	TH1D *aMC_Cs = new TH1D("Missing-Mass-Compton-MC-C-S","Missing-Mass-Compton-MC-C-S",200,850,1050);
 	TH1D *aMC_Ps = new TH1D("Missing-Mass-Compton-MC-P-S","Missing-Mass-Compton-MC-P-S",200,850,1050);
 
-	aMC_Cs->Add(aMC_C,0.05);
-	aMC_Ps->Add(aMC_P,5);
+	aMC_Cs->Add(aMC_C,0.0025);
+	aMC_Ps->Add(aMC_P,0.25);
 
 	aMC_Cs->SetMarkerStyle(21);
 	aMC_Cs->SetMarkerColor(kBlue);
@@ -67,8 +67,8 @@ void Main(){
 	TH1D *bMC_Ps = new TH1D("Missing-Mass-Pi0-MC-P-S",    "Missing-Mass-Pi0-MC-P-S",    200,850,1050);
 	TH1D *bMC_Cs = new TH1D("Missing-Mass-Pi0-MC-C-S",    "Missing-Mass-Pi0-MC-C-S",    200,850,1050);
 
-	bMC_Cs->Add(bMC_C,0.025);
-	bMC_Ps->Add(bMC_P,2.5);
+	bMC_Cs->Add(bMC_C,0.00125);
+	bMC_Ps->Add(bMC_P,.125);
 
 	bMC_Cs->SetMarkerStyle(21);
 	bMC_Cs->SetMarkerColor(kBlue);
@@ -97,13 +97,13 @@ void MissingMass(UInt_t DATA = 2012) {
 	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2008.root");
 	}
 	else if (DATA == 2012) {
-	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012.root");
+	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012_oldcommit.root");
 	}
 	else if (DATA == 0) { 
-	Char_t* filename = Form("/work0/cristina/TA2Pi0ComptonMC_Compton250.root");
+	Char_t* filename = Form("/work0/cristina/FromOldComp/TA2Pi0ComptonMC_Compton.root");
 	}
 	else if (DATA == 1) { 
-	Char_t* filename = Form("/work0/cristina/TA2Pi0ComptonMC_Pi0250.root");
+	Char_t* filename = Form("/work0/cristina/FromOldComp/TA2Pi0ComptonMC_Pi0.root");
 	}
 
 	TFile *file1 = new TFile(filename);
@@ -132,8 +132,8 @@ void MissingMass(UInt_t DATA = 2012) {
 	}
 
 	Int_t NPhoton, NProton, NPi0;
-	Int_t CBNParticle;
-	Double_t CBESum;
+//	Int_t CBNParticle;
+//	Double_t CBESum;
 
 	Int_t NPrompt, NRandom;
 	Int_t NPromptPi0, NRandomPi0;
@@ -148,8 +148,8 @@ void MissingMass(UInt_t DATA = 2012) {
 	tree1->SetBranchAddress("NProton",		&NProton);
 	tree1->SetBranchAddress("NPi0",			&NPi0);
 
-	tree1->SetBranchAddress("CBNParticle",		&CBNParticle);
-	tree1->SetBranchAddress("CBESum",		&CBESum);
+//	tree1->SetBranchAddress("CBNParticle",		&CBNParticle);
+//	tree1->SetBranchAddress("CBESum",		&CBESum);
 
 	tree1->SetBranchAddress("NPrompt",		&NPrompt);
 	tree1->SetBranchAddress("NRandom",		&NRandom);
@@ -181,19 +181,21 @@ void MissingMass(UInt_t DATA = 2012) {
 		tree1->GetEntry(i);
 		
 		Bool_t KinCutsCompton == kFALSE;
-		if (NPhoton == 1 && NProton == 1 && CBNParticle == 2){
+		if (NPhoton == 1 && NProton == 1){
+//		if (NPhoton == 1 && NProton == 1 && CBNParticle == 2){
 			KinCutsCompton = kTRUE;
 		}
 
 		Bool_t KinCutsPi0 == kFALSE;
-		if (NPi0 == 1 && NProton == 1 && CBNParticle == 3){
+		if (NPi0 == 1 && NProton == 1){
+//		if (NPi0 == 1 && NProton == 1 && CBNParticle == 3){
 			KinCutsPi0 = kTRUE;
 		}
 
 		Bool_t Trigger == kFALSE;
-		if (CBESum > 80.0){
+//		if (CBESum > 80.0){
 			Trigger = kTRUE;
-		}
+//		}
 
 		if (Trigger == kTRUE) {
 
