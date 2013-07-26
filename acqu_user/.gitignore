@@ -9,6 +9,8 @@
 /Thread*.txt
 *.log
 /result
+/evgen/
+/simfiles/
 
 # AcquRoot histogram files
 /histograms
