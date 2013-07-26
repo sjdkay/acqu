@@ -1,11 +1,11 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.6)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/subdir-header.cmake)
 message(STATUS "Configuring acqu_core...")
 
 # the following feature helps us to get rid of
 # getenv("acqu"), getenv("acqu_sys"), getenv("ROOTSYS")
 # because we define this variables now at "configure" time!
-set(ACQU_CONFIG_FILE "AcquRoot/src/CMakeConfig.h")
+set(ACQU_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/AcquRoot/src/CMakeConfig.h")
 configure_file("${CMAKE_SOURCE_DIR}/cmake/CMakeConfig.h.in" "${ACQU_CONFIG_FILE}")
 
 # use all "src" subfolders as include directories
