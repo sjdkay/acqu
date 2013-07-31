@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   Int_t initLevel = 0;
   if( argc > 2 ) sscanf( argv[2],"%d",&initLevel );
   //  TApplication theApp("app",&argc,argv);
-  gEXP = new TDAQexperiment( (Char_t*)"Acqu-DAQ", file, (Char_t*)"AcquDAQ",
+  gEXP = new TDAQexperiment( (Char_t*)"Acqu-DAQ", file, NULL,
 			     NULL, initLevel );
   gEXP->FileConfig();
   gEXP->PostInit();
