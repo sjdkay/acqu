@@ -40,8 +40,9 @@
 //--Rev         B. Oussena    9th Nov 2012  sleep(1) after launching data store
 //--Rev         JRM Annand    9th Jan 2013  add CAEN V874 TAPS module
 //--Rev 	K Livingston..7th Feb 2013  Support for writing EPICS buffers
-//--Update	JRM Annand    2nd Mar 2013  EPICS read in conditional block
+//--Rev 	JRM Annand    2nd Mar 2013  EPICS read in conditional block
 //--Update  A Neiser...   6th June 2013  Make char_t* const
+//--Update	JRM Annand    6th Jul 2013  Add V965 QDC
 //
 //--Description
 //                *** AcquDAQ++ <-> Root ***

@@ -15,7 +15,8 @@
 //--Rev 	JRM Annand...20th Jul 2009  Beam primed...check energy
 //--Rev 	JRM Annand... 1st Sep 2009  delete[]
 //--Rev  	JRM Annand...25th Feb 2012  Out-of-plane angle
-//--Update 	JRM Annand...27th Feb 2012  Use-degrees option, and Theta-dist
+//--Rev  	JRM Annand...27th Feb 2012  Use-degrees option, and Theta-dist
+//--Update 	JRM Annand...26th Apr 2013  Bug fix InitParticleDist()
 
 //--Description
 //                *** Acqu++ <-> Root ***
@@ -628,16 +629,16 @@ void TMCGenerator::InitParticleDist( Char_t* line, TMCParticle* particle,
   // Open and read file line by line
   if( n == 3 ){
     Char_t* distfile;
+    Char_t* dline;
     if( strchr( dist, '/' ) ) distfile = BuildName( dist );
     else distfile = BuildName(ENV_OR_CMAKE("acqu",CMAKE_ACQU_USER), "/data/", dist);
     ARFile_t distf( distfile, "r", this );
     delete[] distfile;
-    Char_t* line;
     Double_t xpt[8192];          // array of x values
     Double_t wpt[8192];          // array of f(x) values
     npt = 0;
-    while( (line = distf.ReadLine()) ){
-      if( sscanf( line,"%lf%lf",xpt+npt,wpt+npt ) == 2 ) npt++;
+    while( (dline = distf.ReadLine()) ){
+      if( sscanf( dline,"%lf%lf",xpt+npt,wpt+npt ) == 2 ) npt++;
     }
     particle->SetDist( iopt, npt, xpt, wpt, min, max );
   }

@@ -4,7 +4,8 @@
 //--Rev 	B.Oussena    13th Jul 2010  FB-18XX, 4413SPILL addition
 //--Rev 	JRM Annand   25th Jan 2012  GSI4800 scaler addition
 //--Rev 	JRM Annand    9th Jan 2013  CAEN V874 (TAPS) addition
-//--Update	K Livingston..7th Feb 2013  Support for handling EPICS buffers
+//--Rev 	K Livingston..7th Feb 2013  Support for handling EPICS buffers
+//--Update	JRM Annand  ..6th Jul 2013  CAEN V965 addition
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -40,6 +41,7 @@
 #pragma link C++ class TVME_CBD8210+;
 #pragma link C++ class TVME_KPhSMI+;
 #pragma link C++ class TVME_V792+;
+#pragma link C++ class TVME_V965+;
 #pragma link C++ class TVME_V775+;
 #pragma link C++ class TVME_V874+;
 #pragma link C++ class TVME_V1190+;

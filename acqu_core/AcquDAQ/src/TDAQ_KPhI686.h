@@ -6,7 +6,8 @@
 //--Rev         B. Oussena     15th Jul 2009  Add Init()
 //--Rev         B. Oussena     20th Jul 2009  fix bugs in SetConfig(), MapMem()
 //--Rev         B. Oussena     3rd Mar 2010   Set KpHboard  to perform 32/24bits
-//--Update      B. Oussena     17th Sep 2010  VME addr modifiers to ModIndex.h
+//--Rev         B. Oussena     17th Sep 2010  VME addr modifiers to ModIndex.h
+//--Update      JRM Annand      8th Jul 2013  32-bit addr set range
 //
 //--Description
 //                *** AcquDAQ++ <-> Root ***
@@ -15,6 +16,10 @@
 // TDAQ_KPhI686
 // Mainz Pentium M based VMEbus SBC
 // "Direct bridge" to VMEbus, addresses set by firmware
+// Default setup 32-bit addressing to be bits 28-31 = 0xe
+// Other rangles, ie bits 28-31 = 0x1,2,3..... can be chosen by setting
+// the fRange variable to 0x10000000,0x20000000....
+// All 32-bit address slaves in the crate must follow that address scheme
 
 #ifndef __TDAQ_KPhI686_h__
 #define __TDAQ_KPhI686_h__
@@ -25,11 +30,11 @@
 enum { EVMEbusA24 = 0x9e000000,
        EVMEbusA32 = 0x80000000,
        EVMEbusA16 = 0x9f000000 };
-//enum { EVME_STD, EVME_EXT, EVME_SIO, EVME_OPT };
 
 class TDAQ_KPhI686 : public TDAQmodule {
  protected:
   Int_t fMemFd;
+  Int_t fRange;
  public:
   TDAQ_KPhI686( Char_t*, Char_t*, FILE*, Char_t* );
   virtual ~TDAQ_KPhI686();

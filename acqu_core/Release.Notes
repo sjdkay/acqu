@@ -1226,8 +1226,14 @@ TA2DataManager
 TAcquRoot
 	07/02/13 Stuff to pull out EPICS info from the data stream
 	22/04/13 Explicit flag for Mk2 format. Used in GetFileName()
+	06/06/13 Option to print out hardware errors
+TA2Apparatus
+	15/05/13 Add method (P.Ott)
+		 Int_t GetNParticle(){ return fNparticle; }
 ------------------------------------------------------------------------------
 AcquMC
+TMCGenerator
+	26/04/13 Bug fix InitParticleDist()...distribution from file
 ------------------------------------------------------------------------------
 AcquDAQ
 
@@ -1275,6 +1281,7 @@ TDAQmodule
 	28/08/12 Add dummy ReadEventID()
 	02/09/12 Add dummies for sending event ID to remote
 	03/09/12 Change handling of module types in SetConfig
+	06/06/13 Save fBaseIndex in error block instead of fModIndex
 TVMEmodule
 	20/05/12 Init list of registers...Check AM and IsWrt register arrays
 		 initialised, Implement "repeat" function

@@ -15,7 +15,8 @@
 //--Rev         JRM Annand    1st Sep 2012  Add SIS 3820
 //--Rev         JRM Annand    3rd Sep 2012  EDAQ_ADC_Scaler added
 //--Rev         JRM Annand    9th Jan 2013  ECAEN_V874 added
-//--Update	K Livingston..7th Feb 2013  Support for handling EPICS buffers
+//--Rev 	K Livingston..7th Feb 2013  Support for handling EPICS buffers
+//--Update	JRM Annand  ..6th Jul 2013  ECAEN_V965 added
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -57,7 +58,7 @@ enum { ELRS_1131 = 0x0100 };
 enum { ESTR_8090 = 0x0200, ESTR_8080, ESIS_3820 };
 enum { EKPH_SMI = 0x0400 };
 enum { ECAEN_1465 = 0x0300, ECAEN_1488, ECAEN_V792, ECAEN_V775, ECAEN_V1190,
-       ECAEN_V874 };
+       ECAEN_V874, ECAEN_V965 };
 enum { EINFN_56001 = 0x0500 };
 enum { EFIADC_64 = 0x0600, ECATCH_TDC, ECATCH_SCA, EGeSiCA, ECATCH_TCS };
 enum { EGSI_VUPROM = 0x0700 };
@@ -122,6 +123,7 @@ const Map_t kExpModules[] = {
   {"CAEN_V775",  ECAEN_V775},
   {"CAEN_V874",  ECAEN_V874},
   {"CAEN_V1190", ECAEN_V1190},
+  {"CAEN_V965",  ECAEN_V965},
   {"CAEN_SY1527",ECAEN_SY1527},
   {"CAEN_208",   ECAEN_208},
   {"INFN_56001", EINFN_56001},

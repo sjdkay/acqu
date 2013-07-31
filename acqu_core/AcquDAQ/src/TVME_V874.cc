@@ -62,7 +62,8 @@ ClassImp(TVME_V874)
 enum { EV874_ThrLG=200, EV874_ThrLGS, EV874_ThrSG, EV874_ThrSGS, EV874_ThrBP,
        EV874_FCWindow, EV874_CLRTime, EV874_Voff, EV874_Vset, EV874_EnThresh,
        EV874_EnOvFlow, EV874_ComStop, EV874_PedLG, EV874_PedLGS,
-       EV874_PedSG, EV874_PedSGS, EV874_ThrCFD, EV874_ThrLED1, EV874_ThrLED2};
+       EV874_PedSG, EV874_PedSGS, EV874_ThrCFD, EV874_ThrLED1, EV874_ThrLED2,
+       EV874_DReady };
 static Map_t k874Keys[] = {
   {"Thr-LG:",             EV874_ThrLG},
   {"Thr-LGS:",            EV874_ThrLGS},
@@ -83,6 +84,7 @@ static Map_t k874Keys[] = {
   {"Thr-CFD:",            EV874_ThrCFD},
   {"Thr-LED1:",           EV874_ThrLED1},
   {"Thr-LED2:",           EV874_ThrLED2},
+  {"Data-Ready:",         EV874_DReady},
   {NULL,                  -1}
 };
 
@@ -104,8 +106,9 @@ TVME_V874::TVME_V874( Char_t* name, Char_t* file, FILE* log,
   fClrTime = 0;                            // Time to clear analogue sections
   fVoff = 240;                             // TDC offset 300ns
   fVset = 140;                             // TDC conv gain 54ps/chan
+  fDReady = 0x1;                           // data ready bit local module
   // default all readout channel not stored
-  for(Int_t i=0; i<32; i++){ fThresh[i] = 0x1ff; }
+  for(Int_t i=0; i<32; i++){ fThresh[i] = 0; }
   for(Int_t i=0; i<4; i++){
     fPedLG[i] = fPedLGS[i] = fPedSG[i] = fPedSGS[i] = 4000;
     // 50 mV discriminator threshold approx
@@ -234,6 +237,22 @@ void TVME_V874::SetConfig( Char_t* line, Int_t key )
       break;
     }
     for(Int_t i=0; i<4; i++){ fThrLED2[i] = DACconv(val[i]); }
+    // 4 LED1 threshold values, in mV (positive)
+    if( sscanf(line,"%d%d%d%d",val,val+1,val+2,val+3) != 4 ){
+      PrintError(line,"<Parse LED1 threshold read>");
+      break;
+    }
+    for(Int_t i=0; i<4; i++){ fThrLED1[i] = DACconv(val[i]); }
+    break;
+  case EV874_DReady:
+    // Select local or global data ready
+    if( sscanf(line,"%i",&fDReady) != 1 ){
+      PrintError(line,"<Parse error reading data ready>");
+    }
+    if((fDReady != 0x1) && (fDReady != 0x2)){
+      PrintError(line,"<Incorrect value of data ready bit, resetting to 0x1>");
+      fDReady = 0x1;
+    }
     break;
   default:
     // default try commands of TDAQmodule
@@ -253,12 +272,14 @@ void TVME_V874::ReadIRQ( void** outBuffer )
   //
   UShort_t status1 = Read(EV874_IStatus1);    // read status reg. for data avail
   if( !(status1 & 0x1) ) return;              // no data in buffer
+  /*
   if( (status1 & 0x4) ){                      // check if busy
     fprintf(fLogStream,"<V874 busy, Status = %x (hex)>\n", status1);
     ErrorStore(outBuffer, EErrDataFormat);
     ResetData();
     return;
   }
+  */
   Int_t i = EV874_IOutBuff;
   UInt_t datum = Read(i++);                 // data header
   if( (datum & 0x7000000) != 0x2000000 ){   // check its a header word
@@ -279,11 +300,10 @@ void TVME_V874::ReadIRQ( void** outBuffer )
       ResetData();
       return;
     }
-    if( (datum & 0x1000) ) adcVal = 0xfff;  // overflow
-    else adcVal = datum & 0xfff;            // ADC value not overflowed
-    adcIndex = ((datum & 0x3f0000) >> 16) - 8;    // ADC subaddress
-    adcIndex += fBaseIndex;                 // index offset
-    ADCStore( outBuffer, adcVal, adcIndex );// store values
+    adcVal = datum & 0x1fff;                   // keep overflow bit
+    adcIndex = ((datum & 0x3f0000) >> 16) - 8; // ADC subaddress
+    adcIndex += fBaseIndex;                    // index offset
+    ADCStore( outBuffer, adcVal, adcIndex );   // store values
   }
   datum = Read(i); 
   if( (datum & 0x7000000) != 0x4000000 ){   // Check trailer word
@@ -309,9 +329,12 @@ void TVME_V874::PostInit( )
   Write(EV874_IBitClr2, 0x100);    // setup mode
   // set operating mode
   Write(EV874_IBitSet2, 0x800);                  // Auto increment data ptr
-  if( !fIsEnOvFlow ) Write(EV874_IBitSet2, 0x8); // Overflow suppress
-  if( fIsEnThresh ) Write(EV874_IBitSet2, 0x10); // Below threshold suppress
+  if( fIsEnOvFlow ) Write(EV874_IBitClr2, 0x8); // Overflow suppress
+  else Write(EV874_IBitSet2, 0x8);
+  if( fIsEnThresh ) Write(EV874_IBitClr2, 0x10);// Below threshold suppress
+  else Write(EV874_IBitSet2, 0x10);
   if( fIsComStop ) Write(EV874_IBitSet2, 0x400); // Common stop mode
+  else Write(EV874_IBitClr2, 0x400);
   Write(EV874_IFCW, fFCWindow);                  // Set Fast Clear Window
   Write(EV874_IClearTime,fClrTime);              // set Clear Time
   Write(EV874_IVset,fVset);                      // set TDC gain
@@ -347,12 +370,26 @@ Bool_t TVME_V874::CheckHardID( )
 void TVME_V874::SetPiggy(Int_t device, Int_t value)
 {
   // Write 13-bit value to DAC at address device on piggy back board
-  Write(EV874_IBitClr2, 0x100);                   // setup mode
+  Write(EV874_IBitClr2, 0x100);                   // setup aux write
   Write(EV874_IAux, value & 0xff);                // 8 lsb transfer
   Write(EV874_IAux + 0x38, (value & 0x1f00)>>8);  // 5 msb transfer
   Write(EV874_IAux + (0x40 | device), (UInt_t)0); // int PLD->ext pins PLD
   Write(EV874_IAux + (0x40 | device), (UInt_t)0); // write to DAC
-  Write(EV874_IBitSet2, 0x100);                   // readout mode
+  Write(EV874_IBitSet2, 0x100);                   // read mode
+}
+//-------------------------------------------------------------------------
+void TVME_V874::ReadPiggy(Int_t device, Int_t* value)
+{
+  // Read back 13-bit value to DAC at address device on piggy back board
+  // This is not in a working state just now
+  Int_t val;
+  Write(EV874_IBitSet2, 0x100);                   // setup aux read
+  Write(EV874_IAux + (0x40 | device), (UInt_t)0); // int PLD->ext pins PLD
+  Write(EV874_IAux + (0x40 | device), (UInt_t)0); // int PLD->ext pins PLD
+  val = Read(EV874_IAux);                         // 8 lsb transfer
+  *value = val & 0xff;
+  val = Read(EV874_IAux + 0x38);
+  *value = *value | (val & 0x1f)<<8;
 }
 
 //-------------------------------------------------------------------------
@@ -369,4 +406,150 @@ void TVME_V874::InitDAC()
     SetPiggy( DevThrLED1[i], fThrLED1[i] ); // load LED1 thresholds
     SetPiggy( DevThrLED2[i], fThrLED2[i] ); // load LED2 thresholds
   }
+}
+
+//--------------------------------------------------------------------------
+void TVME_V874::CmdExe(Char_t* input)
+{
+  // Command interface
+  // Use same key words as SetConfig
+  //
+  Int_t key;
+  Int_t val[4];
+  Char_t keyword[64];
+  if( sscanf( input, "%s", keyword ) != 1 ){
+    sprintf(fCommandReply,"<No command keyword supplied>\n");
+    return;
+  }
+  if( (key = Map2Key( keyword, k874Keys )) == -1){
+    sprintf(fCommandReply,"<Unrecognised V874 Command %s>\n",keyword);
+    return;
+  }
+  Char_t* parm = input + strlen(keyword) + 1;  // point to past the keyword
+  //Int_t i,j;
+  switch(key){
+  case EV874_ThrLG:
+    // Settings of LG data suppression threshold registers
+    if( sscanf(parm,"%i%i%i%i",fThresh+10,fThresh+14,fThresh+22,fThresh+26)
+	!= 4 ){ sprintf(fCommandReply,"<Error parse LG threshold read>");
+      break;}
+    WrtThr(10,14,22,26);
+    sprintf(fCommandReply,"LG data thresholds updated\n");
+    break;
+  case EV874_ThrLGS:
+    // Settings of LGS data suppression threshold registers
+    if( sscanf(parm,"%i%i%i%i",fThresh+8,fThresh+12,fThresh+20,fThresh+24)
+	!= 4 ){ sprintf(fCommandReply,"<Error parse LGS threshold read>");
+      break; }
+    WrtThr(8,12,20,24);
+    sprintf(fCommandReply,"LGS data thresholds updated\n");
+    break;
+  case EV874_ThrSG:
+    // Settings of SG data suppression threshold registers
+    if( sscanf(parm,"%i%i%i%i",fThresh+11,fThresh+15,fThresh+23,fThresh+27)
+	!= 4 ){ sprintf(fCommandReply,"<Error parse SG threshold read>");
+      break; }
+    WrtThr(11,15,23,27);
+    sprintf(fCommandReply,"SG data thresholds updated\n");
+    break;
+  case EV874_ThrSGS:
+    // Settings of SGS data suppression threshold registers
+    if( sscanf(parm,"%i%i%i%i",fThresh+9,fThresh+13,fThresh+21,fThresh+25)
+	!= 4 ){ sprintf(fCommandReply,"<Error parse SGS threshold read>");
+      break; }
+    WrtThr(9,13,21,25);
+    sprintf(fCommandReply,"SGS data thresholds updated\n");
+    break;
+  case EV874_Vset:
+    // Vset TDC conversion gain. Value 140,43 -> 54,103 ps/chan
+    if( sscanf(parm,"%i",&fVset) != 1 ){
+      sprintf(fCommandReply,"<Error parse TDC conversion gain read>");
+    }
+    Write(EV874_IVset,fVset);                      // set TDC gain
+    sprintf(fCommandReply,"TDC conversion gain updated\n");
+    break;
+  case EV874_Voff:
+    // Voff Time offset for TDC. Value 240,165,131 -> 300,400,500ns
+    if( sscanf(parm,"%i",&fVoff) != 1 ){
+      sprintf(fCommandReply,"<Error parse TDC offset read>");
+    }
+    Write(EV874_IVoff,fVoff);                      // set TDC offset
+    sprintf(fCommandReply,"TDC offset updated\n");
+    break;
+  case EV874_PedLG:
+    // 4 Long-gate QDC pedestal values
+    if( sscanf(parm,"%i%i%i%i",fPedLG,fPedLG+1,fPedLG+2,fPedLG+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse LG pedestal read>");
+    }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevPedLG[i], fPedLG[i] ); }
+    sprintf(fCommandReply,"LG pedestal settings updated\n");
+    break;
+  case EV874_PedLGS:
+    // 4 Long-gate-S QDC pedestal values
+    if( sscanf(parm,"%i%i%i%i",fPedLGS,fPedLGS+1,fPedLGS+2,fPedLGS+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse LGS pedestal read>");
+    }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevPedLGS[i], fPedLGS[i] ); }
+    sprintf(fCommandReply,"LGS pedestal settings updated\n");
+    break;
+  case EV874_PedSG:
+    // 4 Short-gate QDC pedestal values
+    if( sscanf(parm,"%i%i%i%i",fPedSG,fPedSG+1,fPedSG+2,fPedSG+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse SG pedestal read>");
+    }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevPedSG[i], fPedSG[i] ); }
+    sprintf(fCommandReply,"SG pedestal settings updated\n");
+    break;
+  case EV874_PedSGS:
+    // 4 Short-gate-S QDC pedestal values
+    if( sscanf(parm,"%i%i%i%i",fPedSGS,fPedSGS+1,fPedSGS+2,fPedSGS+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse SGS pedestal read>");
+    }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevPedSGS[i], fPedSGS[i] ); }
+    sprintf(fCommandReply,"SGS pedestal settings updated\n");
+    break;
+  case EV874_ThrCFD:
+    // 4 CFD threshold values, in mV (positive)
+    if( sscanf(parm,"%d%d%d%d",val,val+1,val+2,val+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse CFD thresholds read>");
+      break;
+    }
+    for(Int_t i=0; i<4; i++){ fThrCFD[i] = DACconv(val[i]); }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevThrCFD[i], fThrCFD[i] ); }
+    sprintf(fCommandReply,"CFD thresholds updated\n");
+    break;
+  case EV874_ThrLED1:
+     // 4 LED1 threshold values, in mV (positive)
+    if( sscanf(parm,"%d%d%d%d",val,val+1,val+2,val+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse LED1 thresholds read>");
+      break;
+    }
+    for(Int_t i=0; i<4; i++){ fThrLED1[i] = DACconv(val[i]); }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevThrLED1[i], fThrLED1[i] ); }
+   sprintf(fCommandReply,"LED1 thresholds updated\n");
+    break;
+  case EV874_ThrLED2:
+    // 4 LED2 threshold values, in mV (positive)
+    if( sscanf(parm,"%d%d%d%d",val,val+1,val+2,val+3) != 4 ){
+      sprintf(fCommandReply,"<Error parse LED2 thresholds read>");
+      break;
+    }
+    for(Int_t i=0; i<4; i++){ fThrLED2[i] = DACconv(val[i]); }
+    for(Int_t i=0; i<4; i++){ SetPiggy( DevThrLED2[i], fThrLED2[i] ); }
+    sprintf(fCommandReply,"LED2 thresholds updated\n");
+    break;
+  default:
+    sprintf(fCommandReply,"<Unrecognised or not-permitted V874 command>\n");
+    break;
+  }
+}
+
+//----------------------------------------------------------------------------
+void TVME_V874::WrtThr(Int_t i1, Int_t i2, Int_t i3, Int_t i4)
+{
+  // write 4 data suppression thresholds
+  Write(EV874_IThresh+i1, fThresh[i1]);
+  Write(EV874_IThresh+i2, fThresh[i2]);
+  Write(EV874_IThresh+i3, fThresh[i3]);
+  Write(EV874_IThresh+i4, fThresh[i4]);
 }

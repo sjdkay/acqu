@@ -22,7 +22,8 @@
 //--Rev         JRM Annand    1st Sep 2012 ExecKill..explicit kill GUI
 //--Rev         JRM Annand   29th Sep 2012 GetVUPROMparm()
 //--Rev         JRM Annand    1st Oct 2012 Allow stop/go when storing
-//--Update      JRM Annand    2nd Mar 2013 VADC/VScalers Mk2 header counting
+//--Rev         JRM Annand    2nd Mar 2013 VADC/VScalers Mk2 header counting
+//--Update      JRM Annand   10th Jul 2013 V874 config
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -49,7 +50,8 @@ enum { EExpCtrlUndef, EExpCtrlNet, EExpGUINet, EExpCtrlLocalAR, EExpCtrlLocal,
 enum { ESupStart, ESupGo, ESupRun, ESupPause, ESupStop, ESupEnd, ESupKill, 
        ESupDump,
        ESupExperiment, ESupComm, ESupFile, ESupRunNumber,
-       ESupAuto, ESupNoAuto, ESupIsRunning, ESupConfigTCS, ESupCAMAC, ESupVUPROM };
+       ESupAuto, ESupNoAuto, ESupIsRunning, ESupConfigTCS, ESupCAMAC, 
+       ESupVUPROM, ESupV874 };
 
 class ARSocket_t;
 class TDAQmodule;
@@ -109,6 +111,7 @@ class TDAQsupervise : public TA2System {
   virtual void CAMAC_IO(Int_t,Int_t,Int_t,Int_t,Int_t);
   virtual void ConfigVUPROM(Char_t*);
   virtual Int_t* GetVUPROMparm(Int_t);
+  virtual void ConfigV874(Char_t*);
   //
   TDAQexperiment* GetEXP(){ return fEXP; };
   Int_t GetExpCtrlMode(){ return fExpCtrlMode; }

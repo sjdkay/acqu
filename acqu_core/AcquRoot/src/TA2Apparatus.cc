@@ -11,7 +11,8 @@
 //--Rev 	JRM Annand...21st Jan 2007   4v0 update
 //--Rev 	JRM Annand...31st Jan 2007   Particle-ID cuts
 //--Rev 	JRM Annand... 3rd Jun 2008...const Char_t*...gcc 4.3
-//--Update	JRM Annand...24th Nov 2008...add TA2Particle
+//--Rev 	JRM Annand...24th Nov 2008...add TA2Particle
+//--Update	P Ott     ...15th May 2013...add Int_t GetNParticle()
 //--Description
 //                *** Acqu++ <-> Root ***
 // Online/Offline Analysis of Sub-Atomic Physics Experimental Data 

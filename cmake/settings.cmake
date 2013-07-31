@@ -47,7 +47,7 @@ if(NOT DEFINED ACQU_VERSION)
 endif()
 
 if(NOT DEFINED ACQU_DATE)
-  set(ACQU_DATE "01.06.13")
+  set(ACQU_DATE "09.07.13")
 endif()
 
 # ...and the very handy absolute path names...

@@ -15,7 +15,8 @@
 //--Rev 	JRM Annand...20th Jul 2009  Beam primed...check energy
 //--Rev 	JRM Annand... 1st Sep 2009  delete[]
 //--Rev  	JRM Annand...25th Feb 2012  Out-of-plane angle
-//--Update 	JRM Annand...27th Feb 2012  Use-degrees option, and Theta-dist
+//--Rev  	JRM Annand...27th Feb 2012  Use-degrees option, and Theta-dist
+//--Update 	JRM Annand...26th Apr 2013  Bug fix InitParticleDist()
 
 //--Description
 //                *** Acqu++ <-> Root ***

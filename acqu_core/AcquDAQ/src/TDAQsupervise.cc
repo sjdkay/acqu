@@ -22,7 +22,8 @@
 //--Rev         JRM Annand    1st Sep 2012 ExecKill..explicit kill GUI
 //--Rev         JRM Annand   29th Sep 2012 GetVUPROMparm()
 //--Rev         JRM Annand    1st Oct 2012 Allow stop/go when storing
-//--Update      JRM Annand    2nd Mar 2013 VADC/VScalers Mk2 header counting
+//--Rev         JRM Annand    2nd Mar 2013 VADC/VScalers Mk2 header counting
+//--Update      JRM Annand   10th Jul 2013 V874 config
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -40,6 +41,7 @@
 #include "TVME_CATCH_TCS.h"
 #include "TVME_CBD8210.h"
 #include "TVME_VUPROM.h"
+#include "TVME_V874.h"
 
 #include <time.h>
 
@@ -76,6 +78,7 @@ static Map_t kSuperviseKeys[] = {
   {"ConfigTCS:",     ESupConfigTCS},
   {"Camio:",         ESupCAMAC},
   {"VUPROM:",        ESupVUPROM},
+  {"V874:",          ESupV874},
   {NULL,             -1}
 };
 
@@ -218,6 +221,9 @@ void TDAQsupervise::SetConfig( Char_t* line, Int_t key )
     break;
   case ESupVUPROM:
     ConfigVUPROM(line);
+    break;
+  case ESupV874:
+    ConfigV874(line);
     break;
   default:
     PutString("<Superviser: unrecognised command keyword>\n");
@@ -961,3 +967,32 @@ Int_t* TDAQsupervise::GetVUPROMparm(Int_t chan)
   }
   return NULL;
 }
+
+//----------------------------------------------------------------------------
+void TDAQsupervise::ConfigV874(Char_t* line)
+{
+  // Issue commands to VUPROM
+  // if it exists
+  Char_t nmod[32];
+  sscanf(line,"%s",nmod);
+  Char_t* line1 = line + strlen(nmod) + 1;
+  TList* modList = fEXP->GetModuleList();
+  TDAQmodule* mod;
+  if( !modList ){
+    PutString(" No list of experimental modules found\n");
+    return;
+  }
+  TIter nextM( modList );
+  while( (mod = (TDAQmodule*)nextM()) ){
+    const Char_t* name = mod->GetName();
+    if(strcmp(name,nmod)) continue;         // check name of module
+    if( mod->InheritsFrom("TVME_V874") ){
+      ((TVME_V874*)mod)->CmdExe(line1);
+      PutString(((TVME_V874*)mod)->GetCommandReply());
+      return;
+    }
+  }
+  PutString(" No V874 Module found\n");         // output message
+  return;
+}
+

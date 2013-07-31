@@ -69,9 +69,12 @@ class TVME_V874 : public TVMEmodule {
   Int_t fThrCFD[4];                                 // CFD threshold values
   Int_t fThrLED1[4];                                // LED1 threshold values
   Int_t fThrLED2[4];                                // LED2 threshold values
+  Int_t fDReady;
   Bool_t fIsEnThresh;                               // Enable pedestal suppress?
   Bool_t fIsEnOvFlow;                               // Enable overflow suppress?
   Bool_t fIsComStop;                                // Common stop mode?
+  Bool_t fIsIRQEnabled;                             // Event readout enabled?
+  Char_t fCommandReply[128];                   // Messages back to DAQ control
  public:
   TVME_V874( Char_t*, Char_t*, FILE*, Char_t* );
   virtual ~TVME_V874();
@@ -87,8 +90,17 @@ class TVME_V874 : public TVMEmodule {
   // Full software reset of module
   virtual void Reset(){ Write(EV874_IBitSet1,0x8); Write(EV874_IBitClr1,0x8); }
   virtual void SetPiggy( Int_t, Int_t );
+  virtual void ReadPiggy( Int_t, Int_t*);
   virtual void InitDAC();
   virtual Int_t DACconv( Int_t );
+  // Event readout functions. used only for test setups
+  virtual void WaitIRQ();
+  virtual void ResetIRQ(){}
+  virtual void EnableIRQ(){ fIsIRQEnabled = kTRUE; }
+  virtual void DisableIRQ(){ fIsIRQEnabled = kFALSE; }
+  virtual void CmdExe(Char_t*);              // execute command from DAQ ctrl
+  virtual void WrtThr(Int_t,Int_t,Int_t,Int_t);
+  Char_t* GetCommandReply(){ return fCommandReply; }
   ClassDef(TVME_V874,1)   
 
     };
@@ -102,6 +114,21 @@ inline Int_t TVME_V874::DACconv( Int_t voltage )
   if( voltage > 1100 ) voltage = 1100;
   Double_t dac = 8191 - (voltage * 8191/1100);
   return( (Int_t)dac );
+}
+
+//-----------------------------------------------------------------------------
+inline void TVME_V874::WaitIRQ( )
+{
+  // Poll the state of the status-1 register.
+  // Look at 0th bit, set = data ready in module
+  // OR   at 1st bit, set = global data ready
+  Int_t datum;
+  for(;;){
+    if( fIsIRQEnabled ){              // "interrupt" enabled?
+      datum = Read(EV874_IStatus1);   // poll status1 register
+      if( datum & fDReady )break;     // break loop when data ready.
+    }
+  }
 }
 
 #endif

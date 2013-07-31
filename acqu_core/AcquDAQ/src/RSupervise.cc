@@ -37,6 +37,7 @@ const static Char_t *cmd[] = {
   "ConfigTCS:",
   "Camio:",
   "VUPROM:",
+  "V874:",
   "NULL:"
 };
 
