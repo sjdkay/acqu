@@ -78,6 +78,7 @@ void TDAQstore::PostInit( )
     fSocket = new ARSocket_t( "DAQ-Net-Socket", lhost, 
 			      fPort, ESkLocal, fRecLen, fPacLen, this );
     printf("<Waiting to connect to data receiver>\n");
+    fflush(stdout);
     fSocket->Initialise();
     break;
   case EStoreDODisk:

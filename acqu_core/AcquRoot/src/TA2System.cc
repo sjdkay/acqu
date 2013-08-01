@@ -150,16 +150,16 @@ void TA2System::PrintError( const Char_t* line, const Char_t* operation,
   //
   if( operation )
     fprintf(fLogStream,
-	    " Error in operation %s of class %s at command line:\n%s\n",
+	    "Error in operation %s of class %s at command line:\n%s",
 	     operation, this->ClassName(), line );
   else
-    fprintf(fLogStream, " Error in setup of class %s at command line:\n%s\n",
+    fprintf(fLogStream, "Error in setup of class %s at command line:\n%s",
 	     this->ClassName(), line );
   fIsError = kTRUE;
   fflush(fLogStream);
   if( errorlevel == EErrFatal ){
-    fprintf(fLogStream, " FATAL ERROR...exiting AcquRoot\n\n" );
-    printf("AcquRoot FATAL ERROR...please examine .log files\n");
+    fprintf(fLogStream, " FATAL ERROR...exiting AcquRoot\n" );
+    printf("AcquRoot FATAL ERROR...please examine .log files or syslog\n");
     exit( -1 );
   }
 }
@@ -170,6 +170,7 @@ void TA2System::PrintMessage( const Char_t* mess )
   // General diagnostics
   //
   fprintf( fLogStream,"%s: %s ", this->ClassName(), mess);
+  fflush(fLogStream);
 }
 
 

@@ -692,7 +692,7 @@ void TDAQsupervise::GetSysTime()
   //
   time_t tick = time(NULL);			// # sec. since 1/1/70
   strcpy( fTime, asctime( localtime(&tick) ) );
-  sprintf( fCommandLine,"Superviser system time: %s\n", fTime );
+  sprintf( fCommandLine,"Superviser system time: %s", fTime );
   fprintf( fLogStream, fCommandLine );
   //  PutString( fCommandLine );
   return;
