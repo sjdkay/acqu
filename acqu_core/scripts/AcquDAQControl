@@ -23,7 +23,7 @@ function start() {
     init
 
     # ensure there is a correct symlink
-    DATA_DIR=/acqu/acqu_core/AcquDAQ/data_$(hostname -s)
+    DATA_DIR=/acqu/acqu_core/AcquDAQ/data/$(hostname -s)
     echo "Linking data to ${DATA_DIR}..."
     ln -Tfs ${DATA_DIR} data
 
