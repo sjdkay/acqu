@@ -69,6 +69,8 @@ endforeach()
 if(ACQU_DAQ)
   # we add many additional files marked as "headers"
   # so they appear automatically in QtCreator
+  # but we set the policy to not follow symlinks
+  cmake_policy(SET CMP0009 NEW)
   file(GLOB_RECURSE ADDITIONAL_FILES "*/macros/*" "*/data/*")
   set_source_files_properties(${ADDITIONAL_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
