@@ -61,7 +61,7 @@ endif()
 file(GLOB CORE_EXTRA_SCRIPTS "scripts/*")
 foreach(f ${CORE_EXTRA_SCRIPTS})
   get_filename_component(f_name ${f} NAME)
-  configure_file(${f} "${EXECUTABLE_OUTPUT_PATH}/${f_name}" COPY_ONLY)
+  configure_file(${f} "${EXECUTABLE_OUTPUT_PATH}/${f_name}" COPYONLY)
 endforeach()
 
 # now build the binaries (but only if DAQ mode is on!),
