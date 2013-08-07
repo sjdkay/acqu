@@ -11,7 +11,7 @@ Pi0-Prompt-Windows: -10 5
 Pi0-Random-Windows: -350 -50 45 345
 Pi0-Invariant-Mass-Cuts: 120 150
 Produce-Tree-File: 1
-Tree-File-Name: /work0/cristina/TA2Pi0Compton2012.root
+Tree-File-Name: TA2Pi0Compton2012.root
 #
 Initialise:
 #

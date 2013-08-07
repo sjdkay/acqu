@@ -69,7 +69,7 @@ Initialise:
 ## The procedures are usually held in macro script files
 ## Period...every N events
 ##		N	Macro File	Macro Procedure
-Period:	10000	PeriodMacro.C	PeriodMacro()
+Period:	10000	root/macros/PeriodMacro.C	PeriodMacro()
 ##
 #Period:		1000	linPolMacro.C	linPolMacro()
 ##
@@ -77,7 +77,7 @@ Period:	10000	PeriodMacro.C	PeriodMacro()
 ##EndFile:		EndFileMacro.C  EndFileMacro()
 ##
 ## Finish...when all input data files processed
-Finish:		FinishTree.C	FinishTree("ARHistograms_2012.root")
+Finish:		root/macros/FinishTree.C	FinishTree("ARHistograms_2012.root")
 ##
 ## Save all accepted events (ie those which pass all data cuts) to a
 ## ROOT file. Data saved in RAW format (ie ADC indices and values
