@@ -6,7 +6,7 @@
 #include "TROOT.h"
 #include "TH2.h"
 
-void MissingMass2012() {
+void MissingMass() {
 
 	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012.root");
 	TFile *file1 = new TFile(filename);
@@ -26,7 +26,7 @@ void MissingMass2012() {
 
 	TH1D *b0 = new TH1D("Missing-Mass-Pi0-Prompt","Missing-Mass-Pi0-Prompt", 400,800,1200);
 	TH1D *b1 = new TH1D("Missing-Mass-Pi0-Random","Missing-Mass-Pi0-Random", 400,800,1200);
-	TH1D *b2 = new TH1D("Missing-Mass-Pi0",	    "Missing-Mass-Pi0",	 400,800,1200);
+	TH1D *b2 = new TH1D("Missing-Mass-Pi0",	      "Missing-Mass-Pi0",	 400,800,1200);
 
 	Int_t nentries = (Int_t)tree1->GetEntries();
 	for (Int_t i=0;i<nentries;i++) {
