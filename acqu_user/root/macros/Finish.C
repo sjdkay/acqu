@@ -10,8 +10,6 @@ void FinishBasic( TString name)
 	cout << "End-of-Run macro executing";
 	cout << endl;
 
-	path =  "histograms/";
-
 	path.Append( name);
 	path.Append( ".root");
 	TFile f( path, "recreate");

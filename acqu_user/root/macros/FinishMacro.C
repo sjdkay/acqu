@@ -1,12 +1,12 @@
-void FinishMacro()
+void FinishMacro(Char_t* file = NULL)
 {
-  printf( "End-of-Run macro executing\n");
+    	TString name;
+	printf("\nEnd-of-Run macro executing:\n");
 
-  TFile f( "histograms/ARHistograms.root","recreate");
-  gROOT->GetList()->Write();
-  f.Close();
-
-  printf("All histograms saved to ARHistograms.root\n\n");
-
-//  gSystem->Exit(0);
+	if( !file) file = "ARHistograms.root";
+	TFile f1(file,"RECREATE");
+	gROOT->GetList()->Write();
+	f1.Close();
+  	printf("done.\n",file);
+  	printf("All histograms saved to %s\n",file);
 }
