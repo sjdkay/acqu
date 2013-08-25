@@ -307,7 +307,7 @@ inline void TA2TAPS_BaF2::ReadDecoded()
     E*=1000.0;                                                      //G3/4 output in MeV
     EnergyAll[j] = E;
     GammaToF = (Z_c[j] * TMath::Cos(theta_c[j]))/30.0;
-    T = time[i] - GammaToF + pRandoms->Gaus(0.0, fTimeResolution);
+    T = -time[i] + GammaToF + pRandoms->Gaus(0.0, fTimeResolution);
 
    //Fill veto stuff...
     if(fPatternHits) //...but only if bit pattern unit is active

@@ -53,7 +53,7 @@ BitPattern:  AR-Analysis-TriggerPat.dat
 Apparatus:      TAGG            TA2Tagger   		AR-Analysis-Tagger.dat
 #Apparatus:      CB              TA2CrystalBall		AR-Analysis-CB.dat
 Apparatus:      CB              TA2CentralApparatus	AR-Analysis-CentApp.dat
-#Apparatus:      TAPS            TA2Taps		  	AR-Analysis-TAPS.dat
+Apparatus:      TAPS            TA2Taps		  	AR-Analysis-TAPS.dat
 ##
 ## Turn on apparatus-level reconstruction
 Reconstruct-Analysis:

@@ -26,6 +26,7 @@ Apparatus:  TAGG     TA2Tagger       		   AR-Analysis-Tagger.dat
 Apparatus:  CB       TA2CentralApparatus           AR-Analysis-CentApp.dat
 #Apparatus:  CB       TA2CrystalBall	           AR-Analysis-CB.dat
 #Apparatus:  TAPS     TA2Taps         		   AR-Analysis-TAPS.dat
+Apparatus:  TAPS     TA2Taps         		   TAPS_MC.dat
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,7 +55,7 @@ Initialise:
 #        No. of events  Macro file name             Macro function
 Period:  10000         root/macros/PeriodMacro.C   PeriodMacro()
 #        Macro file name              Macro funcion
-Finish:	 FinishTree.C	FinishTree("ARHistograms_acquMC_Pi0.root")
+Finish:	 FinishTree.C	FinishTree("ARHistograms_acquMC_Pi0-5.root")
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
