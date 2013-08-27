@@ -1,0 +1,19 @@
+Author: Cristina Collicott
+
+Acqu-System:
+-- Build details are included in README.md
+
+This release version of the A2-AcquSystem has user data directories to deal with:
+- acqu_user/data.MC      -- Monte Carlo data processed through A2-Geant4 
+- acqu_user/data.2008.12 -- Linearly polarised data, unpol. proton target, taken in December 2008 
+- acqu_user/data.2012.12 -- Linearly polarised data, unpol. proton target, taken in December 2012 
+- acqu_user/data.TaggEff -- Tagging Efficiency files
+- acqu_user/data.2013.06 -- this has not been tested by me but is included (Mk2)
+
+Fixed:
+- Veto time on TAPS was set to -time (to match the normal calibration output of Basel-Calib code).
+- Fixed TAPS config file as the old (TAPS2009) config files were still being used.
+- Protons were not being detected in previous release versions, this is fixed.
+
+Known Problems:
+- None.
