@@ -233,7 +233,7 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
     case ESQL_CALIB_CBENERGY_PER_RUN:
         {  
 			Char_t tmp[128];
-			
+
 			printf("try to enable CBEnergy correction per Run\n");
 			
 			if (sscanf(line, "%s", tmp) == 1) 
