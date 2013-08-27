@@ -37,7 +37,7 @@ Int_t	TA2AccessSQL::GetRunNumber()
 
 
 //______________________________________________________________________________
-TA2AccessSQL::TA2AccessSQL(const char* name, TA2Analysis* analysis)	: TA2Physics(name, analysis), fCaLibReader(0), fRunNumber(0)
+TA2AccessSQL::TA2AccessSQL(const char* name, TA2Analysis* analysis)	: TA2Physics(name, analysis), fCaLibReader(0), fRunNumber(0), CBEnergyPerRunCorrection(false)
 {
     // command-line recognition for SetConfig()
     AddCmdList(AccessSQLConfigKeys);
@@ -225,6 +225,35 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
             else Error("SetConfig", "CaLib Veto calibration could not be configured!");
             break;
         }
+    case ESQL_CALIB_CBENERGY_PER_RUN:
+        {  
+			Char_t tmp[128];
+			
+			if (sscanf(line, "%s", tmp) == 1) 
+            {
+				GetRunNumber();
+				FILE*	f = fopen(tmp,"r");
+				while(!feof(f))
+				{
+					Int_t 		num;
+					Double_t 	val;
+					if (fscanf(f, "%d %lf", &num, &val) == 1) 
+					{
+						if(num == fRunNumber)
+						{
+							CBEnergyPerRunCorrection		= true;
+							CBEnergyPerRunCorrectionFactor	= val;
+							break;
+						}
+					}
+				}
+				if(CBEnergyPerRunCorrection)
+				{
+					
+					printf("CBEnergy correction factor for run %d is %lf\n", fRunNumber, CBEnergyPerRunCorrectionFactor);
+				}
+			}
+		}
 	default:
         {
             // default main apparatus SetConfig()
@@ -234,8 +263,123 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
     }
 }
 
+void TA2AccessSQL::LoadDetectors(TA2DataManager* parent, Int_t depth)
+{
+    // Load recursively all detector components.
+    
+    Bool_t added = kFALSE;
 
+    // get the children, leave if none found
+    TList* children = parent->GetChildren();
+    if (!children) return;
+    
+    // loop over children
+    TObjLink *lnk = children->FirstLink();
+    while (lnk)
+    {
+        TObject* obj = lnk->GetObject();
+     
+        // look for detectors
+        if (!strcmp(obj->GetName(), "TAGG"))
+        {
+            fTagger = (TA2Tagger*) obj;
+            added = kTRUE;
+        }
+        if (!strcmp(obj->GetName(), "FPD"))
+        {
+            fLadder = (TA2Ladder*) obj;
+            added = kTRUE;
+        }
+        else if (!strcmp(obj->GetName(), "CB"))
+        {
+            fCB = (TA2CentralApparatus*) obj;
+            added = kTRUE;
+        }
+        else if (!strcmp(obj->GetName(), "NaI"))
+        {
+            fNaI = (TA2CalArray*) obj;
+            added = kTRUE;
+        }
+        else if (!strcmp(obj->GetName(), "PID"))
+        {
+            fPID = (TA2PlasticPID*) obj;
+            added = kTRUE;
+        }
+        else if (!strcmp(obj->GetName(), "TAPS"))
+        {
+            fTAPS = (TA2Taps*) obj;
+            added = kTRUE;
+        }
+        else if (!strcmp(obj->GetName(), "BaF2PWO"))
+        {
+            fBaF2PWO = (TA2TAPS_BaF2*) obj;
+            added = kTRUE;
+        }
+        else if (!strcmp(obj->GetName(), "VETO"))
+        {
+            fVeto = (TA2TAPS_Veto*) obj;
+            added = kTRUE;
+        }
 
+        // print information if a detector was added
+        if (added)
+        {
+            for (Int_t i = 0; i < depth; i++) printf("  ");
+            printf( "   %s (%s)\n", obj->GetName(), obj->ClassName());
+            added = kFALSE;
+        }
+
+        // add children of child
+        LoadDetectors((TA2DataManager*) obj, depth + 1);
+        lnk = lnk->Next();
+    }
+}
+
+void TA2AccessSQL::ApplyCaLib()
+{
+	if (!fCaLibReader->ApplyTargetPositioncalib(&fTargetPosition))
+        Error("ApplyCaLib", "An error occured during target position calibration!");
+
+    // calibrate TAGG
+    if (fLadder)
+    {
+        if (!fCaLibReader->ApplyTAGGcalib(fLadder))
+            Error("ApplyCaLib", "An error occured during tagger calibration!");
+    }
+    else Error("ApplyCaLib", "Tagger not found - could not calibrate the tagger using CaLib!");
+
+    // calibrate CB
+    if (fNaI)
+    {
+        if (!fCaLibReader->ApplyCBcalib(fNaI))
+            Error("ApplyCaLib", "An error occured during CB calibration!");
+    }
+    else Error("ApplyCaLib", "CB not found - could not calibrate CB using CaLib!");
+
+    // calibrate TAPS
+    if (fBaF2PWO)
+    {
+        if (!fCaLibReader->ApplyTAPScalib(fBaF2PWO))
+            Error("ApplyCaLib", "An error occured during TAPS calibration!");
+    }
+    else Error("ApplyCaLib", "TAPS not found - could not calibrate TAPS using CaLib!");
+    
+    // calibrate PID
+    if (fPID)
+    {
+        if (!fCaLibReader->ApplyPIDcalib(fPID))
+            Error("ApplyCaLib", "An error occured during PID calibration!");
+    }
+    else Error("ApplyCaLib", "PID not found - could not calibrate PID using CaLib!");
+    
+    // calibrate Veto 
+    if (fVeto)
+    {
+        if (!fCaLibReader->ApplyVetocalib(fVeto))
+            Error("ApplyCaLib", "An error occured during Veto calibration!");
+    }
+    else Error("ApplyCaLib", "Veto not found - could not calibrate Veto using CaLib!");
+}
 
 void TA2AccessSQL::PostInit()
 {

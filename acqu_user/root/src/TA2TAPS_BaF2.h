@@ -70,6 +70,28 @@ class TA2TAPS_BaF2 : public TA2ClusterDetector
   Double_t GetThetaResolutionDg();     // Return Theta res. for given Theta (degree)
   Double_t GetTimeResolution();        // Return sigma of time resolution
   Double_t GetClusterThreshold() {return fClEthresh; }
+  HitD2A_t* GetLGElement(Int_t i)
+    {
+        // get LG element i
+        if (fLGEnergy) 
+        {
+            if (fLGEnergy[i]) return fLGEnergy[i];
+            else return 0;
+        }
+        else return 0;
+    }
+
+    HitD2A_t* GetSGElement(Int_t i)
+    {
+        // get SG element i
+        if (fSGEnergy) 
+        {
+            if (fSGEnergy[i]) return fSGEnergy[i];
+            else return 0;
+        }
+        else return 0;
+    }
+    
   ClassDef(TA2TAPS_BaF2,1)
 };
 
