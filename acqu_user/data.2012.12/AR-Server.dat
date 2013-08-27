@@ -29,6 +29,7 @@ File-Directory:	/home/cristina/RawData/Compton.12.12/
 #Stream-Spec:	File	Mk1	0	32768	32	1	400
 #File-Name:  Tagger_Mk1_0.dat	0	0
 #Stream-Spec:	File	TAPS	0	32768	32	0	29000
+#
 ## merge-fix options for TAPS
 ##              Offset  Nsearch	MaxDiff Max-ID
 #Stream-Options: 1	1	10	19993

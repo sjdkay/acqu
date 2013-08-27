@@ -51,11 +51,11 @@ TAPS_dEvE_Electron_CutName:  pie
 #TAPS and Tagger dime difference.
 #If TAPS_TOF_onlyPhoton: 1 then all uncharged hits are photons. You might
 #define a neutron-TOF-cut, then set TAPS_TOF_onlyPhoton: 0
-TAPS_TOF_Cuts:  data/cuts/TAPS_TOF2.root
-TAPS_TOF_Nucleon:     1
+#TAPS_TOF_Cuts:  data/cuts/TAPS_TOF2.root
+TAPS_TOF_Nucleon:     0
 TAPS_TOF_onlyPhoton:  1
-TAPS_TOF_Nucleon_CutName:  nucleon
-TAPS_TOF_TaggerTime: -142.1
+#TAPS_TOF_Nucleon_CutName:  nucleon
+#TAPS_TOF_TaggerTime: -142.1
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

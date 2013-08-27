@@ -47,11 +47,12 @@ TAPS_dEvE_Proton_CutName:    CutProton
 #TAPS and Tagger time difference.
 #If TAPS_TOF_onlyPhoton: 1 then all uncharged hits are photons. You might
 #define a neutron-TOF-cut, then set TAPS_TOF_onlyPhoton: 0
-TAPS_TOF_Cuts:  data/cuts/TAPS_TOF.root
-TAPS_TOF_Nucleon:     1
+#TAPS_TOF_Cuts:  data/cuts/TAPS_TOF.root
+#TAPS_TOF_Nucleon:     1
+TAPS_TOF_Nucleon:     0
 TAPS_TOF_onlyPhoton:  1
-TAPS_TOF_Nucleon_CutName:  CutNucleon
-TAPS_TOF_TaggerTime:  0.0
+#TAPS_TOF_Nucleon_CutName:  CutNucleon
+#TAPS_TOF_TaggerTime:  0.0
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -8,7 +8,7 @@
 
 void MissingMass() {
 
-	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2012.root");
+	Char_t* filename = Form("/work0/cristina/TA2Pi0Compton2008.root");
 	TFile *file1 = new TFile(filename);
 	TTree *tree1 = (TTree*)file1->Get("Pi0ComptonTree");
 
@@ -43,7 +43,9 @@ void MissingMass() {
 	}
 	
 	b2->Add(b0,1);
-	b2->Add(b1,-0.025); // Data2012
+//	b2->Add(b1,0);	    // DataMC
+	b2->Add(b1,-0.0714);// Data2008
+//	b2->Add(b1,-0.025); // Data2012
 
 	canvas1 = new TCanvas("canvas1","Missing-Mass-Pi0-Prompt");
 	b0->Draw();
@@ -53,6 +55,4 @@ void MissingMass() {
 
 	canvas3 = new TCanvas("canvas3","Missing-Mass-Pi0-Subtracted");	
 	b2->Draw();
-
-
 }
