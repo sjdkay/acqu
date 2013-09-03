@@ -45,10 +45,12 @@ Branch:   emwpc         1024
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ROOT file(s) (GEANT4 output) to be analysed. Add more lines for more files
 #
-#TreeFile: simfiles/compton/LH2_10cm/compton_p_250_out.root
-#TreeFile: simfiles/compton/LH2_10cm/pi0_p_250_out.root
-TreeFile: simfiles/acquMC/Compton_g4_out.root
-#TreeFile: simfiles/acquMC/Pi0_g4_out.root
+TreeFile: $HOME/Geant4/A2/out/acquMC/Compton_g4_out.root
+#TreeFile: $HOME/Geant4/A2/out/acquMC/Pi0_g4_out.root
+#TreeFile: $HOME/Geant4/A2/out/acquMC/PiPlusN_g4_out.root
+#
+#TreeFile: $HOME/Geant4/A2/out/Evgen/Compton_p_250_out.root
+#TreeFile: $HOME/Geant4/A2/out/Evgen/Pi0_p_250_out.root
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Directory to save any created ROOT files (include final '/')

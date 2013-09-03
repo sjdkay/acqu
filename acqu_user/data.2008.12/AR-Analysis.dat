@@ -59,11 +59,11 @@ Initialise:
 ## Setup of extra procedures to run at periodic intervals
 ## The procedures are usually held in macro script files
 ## Period...every N events
-##		N	Macro File	Macro Procedure
-Period:	10000	PeriodMacro.C	PeriodMacro()
+##	N	Macro File			Macro Procedure
+Period:	10000	root/macros/PeriodMacro.C	PeriodMacro()
 ##
 ## Finish...when all input data files processed
-Finish:		FinishTree.C	FinishTree("ARHistograms_2008.root")
+Finish:	root/macros/FinishTree.C	FinishTree("ARHistograms_2008.root")
 ##
 ## Histogram ALL defined single value ADC's
 ## Display blocks of scalers

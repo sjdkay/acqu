@@ -1,19 +1,36 @@
-##--Author      C Collicott. 14th Nov. 2011
-##--Description
-##
-## Do some post-initialisation.
-## Should usually be done before display is setup
+############################################################
+# Setup File for Physics class TA2Pi0Compton
 #
-Target:	0. 0. 0.	938.271  #Used by TA2Physics.cc
+# Author: Cristina Collicott
+############################################################
+#
+# Set Target parameters (used by TA2Physics.cc)
+Target:	0. 0. 0.	938.271  
+#
+############################################################
+# Set Physics class input parameters
+#
+# Set Compton (photon v. tagger) prompt and random windows
 Compton-Prompt-Windows: 0 0
 Compton-Random-Windows: 0 0 0 0
+#
+# Set Pi0 (pi0 v. tagger) prompt and random windows
 Pi0-Prompt-Windows: 0 0
 Pi0-Random-Windows: 0 0 0 0
-Pi0-Invariant-Mass-Cuts: 125 145
-Produce-Tree-File: 1
-Tree-File-Name: /work0/cristina/TA2Pi0ComptonMC.root
 #
+# Set Pi0 Invariant Mass Cut
+Pi0-Invariant-Mass-Cuts: 125 145
+#
+# Produce Physics class tree file? 0/1 = off/on
+Produce-Tree-File: 1
+#
+# Tree file name if Produce-Tree-File is on
+Tree-File-Name: TA2Pi0ComptonMC.root
+#
+############################################################
 Initialise:
+############################################################
+# Define histograms to display
 #
 Display: 1D NPhoton		10 	0 	10 
 Display: 1D PhotonEnergy	85 	0 	850
@@ -41,6 +58,7 @@ Display: 1D TaggerTime		1200	-600	600
 Display: 1D TaggerPhotonTime	1200	-600	600
 Display: 1D TaggerPi0Time	1200	-600	600
 #
+Display: 1D PromptRandomRatio	100	0	1
 Display: 1D TaggerChannelPrompt 352	0 	352
 Display: 1D TaggerChannelRandom 352	0 	352
 Display: 1D MissingMassPrompt 	300	900 	1200
@@ -50,6 +68,7 @@ Display: 1D PhotonThetaRandom	180	0	180
 Display: 1D PhotonPhiPrompt	360	-180	180
 Display: 1D PhotonPhiRandom	360	-180	180
 #
+Display: 1D PromptRandomRatioPi0	100	0	1
 Display: 1D TaggerChannelPromptPi0 	352	0 	352
 Display: 1D TaggerChannelRandomPi0 	352	0 	352
 Display: 1D MissingMassPromptPi0 	300	900 	1200

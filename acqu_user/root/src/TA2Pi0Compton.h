@@ -35,11 +35,10 @@ class TA2Pi0Compton : public TA2Physics {
 	protected:
 
 // Begin by initialising Detectors
-	TA2Tagger*	fTAGG;		// Glasgow photon tagger
-	TA2Ladder*	fLADD;		// Ladder
-//	TA2CrystalBall*	fCB;		// CB (PID, MWPCs, NaI)
+	TA2Tagger*		fTAGG;	// Glasgow photon tagger
+	TA2Ladder*		fLADD;	// Ladder
 	TA2CentralApparatus*	fCB;	// CentApp (PID, MWPCs, NaI)
-	TA2Taps*	fTAPS;  	// TAPS
+	TA2Taps*		fTAPS;  // TAPS
 
 	TA2CalArray	*fNaI;		// NaI 
 	TA2CylMwpc	*fMWPC;		// Mwpc
@@ -127,6 +126,7 @@ class TA2Pi0Compton : public TA2Physics {
 	Int_t		fNPrompt;
 	Int_t		fNRandom;
 
+	Double_t	fPromptRandomRatio;
 	Int_t*		fTaggerChannelPrompt;
 	Int_t*		fTaggerChannelRandom;
 	Double_t*	fMissingMassPrompt;
@@ -147,6 +147,7 @@ class TA2Pi0Compton : public TA2Physics {
 	Int_t		fNPromptPi0;
 	Int_t		fNRandomPi0;
 
+	Double_t	fPromptRandomRatioPi0;
 	Int_t*		fTaggerChannelPromptPi0;
 	Int_t*		fTaggerChannelRandomPi0;
 	Double_t*	fMissingMassPromptPi0;

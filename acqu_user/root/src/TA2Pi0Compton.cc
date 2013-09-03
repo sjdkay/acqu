@@ -81,6 +81,10 @@ TA2Pi0Compton::TA2Pi0Compton( const char* name, TA2Analysis* analysis )
 	fNTaggNPi0		= 0;
 
 	// photon and pi0 physics reconstruction variables
+	
+	fPromptRandomRatio	= 0.0;
+	fPromptRandomRatioPi0	= 0.0;
+
 	f2PhotonInvariantMass	= NULL;
 	fTaggerPhotonTime	= NULL;
 	fTaggerPi0Time		= NULL;
@@ -146,6 +150,7 @@ void TA2Pi0Compton::SetConfig(Char_t* line, Int_t key)
 		case EPi0PromptWindows:
 			//  Pi0 Prompt Windows
 			if( sscanf( line, "%d %d\n", &fPi0TimePL, &fPi0TimePR ) != 2 ){
+
 				PrintError( line, "<Error: Pi0 Prompt Windows not set correctly>");
 				return;
 			}
@@ -205,7 +210,6 @@ void TA2Pi0Compton::PostInit()
 	if ( !fLADD) PrintError( "", "<No Ladder class found>", EErrFatal);
 
 	// Central Apparatus
-//	fCB = (TA2CrystalBall*)((TA2Analysis*)fParent)->GetChild("CB");
 	fCB = (TA2CentralApparatus*)((TA2Analysis*)fParent)->GetChild("CB");	
 	if (!fCB) PrintError( "", "<No Central Apparatus/CB class found>", EErrFatal);
 	else {  printf("CB system included in analysis\n");
@@ -226,6 +230,17 @@ void TA2Pi0Compton::PostInit()
 	}
 
 	printf("\n");
+
+// Calculate ratio of prompt to random windows
+
+	if (gAR->GetProcessType() == EMCProcess) {
+		fPromptRandomRatio	= 0.0;
+		fPromptRandomRatioPi0	= 0.0;		
+	}
+	else {
+		fPromptRandomRatio	= double(fPi0TimePR - fPi0TimePL)/double(fPi0TimeRR1 - fPi0TimeRL1 + fPi0TimeRR2 - fPi0TimeRL2);
+		fPromptRandomRatioPi0	= double(fPi0TimePR - fPi0TimePL)/double(fPi0TimeRR1 - fPi0TimeRL1 + fPi0TimeRR2 - fPi0TimeRL2);
+ 	}
 
 // Get max # of Particles from detectors, used for defining array sizes
 
@@ -338,6 +353,7 @@ void TA2Pi0Compton::PostInit()
 	fTree->Branch("N2PhotonInvariantMass", 	&fN2PhotonInvariantMass,"N2PhotonInvariantMass/I");
 	fTree->Branch("2PhotonInvariantMass",  	f2PhotonInvariantMass,  "2PhotonInvariantMass[N2PhotonInvariantMass]/D");
 
+	fTree->Branch("PromptRandomRatio",	&fPromptRandomRatio,	"PromptRandomRatio/D");
 	fTree->Branch("TaggerChannelPrompt",	fTaggerChannelPrompt,	"TaggerChannelPrompt[NPrompt]/I");
 	fTree->Branch("TaggerChannelRandom",	fTaggerChannelRandom,	"TaggerChannelRandom[NRandom]/I");
 	fTree->Branch("MissingMassPrompt",	fMissingMassPrompt,	"MissingMassPrompt[NPrompt]/D");
@@ -347,6 +363,7 @@ void TA2Pi0Compton::PostInit()
 	fTree->Branch("PhotonPhiPrompt",	fPhotonPhiPrompt, 	"PhotonPhiPrompt[NPrompt]/D");
 	fTree->Branch("PhotonPhiRandom",	fPhotonPhiRandom, 	"PhotonPhiRandom[NRandom]/D");
 
+	fTree->Branch("PromptRandomRatioPi0",	&fPromptRandomRatioPi0,	"PromptRandomRatioPi0/D");
 	fTree->Branch("TaggerChannelPromptPi0",	fTaggerChannelPromptPi0,"TaggerChannelPromptPi0[NPromptPi0]/I");
 	fTree->Branch("TaggerChannelRandomPi0",	fTaggerChannelRandomPi0,"TaggerChannelRandomPi0[NRandomPi0]/I");
 	fTree->Branch("MissingMassPromptPi0",	fMissingMassPromptPi0,	"MissingMassPromptPi0[NPromptPi0]/D");
@@ -400,6 +417,9 @@ void TA2Pi0Compton::LoadVariable( )
 	TA2DataManager::LoadVariable("TaggerPhotonTime",	fTaggerPhotonTime,		EDMultiX);
 	TA2DataManager::LoadVariable("TaggerPi0Time",		fTaggerPi0Time,			EDMultiX);
 
+	TA2DataManager::LoadVariable("PromptRandomRatio",	&fPromptRandomRatio,		EDSingleX);
+	TA2DataManager::LoadVariable("PromptRandomRatioPi0",	&fPromptRandomRatioPi0,		EDSingleX);	
+	
 	TA2DataManager::LoadVariable("TaggerChannelPrompt",	fTaggerChannelPrompt,		EIMultiX);
 	TA2DataManager::LoadVariable("TaggerChannelRandom",	fTaggerChannelRandom,		EIMultiX);
 	TA2DataManager::LoadVariable("MissingMassPrompt",	fMissingMassPrompt,		EDMultiX);
@@ -652,7 +672,7 @@ void TA2Pi0Compton::Reconstruct()
 		}
 	}
 
-	// Trigger Variables
+// Trigger Variables
 	fCBESum = (Float_t)(fNaI->GetTotalEnergy());
 
 	fNaINCluster	= 0;
