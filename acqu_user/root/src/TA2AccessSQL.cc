@@ -20,18 +20,23 @@ ClassImp(TA2AccessSQL)
 
 Int_t	TA2AccessSQL::GetRunNumber()
 {
-	char*	str	= strpbrk(gAR->GetFileName(),".");
+	char*	str = new char[64];
+	strcpy(str,gAR->GetFileName());
 	while(strpbrk(str+1,"."))
 		str	= strpbrk(str+1,".");
 	
 	*str	= '\0';
 	str	= str-1;
+	
 	while(*str == '0' || *str == '1' || *str == '2' || *str == '3' || *str == '4' || *str == '5' || *str == '6' || *str == '7' || *str == '8' || *str == '9')
 		str	= str-1;
 	str	= str+1;
 	
-	fRunNumber	= atoi(str);
-	printf("RunNumber : %d\n",fRunNumber);
+	if(fRunNumber != atoi(str));
+	{
+		fRunNumber = atoi(str);
+		printf("RunNumber : %d\n",fRunNumber);
+	}
 	return fRunNumber;
 }
 
@@ -229,28 +234,26 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
         {  
 			Char_t tmp[128];
 			
+			printf("try to enable CBEnergy correction per Run\n");
+			
 			if (sscanf(line, "%s", tmp) == 1) 
             {
 				GetRunNumber();
 				FILE*	f = fopen(tmp,"r");
+				Int_t 		num;
+				Double_t 	val[4];
 				while(!feof(f))
 				{
-					Int_t 		num;
-					Double_t 	val;
-					if (fscanf(f, "%d %lf", &num, &val) == 1) 
+					if (fscanf(f, "%d %lf %lf %lf %lf\n", &num, &val[0], &val[1], &val[2], &val[3]) == 5) 
 					{
 						if(num == fRunNumber)
 						{
 							CBEnergyPerRunCorrection		= true;
-							CBEnergyPerRunCorrectionFactor	= val;
+							CBEnergyPerRunCorrectionFactor	= val[0];
+							printf("CBEnergy correction factor for run %d is %lf with error %lf\n", fRunNumber, CBEnergyPerRunCorrectionFactor, val[1]);
 							break;
 						}
 					}
-				}
-				if(CBEnergyPerRunCorrection)
-				{
-					
-					printf("CBEnergy correction factor for run %d is %lf\n", fRunNumber, CBEnergyPerRunCorrectionFactor);
 				}
 			}
 		}
@@ -386,6 +389,7 @@ void TA2AccessSQL::PostInit()
 	TA2Physics::PostInit();
 	
 	LoadDetectors(fParent, 0);
+	printf("gain at begin:			%lf\n", fNaI->GetElement(10)->GetA1());
 	
 	if(fCaLibReader)
 	{
@@ -398,6 +402,14 @@ void TA2AccessSQL::PostInit()
 		for(int i=0; i<fNaI->GetNelement(); i++)
 			fNaI->GetElement(i)->SetA1(CBEnergyPerRunCorrectionFactor * (fNaI->GetElement(i)->GetA1()));
 	}
+	printf("gain after calib:		%lf\n", fNaI->GetElement(10)->GetA1());
+	
+	if(CBEnergyPerRunCorrection)
+	{
+		for(int i=0; i<fNaI->GetNelement(); i++)
+			fNaI->GetElement(i)->SetA1(CBEnergyPerRunCorrectionFactor * (fNaI->GetElement(i)->GetA1()));
+	}
+	printf("gain after correction:	%lf\n", fNaI->GetElement(10)->GetA1());
 }
 
 void TA2AccessSQL::LoadVariable()
