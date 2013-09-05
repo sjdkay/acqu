@@ -1,6 +1,8 @@
 //--Author	JRM Annand   9th Jan 2013  Prototype version
 //--Rev 	
-//--Update  
+//--Rev         B. Oussena   5th Feb 2013  Fix bug in ReadIRQ()
+//--Rev         JRM Annand  25th Sep 2013  Raw CFD thresholds
+//--Update      JRM Annand  26th Sep 2013  Ped/LED control Veto version
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -69,11 +71,16 @@ class TVME_V874 : public TVMEmodule {
   Int_t fThrCFD[4];                                 // CFD threshold values
   Int_t fThrLED1[4];                                // LED1 threshold values
   Int_t fThrLED2[4];                                // LED2 threshold values
+  Int_t fThrVLED[8];                                // Veto LED threshold values
+  Int_t fPedVG[8];                                  // Veto Pedestal current
   Int_t fDReady;
+  Int_t fADCoffset;                                 // offset index til data
   Bool_t fIsEnThresh;                               // Enable pedestal suppress?
   Bool_t fIsEnOvFlow;                               // Enable overflow suppress?
   Bool_t fIsComStop;                                // Common stop mode?
   Bool_t fIsIRQEnabled;                             // Event readout enabled?
+  Bool_t fIsThrCFDRaw;                              // Raw CFD thresholds
+  Bool_t fIsVeto;                                   // Is it a Veto module
   Char_t fCommandReply[128];                   // Messages back to DAQ control
  public:
   TVME_V874( Char_t*, Char_t*, FILE*, Char_t* );

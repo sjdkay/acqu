@@ -16,7 +16,9 @@
 //--Rev         JRM Annand   11th  Jul 2011  Try to improve speed
 //--Rev         JRM Annand   24th  Jan 2012  Save TCS event ID
 //--Rev         JRM Annand   25th  Jan 2012  Constructor set bits = 13
-//--Update      B. Oussena   22nd  Nov 2012  Add Send Event ID in SpyRead()
+//--Rev         B. Oussena   22nd  Nov 2012  Add Send Event ID in SpyRead()
+//--Rev         JRM Annand   17th  Sep 2013  Spy buff timeout 200 us
+//--Update      JRM Annand   27th  Sep 2013  Try pause() spy buff wait
 //
 //--Description
 //
@@ -46,7 +48,7 @@ enum{ ENADCBoards=300, EGeSiCAFile, EGeSiCAReg, EGeSiCAMode,
 enum{ EChanPerBlock = 16 };
 
 // Size of internal data buffer
-enum{ ESizeData = 16384, EGeSiCATimeout = 10000, EI2CTimeout = 2000000 }; 
+enum{ ESizeData = 16384, EGeSiCATimeout = 200, EI2CTimeout = 2000000 }; 
 
 enum{ EErrBufferEmpty = 1, EErrNoSLinkStart = 2, EErrSLinkErr = 3,
       EErrBuffersizeMismatch = 4, EErrNoCatchTrailer = 5};
@@ -108,6 +110,7 @@ class TVME_GeSiCA : public TVME_CATCH {
   UShort_t i2cRead(UShort_t);
   UShort_t i2cReadB(UShort_t);
   void i2cWriteChk( Int_t, Int_t, Int_t );
+  void pause(){ Int_t j=0; for(Int_t i=0; i<10000; i++)j++; }
 
   ClassDef(TVME_GeSiCA,1)   
     };
@@ -119,24 +122,29 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
   // Check that the module is active..ie has received a trigger
   // If any error detected return 0 words read, reset spy buffer
   // and write error block into data stream
+  //timespec del;
+  //del.tv_sec=0;
+  //del.tv_nsec=1000;
   
   UInt_t datum = 0;
   UInt_t* pStatus = (UInt_t*)fReg[EIDStatus];
   for( Int_t k=0; k<=EGeSiCATimeout; k++ ){  // NB <= JRMA
-    //    datum = Read(EIDStatus);
+    //datum = Read(EIDStatus);
     datum = *pStatus;
-    //    usleep(1);
     if( datum & 0x1 )break;
     if( k == EGeSiCATimeout ){
-      fprintf(fLogStream, "<GeSiCA %d Timeout> Buffer empty, event %d\n",
-	      fBaseIndex, fEXP->GetNEvent());
+      //fprintf(fLogStream, "<GeSiCA %d Timeout> Buffer empty, event %d\n",
+      //      fBaseIndex, fEXP->GetNEvent());
       SpyReset();
       return 0;
     }
+    //    usleep(1);
+    //    nanosleep(&del,&del);
+    // pause();
   }
   UInt_t* pDatum = (UInt_t*)fReg[EIDatum];
   // Examine header, the first data word...should be 0x0
-  //  UInt_t header = Read(EIDatum);
+  //UInt_t header = Read(EIDatum);
   UInt_t header = *pDatum;
   if( header != 0 ){
     ErrorStore( outBuffer,0x1 );
@@ -144,7 +152,7 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
     return 0;
   }
   // Check for error flag in 1st non-zero header datum
-  //  header = Read(EIDatum);
+  //header = Read(EIDatum);
   header = *pDatum;
   if( header & ECATCH_ErrFlag ){
     ErrorStore( outBuffer,0x1 );
@@ -153,7 +161,7 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
   }
   // Check consistency of data-buffer header and data-status register
   UInt_t nWord = header & 0xffff;
-  //  datum = Read(EIDStatus);
+  //datum = Read(EIDStatus);
   datum = *pStatus;
   if( nWord != ( (datum >> 16) & 0xfff) ){
     ErrorStore( outBuffer,0x4 );
@@ -166,10 +174,10 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
     return 0;
   }
   // Make nword reads from the spy buffer
-  //  for( UInt_t n=0; n<nWord; n++ ) fSpyData[n] = Read(EIDatum);
+  //for( UInt_t n=0; n<nWord; n++ ) fSpyData[n] = Read(EIDatum);
   for( UInt_t n=0; n<nWord; n++ ) fSpyData[n] = *pDatum;
   // Check last data word is the trailer and buffer status reg. is 0
-  //  datum = Read(EIDStatus);
+  //datum = Read(EIDStatus);
   datum = *pStatus;
   if((fSpyData[nWord-1] != ECATCH_Trailer) || datum  ){ 
     ErrorStore( outBuffer, 3 );                     // error code 3

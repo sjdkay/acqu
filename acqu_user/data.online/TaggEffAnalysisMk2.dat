@@ -1,0 +1,94 @@
+##-----------------------------------------------------------------------
+##--Author	JRM Annand   29th Apr 2003
+##--Update	JRM Annand... 1st Dec 2004
+##--Description
+##                *** Acqu++ <-> Root ***
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data 
+##
+## Parameter File: CBanalysis.dat (specified in CB.Offline)
+## Setup basic parameters of analysis to be used
+## This one sets up an analysis of CB-TAPS-Tagger data
+##
+##-----------------------------------------------------------------------
+##
+## The following give sample specifications for
+## handlers for flash or multihit ADCs or TDCs
+##
+## Catch-TDC, where a reference TDC channel has to be specified
+## The reference TDC channel contains the trigger time which is subtracted
+## from the other specified channels
+## CB TDC's
+##              #hits   start   stop    reference
+MultiADC:       3       1401    1911    1400
+#
+## Stuff to monitor time dependence of counting rates and the hit pattern
+## coming from the trigger box....the parameter is the setup file name
+RateMonitor: Tagger.Rate.dat
+#BitPattern:  Trigger.Pat
+##
+## Apparatus setup....
+## Raw analysis may be performed without Apparati
+##              Name            Class           	Setup file
+Apparatus:      Tagger           TA2Tagger   		TaggerTMk2_883.dat
+#Apparatus:      LinPol          TA2LinearPol            LinearPolapparatus.dat
+##
+## Turn on apparatus-level reconstruction
+Reconstruct-Analysis:
+##
+## Do some post initialisation...usually necessary
+Initialise:
+##
+## Setup of extra procedures to run at periodic intervals
+## The procedures are usually held in macro script files
+## Period...every N events
+##		N	Macro File	Macro Procedure
+#Period:	100000	PeriodMacro.C	PeriodMacro()
+#Period:		1000	linPolMacro.C	linPolMacro()
+##
+## EndFile...each time an input data file is closed
+#EndFile:		EndFileMacro.C  EndFileMacro()
+#EndFile:  
+##
+## Finish...when all input data files processed
+###Finish:		FinishMacro.C	FinishMacro()
+#Finish:  
+##
+## Save all accepted events (ie those which pass all data cuts) to a
+## ROOT file. Data saved in RAW format (ie ADC indices and values)
+#Save-Event:
+##
+## Histogram ALL defined single value ADC's
+#Display: All
+## Histogram QDCs
+## Tagger QDCs
+# Display: ADC 800  1183
+## Microscope QDCs
+#Display: ADC 1184 1279
+#
+## Pb-Glass, paddle QDCs
+Display: ADC 1280 1375
+##
+## Display Reference TDC
+Display: ADC 1400 1400
+## CB CATCH TDC's, 1st hit
+#Display: MultiHit 1432 1948 2000 -6000 -8000 0
+#
+## Display blocks of scalers
+Display: Scaler 000 191
+Display: SumScaler 0 191
+#Display: Scaler 300 311
+#Display: SumScaler 300 311
+Display: Scaler 400 751
+Display: SumScaler 400 751
+#
+## Time dependence of individual scaler rates and ratios
+Display: Rate	0	2500
+Display: Rate	1	2500
+Display: Rate	2	2500
+##
+## Trigger pattern, and e-beam polarisation bits
+#Display: Pattern	0 16 0 16
+#Display: Pattern	1 8 0 8
+##
+##
+## END OF FILE

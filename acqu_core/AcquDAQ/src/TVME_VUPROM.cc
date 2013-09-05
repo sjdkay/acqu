@@ -12,7 +12,8 @@
 //--Rev 	JRM Annand   29th Nov 2012 Timeout 100 us Event ID read
 //--Rev  	JRM Annand    1st Dec 2012 Scaler read only, Ref TDC width ctrl
 //--Rev 	JRM Annand    2nd Dec 2012 Mod RAM download (buff size & <=) 
-//--Update 	JRM Annand   28th Feb 2013 Modified L1,L2 prescale setup 
+//--Rev 	JRM Annand   28th Feb 2013 Modified L1,L2 prescale setup 
+//--Update 	JRM Annand   10th Sep 2013 Reg. map changes for expanded DAQ 
 //
 //--Description
 //                *** AcquDAQ++ <-> Root ***
@@ -110,9 +111,16 @@ VMEreg_t VUPROMreg[] = {
   {0x2550,      0x0,  'l', 0},       // Interrupt delay CPU-5
   {0x2560,      0x0,  'l', 0},       // Interrupt delay CPU-6
   {0x2570,      0x0,  'l', 0},       // Interrupt delay CPU-7
-  {0x25a0,      0x0,  'l', 0},       // Fast clear delay (all)
+  {0x2580,      0x0,  'l', 0},       // Interrupt delay CPU-8
+  {0x2590,      0x0,  'l', 0},       // Interrupt delay CPU-9
+  {0x25a0,      0x0,  'l', 0},       // Interrupt delay CPU-10
+  {0x25b0,      0x0,  'l', 0},       // Interrupt delay CPU-11
+  {0x25c0,      0x0,  'l', 0},       // Interrupt delay CPU-12
+  {0x25d0,      0x0,  'l', 0},       // Interrupt delay CPU-13
+  {0x25f0,      0x0,  'l', 0},       // Fast clear delay (all)
   {0x2a00,      0x0,  'l', 0},       // Event ID (send) register
   {0x2a10,      0x0,  'l', 0},       // Event ID (send) trigger
+  {0x2a20,      0x0,  'l', 0},       // Event ID status
   {0x2e00,      0x0,  'l', 0},       // Read back debug switch
   {0x2e10,      0x0,  'l', 0},       // Set debug output 0
   {0x2e20,      0x0,  'l', 0},       // Set debug output 1
@@ -138,7 +146,7 @@ TVME_VUPROM::TVME_VUPROM( Char_t* name, Char_t* file, FILE* log,
   fL1Width = 1;                            // default width output 1
   fL1Delay = fL2Delay = 2;                 // default internal delays
   fRefTDCWidth = 5;
-  for(Int_t i=0; i<16; i++) fIntDelay[i] = 0;
+  for(Int_t i=0; i<EVU_MaxCPU; i++) fIntDelay[i] = 0;
   for(Int_t i=0; i<16; i++) fInputPrescale[i] = 0;
   for(Int_t i=0; i<16; i++) fL1Prescale[i] = 0;
   for(Int_t i=0; i<16; i++) fL2Prescale[i] = 0;
@@ -168,12 +176,12 @@ void TVME_VUPROM::SetConfig( Char_t* line, Int_t key )
   Int_t i,j;
   switch( key ){
   case EVUP_EnCPU:
-    // Input an 8-bit number to specify which CPUs are enabled. Bit set to 1 = enabled 
+    // Input number to specify which CPUs are enabled. Bit set to 1 = enabled 
     if(sscanf(line,"%x",&fEnableCPU) != 1)
       PrintError(line,"<CPU enable switch>",EErrFatal);
     break;
   case EVUP_IntDelay:
-    // Set the interrupt delays of up to 8 coupled CPUs
+    // Set the interrupt delays of up to 14 coupled CPUs
     if(sscanf(line,"%d%d",&i,&j) != 2)
       PrintError(line,"<Interrupt Delay Spec. Format>",EErrFatal);
     if(i >= EVU_MaxCPU)
@@ -295,7 +303,7 @@ void TVME_VUPROM::PostInit( )
   Write(EVU_L2Delay,fL2Delay);             // Set L2 strobe delay
   Write(EVU_RefTDCWidth,fRefTDCWidth);     // Set Ref TDC output width
   // Interrupt delays cpu's 0-7
-  for( Int_t i=0; i<8; i++ )
+  for( Int_t i=0; i<EVU_MaxCPU; i++ )
     SetIntDelay(i, fIntDelay[i]);
   // Switch internal signals to debug outputs, if this is enabled
   if( fDebugOut[0] >= 0 ) SetDebugOut(0, fDebugOut[0]);
@@ -591,37 +599,12 @@ void TVME_VUPROM::SetPrescale(Int_t section, Int_t chan, Int_t prescale)
 void TVME_VUPROM::SetIntDelay(Int_t cpu, Int_t delay)
 {
   // write interrupt delay value (ns*10) for particular CPU
-  // 
-  Int_t creg;
-  // choose the register for CPU 0-7
-  switch(cpu){
-  case 0:
-    creg = EVU_IntDelay0;
-    break;
-  case 1:
-    creg = EVU_IntDelay1;
-    break;
-  case 2:
-    creg = EVU_IntDelay2;
-    break;
-  case 3:
-    creg = EVU_IntDelay3;
-    break;
-  case 4:
-    creg = EVU_IntDelay4;
-    break;
-  case 5:
-    creg = EVU_IntDelay5;
-    break;
-  case 6:
-    creg = EVU_IntDelay6;
-    break;
-  case 7:
-    creg = EVU_IntDelay7;
-    break;
-  default:
+  //
+  if( cpu >= EVU_MaxCPU ){
+    printf(" VUPROM Invalid CPU number: %d\n",cpu);
     return;
   }
+  Int_t creg = EVU_IntDelay0 + cpu;
   Write(creg, delay);
   return;
 }
@@ -681,7 +664,7 @@ void TVME_VUPROM::CmdExe(Char_t* input)
       sprintf(fCommandReply,"%s <Interrupt delay input Format>\n", parm);
       break;
     }
-    if( (i<0) || (i>7)){
+    if( (i<0) || (i>=EVU_MaxCPU)){
       sprintf(fCommandReply,"Interrupt delay: channel %d outside valid range\n", i);
       break;
     }      

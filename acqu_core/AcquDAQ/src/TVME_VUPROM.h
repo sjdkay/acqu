@@ -11,7 +11,8 @@
 //--Rev 	JRM Annand   28th Sep 2012 Pattern readout and extra ctrl fns
 //--Rev  	JRM Annand    1st Dec 2012 Scaler read only, Ref TDC width ctrl
 //--Rev 	JRM Annand    2nd Dec 2012 Mod RAM download (buff size & <=) 
-//--Update 	JRM Annand   28th Feb 2013 Modified L1,L2 prescale setup 
+//--Rev 	JRM Annand   28th Feb 2013 Modified L1,L2 prescale setup 
+//--Update 	JRM Annand   10th Sep 2013 Reg. map changes for expanded DAQ 
 //
 //--Description
 //                *** AcquDAQ++ <-> Root ***
@@ -31,6 +32,7 @@
 
 #include "TVMEmodule.h"
 //
+enum{ EVU_MaxCPU=14 };     // maximum number of CPUs VUPROM can handle
 // enumerator specifies internal register index
 // For register address offsets see VMEreg_t VUPROMreg
 enum{
@@ -73,16 +75,10 @@ enum{
   EVU_IRQ,
   EVU_TCS,
   EVU_IntDelay0,
-  EVU_IntDelay1,
-  EVU_IntDelay2,
-  EVU_IntDelay3,
-  EVU_IntDelay4,
-  EVU_IntDelay5,
-  EVU_IntDelay6,
-  EVU_IntDelay7,
-  EVU_FCDelay,
+  EVU_FCDelay = EVU_IntDelay0 + EVU_MaxCPU,
   EVU_EvID,
   EVU_TrigEvID,
+  EVU_StatEvID,
   EVU_ReadDebug,
   EVU_SetDebug0,
   EVU_SetDebug1,
@@ -92,7 +88,6 @@ enum{
   EVU_ScalerLoad,
   EVU_Scaler,
 };
-enum{ EVU_MaxCPU=8 };     // maximum number of CPUs VUPROM can handle
 
 class TVME_VUPROM : public TVMEmodule {
  protected:
@@ -156,9 +151,9 @@ class TVME_VUPROM : public TVMEmodule {
   Bool_t IsPattRead(){ return fIsPattRead; }
   Bool_t IsScalerRead(){ return fIsScalerRead; }
   // Getters for protected variables
-  Int_t GetEnableCPU(){ return fEnableCPU; }
+  virtual Int_t GetEnableCPU(){ return fEnableCPU; }
   Int_t GetFCDelay(){ return fFCDelay; }
-  Int_t GetIntDelay(Int_t i){ return fIntDelay[i]; }
+  virtual Int_t GetIntDelay(Int_t i){ return fIntDelay[i]; }
   Int_t GetRAMid(){ return fRAMid; }
   Int_t GetInputMask(){ return fInputMask; }
   Int_t GetInputPrescale(Int_t i){ return fInputPrescale[i]; }

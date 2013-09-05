@@ -1,0 +1,29 @@
+##-----------------------------------------------------------------------
+##--Author	JRM Annand   13th Jan 2004
+##--Update	JRM Annand... 1st Dec 2004
+##--Description
+##                *** Acqu++ <-> Root ***
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data 
+##
+## Parameter File: FPcommServer.Offline
+## Configuration file for DataServer (data input for analysis)
+##
+##-----------------------------------------------------------------------
+## Number of Input streams (sources of data), Record length to write data
+## and switch 0/1 = no/yes to control data write
+##              Number streams	Record Len	Save Data
+Input-Streams:	1		32786		1
+##
+## Optional directory spec. If not specified File-Names must contain the full
+## directory path
+#File-Directory:	/scratch/jrma/TaggerTest/
+##
+## Specify each input stream
+## From disk file, ACQU (Mk1) format, save any output to file (save=1)
+## Input data record length, Output data record length
+##
+##            	Source	Format	Save?	Node		Port	Buffers	MarkID
+#Stream-Spec:	Network	Mk1	0	laddertest	3020	32	400
+Stream-Spec:	Network	Mk1	0	taggerdaq1	3020	32	400
+##
+## END

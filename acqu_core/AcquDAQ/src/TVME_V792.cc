@@ -60,7 +60,7 @@ TVME_V792::TVME_V792( Char_t* name, Char_t* file, FILE* log,
   // Basic initialisation 
   fCtrl = NULL;                            // no control functions
   fType = EDAQ_ADC;                        // analogue to digital converter
-  fNreg = fMaxReg = EV7XX_ID2 + 1;         // Last "hard-wired" register
+  fNreg = EV7XX_ID2 + 1;                   // Last "hard-wired" register
   fHardID = 792;                           // ID read from hardware
   fNBits = 12;                             // 12-bit ADC
   fIsThreshold = kTRUE;                    // default suppress pedestals

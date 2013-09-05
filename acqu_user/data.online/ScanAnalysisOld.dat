@@ -1,0 +1,27 @@
+##-----------------------------------------------------------------------
+##--Author      JRM Annand      29th Apr 2003
+##--Update      Ken Livingston  19th Mar 2004
+##--Description
+##                *** Acqu++ <-> Root ***
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data
+##
+## Parameter File: LinearPolanalysis.dat (specified in ROOTsetup.dat)
+## Setup basic parameters of analysis to be used
+## This one sets up an "online" analysis for the Linear Polarised Photon system in Mainz
+##
+##-----------------------------------------------------------------------
+##Initialise:
+MultiADC:       3       1401    1911    1400
+# Apparatus setup
+# Raw analysis may be performed without Apparati
+#               Name            Class           Setup file
+Apparatus:      TAGG          TA2KensTagger   	KensTaggerScan.dat
+Apparatus:      LinPol          TA2LinearPol    LinearPolapparatus.dat
+#
+Reconstruct-Analysis:
+# Do some post initialisation...usually necessary
+Initialise:
+#
+# Histogram ALL defined single value ADC's
+#Display: All
+#

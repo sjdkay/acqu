@@ -1,0 +1,15 @@
+##--Rev 	JRM Annand... 1st Oct 2005  New DAQ software
+##--Update	JRM Annand...
+##--Description
+##                *** AcquDAQ++ <-> Root ***
+## DAQ for Sub-Atomic Physics Experiments.
+##
+## Read scalers from multiplicity VUPROM
+##
+##              Hex Base	#Registers	Module type	MapSize
+BaseSetup:	0		0		Scaler		4000
+#Hardware-ID: 12120364
+Hardware-ID: 1302156d
+En-Scaler-Read:
+#	End of File
+#

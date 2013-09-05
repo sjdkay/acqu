@@ -16,7 +16,9 @@
 //--Rev         JRM Annand   11th  Jul 2011  Try to improve speed
 //--Rev         JRM Annand   24th  Jan 2012  Save TCS event ID
 //--Rev         JRM Annand   25th  Jan 2012  Constructor set bits = 13
-//--Update      B. Oussena   22nd  Nov 2012  Add Send Event ID in SpyRead()
+//--Rev         B. Oussena   22nd  Nov 2012  Add Send Event ID in SpyRead()
+//--Rev         JRM Annand   17th  Sep 2013  Spy buff timeout 200 us
+//--Update      JRM Annand   27th  Sep 2013  Try pause() spy buff wait
 //
 //
 //--Description
