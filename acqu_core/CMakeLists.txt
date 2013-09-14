@@ -57,23 +57,17 @@ endif()
 
 
 # install some scripts to the bin directory
-# misuse the configure_file for that...
+# by creating symlinks
 file(GLOB CORE_EXTRA_SCRIPTS "scripts/*")
 foreach(f ${CORE_EXTRA_SCRIPTS})
   get_filename_component(f_name ${f} NAME)
-  configure_file(${f} "${EXECUTABLE_OUTPUT_PATH}/${f_name}" COPYONLY)
+  add_custom_target(link_${f_name} ALL
+    COMMAND ${CMAKE_COMMAND} -E create_symlink "${f}" "${EXECUTABLE_OUTPUT_PATH}/${f_name}")
 endforeach()
 
 # now build the binaries (but only if DAQ mode is on!),
 # the libs EG and Foam are yet another ROOT libraries
 if(ACQU_DAQ)
-  # we add many additional files marked as "headers"
-  # so they appear automatically in QtCreator
-  # but we set the policy to not follow symlinks
-  cmake_policy(SET CMP0009 NEW)
-  file(GLOB_RECURSE ADDITIONAL_FILES "*/macros/*" "*/data/*")
-  set_source_files_properties(${ADDITIONAL_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
-
   foreach(exesrc ${CORE_EXESRCS})
     # guess the executable name from the source file.
     # Remove leading "Main" (if any) and trailing ".cc"
@@ -85,7 +79,7 @@ if(ACQU_DAQ)
     # add the exe as target, only in DAQ mode
     # so targets here do not to interfere with
     # targets in acqu_user
-    add_executable(${EXENAME} ${exesrc} ${ADDITIONAL_FILES})
+    add_executable(${EXENAME} ${exesrc})
     set_target_properties(${EXENAME}
       PROPERTIES OUTPUT_NAME ${EXENAME})
     target_link_libraries(${EXENAME} ${CORE_LIBS})
