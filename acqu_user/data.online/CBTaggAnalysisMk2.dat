@@ -43,7 +43,7 @@ BitPattern:  Trigger.Pat.dat
 ## Apparatus setup....
 ## Raw analysis may be performed without Apparati
 ##              Name            Class           	Setup file
-Apparatus:      Misc	        TA2GenericApp  		TrigMisc.dat.13.07.07
+#Apparatus:      Misc	        TA2GenericApp  		TrigMisc.dat.13.07.07
 Apparatus:      TAGG            TA2Tagger   		TaggerMk2_883.dat
 Apparatus:      CB              TA2CrystalBall		CB_PID.dat
 #Apparatus:      MWPC	        TA2GenericApp  		MWPC_Hits.dat
