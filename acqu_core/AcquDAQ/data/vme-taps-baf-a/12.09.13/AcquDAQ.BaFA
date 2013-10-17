@@ -31,7 +31,6 @@ Module: CAEN_V874  v874_c	Module_12.dat		2c000000   	20384		22		12
 Module: CAEN_V874  v874_d	Module_13.dat		2d000000   	20416		22		12
 Module: CAEN_V874  v874_e	Module_14.dat		2e000000   	20448		22		12
 Module: CAEN_V874  v874_f	Module_15.dat		2f000000   	20480		22		12
-#
 # Switch this to VITEC card
 IRQ-Ctrl: vit_0
 #IRQ-Ctrl: v874_0

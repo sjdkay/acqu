@@ -1,9 +1,9 @@
 ###
 Description: BaF Sector B readout
-File-Name: /scratch/TAPS  32    500000	32768   ENet	32768  5011
-#File-Name: scratch/TAPS  32   	500000	32768 No-Store  32768  5011
+File-Name: /scratch/TAPS  32   500000	32768   ENet	32768  5011
+#File-Name: scratch/TAPS 32   	500000	32768 No-Store  32768  5011
 #                      Freq
-Event-Counters:	       0	0
+Event-Counters:	       0     0
 Start-Run: 0
 #
 #Control:  Local    0     0
@@ -11,7 +11,7 @@ Start-Run: 0
 #Control:   ENetSlave  localhost 6020
 Control:    Slave      0 0
 #Control:   GUI-Local  0 0
-
+#
 #	module	   Name		configFile		BaseAdr		BaseIndex	Nchannel	NBits
 Module:	KPH_I686   kphi686_0	kphi686.dat		0		0
 Module: KPH_VITEC  vit_0	vitec_0.dat		0000		0		0
@@ -35,3 +35,4 @@ Module: CAEN_V874  v874_f	Module_15.dat		2f000000   	21480		22		12
 IRQ-Ctrl: vit_0
 #IRQ-Ctrl: v874_0
 Synch-Ctrl: vit_0 400
+########### End of File #######################

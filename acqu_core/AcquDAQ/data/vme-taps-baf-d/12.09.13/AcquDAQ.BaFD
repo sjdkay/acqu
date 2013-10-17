@@ -1,9 +1,9 @@
 ###
 Description: BaF Sector D readout
 File-Name: /scratch/TAPS  32   500000	32768   ENet	32768  5013
-#File-Name: scratch/TAPS  32   	500000	32768 No-Store  32768  5013
+#File-Name: scratch/TAPS 32   	500000	32768 No-Store  32768  5013
 #                      Freq
-Event-Counters:	       0	0
+Event-Counters:	       0     0
 Start-Run: 0
 #
 #Control:  Local    0     0
@@ -31,7 +31,6 @@ Module: CAEN_V874  v874_c	Module_12.dat		2c000000   	23384		22		12
 Module: CAEN_V874  v874_d	Module_13.dat		2d000000   	23416		22		12
 Module: CAEN_V874  v874_e	Module_14.dat		2e000000   	23448		22		12
 Module: CAEN_V874  v874_f	Module_15.dat		2f000000   	23480		22		12
-#
 # Switch this to VITEC card
 IRQ-Ctrl: vit_0
 #IRQ-Ctrl: v874_0

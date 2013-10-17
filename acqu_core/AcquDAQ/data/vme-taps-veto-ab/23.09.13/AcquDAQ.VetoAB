@@ -1,9 +1,9 @@
 ###
 Description: Veto Sector AB readout
-File-Name: scratch/TAPS 32   	500000	32768   ENet	32768  5016
+File-Name: /scratch/TAPS  32   500000	32768   ENet	32768  5016
 #File-Name: scratch/TAPS 32   	500000	32768 No-Store  32768  5016
 #                      Freq
-Event-Counters:	       0	0
+Event-Counters:	       0     0
 Start-Run: 0
 #
 #Control:  Local    0     0
