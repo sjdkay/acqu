@@ -63,7 +63,6 @@ private:
 	
 	void	LoadDetectors(TA2DataManager* parent, Int_t depth);
 	void 	ApplyCaLib();
-	Int_t	GetRunNumber();
 
 protected:
 	Int_t			fRunNumber;
@@ -77,6 +76,8 @@ protected:
     TA2Taps* 				fTAPS;       					// pointer to TAPS
     TA2TAPS_BaF2* 			fBaF2PWO;       				// pointer to the BaF2 (or the BaF2/PWO) array
     TA2TAPS_Veto* 			fVeto;           				// pointer to the TAPS Vetos
+    
+	Int_t	GetRunNumber();
     
 public:
     TA2AccessSQL(const char* name, TA2Analysis* analysis);
