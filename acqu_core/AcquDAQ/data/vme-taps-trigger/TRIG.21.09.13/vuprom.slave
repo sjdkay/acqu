@@ -8,7 +8,7 @@
 BaseSetup:	0		0		Scaler		4000
 Hardware-ID: 13092608
 Enable-CPU: 7ff
-Int-Delay:  0 1200
+Int-Delay:  0 1
 Int-Delay:  1 1200
 Int-Delay:  2 1200
 Int-Delay:  3 1200
@@ -19,8 +19,8 @@ Int-Delay:  7 1200
 Int-Delay:  8 1200
 Int-Delay:  9 1200
 Int-Delay:  10 1200
-Int-Delay:  11 1200
-Int-Delay:  12 1200
+Int-Delay:  11 1
+Int-Delay:  12 1
 Int-Delay:  13 1
 ##
 Set-Debug-Out: 0 218
