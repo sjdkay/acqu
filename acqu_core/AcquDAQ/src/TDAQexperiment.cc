@@ -682,6 +682,7 @@ void TDAQexperiment::RunIRQ()
       (fSupervise->GetExpCtrlMode() == EExpCtrlNetSlave) )
     fSupervise->ExecAutoStart();
   UInt_t nevID = 0;
+  UInt_t nevIDprev;
   for( ; ; ){
     fIRQMod->WaitIRQ();
     out = fEventBuff;
@@ -828,6 +829,9 @@ void TDAQexperiment::RunIRQ()
 	*/
       }
     }
+    if( nevID != (nevIDprev+1) )
+      printf("nevID=%d  nevIDprev=%d\n",nevID,nevIDprev);
+    nevIDprev = nevID;
     BuffStore(&out, EEndEvent);
     StoreEvent( (Char_t*)(out) );
     // Check file length

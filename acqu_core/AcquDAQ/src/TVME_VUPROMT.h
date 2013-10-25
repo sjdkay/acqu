@@ -158,6 +158,9 @@ inline void TVME_VUPROMT::SendEventID(UInt_t ID)
   // Send Event ID to remote system
   Write(EVUT_EvID, ID);        // load the register
   Write(EVUT_TrigEvID, 1);     // trigger the sending
+  UInt_t id = Read(EVUT_EvID);
+  if(id != ID)
+    printf("VUPROM event id reg: wrote %d, read back %d\n",ID,id);
 }
 
 //-----------------------------------------------------------------------------

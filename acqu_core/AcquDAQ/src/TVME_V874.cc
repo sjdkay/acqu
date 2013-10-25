@@ -2,7 +2,8 @@
 //--Rev 	
 //--Rev         B. Oussena   5th Feb 2013  Fix bug in ReadIRQ()
 //--Rev         JRM Annand  25th Sep 2013  Raw CFD thresholds
-//--Update      JRM Annand  26th Sep 2013  Ped/LED control Veto version
+//--Rev         JRM Annand  26th Sep 2013  Ped/LED control Veto version
+//--Update      JRM Annand  24th Oct 2013  Mod threshold init like old TAPS
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -81,7 +82,7 @@ static Map_t k874Keys[] = {
   {"Clear-Time:",         EV874_CLRTime},
   {"V-Set:",              EV874_Vset},
   {"V-Off:",              EV874_Voff},
-  {"Suppress-Pedestal:",  EV874_EnThresh},
+  {"Enable-Thresholds:",  EV874_EnThresh},
   {"Suppress-Overflow:",  EV874_EnOvFlow},
   {"Common-Stop:",        EV874_ComStop},
   {"Ped-LG:",             EV874_PedLG},
@@ -122,9 +123,15 @@ TVME_V874::TVME_V874( Char_t* name, Char_t* file, FILE* log,
   fIsVeto = kFALSE;                        // default a BaF2 module
   fADCoffset = 8;                          // 1st valid internal data index
   // Turn off unused BaF2 channels
+  for(Int_t i=0; i<8; i++){ fThresh[i] = 0x1ff; }  // 0-7 off
+  for(Int_t i=8; i<28; i++){ fThresh[i] = 0x1; }   // default for used channels 8-27
+  for(Int_t i=28; i<30; i++){ fThresh[i] = 0x0; }  // no thr. for bit pattern 28,29
+  for(Int_t i=30; i<32; i++){ fThresh[i] = 0x1ff; }// 30,31 off
+  /*
   for(Int_t i=0; i<4; i++){ fThresh[i] = 0x1ff; }  // 0-3 off
   for(Int_t i=30; i<32; i++){ fThresh[i] = 0x1ff; }// 30,31 off
   for(Int_t i=4; i<8; i++){ fThresh[i] = 0x1; }    // TDCs have some data
+  */
   for(Int_t i=0; i<4; i++){
     fPedLG[i] = fPedLGS[i] = fPedSG[i] = fPedSGS[i] = 4000;
     // 50 mV discriminator threshold approx
@@ -317,17 +324,25 @@ void TVME_V874::ReadIRQ( void** outBuffer )
   // readout aborted and a software reset made
   // This version decodes a single event and then resets the data buffer
   //
-  UShort_t status1 = Read(EV874_IStatus1);    // read status reg. for data avail
-  if( !(status1 & 0x1) ) return;              // no data in buffer
-  /*
-  if( (status1 & 0x4) ){                      // check if busy
-    fprintf(fLogStream,"<V874 busy, Status = %x (hex)>\n", status1);
+  UShort_t status1;
+  Int_t i;
+  for(i=0; i<EV874_Timeout; i++){
+    status1 = Read(EV874_IStatus1);    // read status reg. for busy signal
+    if( !(status1 & 0x4) ) break;;     // OK not busy
+  }
+  // did busy timeout...error if so
+  if( i == 100 ){
     ErrorStore(outBuffer, EErrDataFormat);
     ResetData();
     return;
   }
-  */
-  Int_t i = EV874_IOutBuff;
+  if (!(status1 & 0x1)){
+    //printf("No data in board - resetting\n");
+    ErrorStore(outBuffer, EErrDataFormat);
+    ResetData();
+    return;
+  }
+  i = EV874_IOutBuff;
   UInt_t datum = Read(i++);                 // data header
   if( (datum & 0x7000000) != 0x2000000 ){   // check its a header word
     ErrorStore(outBuffer, EErrDataFormat);
@@ -375,7 +390,7 @@ void TVME_V874::PostInit( )
   if( fIsVeto ){
     fADCoffset = 12;
     for(Int_t i=0; i<12; i++) fThresh[i] = 0x1ff;
-    for(Int_t i=12; i<20; i++) fThresh[i] = 0x1;
+    for(Int_t i=12; i<28; i++) fThresh[i] = 0x3;
   }
   // Specialist V874
   Reset();                         // software reset

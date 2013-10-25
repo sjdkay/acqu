@@ -2,7 +2,8 @@
 //--Rev 	
 //--Rev         B. Oussena   5th Feb 2013  Fix bug in ReadIRQ()
 //--Rev         JRM Annand  25th Sep 2013  Raw CFD thresholds
-//--Update      JRM Annand  26th Sep 2013  Ped/LED control Veto version
+//--Rev         JRM Annand  26th Sep 2013  Ped/LED control Veto version
+//--Update      JRM Annand  24th Oct 2013  Mod threshold init like old TAPS
 //--Description
 //                *** AcquDAQ++ <-> Root ***
 // DAQ for Sub-Atomic Physics Experiments.
@@ -30,7 +31,8 @@
 enum {
   EV874_NOutBuff = 512,
   EV874_NThresh = 32,
-  EV874_NAux = 128
+  EV874_NAux = 128,
+  EV874_Timeout = 100
 };
 
 // Address indices for main-board registers
