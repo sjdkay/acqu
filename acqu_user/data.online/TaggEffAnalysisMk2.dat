@@ -71,7 +71,7 @@ Display: ADC 1280 1375
 ## Display Reference TDC
 Display: ADC 1400 1400
 ## CB CATCH TDC's, 1st hit
-#Display: MultiHit 1432 1948 2000 -6000 -8000 0
+Display: MultiHit 1432 1948 1000 -10000 10000 0
 #
 ## Display blocks of scalers
 Display: Scaler 000 191

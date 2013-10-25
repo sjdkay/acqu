@@ -20,7 +20,7 @@
 ## CB TDC's
 ##              #hits   start   stop    reference
 MultiADC:       3       1401    1911    1400
-MultiADC:       3       2002    2767    2000
+MultiADC:       3       2001    2767    2000
 ## Paolo MultiADC:       3       2002    2767    4608
 #
 # Full MWPC TDC configuration
@@ -100,7 +100,7 @@ Display: ADC 2000 2000
 #Display: MultiHit 1401 1410 1000 -6000  6000 0
 #
 #Display: MultiHit 1400 1400 1000 -3500  3500 0
-#Display: MultiHit 1432 1784 1000 -3500 3000 0
+Display: MultiHit 1432 1784 1000 -5500 3000 0
 #
 #Cherenkov TDC
 Display: MultiHit 2001 2007 1000 -5000 1000 0
@@ -110,14 +110,14 @@ Display: MultiHit 2001 2007 1000 -5000 1000 0
 Display: MultiHit 2008 2031 1000 -5000 1000 0
 ##
 ## CB TDCs
-Display: MultiHit 2032 2751 3000 -5000 1000 0
+#Display: MultiHit 2032 2751 3000 -5000 1000 0
 ##
 ##
 ## WC CATCH TDC's
-Display: MultiHit 4000 4607 1000 -30000 70000 0
+#Display: MultiHit 4000 4607 1000 -30000 70000 0
 ##Display: MultiHit 4000 4639 1000 -7000 5000 0
 #
-#Display: MultiHit 4000 4511 1000 -7000 5000 0
+Display: MultiHit 4000 4511 1000 -7000 5000 0
 #
 ## CB SADC's pedestal
 #Display: MultiHit 3352 3383 100 6000 7000 0

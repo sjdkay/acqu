@@ -26,6 +26,9 @@ MultiADC:       3       29193   29319     29192
 ## coming from the trigger box....the parameter is the setup file name
 #RateMonitor: Trigger.Rate.dat
 #BitPattern:  Trigger.Pat.dat
+#
+# TAPS bit pattern
+BitPattern: TAPS.pat
 ##
 ## Apparatus setup....
 ## Raw analysis may be performed without Apparati
@@ -94,6 +97,14 @@ Display: SumScaler 0 95
 #Display: Pattern	2 16 0 16
 #Display: Pattern-N	1 32 0 32
 #
+# BaF2 CFD pattern
+Display: Pattern       0 384 0 384
+# BaF2 LED1 pattern
+Display: Pattern       1 384 0 384
+# BaF2 LED2 pattern
+Display: Pattern       2 384 0 384
+# Veto LED pattern
+Display: Pattern       3 384 0 384
 #Display: 2D 1098 200 0 4000 2010M0 200 -2600 -2200
 #Display: 2D 1098 200 0 4000 1096   200  0     4000
 #Display: 2D 1164 200 0 4000 2043M0 200 -2500 -500

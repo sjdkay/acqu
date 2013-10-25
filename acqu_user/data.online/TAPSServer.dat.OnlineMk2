@@ -22,7 +22,7 @@ File-Directory:	scratch/
 ## Specify each network-socket input stream
 ##            	Source	Format	Save?	Node	   Port	Buffers MkID	Swap
 #
-Stream-Spec:	Network	Mk2	0	vme-taps-trigger 5000 128	400
+Stream-Spec:	Network	Mk2	0	vme-taps-trigger 5000 64	400
 File-Name:	tapstrig	0	0
 #
 Stream-Spec:	Network	Mk2	0	vme-taps-baf-a 5010 128	400
