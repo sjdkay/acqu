@@ -93,9 +93,10 @@ Initialise:
 ###-FASTBUS QDCs-->>Display: ADC 1216 1263
 #
 ## (PID) Histogram ADCs 100 - 131
-#Display: ADC 100 131
+Display: ADC 100 131
 ##
 ## Display of multihit stuff etc.
+Display: MultiHit 2001 2003 1000 -5000 3000 0
 ##
 ## Display Trigger TDCS
 #
@@ -126,7 +127,7 @@ Initialise:
 ##
 ## PID TDCs
 #Display: MultiHit 2001 2006 1000 -3000 2000 0
-#Display: MultiHit 2008 2031 1000 -5000 -2000 0
+Display: MultiHit 2008 2031 1000 -5000 -2000 0
 ##
 ## Tagger CATCH TDC's, 2nd hit
 #Display: MultiHit 1000 1127 2000 -1000 1000 0
@@ -175,8 +176,8 @@ Initialise:
 #Display: ADC 30600
 ##
 ## TAPS
-#Display: ADC 20000 20511
-#Display: ADC 21000 21511
+Display: ADC 20000 20511
+Display: ADC 21000 21511
 #Display: ADC 22000 22511
 #Display: ADC 23000 23511
 #Display: ADC 24000 24511
@@ -186,6 +187,7 @@ Initialise:
 #Display: ADC 28000 28511
 #Display: ADC 29000 29191
 Display: ADC 29192 29192
+Display: MultiHit 29193 29319 1000 -10000 0000 0             
 ## Display blocks of scalers
 Display: Scaler 0 175
 Display: SumScaler 0 175
