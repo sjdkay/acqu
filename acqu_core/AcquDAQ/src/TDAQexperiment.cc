@@ -829,7 +829,7 @@ void TDAQexperiment::RunIRQ()
 	*/
       }
     }
-    if( nevID != (nevIDprev+1) )
+    if(nevID>0 && nevID != (nevIDprev+1) )
       printf("nevID=%d  nevIDprev=%d\n",nevID,nevIDprev);
     nevIDprev = nevID;
     BuffStore(&out, EEndEvent);
