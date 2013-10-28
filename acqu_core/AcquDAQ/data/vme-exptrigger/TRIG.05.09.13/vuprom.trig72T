@@ -8,8 +8,9 @@
 ##              Hex Base	#Registers	Module type	MapSize  <-- Baya Added MapSize
 BaseSetup:	0		0		Scaler		4000
 #Hardware-ID: 1309095e
-Hardware-ID: 1309265f
-Enable-CPU: 27fb
+#Hardware-ID: 1309265f
+Hardware-ID: 13102462
+Enable-CPU: 37fB
 Int-Delay:  0 2000
 Int-Delay:  1 2000
 Int-Delay:  2 2000
@@ -25,15 +26,15 @@ Int-Delay:  11 2000
 Int-Delay:  12 0
 Int-Delay:  13 0
 FC-Delay: 100
-RAM-Download: 13
-Input-Mask: 1001
+RAM-Download: 72
+Input-Mask: 9001
 L1-Width: 14
 Strobe-Delay: 0 8
 Enable-TAPS: 0
 Set-M-Threshold: 0 1 2 3
-L2-Prescale: 0 15 15 15 15 15 15 15
+L2-Prescale: 0 0 0 0 15 15 15 0
 GUI-permit:
 #	End of File
 #
-L1-Prescale: 0 15 15 15 15 15 15 15
-Input-Prescale: 0 15 15 15 15 15 15 15 15 15 15 15 0 15 15 15
+L1-Prescale: 0 0 0 0 0 15 15 15
+Input-Prescale: 0 15 15 15 15 15 15 15 0 15 15 15 0 0 15 0

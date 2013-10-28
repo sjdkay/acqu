@@ -14,6 +14,8 @@ CAMAC-CNAF:	fffff	26	0	0	Init
 CAMAC-CNAF:	0	16	0	0	Init	
 CAMAC-CNAF:	fffff	25	0	0	Init	
 CAMAC-CNAF:     30      17      0       0       Init
+# 40mV
+#CAMAC-CNAF:     28      17      0       0       Init
 #CAMAC-CNAF:	60	17	0	0	Init
 ##
 #	End of File

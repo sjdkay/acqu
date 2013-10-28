@@ -10,8 +10,8 @@ Start-Run: 0
 ##Control:  Local    0     0
 #Control:   ENet	    localhost 4026
 #Control:   GUI-Local	    0 0
-#Control:   ENetSlave	    localhost 4026
-Control:  Slave    0     0
+Control:   ENetSlave	    localhost 4026
+#Control:  Slave    0     0
 #
 #	module	   Name		configFile
 Module:	KPH_I686   kphi686_0	kphi686.dat	0	0

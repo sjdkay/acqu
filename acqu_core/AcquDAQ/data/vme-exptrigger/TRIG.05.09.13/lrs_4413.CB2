@@ -19,5 +19,8 @@ CAMAC-CNAF:	fffff	25	0	0	Init
 # 250MeV
 #
 CAMAC-CNAF:     64      17      0       0       Init
+#
+# 180mV
+#CAMAC-CNAF:     B4      17      0       0       Init
 ##
 #	End of File

@@ -8,5 +8,6 @@
 ## Registers...512 data memory, 34 control, 32 threshold, 9 ROM
 ##              Hex Base	#Registers	Module type Mapsize
 BaseSetup:	0		0		ADC    	    9000
+Window: 0xffd8 0x28
 ##
 ##
