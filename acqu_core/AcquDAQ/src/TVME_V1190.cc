@@ -58,10 +58,11 @@ VMEreg_t V1190reg[] = {
 
 ClassImp(TVME_V1190)
 
-enum { EV1190_Threshold=200, EV1190_EdgeDet};
+enum { EV1190_Threshold=200, EV1190_EdgeDet, EV1190_Window};
 static Map_t k1190Keys[] = {
   {"Threshold:",          EV1190_Threshold},
   {"Edge-Detect:",        EV1190_EdgeDet},
+  {"Window:",             EV1190_Window},
   {NULL,                  -1}
 };
 
@@ -77,7 +78,7 @@ TVME_V1190::TVME_V1190( Char_t* name, Char_t* file, FILE* log,
   fType = EDAQ_ADC;                        // analogue to digital converter
   fNreg = EV1190_OutBuff + 1026; // Last "hard-wired" register
   fHardID = 0xa60400;                      // ID read from hardware
-  fNBits = 14;                             // 12-bit ADC
+  fNBits = 15;                             // 16-bit ADC
   AddCmdList( k1190Keys );                 // CAEN-specific setup commands
   fEdgeDet = 0x2;                          // leading edge
   fWindow = 0x28;
@@ -101,6 +102,11 @@ void TVME_V1190::SetConfig( Char_t* line, Int_t key )
     // 0 = pair, 1 trailing edge, 2 leading edge, 3 trailing and leading
     if( sscanf(line,"%i",&fEdgeDet) != 1 )
       { PrintError(line,"<Parse edge detection mode read>"); }
+    break;
+  case EV1190_Window:
+    // Time window, ofset and width
+    if( sscanf(line,"%i%i",&fWindowOffset,&fWindow) != 2 )
+      { PrintError(line,"<Parse window offset and width read>"); }
     break;
   default:
     // default try commands of TDAQmodule
