@@ -52,7 +52,7 @@ EventID-Send: vup0
 ##
 ## Event Synchronisation info provider module and event ID index
 EventID-Master: 400
-Synch-Ctrl: vup0 400
+#Synch-Ctrl: vup0 400
 ########### End of File #######################
 
 
