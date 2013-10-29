@@ -89,6 +89,7 @@
 #include "TVirtualModule.h"
 #include "TVME_VUPROM.h"
 #include "TVME_VUPROMT.h"
+#include "TVME_VUPROM_Scaler.h"
 #include "TVME_SIS3820.h"
 #include "TEPICSmodule.h"
 #include "TVME_V965.h"
@@ -459,6 +460,10 @@ void TDAQexperiment::AddModule( Char_t* line )
   case EGSI_VUPROMT:
     // VMEbus/CATCH - Trigger Controller (TAPS version)
     mod = new TVME_VUPROMT( name, file, fLogStream, line );
+    break;
+  case EGSI_VUPROM_Scaler:
+    // VUPROM Simple scaler module
+    mod = new TVME_VUPROM_Scaler( name, file, fLogStream, line );
     break;
   case ESIS_3820:
     // SIS 3820 I/O register and scaler
