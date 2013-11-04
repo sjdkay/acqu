@@ -129,9 +129,12 @@ void TVMEmodule::InitReg( VMEreg_t* list)
 { 
   // Setup set of registers
 
-  if( !fReg ){
+  if(!fReg){
     VMEreg_t* l = list;
-    while( l->offset != 0xffffffff ) { fNreg++; l++; }
+    while( l->offset != 0xffffffff ) {
+      fNreg += l->repeat+1; // respect the repeat property
+      l++;
+    }
     fMaxReg = fNreg;
     fReg = new void*[fMaxReg];
     fDW = new Int_t[fMaxReg];
