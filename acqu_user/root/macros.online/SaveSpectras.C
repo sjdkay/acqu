@@ -1,8 +1,4 @@
-// Peter Otte
-// 30.8.2011
-
 void SaveOpenSpectras() {
-
 char *spectra_names[] =    
 	{"CB-Spectra",
 	"TAPS-Spectra",
@@ -12,15 +8,15 @@ char *spectra_names[] =
 	"EPT-Spectra",
 	"PID-Spectra",
 	"MWPC-Spectra",
-	"Trigger-Spectra",
-	"Live-Times",
+	"Scaler-Spectra",
+	"Livetimes-Spectra",
 	"Physics-Spectra",
 	0};
 
 	printf("\nDelete all PNG images on a2kallisti:/home/a2cb/OnlineSpectra\n");
 
 	stringstream CmdStr;
-        CmdStr << "rm /home/a2cb/OnlineSpectra/*.png";
+        CmdStr << "rm /home/a2cb/acqu/OnlineSpectra/*.png";
         system(CmdStr.str().c_str());
 
 
@@ -30,7 +26,7 @@ char spectra_title[50];
 char spectra_filename[100];
 while (spectra_names[i]){
 	sprintf(spectra_title, "%s", spectra_names[i]);
-	sprintf(spectra_filename, "/home/a2cb/OnlineSpectra/%i %s.png", i, spectra_names[i]);
+	sprintf(spectra_filename, "/home/a2cb/acqu/OnlineSpectra/%i %s.png", i, spectra_names[i]);
    gSystem->ProcessEvents();
 
    if (gROOT->FindObject(spectra_title)) {
@@ -48,9 +44,9 @@ while (spectra_names[i]){
 
 
 	stringstream CmdStr2;
-        CmdStr2 << "scp /home/a2cb/OnlineSpectra/*.png a2cb@macrobusy:/home/a2cb/Spectra";
+        CmdStr2 << "scp /home/a2cb/acqu/OnlineSpectra/*.png a2cb@macrobusy:/home/a2cb/";
         system(CmdStr2.str().c_str());
 
-	printf("Finished saving all open spectras as PNG on a2cb@macrobusy:/home/a2cb/Spectra\n\n");
+	printf("Finished saving all open spectras as PNG on a2cb@macrobusy:/home/a2cb/\n\n");
 
 }
