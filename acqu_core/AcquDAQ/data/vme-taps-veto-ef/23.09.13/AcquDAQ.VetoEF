@@ -15,7 +15,7 @@ Control:    Slave      0 0
 #	module	   Name		configFile		BaseAdr		BaseIndex	Nchannel	NBits
 Module:	KPH_I686   kphi686_0	kphi686.veto		0		0
 Module: KPH_VITEC  vit_0	vitec_0.dat		0000		0		0
-Module: CAEN_V874  v874_0	Module_00.dat		40000000   	28000		18		12
+Module: CAEN_V874  v874_0	Module_00.dat		50000000   	28000		18		12
 Module: CAEN_V874  v874_1	Module_01.dat		41000000   	28032		18		12
 Module: CAEN_V874  v874_2	Module_02.dat		42000000   	28064		18		12
 Module: CAEN_V874  v874_3	Module_03.dat		43000000   	28096		18		12

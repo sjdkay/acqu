@@ -14,7 +14,7 @@ Control:   ENet	    vme-taps-trigger 4040
 #	module	   Name		configFile
 Module:	KPH_I686   kphi686_0	kphi686.dat		0	 0
 Module: KPH_VITEC   vit0        vitec_0.dat     0000    0       0
-Module: GSI_VUPROMT vup0        vuprom.TestQAC		0a000000 1000 96 32 
+Module: GSI_VUPROMT vup0        vuprom.CalibQAC		0a000000 1000 96 32 
 Module: GSI_VUPROMT vup1        vuprom.bafA     	01000000 0   6 8
 Module: GSI_VUPROMT vup2        vuprom.bafB     	02000000 0   6 8
 Module: GSI_VUPROMT vup3        vuprom.bafC     	03000000 0   6 8
@@ -38,7 +38,8 @@ Module: GSI_VUPROMT vup9        vuprom.vetoEF     	09000000 0   6 8
 Reset-Ctrl: kphi686_0
 #
 ## Interrupt control module
-IRQ-Ctrl: vit0
+#IRQ-Ctrl: vit0
+IRQ-Ctrl: vup0
 ##
 ## Trigger enable and TCS start/stop module, 
 ## and delay in usec after CATCH reset
@@ -50,7 +51,6 @@ EventID-Master: 400
 #
 ##
 ## Event Synchronisation info provider module and event ID index
-EventID-Master: 400
 #Synch-Ctrl: vup0 400
 ########### End of File #######################
 
