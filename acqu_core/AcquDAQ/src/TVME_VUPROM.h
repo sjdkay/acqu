@@ -74,6 +74,7 @@ enum{
   EVU_ACK,
   EVU_IRQ,
   EVU_TCS,
+  EVU_Helicity,
   EVU_IntDelay0,
   EVU_FCDelay = EVU_IntDelay0 + EVU_MaxCPU,
   EVU_EvID,

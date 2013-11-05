@@ -103,6 +103,7 @@ VMEreg_t VUPROMreg[] = {
   {0x2450,      0x0,  'l', 0},       // End of readout acknowledge
   {0x2460,      0x0,  'l', 0},       // IRQ reg.
   {0x2470,      0x0,  'l', 0},       // TCS Control
+  {0x2490,      0x0,  'l', 0},       // MAMI Beam Helicity  
   {0x2500,      0x0,  'l', 0},       // Interrupt delay CPU-0
   {0x2510,      0x0,  'l', 0},       // Interrupt delay CPU-1
   {0x2520,      0x0,  'l', 0},       // Interrupt delay CPU-2
@@ -230,7 +231,7 @@ void TVME_VUPROM::SetConfig( Char_t* line, Int_t key )
     // Enable readout of L1, L2 and multiplicity input patterns
     // In this case no trigger control is performed
     fIsPattRead = kTRUE;
-    fNChannel = 7;
+    fNChannel = 6+1+1; // patterns + multiplicity + helicity 
     fType = EDAQ_ADC;
     break;
   case EVUP_EnScalerRead:
@@ -483,6 +484,11 @@ void TVME_VUPROM::ReadIRQ( void** outBuffer )
   }
   datumlow = Read(EVU_RdMValue);          // read calculated multiplicity
   ADCStore( outBuffer, datumlow, fBaseIndex + j++ );
+
+  // also read the beam helicity bit register, only bit3-bit0 are of interest
+  datumlow = Read(EVU_Helicity);
+  ADCStore( outBuffer, datumlow, fBaseIndex + j++ );
+  // TODO: Check if Bit0 (sent from us) and Bit2 (received from MAMI) are equal
 }
 
 //-------------------------------------------------------------------------
