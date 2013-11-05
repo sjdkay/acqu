@@ -11,7 +11,8 @@ MultiADC:       3       2001    2767    2000
 ## MWPC TDCS
 MultiADC:       3       4000    4639    2000
 ## TAPS Multihit
-MultiADC:       3       29193   29320   29192
+#MultiADC:       3       29193   29320   29192
+MultiADC:       3       29224   29317   29223
 ##
 ## SG ADC read out in 3-sum mode (#hits is always 3)
 ## DC # channels summed for the pedestal (before signal leading edge)
@@ -25,31 +26,31 @@ MultiADC:       3       5000    5351    30      30      30
 #
 ## Stuff to monitor time dependence of counting rates and the hit pattern
 ## coming from the trigger box....the parameter is the setup file name
-RateMonitor: Trigger-RateT.dat
-BitPattern:  Trigger-Pattern.dat
+RateMonitor: ./data/monitor/Rate-CBTaggTAPS.dat
+BitPattern:  ./data/monitor/Trig-Pattern.dat
 ##
 ## Apparatus setup....
 ##              Name            Class           	Setup file
 Apparatus:      TAGG            TA2Tagger   		Apparatus-Tagger883.dat
 Apparatus:      CB              TA2CrystalBall		Apparatus-CB.dat
-#Apparatus: 	TAPS		TA2Taps			Apparatus-TAPS.dat 
+Apparatus: 	TAPS		TA2Taps			Apparatus-TAPS.dat 
 Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
 ##
 ## Turn on apparatus-level reconstruction
 #Reconstruct-Analysis:
 ##
 ## Specify physics analysis
-##			Name	Class		Config File
-#Physics-Analysis:	EtaM	TA2PhotoPhysics	CBTaggPhysics.dat
-#Physics-Analysis:	Pi0		TA2PhotoPhysics	CBTaggPi0Physics.dat
+##			Name	Class		        Config File
+#Physics-Analysis:	EtaM	TA2PhotoPhysics	        CBTaggPhysics.dat
+#Physics-Analysis:	Pi0	TA2PhotoPhysics	        CBTaggPi0Physics.dat
 ##
 ## Do some post initialisation...usually necessary
 Initialise:
 ##
 ## Macros
 #Period:  1000	linPolMacro.C	linPolMacro()
-#EndFile:		EndFileMacro.C  EndFileMacro()
-#Finish:		FinishMacro.C	FinishMacro()
+#EndFile:	EndFileMacro.C  EndFileMacro()
+#Finish:	FinishMacro.C	FinishMacro()
 ##
 ########################################################################
 ## Display histograms (someone should clean this up...)
