@@ -657,8 +657,8 @@ sub Init {
                  sprintf('VUPROM: Enable-CPU: %d', hex($InitCPUEnable)),
                  'Go:'
                 );
-  Logger("$prefix DAQ has been started. Checking CBInterrupt rate.",1);
-  CheckInterruptRate();
+  Logger("$prefix DAQ has been started. Checking trigger rate.",1);
+  CheckTriggerRate();
 
   # now, with an working TCS and interrupts, we can initialize the
   # all the remaining modules
@@ -669,8 +669,8 @@ sub Init {
                [] # whitelist defaults to empty, just for completeness
               );
 
-  Logger("$prefix Checking CBInterrupt rate again (should still run).",1);
-  CheckInterruptRate();
+  Logger("$prefix Checking trigger rate again (should still run).",1);
+  CheckTriggerRate();
 
 
   Logger("$prefix Issueing ConfigTCS: on $host_tcs via RSupervise",1);
@@ -755,10 +755,10 @@ sub Do {
 # Helper Functions #
 ####################
 
-sub CheckInterruptRate {
-  # poll the CB interrupt rate via EPICS...
+sub CheckTriggerRate {
+  # poll the TRIG:Trigger rate via EPICS...
   # we expect it to be more than 1000
-  my $chan = CA->new('DAQ:CBInterrupt');
+  my $chan = CA->new('TRIG:Trigger');
   CA->pend_io(1);
 
   my $tries = $retry;
@@ -766,10 +766,10 @@ sub CheckInterruptRate {
     $chan->get;
     CA->pend_io(1);
     if ($chan->value>1000) {
-      Logger("CBInterrupt rate: ".$chan->value." > 1000, Ok!",1);
+      Logger("TRIG:Trigger rate: ".$chan->value." > 1000, Ok!",1);
       last;
     } elsif ($tries==0) {
-      Logger("CBInterrupt rate did not exceed 1000. Last value: ".$chan->value);
+      Logger("TRIG:Trigger rate did not exceed 1000 (says EPICS). Last value: ".$chan->value);
     } else {
       $tries--;
       sleep(1);
