@@ -89,6 +89,9 @@ void ARSocket_t::Initialise()
       close(fID);
       PrintError("<ERROR ARSocket_t: socket listen>",EErrFatal);
     }
+    // put that output exactly before the blocking accept command
+    printf("\n<Waiting to connect to data receiver>\n");
+    fflush(stdout);
     Int_t acc = accept(fID,(sockaddr*)(&skname),(socklen_t*)(&sklen));
     if( acc == -1){
       close(fID);
