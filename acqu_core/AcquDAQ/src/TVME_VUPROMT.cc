@@ -126,7 +126,7 @@ TVME_VUPROMT::~TVME_VUPROMT( )
 void TVME_VUPROMT::SetConfig( Char_t* line, Int_t key )
 {
   // Configuration from file
-  Int_t i,j;
+  // unused Int_t i,j;
   switch( key ){
   case EVUPT_CFD:
     // Input CFD trigger parameters 

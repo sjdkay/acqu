@@ -79,8 +79,8 @@ class TVME_GeSiCA : public TVME_CATCH {
   Int_t* fSADCport;
   Int_t* fSADCchan;
   Int_t* fSADCthresh;
-  Int_t fSamStart[3];
-  Int_t fSamWidth[3];
+  UInt_t fSamStart[3];
+  UInt_t fSamWidth[3];
  public:
   TVME_GeSiCA( Char_t*, Char_t*, FILE*, Char_t* );
   virtual ~TVME_GeSiCA();
@@ -109,7 +109,7 @@ class TVME_GeSiCA : public TVME_CATCH {
   void i2cWriteB(UShort_t, UShort_t);
   UShort_t i2cRead(UShort_t);
   UShort_t i2cReadB(UShort_t);
-  void i2cWriteChk( Int_t, Int_t, Int_t );
+  void i2cWriteChk(Int_t, Int_t, UInt_t );
   void pause(){ Int_t j=0; for(Int_t i=0; i<10000; i++)j++; }
 
   ClassDef(TVME_GeSiCA,1)   

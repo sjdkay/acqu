@@ -192,7 +192,7 @@ void TVME_GeSiCA::ReadIRQorig( void** outBuffer )
 {
   // Read GeSiCA (SG-ADC) Data Buffer via Spy Buffer (VMEbus)
   //
-  UInt_t* pdatum;
+  volatile UInt_t* pdatum;
   Int_t adc_mode;                // 0: latch-all, 1: sparsified
   Int_t chip_id;                 // at the moment 1: top / 0: bottom chip
   Int_t sum;                     // total "integral" after ped. subtr.
@@ -888,7 +888,7 @@ void TVME_GeSiCA::i2cReset(){
 //------------------------------------------------------------------------------
 
 void TVME_GeSiCA::i2cWriteChk(Int_t i2cAddr, Int_t adc_side,
-				Int_t configVal )
+				UInt_t configVal )
 {
   // Write a value to the I2C and read it back to check
   UInt_t readVal =0; 
