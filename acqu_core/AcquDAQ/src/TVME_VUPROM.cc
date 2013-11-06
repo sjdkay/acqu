@@ -473,7 +473,7 @@ void TVME_VUPROM::ReadIRQ( void** outBuffer )
   datum[0] = Read(EVU_InPattRead);         // L1 and L2 Patterns
   datum[1] = Read(EVU_RdMPattern1);        // 1st set multiplicity
   datum[2] = Read(EVU_RdMPattern2);        // 2nd set multiplicity
-  Int_t j = fBaseIndex;
+  Int_t j = fBaseIndex; // ADC numbering starts at the fBaseIndex
   for( Int_t i=0; i<3; i++ ){
     datumlow = datum[i] & 0xffff;
     datumhigh = datum[i] >> 16;
@@ -483,11 +483,13 @@ void TVME_VUPROM::ReadIRQ( void** outBuffer )
     j++;
   }
   datumlow = Read(EVU_RdMValue);          // read calculated multiplicity
-  ADCStore( outBuffer, datumlow, fBaseIndex + j++ );
-
+  ADCStore( outBuffer, datumlow, j );
+  j++;
+  
   // also read the beam helicity bit register, only bit3-bit0 are of interest
   datumlow = Read(EVU_Helicity);
-  ADCStore( outBuffer, datumlow, fBaseIndex + j++ );
+  ADCStore( outBuffer, datumlow, j );
+  j++;
   // TODO: Check if Bit0 (sent from us) and Bit2 (received from MAMI) are equal
 }
 
