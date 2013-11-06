@@ -246,8 +246,10 @@ void TVME_V874::SetConfig( Char_t* line, Int_t key )
       PrintError(line,"<Parse CFD threshold read>");
       break;
     }
-    if( !fIsThrCFDRaw )
-      for(Int_t i=0; i<4; i++){ fThrCFD[i] = DACconv(val[i]); }
+    for(Int_t i=0; i<4; i++){ 
+      if( fIsThrCFDRaw ) fThrCFD[i] = val[i]; 
+      else fThrCFD[i] = DACconv(val[i]); 
+    }
     break;
   case EV874_ThrLED1:
     // 4 LED1 threshold values, in mV (positive)
