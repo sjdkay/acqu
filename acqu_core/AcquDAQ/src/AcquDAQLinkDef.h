@@ -55,6 +55,7 @@
 #pragma link C++ class TVME_VUPROM+;
 #pragma link C++ class TVME_VUPROMT+;
 #pragma link C++ class TVME_VUPROM_Scaler+;
+#pragma link C++ class TVME_VUPROM_Moeller+;
 #pragma link C++ class TVME_SIS3820+;
 #pragma link C++ class TVME_VITEC+;
 //

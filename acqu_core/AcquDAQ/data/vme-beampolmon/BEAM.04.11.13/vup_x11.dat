@@ -1,0 +1,10 @@
+# Note that the order of BaseSetup:, 
+# Hardware-ID: and Scaler: lines is important!
+
+##         HexBase #Registers ModuleType MapSize
+BaseSetup: 0       0          ADC-Scaler     4000
+# firmware id of the VUPROM
+Hardware-ID: 1309261e
+
+#             NoOfLeftChannels   NoOfPairsPerCh
+ChannelPairs: 10              5
