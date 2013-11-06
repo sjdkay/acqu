@@ -31,6 +31,7 @@
 #pragma link C++ class TA2MesonPhysics+;
 #pragma link C++ class TA2BasePhysics+;
 #pragma link C++ class TA2TriggerPhysics+;
+#pragma link C++ class TA2TAPSAnalysis+;
 // TA2My... extension classes
 //#pragma link C++ class TA2MyAnalysis+;
 #pragma link C++ class TA2MyCalibration+;
