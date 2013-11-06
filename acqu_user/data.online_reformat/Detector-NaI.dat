@@ -1466,8 +1466,6 @@ Next-Neighbour: 12	719	718	575	143	574	142	287	141	716	717	572	431
 ## Do some post-initialisation.
 Initialise: 
 #
-#Detector period 2 x parent period
-Period: 2
 #
 ########################################################################
 ## Display histograms of detector-level variables
@@ -1496,4 +1494,3 @@ Display: 2D ClTheta  180 0 180 -1    ClPhi   180 -180 180 -1
 Display: 2D EnergyOR 100 0 400 -1    Hits   720 0 720 -1
 Display: 2D TimeOR   200 -100 100 -1    Hits   720 0 720 -1
 #Display: 1D 3015M1 200 0 400
-Display: ADC 3000 3015
