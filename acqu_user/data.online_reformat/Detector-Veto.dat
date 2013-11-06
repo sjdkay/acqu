@@ -429,64 +429,30 @@ Element:   28495    0.1 9999.0   84.93 0.013270   28487 -1000.0  1000.0  2968.57
 ##
 Initialise:
 ##
-##
-##      Histograming of basic detector stuff
-##
-## NaI Crystal hit multiplicity, 32 channels, range 0--32
-##              Name            ch/low/high     imin/imax
-Display: 1D     Nhits           32 0 32
-Display: 1D	NADChits  	32 0 32
-Display: 1D	NTDChits  	32 0 32
+# Histogram display
+#######################################################################
+Display: 1D	NADChits    32 0 32
+Display: 1D	NTDChits    32 0 32
+Display: 1D     Nhits       32 0 32
+Display: 1D	ADCHits	    384 0 384
+Display: 1D	TDCHits	    384 0 384
+Display: 1D     Hits        384 0 384
+Display: 1D     TimeOR      200 -100 100
+Display: 2D     EnergyOR    100 0 10 -1     Hits   384  0 384 -1
+Display: 2D     TimeOR      300 -100 200 -1  Hits   384  0 384 -1
+
 #Display: 1D	TAPSDiscr	8192 0 8192
 #Display: 1D	TAPSVeto	384 0 384
 #Display: 1D	NPatternHits	48 0 48		0 1
-##
-## NaI hit frequency distribution, 720 elements, range 0 -- 720
-##              Name            ch/low/high     imin/imax
-Display: 1D     Hits            384 0 384
-Display: 1D	ADCHits		384 0 384
-Display: 1D	TDCHits		384 0 384
-##
-## Total Energy deposited in the array, 1000 channels, range 0 -- 200 MeV
-##              Name            ch/low/high     imin/imax
 #Display: 1D     Etot            400 0 800 
-##
-## Energy deposited in individual crystals, 200 channels, range 0 -- 400 MeV
-## Make histogram for each element (0-509) of the CB
-##              Name            ch/low/high     imin/imax(opt)
 #Display: 1D    Energy          2000  0 400     0 384
-##
-## Energy OR
-Display: 1D    EnergyOR        2000  0 400
-##      Cluster Histograms
-##
-##      1/2D    Name            Chan    Low     High    Imin    Imax
-## Energy in each Cluster
-## Make histogram for each element (0-509)  of the TAPS forward wall
-##              Name            ch/low/high     imin/imax(opt)
+#Display: 1D    EnergyOR        2000  0 400
 #Display: 1D    ClEnergy        200 0 600       0 384
-##
-## Hit pattern within each cluster
-##              Name            ch/low/high     imin/imax(opt)
 #Display: 1D    ClHits          32 0 32         0 384
-##
-## # hits in each cluster
-##              Name            ch/low/high     imin/imax(opt)
 #Display: 1D    ClMulti         64 0 64         0 384
-##
-## # clusters detected per event
-##              Name            ch/low/high     imin/imax(opt)
 #Display: 1D     ClNhits         64 0 64         0 384
 #Display: 1D    ClNhitsOR       16 0 16
-##
-## Cluster center distribution
-##              Name            ch/low/high     imin/imax(opt)
 #Display: 1D     ClTotHits       384 0 384
-##
-#         X-Name  X-ch/low/high/id  Y-Name  Y ch/low/high/id  Condition(opt)
 #Display: 2D ClTheta  100 0 25 -1    ClPhi  180 -180 180 -1
-Display: 2D EnergyOR 100 0 10 -1    Hits   384  0 384 -1
-Display: 2D TimeOR   200 -70 130 -1    Hits   384  0 384 -1
-Display: 1D TimeOR 300 -100 200
 #
 #

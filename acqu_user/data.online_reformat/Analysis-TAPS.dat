@@ -4,7 +4,7 @@ MultiADC:       3       29193   29319     29192
 # TAPS bit pattern
 BitPattern: Pattern-TAPS.dat
 ##
-#Apparatus:          TAPS            TA2GenericApp           data/TAPS/TAPS.dat
+Apparatus:          TAPS       TA2GenericApp           data/TAPS/TAPS.dat
 ##
 #Reconstruct-Analysis:
 ##
