@@ -706,15 +706,25 @@ sub Do {
 
   my %exclude = map { $_ => 1 } split(/,/,$exclude); # comma separated list
 
+  # sanity checks by guessing the status beforehand
+  # already checks if runset is defined
+  GuessStatus($runset);
+
   # some simple logic to catch the ALL keyword properly
   # and init the necessary SSH connections
   if ($runset eq 'ALL') {
+    if (!$force) {
+      Logger("Cannot 'do' for ALL runsets without option --force. Be careful!");
+    }
     foreach my $runset (keys $runsets) {
       InitSSH($runsets->{$runset});
     }
-  } else {
-    Logger("Specified runset not found") unless $runsets->{$runset};
+  }
+  else {
     my $r = $runsets->{$runset};
+    if(!$force && $r->{Status} != 1) {
+      Logger("Cannot 'do' on non-stopped runset without option --force.");
+    }
     my $h = $r->{Hosts}->[0];
     my $host_gui = $h->[0];
     InitSSH($r);
