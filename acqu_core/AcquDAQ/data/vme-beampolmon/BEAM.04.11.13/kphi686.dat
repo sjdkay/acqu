@@ -5,6 +5,7 @@
 ## DAQ for Sub-Atomic Physics Experiments.
 #
 ## Force hardware initialisation at config stage
+Range: 0x10000000
 Board:
 #	End of File
 #

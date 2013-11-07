@@ -4,7 +4,8 @@
 ##         HexBase #Registers ModuleType MapSize
 BaseSetup: 0       0          Scaler     4000
 # firmware id of the VUPROM
-Hardware-ID: 1309261e
+#Hardware-ID: 1309261e
+Hardware-ID: 1310241f
 
 #       offset    clear    load   number of scalers
 #       hex       hex      hex    dec

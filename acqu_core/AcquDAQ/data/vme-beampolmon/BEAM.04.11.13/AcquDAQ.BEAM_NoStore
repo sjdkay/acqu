@@ -21,10 +21,10 @@ Module: GSI_VUPROM_Scaler vup3 vup_x03.dat    03000000  2400       192  32
 Module: GSI_VUPROM_Scaler vup4 vup_x04.dat    04000000  2600       192  32
 
 # Moeller readout
-Module: GSI_VUPROM_Moeller vup11 vup_x11.dat  11000000  8000       50  32
-Module: GSI_VUPROM_Moeller vup12 vup_x11.dat  12000000  8100       50  32
-Module: GSI_VUPROM_Moeller vup13 vup_x11.dat  13000000  8200       50  32
-Module: GSI_VUPROM_Moeller vup14 vup_x11.dat  14000000  8300       50  32
+#Module: GSI_VUPROM_Moeller vup11 vup_x11.dat  11000000  8000       50  32
+#Module: GSI_VUPROM_Moeller vup12 vup_x11.dat  12000000  8100       50  32
+#Module: GSI_VUPROM_Moeller vup13 vup_x11.dat  13000000  8200       50  32
+#Module: GSI_VUPROM_Moeller vup14 vup_x11.dat  14000000  8300       50  32
 
 
 ## Interrupt control module
