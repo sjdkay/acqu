@@ -140,6 +140,7 @@ my $help = 0;
 my $verbose = 0;
 my $warnings = 1;
 my $nostore = 0;
+my $eventmerger = 1; # start the event merger?
 my $runsetfile;
 my $force = 0;
 my $retry = 10;
@@ -167,6 +168,7 @@ GetOptions(
            'verbose|v+' => \$verbose,
            'warnings|w!' => \$warnings,
            'nostore|n' => \$nostore,
+           'eventmerger!'=> \$eventmerger,
            'runsetfile|r=s' => \$runsetfile,
            'force|f' => \$force,
            'retry' => \$retry,
@@ -225,7 +227,7 @@ sub Start {
   Logger("AcquDAQ processes successfully launched on $nHosts VME hosts.",1);
 
   # in Nostore mode, we're done now (no eventmerger needed)
-  return if $nostore;
+  return if $nostore || !$eventmerger;
 
   # Start the AcquRoot event merger in a xterm window,
   # which connects to the previously started AcquDAQ processes
@@ -1422,6 +1424,7 @@ AcquManager do <runset|ALL> <command>
    -r, --runsetfile load more runsets from this file
    --retry          retry that often
    -e, --exclude    skip hosts in do mode
+   --noeventmerger  do not start event merger (AcquRoot)
 
 =head1 MODES
 
@@ -1440,6 +1443,13 @@ data merger AcquRoot locally (i.e. on daq-master).
 The option --nostore does not start the event merger, but only the
 AcquDAQ instances without actual data output. This works by appending
 '_NoStore' to each AcquDAQ top-level configuration file.
+
+The option --noeventmerger tells AcquManager not to start the event
+merger at the end (after starting all needed AcquDAQ processes). This
+is helpful for debugging startup of AcquRoot with QtCreator (you can
+also attach to a running AcquRoot session via its process ID). Note
+that the AcquDAQ-GUI does not show up until AcquRoot has actually been
+started!
 
 =item B<status>
 
