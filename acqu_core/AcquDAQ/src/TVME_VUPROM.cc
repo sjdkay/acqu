@@ -591,8 +591,8 @@ void TVME_VUPROM::SetPrescale(Int_t section, Int_t chan, Int_t prescale)
       if( i == chan ) start[i] = prescale; 
     }
     for( Int_t i=0; i<nchan; i+=2){
-      Int_t lsb = 0xffff - (start[i] & 0xffff);
-      Int_t msb = 0xffff - (start[i+1] & 0xffff);
+      Int_t lsb = (start[i] & 0xffff);
+      Int_t msb = (start[i+1] & 0xffff);
       datum = lsb | (msb << 16) ;
       Int_t j = i/2;
       printf("Section %d, Chan:%d Prescale:%d; Chan:%d Prescale:%d\n",
@@ -729,34 +729,34 @@ void TVME_VUPROM::CmdExe(Char_t* input)
     sprintf(fCommandReply,"Input %d prescale set to 2^%d\n",i,(j&0xf));
     fInputPrescale[i] = j;
     break;
-  case EVUP_L1Prescale:
-    // Prescale values for L1 output signals (4-bit)
-    if(sscanf(parm,"%i%i",&i,&j) != 2){
-      sprintf(fCommandReply,"%s <L1 prescale input Format>\n", parm);
-      break;
-    }
-    if( (i<0) || (i>7)){
-      sprintf(fCommandReply,"L1 prescale: channel %d outside valid range\n", i);
-      break;
-    }      
-    SetPrescale(2, i, j);
-    fL1Prescale[i] = j;
-    sprintf(fCommandReply,"L1 %d prescale factor set to %d\n",i,(j+1));
-    break;
-  case EVUP_L2Prescale:
-    // Prescale values for L2 output signals (4-bit)
-    if(sscanf(parm,"%i%i",&i,&j) != 2){
-      sprintf(fCommandReply,"%s <L2 prescale input Format>\n", parm);
-      break;
-    }
-    if( (i<0) || (i>7)){
-      sprintf(fCommandReply,"L2 prescale: channel %d outside valid range\n", i);
-      break;
-    }      
-    SetPrescale(3, i, j);
-    fL2Prescale[i] = j;
-    sprintf(fCommandReply,"L2 %d prescale factor set to %d\n",i,(j+1));
-    break;
+//  case EVUP_L1Prescale:
+//    // Prescale values for L1 output signals (4-bit)
+//    if(sscanf(parm,"%i%i",&i,&j) != 2){
+//      sprintf(fCommandReply,"%s <L1 prescale input Format>\n", parm);
+//      break;
+//    }
+//    if( (i<0) || (i>7)){
+//      sprintf(fCommandReply,"L1 prescale: channel %d outside valid range\n", i);
+//      break;
+//    }
+//    SetPrescale(2, i, j);
+//    fL1Prescale[i] = j;
+//    sprintf(fCommandReply,"L1 %d prescale factor set to %d\n",i,(j+1));
+//    break;
+//  case EVUP_L2Prescale:
+//    // Prescale values for L2 output signals (4-bit)
+//    if(sscanf(parm,"%i%i",&i,&j) != 2){
+//      sprintf(fCommandReply,"%s <L2 prescale input Format>\n", parm);
+//      break;
+//    }
+//    if( (i<0) || (i>7)){
+//      sprintf(fCommandReply,"L2 prescale: channel %d outside valid range\n", i);
+//      break;
+//    }
+//    SetPrescale(3, i, j);
+//    fL2Prescale[i] = j;
+//    sprintf(fCommandReply,"L2 %d prescale factor set to %d\n",i,(j+1));
+//    break;
   case EVUP_EnPattRead:
     // Enable pattern register read
     // Do nothing
