@@ -53,7 +53,7 @@ Initialise:
 ## Display Histograms
 ########################################################################
 ##
-## Histogram ALL defined single value ADCs
+## Histogram ALL defined single value ADCs (use with caution!!)
 #Display: All
 ##
 ########################################################################
@@ -148,18 +148,6 @@ Display: Rate	21	500
 Display: Rate	22	500
 Display: Rate	23	500
 Display: Rate	24	500
-Display: Rate	25	500
-Display: Rate	26	500
-Display: Rate	27	500
-Display: Rate	28	500
-Display: Rate	29	500
-Display: Rate	30	500
-Display: Rate	31	500
-Display: Rate	32	500
-Display: Rate	33	500
-Display: Rate	34	500
-Display: Rate	35	500
-Display: Rate	36	500
 ##
 ########################################################################
 ## Display Trigger Patterns (and e-beam polarization bit)
@@ -168,6 +156,7 @@ Display: Rate	36	500
 Display: Pattern	0 32 0 32
 Display: Pattern	1 64 0 64
 Display: Pattern	2 16 0 16
+Display: Pattern	3 16 0 16
 Display: Pattern-N	1 32 0 32
 ##
 #Display: 2D 1000 100 0 4000 2112M0 100 -1000 -400

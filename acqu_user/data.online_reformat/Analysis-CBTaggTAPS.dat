@@ -33,7 +33,7 @@ BitPattern:  ./data/monitor/Trig-Pattern.dat
 ##              Name            Class           	Setup file
 Apparatus:      TAGG            TA2Tagger   		Apparatus-Tagger883.dat
 Apparatus:      CB              TA2CrystalBall		Apparatus-CB.dat
-Apparatus: 	TAPS		TA2Calorimeter 	        Apparatus-TAPS.dat 
+Apparatus: 		TAPS			TA2Calorimeter 	    Apparatus-TAPS.dat 
 Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
 ##
 ## Turn on apparatus-level reconstruction
@@ -217,6 +217,7 @@ Display: Rate	36	500
 Display: Pattern	0 32 0 32
 Display: Pattern	1 64 0 64
 Display: Pattern	2 16 0 16
+Display: Pattern	3 16 0 16
 Display: Pattern-N	1 32 0 32
 ##
 ## TAPS discriminator pattern

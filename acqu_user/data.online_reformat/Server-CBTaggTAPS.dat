@@ -1,10 +1,9 @@
 ## Server file for running Tagger + CB + TAPS
 ########################################################################
-##
 ## Number of Input streams (sources of data), Record length to write data
 ## and switch 0/1 = no/yes to control data write
 ##              Number streams	Record Len	Save Data
-Input-Streams:	22		32768		1
+Input-Streams:	23		32768		1
 ##
 ## Optional directory spec. If not specified File-Names must contain the full
 ## directory path
@@ -15,6 +14,9 @@ File-Directory:	scratch/
 #
 Stream-Spec:	Network	Mk2	0	vme-exptrigger 3030 128	400
 File-Name:	trig	0	0
+#
+Stream-Spec:	Network	Mk2	0	vme-beampolmon 3031 128	400
+File-Name:	beam	0	0
 #
 Stream-Spec:	Network	Mk2	0	vme-cb-adc-1a 3020 128	400
 File-Name:	adc1a	0	0
