@@ -81,6 +81,12 @@ void ARSocket_t::Initialise()
 // Local-host setup.....
 // bind, listen, accept, exchange initial data packet
   if( fMode == ESkLocal ){
+    int optval = 1;
+    socklen_t optlen = sizeof(optval);
+    if(setsockopt(fID, SOL_SOCKET, SO_REUSEADDR, &optval, optlen) < 0) {
+        perror("setsockopt()");
+        close(fID);
+    }
     if( bind(fID, (sockaddr*)(&skname), sklen) == -1 ){
       close(fID);
       PrintError("<ERROR ARSocket_t: socket bind name Failed>",EErrFatal);
