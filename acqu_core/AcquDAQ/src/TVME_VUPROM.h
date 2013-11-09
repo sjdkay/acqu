@@ -74,7 +74,8 @@ enum{
   EVU_ACK,
   EVU_IRQ,
   EVU_TCS,
-  EVU_Helicity,
+  EVU_HelicityInhibit,
+  EVU_HelicityPattern,
   EVU_IntDelay0,
   EVU_FCDelay = EVU_IntDelay0 + EVU_MaxCPU,
   EVU_EvID,
@@ -108,8 +109,9 @@ class TVME_VUPROM : public TVMEmodule {
   Int_t fRefTDCWidth;         // Width Ref TDC output
   Int_t fDebugOut[16];        // Internal signals switched to debug outputs 0-3
   Int_t fTAPSEnable;          // 1 = TAPS in the busy circuit, 0 = NOT
+  Int_t fHelicityInhibit;     // 1 = MAMI Helicity Inhibit, 0 = NOT
   Int_t fMThresh[16];         // Multiplicity threshold values
-  Int_t fTrigParm[64];       // Holds trigger parameters for easy provision
+  Int_t fTrigParm[64];        // Holds trigger parameters for easy provision
   Char_t fCommandReply[128];  // Messages back to DAQ control
   Bool_t fIsIRQEnabled;       // Readout register activated?
   Bool_t fIsPattRead;         // pattern read activated?

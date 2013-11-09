@@ -36,8 +36,8 @@ ClassImp(TVME_VUPROM)
 enum { EVUP_EnCPU=200, EVUP_IntDelay, EVUP_FCDelay, EVUP_RAMDownload,
        EVUP_InputMask, EVUP_InputPrescale, EVUP_L1Prescale, EVUP_L2Prescale,
        EVUP_EnPattRead, EVUP_EnScalerRead, EVUP_SetDebug, EVUP_L1Width,
-       EVUP_SetDelay, EVUP_EnableTAPS, EVUP_SetMThresh, EVUP_GUIpermit,
-       EVUP_RefTDCWidth };
+       EVUP_SetDelay, EVUP_EnableTAPS, EVUP_HelicityInhibit, EVUP_SetMThresh, 
+       EVUP_GUIpermit, EVUP_RefTDCWidth };
 static Map_t kVUPROMKeys[] = {
   {"Enable-CPU:",         EVUP_EnCPU},
   {"Int-Delay:",          EVUP_IntDelay},
@@ -53,6 +53,7 @@ static Map_t kVUPROMKeys[] = {
   {"L1-Width:" ,          EVUP_L1Width},
   {"Strobe-Delay:" ,      EVUP_SetDelay},
   {"Enable-TAPS:" ,       EVUP_EnableTAPS},
+  {"Helicity-Inhibit:" ,  EVUP_HelicityInhibit},
   {"Set-M-Threshold:" ,   EVUP_SetMThresh},
   {"GUI-permit:" ,        EVUP_GUIpermit},
   {"RefTDC-Width:" ,      EVUP_RefTDCWidth},
@@ -103,7 +104,8 @@ VMEreg_t VUPROMreg[] = {
   {0x2450,      0x0,  'l', 0},       // End of readout acknowledge
   {0x2460,      0x0,  'l', 0},       // IRQ reg.
   {0x2470,      0x0,  'l', 0},       // TCS Control
-  {0x2490,      0x0,  'l', 0},       // MAMI Beam Helicity  
+  {0x2480,      0x0,  'l', 0},       // MAMI Beam Helicity Inhibit  
+  {0x2490,      0x0,  'l', 0},       // MAMI Beam Helicity Pattern 
   {0x2500,      0x0,  'l', 0},       // Interrupt delay CPU-0
   {0x2510,      0x0,  'l', 0},       // Interrupt delay CPU-1
   {0x2520,      0x0,  'l', 0},       // Interrupt delay CPU-2
@@ -160,6 +162,7 @@ TVME_VUPROM::TVME_VUPROM( Char_t* name, Char_t* file, FILE* log,
   fIsPattRead = kFALSE;                    // default no pattern read
   fIsScalerRead = kFALSE;                  // default not only a scaler
   fTAPSEnable = 0;                         // default TAPS not in busy circuit
+  fHelicityInhibit = 0;                    // default Helicity not in busy circuit
   fIsGUIpermit = kFALSE;                   // default no change from GUI
   fIsTCSStarted = kTRUE;                   // VUPROM will stop it by default
 }
@@ -266,11 +269,16 @@ void TVME_VUPROM::SetConfig( Char_t* line, Int_t key )
     break;
   case EVUP_EnableTAPS:
     // Switch TAPS busy signal into the total dead time circuit
-    // Width of L1 output 1
     if(sscanf(line,"%i",&i) != 1)
       PrintError(line,"<TAPS enable input Format>",EErrFatal);
     fTAPSEnable = i;
     break;
+  case EVUP_HelicityInhibit:
+	  // Helicity bit setting into the total dead time circuit
+	  if(sscanf(line,"%i",&i) != 1)
+		  PrintError(line,"<Helicity Inhibit input Format>",EErrFatal);
+	  fHelicityInhibit = i;
+	  break;
   case EVUP_SetMThresh:
     // Set threshold values on M signals
     if(sscanf(line,"%i%i%i%i",fMThresh,fMThresh+1,fMThresh+2,fMThresh+3) != 4)
@@ -320,6 +328,7 @@ void TVME_VUPROM::PostInit( )
   for(Int_t i=0; i<4; i++)
     SetPrescale(i);
   Write(EVU_EnableTAPS,fTAPSEnable); // enable TAPS busy if desired
+  Write(EVU_HelicityInhibit,fHelicityInhibit); // Helicity inhibit if desired
   SetMThresh(0);                     // set the M thresholds
   EndTrigCtrl();                     // ensure triggers disabled & TCS stopped
   return;
@@ -486,8 +495,9 @@ void TVME_VUPROM::ReadIRQ( void** outBuffer )
   ADCStore( outBuffer, datumlow, j );
   j++;
   
-  // also read the beam helicity bit register, only bit3-bit0 are of interest
-  datumlow = Read(EVU_Helicity);
+  // also read the beam helicity bit register,
+  // only bit3-bit0 are actually of interest
+  datumlow = Read(EVU_HelicityPattern);
   ADCStore( outBuffer, datumlow, j );
   j++;
   // TODO: Check if Bit0 (sent from us) and Bit2 (received from MAMI) are equal
