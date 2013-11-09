@@ -17,13 +17,17 @@
 
 ClassImp(TVME_VUPROM_Moeller)
 
-enum { EVUPM_ChannelPairs=500 };
+enum { EVUPM_ChannelPairs=500, EVUPM_NBins,
+      EVUPM_NReadsPerIRQ, EVUPM_NScalersBetweenReadout};
 
 using namespace std;
 
 
 static Map_t kVUPROMMoellerKeys[] = {
-  {"ChannelPairs:", EVUPM_ChannelPairs},
+  {"ChannelPairs:",           EVUPM_ChannelPairs},
+  {"NBins:",                  EVUPM_NBins},
+  {"NReadsPerIRQ:",           EVUPM_NReadsPerIRQ},
+  {"NScalersBetweenReadout:", EVUPM_NScalersBetweenReadout},  
   {NULL,      -1}
 };
 
@@ -63,7 +67,7 @@ TVME_VUPROM_Moeller::TVME_VUPROM_Moeller( Char_t* name, Char_t* file, FILE* log,
   // set some defaults
   fNLeftChannels = 10;
   fNPairsPerCh = 5;
-  fNBins = 0x100; // = 256 bins
+  fNBins = 256; // = 0x100, fixed by firmware!
   fNReadsPerIRQ = 25;
   fNScalersBetweenReadout = 5;
   
@@ -106,20 +110,38 @@ void TVME_VUPROM_Moeller::StopMoellerDAQ()
 void TVME_VUPROM_Moeller::SetConfig( Char_t* line, Int_t key)
 {
   // Configuration from file
-  stringstream ss(line); // convert it to stringstream
+  stringstream ss(line); // convert it to stringstream for easier conversion
   switch(key) {
   case EVUPM_ChannelPairs: {
     if(!(ss >> fNLeftChannels)) {
-      PrintError(line,"<VUPROM_Moeller NoOfLeftChannels>",EErrFatal);
+      PrintError(line,"<VUPROM_Moeller NoOfLeftChannels config line>",EErrFatal);
     }
     if(!(ss >> fNPairsPerCh)) {
-      PrintError(line,"<VUPROM_Moeller NoOfPairsPerCh>",EErrFatal);
+      PrintError(line,"<VUPROM_Moeller NoOfPairsPerCh config line>",EErrFatal);
     }
     if(fNLeftChannels*fNPairsPerCh>(UShort_t)fNChannel) {
       PrintError(line,"<VUPROM_Moeller More than fNChannel pair combinations cannot be read out>",EErrFatal);      
     }
     break;
   } 
+  case EVUPM_NBins: {
+    if(!(ss >> fNBins)) {
+      PrintError(line,"<VUPROM_Moeller NBins config line>",EErrFatal);
+    }
+    break;
+  }
+  case EVUPM_NReadsPerIRQ: {
+    if(!(ss >> fNReadsPerIRQ)) {
+      PrintError(line,"<VUPROM_Moeller NReadsPerIRQ config line>",EErrFatal);
+    }
+    break;
+  }
+  case EVUPM_NScalersBetweenReadout: {
+    if(!(ss >> fNScalersBetweenReadout)) {
+      PrintError(line,"<VUPROM_Moeller NScalersBetweenReadout config line>",EErrFatal);
+    }
+    break;
+  }  
   default:
     // default try commands of TVMEmodule
     TVMEmodule::SetConfig(line, key);
