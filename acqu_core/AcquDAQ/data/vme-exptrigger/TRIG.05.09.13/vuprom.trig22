@@ -9,7 +9,8 @@
 BaseSetup:	0		0		Scaler		4000
 #Hardware-ID: 1309095e
 #Hardware-ID: 1309265f
-Hardware-ID: 1311086e
+#Hardware-ID: 1311086e
+Hardware-ID: 13110973
 Enable-CPU: 27ff
 Int-Delay:  0 2000
 Int-Delay:  1 2000
