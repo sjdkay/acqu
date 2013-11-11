@@ -4,12 +4,12 @@
 ##         HexBase #Registers ModuleType MapSize
 BaseSetup: 0       0          ADC-Scaler     4000
 # firmware id of the VUPROM
-Hardware-ID: 1309261e
+Hardware-ID: 13110828
 
 # Combinations of left Channels with right channel
 # for Moeller events
 #             NoOfLeftChannels   NoOfPairsPerCh
-ChannelPairs: 10              5
+ChannelPairs: 10                 5
 
 # Number of Bins of each histogram (determined by firmware)
 # Wrong value may lead to wrong readout!

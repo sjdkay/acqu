@@ -14,11 +14,15 @@ Control:  Slave    0     0
 Module:	KPH_I686   kphi686_0	kphi686.dat 0 0
 Module: KPH_VITEC  vit0	        vitec_0.dat 0 0 0
 
-# PairSpek / Moeller config                   baseAddr  baseIndex  #ch  #bits
-Module: GSI_VUPROM_Scaler vup1 vup_x01.dat    01000000  2000       192  32
-Module: GSI_VUPROM_Scaler vup2 vup_x02.dat    02000000  2200       192  32
-Module: GSI_VUPROM_Scaler vup3 vup_x03.dat    03000000  2400       192  32
-Module: GSI_VUPROM_Scaler vup4 vup_x04.dat    04000000  2600       192  32
+# Tagger/PairSpek readout                            baseAddr  baseIndex  #ch  #bits
+Module: GSI_VUPROM_Scaler vup1 vup_tagg_288ch.dat    01000000  2000       288  32 
+Module: GSI_VUPROM_Scaler vup2 vup_tagg_288ch.dat    02000000  2288       288  32
+Module: GSI_VUPROM_Scaler vup3 vup_tagg_288ch.dat    03000000  2576       288  32
+Module: GSI_VUPROM_Scaler vup4 vup_tagg_192ch.dat    04000000  2864       192  32
+# the EPT sits on the same cards, 
+# but we want it in a separate scaler block
+Module: GSI_VUPROM_Scaler vup5 vup_EPT_32ch.dat      03000000  3100        32  32
+Module: GSI_VUPROM_Scaler vup6 vup_EPT_32ch.dat      04000000  3132        32  32
 
 # Moeller readout
 #Module: GSI_VUPROM_Moeller vup11 vup_x11.dat  11000000  8000       50  32
