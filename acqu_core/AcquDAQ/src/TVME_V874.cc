@@ -266,12 +266,6 @@ void TVME_V874::SetConfig( Char_t* line, Int_t key )
       break;
     }
     for(Int_t i=0; i<4; i++){ fThrLED2[i] = DACconv(val[i]); }
-    // 4 LED1 threshold values, in mV (positive)
-    if( sscanf(line,"%d%d%d%d",val,val+1,val+2,val+3) != 4 ){
-      PrintError(line,"<Parse LED1 threshold read>");
-      break;
-    }
-    for(Int_t i=0; i<4; i++){ fThrLED1[i] = DACconv(val[i]); }
     break;
   case EV874_DReady:
     // Select local or global data ready
