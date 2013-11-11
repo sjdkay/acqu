@@ -1,0 +1,7 @@
+## Apparatus setup file for running TA2PairSpec
+########################################################################
+
+Detector: PairSpec TA2PairSpec Detector-PairSpec.dat
+
+## Do some post-initialisation.
+Initialise:

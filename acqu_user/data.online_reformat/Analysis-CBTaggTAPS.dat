@@ -35,6 +35,7 @@ Apparatus:      TAGG            TA2Tagger   		Apparatus-Tagger1557.dat
 Apparatus:      CB              TA2CrystalBall		Apparatus-CB.dat
 Apparatus: 		TAPS			TA2Calorimeter 	    Apparatus-TAPS.dat 
 Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
+Apparatus:       PairSpec       TA2GenericApp       Apparatus-PairSpec.dat
 ##
 ## Turn on apparatus-level reconstruction
 #Reconstruct-Analysis:

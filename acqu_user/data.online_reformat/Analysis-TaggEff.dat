@@ -17,6 +17,7 @@ RateMonitor: ./data/monitor/Rate-Tagg.dat
 ##              Name            Class           	Setup file
 Apparatus:      Tagger           TA2Tagger   		Apparatus-Tagger883.dat
 #Apparatus:      LinPol          TA2LinearPol            LinearPolapparatus.dat
+Apparatus:       PairSpec       TA2GenericApp       Apparatus-PairSpec.dat
 ##
 ## Turn on apparatus-level reconstruction
 Reconstruct-Analysis:

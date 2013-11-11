@@ -50,6 +50,7 @@
 #pragma link C++ class TA2CB+;
 #pragma link C++ class TA2Taps+;
 #pragma link C++ class TA2CentralApparatus+;
+#pragma link C++ class TA2PairSpec+;
 // Detector classes
 #pragma link C++ class TA2PlasticPID+;
 #pragma link C++ class TA2PlasticVETO+;
