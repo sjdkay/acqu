@@ -31,7 +31,7 @@ BitPattern:  ./data/monitor/Trig-Pattern.dat
 ##
 ## Apparatus setup....
 ##              Name            Class           	Setup file
-Apparatus:      TAGG            TA2Tagger   		Apparatus-Tagger883.dat
+Apparatus:      TAGG            TA2Tagger   		Apparatus-Tagger1557.dat
 Apparatus:      CB              TA2CrystalBall		Apparatus-CB.dat
 Apparatus: 		TAPS			TA2Calorimeter 	    Apparatus-TAPS.dat 
 Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
@@ -48,7 +48,7 @@ Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
 Initialise:
 ##
 ## Macros
-#Period:  1000	linPolMacro.C	linPolMacro()
+Period:  500	linPolMacro.C	linPolMacro()
 #EndFile:	EndFileMacro.C  EndFileMacro()
 #Finish:	FinishMacro.C	FinishMacro()
 ##
@@ -78,10 +78,10 @@ Initialise:
 ########################################################################
 ##
 ## PID - ADCs
-#Display: ADC 100 131
+Display: ADC 100 131
 ##
 ## PID - TDCs
-#Display: MultiHit 2008 2031 1000 -5000 -2000 0
+Display: MultiHit 2008 2031 1000 -5000 -2000 0
 #Display: MultiHit 2008 2031 1000 -5000 -2000 1
 #Display: MultiHit 2008 2031 1000 -5000 -2000 2
 ##
@@ -129,7 +129,7 @@ Initialise:
 #Display: ADC 29000 29143
 ##
 ## TAPS PbWO4 - TDCs
-#Display: MultiHit 29224 29295 1000 -5000 -2000 0
+#Display: MultiHit 29224 29295 1000 -10000 10000 0
 #Display: MultiHit 29224 29295 1000 -5000 -2000 1
 #Display: MultiHit 29224 29295 1000 -5000 -2000 2
 ##
@@ -139,7 +139,7 @@ Initialise:
 ## Note that each batch of 32 has 16 defined and then 16 empty channels
 ##
 ## Block A
-#Display: ADC 26000 26239
+Display: ADC 26000 26239
 ## Block B
 #Display: ADC 26256 26495
 ## Block C

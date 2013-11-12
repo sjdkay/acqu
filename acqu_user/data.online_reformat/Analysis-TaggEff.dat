@@ -26,7 +26,7 @@ Initialise:
 ##
 # Macros
 #Period: 100000	PeriodMacro.C	PeriodMacro()
-#Period: 1000	linPolMacro.C	linPolMacro()
+Period: 1000	linPolMacro.C	linPolMacro()
 #EndFile:	EndFileMacro.C  EndFileMacro()
 #Finish:	FinishMacro.C	FinishMacro()
 ##
