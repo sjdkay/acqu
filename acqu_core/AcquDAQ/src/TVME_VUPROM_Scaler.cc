@@ -21,27 +21,32 @@ enum { EVUPS_Scaler=400 };
 
 using namespace std;
 
-
 static Map_t kVUPROMScalerKeys[] = {
   {"Scaler:", EVUPS_Scaler},
   {NULL,      -1}
 };
+
+static TVME_VUPROM_Scaler* firstMod = NULL;
+static TVME_VUPROM_Scaler* lastMod = NULL;
 
 //-----------------------------------------------------------------------------
 TVME_VUPROM_Scaler::TVME_VUPROM_Scaler( Char_t* name, Char_t* file, FILE* log,
 			    Char_t* line ):
   TVMEmodule( name, file, log, line )
 {
+  if(firstMod == NULL)
+    firstMod = this;
+  lastMod = this;
+  
   // Basic initialisation 
   AddCmdList( kVUPROMScalerKeys );          // VUPROM-specific setup commands
-  
-  
-  
+    
   // number of scalers and registers
   // are finally set in SetConfig/PostInit
   // since the number of scalers can be configured
   fNreg = 0; 
   fNScalerChan = 0; 
+  fScalerOffset = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -58,6 +63,7 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
       VMEreg_t fw = {0x2f00, 0x0, 'l', 0};
       fVUPROMregs.push_back(fw);
       fNreg = 1;      
+      fScalerOffset = fNreg; // offset where the scaler blocks start
     }
     
     stringstream ss(line);
@@ -88,9 +94,7 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
     // remember the scaler block offset
     // before we add them. Note that the size of fVUPROMregs is not 
     // the correct offset due to the repeat attribute,
-    // and +2 due to the load/clear registers in the beginning
-    size_t offset = fNScalerChan+fNreg+2;
-    fScalerBlockOffsets.push_back(make_pair(offset, numberOfScalers));
+    fScalerBlockOffsets.push_back(make_pair(fScalerOffset, numberOfScalers));
     // add them in some defined order, 
     // ReadIRQScaler() relies on that!
     fVUPROMregs.push_back(load);
@@ -98,6 +102,9 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
     fVUPROMregs.push_back(scalers);    
     // add it to the total number
     fNScalerChan += numberOfScalers;
+    // scaler register offset, 
+    // +2 due to the load/clear registers in the beginning    
+    fScalerOffset += numberOfScalers+2;
     break;
   } 
   default:
@@ -113,7 +120,7 @@ void TVME_VUPROM_Scaler::PostInit( )
   // Check if any general register initialisation has been performed
   // If not do the default here
   if( fIsInit ) return;
-  
+
   // before we call InitReg, 
   // add an "end-marker" at the very end 
   // (well this happens if one uses C-style pointer hell...)
@@ -145,6 +152,11 @@ Bool_t TVME_VUPROM_Scaler::CheckHardID( )
 //-----------------------------------------------------------------------------
 void TVME_VUPROM_Scaler::ReadIRQScaler( void** outBuffer )
 {
+  if(firstMod == this) {
+    // we are the first of the GSI_VUPROM_Scaler,
+    // so set the inhibit signal for us
+  }
+  
   // iterate over the blocks, remember
   size_t n = 0; // total number of scalers stored
   for(size_t block=0;block<fScalerBlockOffsets.size();block++) {
@@ -157,5 +169,10 @@ void TVME_VUPROM_Scaler::ReadIRQScaler( void** outBuffer )
       n++;
     }
     Write(offset+1, 1); // clear the scalers
+  }
+  
+  if(lastMod == this) {
+    // we are the last of the GSI_VUPROM_Scaler,
+    // so release the inhibit signal for us
   }
 }

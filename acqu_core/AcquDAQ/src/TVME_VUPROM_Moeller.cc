@@ -22,7 +22,6 @@ enum { EVUPM_ChannelPairs=500, EVUPM_NBins,
 
 using namespace std;
 
-
 static Map_t kVUPROMMoellerKeys[] = {
   {"ChannelPairs:",           EVUPM_ChannelPairs},
   {"NBins:",                  EVUPM_NBins},
@@ -54,13 +53,18 @@ VMEreg_t VUPROMMoellerReg[] = {
   {0xffffffff,  0x0,  'l', 0},       // end of list
 };
 
+static TVME_VUPROM_Moeller* firstMod = NULL;
+static TVME_VUPROM_Moeller* lastMod = NULL;
+
 //-----------------------------------------------------------------------------
-
-
 TVME_VUPROM_Moeller::TVME_VUPROM_Moeller( Char_t* name, Char_t* file, FILE* log,
 			    Char_t* line ):
   TVMEmodule( name, file, log, line )
 {
+  if(firstMod == NULL)
+    firstMod = this;
+  lastMod = this;
+  
   // Basic initialisation 
   AddCmdList( kVUPROMMoellerKeys );          // VUPROM-specific setup commands
   

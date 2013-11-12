@@ -12,6 +12,7 @@ private:
   // we store the offset to access fVUPROMregs in the first value
   // and the length of the block (a.k.a the number of the scalers) in the second  
   std::vector< std::pair<size_t,size_t> > fScalerBlockOffsets; 
+  UInt_t fScalerOffset;
 protected:
 
 public:
