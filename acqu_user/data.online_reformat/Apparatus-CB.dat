@@ -13,7 +13,7 @@ Reconstruct:
 ParticleID: 	16
 ##
 ## Angle-difference limits (in deg.)  for hits correlation
-##              PID		MWPC
+##              PID	MWPC
 AngleLimits:	15.0	20.0
 ##
 ## Do some post-initialisation.
@@ -21,12 +21,14 @@ Initialise:
 ##
 ## Cut specification (Proton and Pion dE-E cuts for particle ID)
 ##        2D x-var    	Link scope 	y-var 	 name     file       ix iy   i PDG
-Data-Cut: 2D EchargedOR AND  misc 	DeltaEOR Proton   cuts/CB_DeltaE-E_Proton.root 0  0   0 2212
-Data-Cut: 2D EchargedOR AND  misc 	DeltaEOR Pion     cuts/CB_DeltaE-E_Pion.root   0  0   0 211
+#Data-Cut: 2D EchargedOR AND  misc 	DeltaEOR Proton   cuts/CB_DeltaE-E_Proton.root 0  0   0 2212
+#Data-Cut: 2D EchargedOR AND  misc 	DeltaEOR Pion     cuts/CB_DeltaE-E_Pion.root   0  0   0 211
 ##
 ##		#Cuts	#Sectors
-ParticleID-Cut: 48	24
+#ParticleID-Cut: 48	24
 ##
+Display: 2D PID_Hits 24 0 24 -1              NaI_ClPhi 180 -180 180 -1
+#Display: 1D PID_Hits 24 0 24 -1
 ##
 ########################################################################
 ## Display histograms of apparatus-level variables
@@ -62,4 +64,3 @@ Display: 2D Echarged 100 0 500 23   DeltaE 100 0 5 23
 #
 #Display: 1D DeltaTheta 50  0   50 -1
 Display: 1D DeltaPhi   100 -50 50 0 23
-
