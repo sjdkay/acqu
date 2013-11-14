@@ -38,7 +38,7 @@ Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
 Apparatus:       PairSpec       TA2GenericApp       Apparatus-PairSpec.dat
 ##
 ## Turn on apparatus-level reconstruction
-#Reconstruct-Analysis:
+Reconstruct-Analysis:
 ##
 ## Specify physics analysis
 ##			Name	Class		        Config File
@@ -82,7 +82,7 @@ Period:  500	linPolMacro.C	linPolMacro()
 Display: ADC 100 131
 ##
 ## PID - TDCs
-Display: MultiHit 2008 2031 1000 -5000 -2000 0
+Display: MultiHit 2001 2031 1000 -5000 -2000 0
 #Display: MultiHit 2008 2031 1000 -5000 -2000 1
 #Display: MultiHit 2008 2031 1000 -5000 -2000 2
 ##
@@ -140,7 +140,7 @@ Display: MultiHit 2008 2031 1000 -5000 -2000 0
 ## Note that each batch of 32 has 16 defined and then 16 empty channels
 ##
 ## Block A
-Display: ADC 26000 26239
+#Display: ADC 26000 26239
 ## Block B
 #Display: ADC 26256 26495
 ## Block C
@@ -160,6 +160,8 @@ Display: Scaler 0 175
 Display: SumScaler 0 175
 Display: Scaler 176 191
 Display: SumScaler 176 191
+Display: Scaler 192 195
+Display: SumScaler 192 195
 #Display: Scaler 192 203
 #Display: SumScaler 192 203
 #Display: Scaler 204 555

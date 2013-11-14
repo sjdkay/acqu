@@ -46,7 +46,7 @@ Apparatus:       PairSpec       TA2GenericApp       Apparatus-PairSpec.dat
 Initialise:
 ##
 ## Macros
-#Period:  1000	linPolMacro.C	linPolMacro()
+Period:  1000	linPolMacro.C	linPolMacro()
 #EndFile:   	EndFileMacro.C  EndFileMacro()
 #Finish:	FinishMacro.C	FinishMacro()
 ##
