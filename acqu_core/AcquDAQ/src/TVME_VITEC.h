@@ -26,7 +26,7 @@ enum{
   EVIT_Status,
   EVIT_FwID,
 };
-enum{ EVIT_EvIDTimeout = 250 };
+enum{ EVIT_EvIDTimeout = 4000 };
 
 class TVME_VITEC : public TVMEmodule {
  protected:
@@ -85,7 +85,7 @@ inline UInt_t TVME_VITEC::GetEventID( )
       return evid;
     }
     i++;
-    usleep(1);
+    //   usleep(1);
   }
   evid = Read(EVIT_EvIDlsb);           // get the event ID
   datum = Read(EVIT_EvIDmsb);
