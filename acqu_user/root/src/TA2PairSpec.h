@@ -15,6 +15,10 @@ private:
   UInt_t* fScalerGated;    // Gated with PairSpec
   UInt_t* fScalerGatedDly; // Gated, but out of coincidence with PairSpec
   
+  Double_t* fScalerSumOpen;
+  Double_t* fScalerSumGated;    // Gated with PairSpec
+  Double_t* fScalerSumGatedDly; // Gated, but out of coincidence with PairSpec
+  
   UInt_t fScalerBlockIdx; // used in SetConfig, counts ScalerBlocks within Vuprom
   UInt_t fVupromSize;    // number of ScalerBlocks in Vuprom
   UInt_t fVupromSumSize; // used in SetConfig, sum of VupromSize

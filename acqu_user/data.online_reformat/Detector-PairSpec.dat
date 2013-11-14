@@ -51,6 +51,9 @@ ScalerBlock:  320
 ## Do some post-initialisation.
 Initialise:
 
-Display: 1D ScalerOpen     352 0 352
-Display: 1D ScalerGated    352 0 352
-Display: 1D ScalerGatedDly 352 0 352
+Display: 1D Open     352 0 352
+Display: 1D Gated    352 0 352
+Display: 1D GatedDly 352 0 352
+Display: 1D SumOpen     352 0 352
+Display: 1D SumGated    352 0 352
+Display: 1D SumGatedDly 352 0 352

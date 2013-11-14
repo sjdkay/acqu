@@ -28,12 +28,13 @@ TA2PairSpec::TA2PairSpec( const char* name, TA2System* analysis  )
   fScalerIndex = new UInt_t[fNHistograms*fNchannels]; // three different histograms!
   
   // buffers for histogram contents 
-  fScalerOpen = new UInt_t[fNchannels+1]; 
-  fScalerOpen[fNchannels] = EBufferEnd;
-  fScalerGated = new UInt_t[fNchannels+1];
-  fScalerGated[fNchannels] = EBufferEnd;  
-  fScalerGatedDly = new UInt_t[fNchannels+1];
-  fScalerGatedDly[fNchannels] = EBufferEnd;  
+  fScalerOpen = new UInt_t[fNchannels]; 
+  fScalerGated = new UInt_t[fNchannels];
+  fScalerGatedDly = new UInt_t[fNchannels];
+  
+  fScalerSumOpen = new Double_t[fNchannels]; 
+  fScalerSumGated = new Double_t[fNchannels];
+  fScalerSumGatedDly = new Double_t[fNchannels];
   
   AddCmdList( kPairSpecKeys );                  // for SetConfig()
 }
@@ -43,9 +44,13 @@ TA2PairSpec::TA2PairSpec( const char* name, TA2System* analysis  )
 
 TA2PairSpec::~TA2PairSpec() 
 {
-    delete[] fScalerOpen;
-    delete[] fScalerGated;
-    delete[] fScalerGatedDly;
+  delete[] fScalerOpen;
+  delete[] fScalerGated;
+  delete[] fScalerGatedDly;
+  
+  delete[] fScalerSumOpen;
+  delete[] fScalerSumGated;
+  delete[] fScalerSumGatedDly;
 }
 
 //-----------------------------------------------------------------------------
@@ -116,9 +121,12 @@ void TA2PairSpec::LoadVariable( )
   //           MultiX  for a multi-valued variable
 
   //                            name                     pointer          type-spec
-  TA2DataManager::LoadVariable("ScalerOpen",     fScalerOpen,     EIScalerX);
-  TA2DataManager::LoadVariable("ScalerGated",    fScalerGated,    EIScalerX);
-  TA2DataManager::LoadVariable("ScalerGatedDly", fScalerGatedDly, EIScalerX);
+  TA2DataManager::LoadVariable("Open",     fScalerOpen,     EIScalerX);
+  TA2DataManager::LoadVariable("Gated",    fScalerGated,    EIScalerX);
+  TA2DataManager::LoadVariable("GatedDly", fScalerGatedDly, EIScalerX);
+  TA2DataManager::LoadVariable("SumOpen",     fScalerSumOpen,     EDScalerX);
+  TA2DataManager::LoadVariable("SumGated",    fScalerSumGated,    EDScalerX);
+  TA2DataManager::LoadVariable("SumGatedDly", fScalerSumGatedDly, EDScalerX);
   TA2Detector::LoadVariable();
 }
 
@@ -135,18 +143,24 @@ void TA2PairSpec::PostInit( )
 
 void TA2PairSpec::Decode()
 {
-  if(!gAR->IsScalerRead())
-    return;
-  
   for(UInt_t i=0;i<fNchannels;i++) {
     fScalerOpen[i] = fScaler[fScalerIndex[i+0*fNchannels]];
-    //cout << "i="<<i<<" open: "<<fScalerOpen[i] << endl;
   }
   for(UInt_t i=0;i<fNchannels;i++) {
     fScalerGated[i] = fScaler[fScalerIndex[i+1*fNchannels]];
   }
   for(UInt_t i=0;i<fNchannels;i++) {
     fScalerGatedDly[i] = fScaler[fScalerIndex[i+2*fNchannels]];
+  }
+  
+  for(UInt_t i=0;i<fNchannels;i++) {
+    fScalerSumOpen[i] = fScalerSum[fScalerIndex[i+0*fNchannels]];
+  }
+  for(UInt_t i=0;i<fNchannels;i++) {
+    fScalerSumGated[i] = fScalerSum[fScalerIndex[i+1*fNchannels]];
+  }
+  for(UInt_t i=0;i<fNchannels;i++) {
+    fScalerSumGatedDly[i] = fScalerSum[fScalerIndex[i+2*fNchannels]];
   }
 }
 
