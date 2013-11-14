@@ -2,7 +2,7 @@
 # Hardware-ID: and Scaler: lines is important!
 
 ##         HexBase #Registers ModuleType MapSize
-BaseSetup: 0       0          Scaler     4000
+BaseSetup: 0       0          Scaler     14000
 # firmware id of the VUPROM
 #Hardware-ID: 1309261e
 Hardware-ID: 1310241f
