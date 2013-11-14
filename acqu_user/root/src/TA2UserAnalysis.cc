@@ -31,6 +31,7 @@
 #include "TA2MyCrystalBall.h"
 #include "TA2MyTAPS.h"
 #include "TA2GenericApp.h"
+#include "TA2BeamPolMon.h"
 #include "TA2MyCalibration.h"
 #include "TA2MyCaLib.h"
 #include "TA2MyClusterCalib.h"
@@ -39,28 +40,30 @@
 
 // Recognised apparatus classes.
 // The "standard" set is held in TA2Analysis
-enum { EA2Calorimeter,
-       EA2Tagger,
-		 EA2CosmicCal,
-       EA2CrystalBall,
-		 EA2CB,
-		 EA2Taps,
-       EA2CentralApparatus,
-		 EA2GenericApp,
-       EA2Physics,
-		 EA2UserPhysics,
-		 EA2MesonPhysics,
-		 EA2BasePhysics,
-		 EA2TriggerPhysics,
-	         EA2Pi0Compton,
-       EA2MyCrystalBall, 
-       EA2MyTAPS,
-       EA2MyAnalysis, 
-       EA2MyCalibration, 
-       EA2MyCaLib, 
-       EA2MyClusterCalib, 
-       EA2MyRateEstimation,
-       EA2TAPSAnalysis };
+enum { 
+  EA2Calorimeter,
+  EA2Tagger,
+  EA2CosmicCal,
+  EA2CrystalBall,
+  EA2CB,
+  EA2Taps,
+  EA2CentralApparatus,
+  EA2GenericApp,
+  EA2BeamPolMon,
+  EA2Physics,
+  EA2UserPhysics,
+  EA2MesonPhysics,
+  EA2BasePhysics,
+  EA2TriggerPhysics,
+  EA2Pi0Compton,
+  EA2MyCrystalBall, 
+  EA2MyTAPS,
+  EA2MyAnalysis, 
+  EA2MyCalibration, 
+  EA2MyCaLib, 
+  EA2MyClusterCalib, 
+  EA2MyRateEstimation,
+  EA2TAPSAnalysis };
 
 static const Map_t kKnownChild[] =
 {
@@ -73,6 +76,7 @@ static const Map_t kKnownChild[] =
   {"TA2Taps",             EA2Taps},
   {"TA2CentralApparatus", EA2CentralApparatus},
   {"TA2GenericApp",       EA2GenericApp},  
+  {"TA2BeamPolMon",       EA2BeamPolMon},  
   {"TA2MyCrystalBall",    EA2MyCrystalBall},
   {"TA2MyTAPS",           EA2MyTAPS},
   //Physics
@@ -139,7 +143,10 @@ TA2DataManager* TA2UserAnalysis::CreateChild(const char* name, Int_t a)
    case EA2GenericApp:
     //Generic
     return new TA2GenericApp(name, this);
-   case EA2MyCrystalBall:
+  case EA2BeamPolMon:
+    // BeamPolMon
+    return new TA2BeamPolMon(name, this);
+  case EA2MyCrystalBall:
     // My Moded CB stuff
     return new TA2MyCrystalBall( name, this );
   case EA2MyTAPS:

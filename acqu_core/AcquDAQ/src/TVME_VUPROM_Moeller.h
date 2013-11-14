@@ -6,6 +6,7 @@
 
 enum {
   EVUM_Firmware,
+  EVUM_GlobalEnable,
   EVUM_DAQ_status,
   EVUM_DAQ_reset,
   EVUM_DAQ_enable,
@@ -21,7 +22,11 @@ enum {
   EVUM_RAM_WEB,
   EVUM_RAM_AddrB,
   EVUM_RAM_DinB,
-  EVUM_RAM_DOutB0
+  EVUM_RAM_DOutB0,
+  // scaler
+  EVUM_ScalerClr,
+  EVUM_ScalerLoad,
+  EVUM_Scaler
 };
 
 class TVME_VUPROM_Moeller : public TVMEmodule {
@@ -31,13 +36,19 @@ private:
  UShort_t fNPairsPerCh; 
  UShort_t fNBins; // in read-out Moeller histogram (per channel pair)
  UInt_t fNReadsPerIRQ; // VME reads per IRQ are limited!
- UInt_t fNScalersBetweenReadout; // scaler IRQs needed to trigger Moeller readout 
+ UInt_t fScalerModulo; // scaler IRQs needed to trigger Moeller readout 
+ 
+ Bool_t kCfgMode;
+ UInt_t fOffsetLeft, fOffsetRight; // in config mode, holds the two offsets
  
  // internal fields
  UInt_t fNScalerIRQsSeen;
  Bool_t kReadoutStarted;
+ UShort_t fReadoutsDone;
  UShort_t iBin, iHelicity, iLeftChannel, iPair;
  Int_t  iRamAddrPrev; // -1 is needed as invalid flag
+ Bool_t kChainIsLast;
+ 
  
  void ClearIndices();
  void StartMoellerDAQ();

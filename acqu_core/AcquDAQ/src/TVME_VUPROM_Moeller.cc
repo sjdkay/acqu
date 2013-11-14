@@ -14,19 +14,22 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <time.h>
 
 ClassImp(TVME_VUPROM_Moeller)
 
-enum { EVUPM_ChannelPairs=500, EVUPM_NBins,
-      EVUPM_NReadsPerIRQ, EVUPM_NScalersBetweenReadout};
+enum { EVUPM_CfgMode=500, EVUPM_ModuleChain, EVUPM_ChannelPairs, EVUPM_NBins,
+      EVUPM_NReadsPerIRQ, EVUPM_ScalerModulo};
 
 using namespace std;
 
 static Map_t kVUPROMMoellerKeys[] = {
+  {"CfgMode:",                EVUPM_CfgMode}, // use this module to setup channel selection
+  {"ModuleChain:",            EVUPM_ModuleChain},  
   {"ChannelPairs:",           EVUPM_ChannelPairs},
   {"NBins:",                  EVUPM_NBins},
   {"NReadsPerIRQ:",           EVUPM_NReadsPerIRQ},
-  {"NScalersBetweenReadout:", EVUPM_NScalersBetweenReadout},  
+  {"ScalerModulo:",           EVUPM_ScalerModulo},  
   {NULL,      -1}
 };
 
@@ -34,6 +37,7 @@ VMEreg_t VUPROMMoellerReg[] = {
   // this list is from 
   // http://wwwa2/intern/daqwiki/doku.php?id=trigger:moeller:vmeregisters
   {0x2f00,      0x0,  'l', 0},       // Firmware revision
+  {0x2200,      0x0,  'l', 0},       // Global DAQ enable, sent out by first mod 
   {0x2020,      0x0,  'l', 0},       // DAQ status 
   {0x2030,      0x0,  'l', 0},       // DAQ reset 
   {0x2040,      0x0,  'l', 0},       // DAQ enable
@@ -50,45 +54,50 @@ VMEreg_t VUPROMMoellerReg[] = {
   {0x2c10,      0x0,  'l', 0},       // AddrB
   {0x2c20,      0x0,  'l', 0},       // DInB
   {0x2800,      0x0,  'l', 0},       // DOutB0 (this is an offset, see PostInit)
+  {0x1800,      0x0,  'l', 0},       // Clear scalers
+  {0x1804,      0x0,  'l', 0},       // Load scalers
+  {0x1000,      0x0,  'l', 95},      // Scaler registers 0-95
   {0xffffffff,  0x0,  'l', 0},       // end of list
 };
 
-static TVME_VUPROM_Moeller* firstMod = NULL;
-static TVME_VUPROM_Moeller* lastMod = NULL;
+// for the readout modules (no CfgMode),
+// there's only one ChainCtrl module, thus it's a static variable
+static TVME_VUPROM_Moeller* fChainCtrl = NULL;
 
 //-----------------------------------------------------------------------------
 TVME_VUPROM_Moeller::TVME_VUPROM_Moeller( Char_t* name, Char_t* file, FILE* log,
-			    Char_t* line ):
+                                          Char_t* line ):
   TVMEmodule( name, file, log, line )
 {
-  if(firstMod == NULL)
-    firstMod = this;
-  lastMod = this;
   
   // Basic initialisation 
   AddCmdList( kVUPROMMoellerKeys );          // VUPROM-specific setup commands
   
   // set some defaults
-  fNLeftChannels = 10;
-  fNPairsPerCh = 5;
-  fNBins = 256; // = 0x100, fixed by firmware!
-  fNReadsPerIRQ = 25;
-  fNScalersBetweenReadout = 5;
-  
+  fNLeftChannels = 0;
+  fNPairsPerCh = 0;
+  fNBins = 0; 
+  fNReadsPerIRQ = 0;
+  fScalerModulo = 0;
+  fOffsetLeft = fOffsetRight = 0;
+  kCfgMode = kFALSE; // by default, we are a readout module
   
   // other init stuff
   ClearIndices();
+  fNScalerIRQsSeen = 0;
   kReadoutStarted = false;
+  fReadoutsDone = 0;
+  kChainIsLast = false;
   
   // set by InitReg() in PostInit()
   fNreg = 0; 
-  fNScalerChan = 0; 
+  fNScalerChan = 106; 
 }
 
 //-----------------------------------------------------------------------------
 void TVME_VUPROM_Moeller::ClearIndices()
 {
-  // all indices zero, important in ReadIRQScaler
+  // all indices zero, important in ReadIRQ
   iBin = iHelicity = iLeftChannel = iPair = 0; 
   // but prev invalid, forces setting of ram address at the beginning
   iRamAddrPrev = -1;
@@ -96,18 +105,20 @@ void TVME_VUPROM_Moeller::ClearIndices()
 
 void TVME_VUPROM_Moeller::StartMoellerDAQ()
 {
-  // ensure DAQ is stopped
-  Write(EVUM_DAQ_enable, (UInt_t)0x0); // 0x2040
-  // set reset high and low again
+  // set reset high and low again, for each module
   Write(EVUM_DAQ_reset, (UInt_t)0x1);  // 0x2030
   Write(EVUM_DAQ_reset, (UInt_t)0x0);  // 0x2030  
-  // finally start a clean new run
-  Write(EVUM_DAQ_enable, (UInt_t)0x1); // 0x2040
+  // finally start a clean new run, 
+  // this also starts the scalers
+  if(kChainIsLast) {
+    fChainCtrl->Write(EVUM_GlobalEnable, (UInt_t)0x1); // 0x2200
+  }
 }
 
 void TVME_VUPROM_Moeller::StopMoellerDAQ()
 {
-   Write(EVUM_DAQ_enable, (UInt_t)0x0); // 0x2040
+  if(fChainCtrl==this)
+    Write(EVUM_GlobalEnable, (UInt_t)0x0); // 0x2200
 }
 
 //-----------------------------------------------------------------------------
@@ -116,6 +127,28 @@ void TVME_VUPROM_Moeller::SetConfig( Char_t* line, Int_t key)
   // Configuration from file
   stringstream ss(line); // convert it to stringstream for easier conversion
   switch(key) {
+  case EVUPM_CfgMode: {
+    if(!(ss >> fOffsetLeft)) {
+      PrintError(line,"<VUPROM_Moeller CfgMode left>",EErrFatal);
+    }
+    if(!(ss >> fOffsetRight)) {
+      PrintError(line,"<VUPROM_Moeller CfgMode right>",EErrFatal);
+    }
+    kCfgMode = kTRUE;
+    break;
+  }
+  case EVUPM_ModuleChain: {
+    string first, last;
+    ss >> first;
+    ss >> last;
+    if(GetName()==first) {
+      fChainCtrl = this;
+    }
+    if(GetName()==last) {
+      kChainIsLast = true;
+    }
+    break;
+  }
   case EVUPM_ChannelPairs: {
     if(!(ss >> fNLeftChannels)) {
       PrintError(line,"<VUPROM_Moeller NoOfLeftChannels config line>",EErrFatal);
@@ -140,9 +173,9 @@ void TVME_VUPROM_Moeller::SetConfig( Char_t* line, Int_t key)
     }
     break;
   }
-  case EVUPM_NScalersBetweenReadout: {
-    if(!(ss >> fNScalersBetweenReadout)) {
-      PrintError(line,"<VUPROM_Moeller NScalersBetweenReadout config line>",EErrFatal);
+  case EVUPM_ScalerModulo: {
+    if(!(ss >> fScalerModulo)) {
+      PrintError(line,"<VUPROM_Moeller ScalerModulo config line>",EErrFatal);
     }
     break;
   }  
@@ -168,19 +201,20 @@ void TVME_VUPROM_Moeller::PostInit( )
   InitReg( VUPROMMoellerReg );
   // init the base class  
   TVMEmodule::PostInit();
-    
-  // setup the Moeller DAQ firmware 
-  // TODO: correct channel setup? for 455MeV beam
   
-  Write(EVUM_InputChannelsDebugMode, 0x1); // 0x20a0
-  Write(EVUM_InputChannelsDebugLeftStart, 0x16); // 0x20b0
-  Write(EVUM_InputChannelsDebugRightStart, 0x3); // 0x20b0
+  // check if cfg mod only, then just do the config business
+  if(kCfgMode) {  
+    Write(EVUM_InputChannelsDebugLeftStart, fOffsetLeft); // 0x20b0
+    Write(EVUM_InputChannelsDebugRightStart, fOffsetRight); // 0x20b0
+    return;
+  }
   
+  // we are a read out module
+  // ensure DAQ is stopped
+  StopMoellerDAQ();
   // start the DAQ right now 
-  // and hope that there are events soon
+  // and hope that there are ReadIRQ's soon  
   StartMoellerDAQ();
-  
-  return;
 }
 
 //-------------------------------------------------------------------------
@@ -190,7 +224,7 @@ Bool_t TVME_VUPROM_Moeller::CheckHardID( )
   // Fatal error if it does not match the hardware ID
   Int_t id = Read(EVUM_Firmware);
   fprintf(fLogStream,"VUPROM Moeller firmware version Read: %x  Expected: %x\n",
-	  id,fHardID);
+          id,fHardID);
   if( id == fHardID ) return kTRUE;
   else
     PrintError("","<VUPROM Moeller firmware ID error>",EErrFatal);
@@ -239,7 +273,7 @@ void TVME_VUPROM_Moeller::ReadIRQ( void** outBuffer )
           ADCStore(outBuffer, datumhigh, fBaseIndex+k);
           iPair++; // go to the next pair
           // if max reads reached, stop reading for this IRQ
-          // will be resumed next IRQ!
+          // will hopefully be resumed next IRQ!
           if(nReads==fNReadsPerIRQ) {
             return;
           }            
@@ -259,29 +293,51 @@ void TVME_VUPROM_Moeller::ReadIRQ( void** outBuffer )
   // reached end of all loops, 
   // so readout is finished
   kReadoutStarted = false;  
+  fReadoutsDone++;
   
   // immediately start the DAQ again 
-  // (we assume it has been stopped before readout
+  // (we assume it has been stopped before readout)
   StartMoellerDAQ();
 }
 
 //-----------------------------------------------------------------------------
 void TVME_VUPROM_Moeller::ReadIRQScaler(void** outBuffer)
-{  
-  // wait until read out
-  if(kReadoutStarted)
+{    
+  // check if a Moeller readout is due
+  fNScalerIRQsSeen++;
+  if(fNScalerIRQsSeen % fScalerModulo != 0)
     return;
   
-  // check if a Moeller readout is due
   // note that this is not the best way to do it
   // since we don't know if a new run has been started
   // or this is maybe the last ScalerRead in a run
   // so, it might be that in between runs the Moeller DAQ 
-  // is still running and maybe some other tests were performed then..?!
-  fNScalerIRQsSeen++;
-  if(fNScalerIRQsSeen % fNScalersBetweenReadout == 0) {
-    // stop the acquisition and start the readout
-    StopMoellerDAQ();
-    kReadoutStarted = true;    
+  // is still running and maybe some other tests were performed then..?!  
+  
+  if(kReadoutStarted) {
+    cerr << "Readout started, and previous not finished! Skipping!" << endl;
+    return;
   }
+  
+  // stop the acquisition and start the readout
+  StopMoellerDAQ();
+  ClearIndices();
+  kReadoutStarted = true;    
+  // also send some marker scalers, 
+  // containing the current time
+  if(fChainCtrl == this) {
+    ScalerStore(outBuffer, 0xaa000000+(fReadoutsDone&0xffff), fBaseIndex+0);
+    timespec t;
+    clock_gettime(CLOCK_MONOTONIC, &t);    
+    ScalerStore(outBuffer, t.tv_sec, fBaseIndex+1);
+    ScalerStore(outBuffer, t.tv_nsec, fBaseIndex+2);   
+  }
+  // write the scalers at offset 10
+  Write(EVUM_ScalerLoad, 1); 
+  for(UInt_t i=0; i<96; i++){     // read 96 scaler channels
+    UInt_t j = i + EVUM_Scaler;
+    UInt_t datum = Read(j);
+    ScalerStore( outBuffer, datum, fBaseIndex+10+i );
+  }
+  Write(EVUM_ScalerClr, 1);           // clear the scalers
 }

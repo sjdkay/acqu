@@ -3,10 +3,11 @@
 #include <iostream>
 
 // Valid Keywords for command-line setup of CB apparatus
-enum { EPairSpecScalerBlock = 2000, EPairSpecVuprom };
+enum { EPairSpecScalerBlock = 2000, EPairSpecVuprom, EPairSpecSetup };
 static const Map_t kPairSpecKeys[] = {
-  {"ScalerBlock:",  EPairSpecScalerBlock},   
-  {"Vuprom:",       EPairSpecVuprom},
+  {"ScalerBlock:",   EPairSpecScalerBlock},   
+  {"Vuprom:",        EPairSpecVuprom},
+  {"PairSpecSetup:", EPairSpecSetup},
   {NULL,            -1}
 };
 
@@ -19,22 +20,16 @@ using namespace std;
 TA2PairSpec::TA2PairSpec( const char* name, TA2System* analysis  )
                :TA2Detector( name, analysis)
 {
-  // TODO: All these numbers should be file configurable...
-  fNchannels = 352; // number of channels
-  fNHistograms = 3;
-  fScalerOffset = 2000; // offset of scaler block
-  fScalerBlockSize = 32;
   fVupromSumSize = 0; 
-  fScalerIndex = new UInt_t[fNHistograms*fNchannels]; // three different histograms!
+  fScalerIndex = NULL;
   
-  // buffers for histogram contents 
-  fScalerOpen = new UInt_t[fNchannels]; 
-  fScalerGated = new UInt_t[fNchannels];
-  fScalerGatedDly = new UInt_t[fNchannels];
+  fScalerOpen = NULL; 
+  fScalerGated = NULL;
+  fScalerGatedDly = NULL;
   
-  fScalerSumOpen = new Double_t[fNchannels]; 
-  fScalerSumGated = new Double_t[fNchannels];
-  fScalerSumGatedDly = new Double_t[fNchannels];
+  fScalerSumOpen = NULL; 
+  fScalerSumGated = NULL;
+  fScalerSumGatedDly = NULL;
   
   AddCmdList( kPairSpecKeys );                  // for SetConfig()
 }
@@ -44,13 +39,15 @@ TA2PairSpec::TA2PairSpec( const char* name, TA2System* analysis  )
 
 TA2PairSpec::~TA2PairSpec() 
 {
-  delete[] fScalerOpen;
-  delete[] fScalerGated;
-  delete[] fScalerGatedDly;
+  if(fScalerIndex) delete[] fScalerIndex;
   
-  delete[] fScalerSumOpen;
-  delete[] fScalerSumGated;
-  delete[] fScalerSumGatedDly;
+  if(fScalerOpen)     delete[] fScalerOpen;
+  if(fScalerGatedDly) delete[] fScalerGatedDly;
+  if(fScalerGatedDly) delete[] fScalerGatedDly;
+  
+  if(fScalerSumOpen)     delete[] fScalerSumOpen;
+  if(fScalerSumGatedDly) delete[] fScalerSumGatedDly;
+  if(fScalerSumGatedDly) delete[] fScalerSumGatedDly;
 }
 
 //-----------------------------------------------------------------------------
@@ -65,6 +62,8 @@ void TA2PairSpec::SetConfig(Char_t* line, Int_t key)
     if(!(ss >> start)) {
       PrintError(line, "TA2PairSpec Start of ScalerBlock", EErrFatal);
     }
+    // init the scaler map
+    if(!fScalerIndex) fScalerIndex = new UInt_t[fNHistograms*fNchannels];
     
     // you can specify a custom permutation,
     // by default it's the identity permutation
@@ -98,6 +97,21 @@ void TA2PairSpec::SetConfig(Char_t* line, Int_t key)
     fScalerBlockIdx=0;
     break;
   }
+  case EPairSpecSetup: {
+    if(!(ss >> fNchannels)) {
+      PrintError(line, "TA2PairSpec Nchannels", EErrFatal);
+    }
+    if(!(ss >> fNHistograms)) {
+      PrintError(line, "TA2PairSpec NHistograms", EErrFatal);
+    }
+    if(!(ss >> fScalerOffset)) {
+      PrintError(line, "TA2PairSpec ScalerOffset", EErrFatal);
+    }
+    if(!(ss >> fScalerBlockSize)) {
+      PrintError(line, "TA2PairSpec ScalerOffset", EErrFatal);
+    }
+    break;
+  }
   default: {
     // default main apparatus SetConfig()
     TA2Detector::SetConfig( line, key );
@@ -110,6 +124,15 @@ void TA2PairSpec::SetConfig(Char_t* line, Int_t key)
 
 void TA2PairSpec::LoadVariable( )
 {
+  // buffers for histogram contents 
+  fScalerOpen = new UInt_t[fNchannels]; 
+  fScalerGated = new UInt_t[fNchannels];
+  fScalerGatedDly = new UInt_t[fNchannels];
+  
+  fScalerSumOpen = new Double_t[fNchannels]; 
+  fScalerSumGated = new Double_t[fNchannels];
+  fScalerSumGatedDly = new Double_t[fNchannels];
+  
   // Input name - variable pointer associations for any subsequent
   // cut or histogram setup.
   // LoadVariable( "name", pointer-to-variable, type-spec );
@@ -127,7 +150,6 @@ void TA2PairSpec::LoadVariable( )
   TA2DataManager::LoadVariable("SumOpen",     fScalerSumOpen,     EDScalerX);
   TA2DataManager::LoadVariable("SumGated",    fScalerSumGated,    EDScalerX);
   TA2DataManager::LoadVariable("SumGatedDly", fScalerSumGatedDly, EDScalerX);
-  TA2Detector::LoadVariable();
 }
 
 
@@ -136,6 +158,7 @@ void TA2PairSpec::LoadVariable( )
 
 void TA2PairSpec::PostInit( )
 {
+  // skip TA2Detector PostInit
   TA2DataManager::PostInit();
 }
 
@@ -166,11 +189,3 @@ void TA2PairSpec::Decode()
 
 //-----------------------------------------------------------------------------
 
-inline void TA2PairSpec::Cleanup()
-{
- // Clear any arrays holding variables
- //TA2DataManager::Cleanup();
-
-}
-
-//-----------------------------------------------------------------------------

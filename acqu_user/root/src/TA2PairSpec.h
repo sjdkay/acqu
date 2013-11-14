@@ -28,10 +28,10 @@ public:
   virtual void PostInit();                    // some setup after parms read in
   virtual void LoadVariable();              // display setup
   virtual void Decode();                // event by event analysis
-  virtual void Cleanup();                     // reset at end of event
+  virtual void Cleanup() {}                     // reset at end of event
   virtual void SetConfig( Char_t*, Int_t );   // setup decode in implement
-  virtual void SaveDecoded( ) {}
-  virtual void ReadDecoded( ) {}
+  virtual void SaveDecoded() {}
+  virtual void ReadDecoded() {}
  
   // Root needs this line for incorporation in dictionary
   ClassDef(TA2PairSpec,1)

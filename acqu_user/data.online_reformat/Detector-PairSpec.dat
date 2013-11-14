@@ -1,6 +1,10 @@
 ## Detector setup file for running TA2PairSpec
 ########################################################################
 
+# this configures the PairSpec data
+#              #channels  #histograms  ScalerOffset  ScalerBlockSize
+PairSpecSetup: 352        3            2000          32 
+
 # the order of the blocks
 # corresponds to the physical connections, 
 # AB   0  32
@@ -16,6 +20,10 @@
 # UV 320  32
 # the current connection order is:
 # IJ, OP, CD, GH, QR, KL, EF, ST, MN, AB, UV
+
+# Furthermore, the ScalerBlock: are grouped
+# by the Vuprom: commands, which need the number
+# of ScalerBlock's which follow
 
 Vuprom: 3
 # IJ
@@ -51,6 +59,7 @@ ScalerBlock:  320
 ## Do some post-initialisation.
 Initialise:
 
+# show the histograms defined by the detector
 Display: 1D Open     352 0 352
 Display: 1D Gated    352 0 352
 Display: 1D GatedDly 352 0 352

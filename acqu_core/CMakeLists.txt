@@ -38,7 +38,7 @@ endmacro()
 
 # some variables to track and configure
 # the following macro calls
-set(EXTRA_LIBS EG Foam)
+set(EXTRA_LIBS EG Foam rt)
 set(CORE_EXESRCS)
 set(CORE_LIBS)
 

@@ -4,9 +4,12 @@
 ##         HexBase #Registers ModuleType MapSize
 BaseSetup: 0       0          Scaler     14000
 # firmware id of the VUPROM
-#Hardware-ID: 1309261e
-#Hardware-ID: 1310241f
 Hardware-ID: 02000021
+
+# we define what is the first and the last module
+# (by name) in the chain of readout Vuproms 
+# (controls the global NIM DAQ enable signal)
+ModuleChain: vup1 vup6
 
 # Three full tagger sectors (3x32=96)
 # no EPT

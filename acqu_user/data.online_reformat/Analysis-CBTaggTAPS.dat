@@ -24,6 +24,8 @@ MultiADC:       3       3000    3735    30      30      30
 ## MWPC strip S-ADC's
 MultiADC:       3       5000    5351    30      30      30
 #
+# Moeller ADC channels, not really an ADC value!
+MultiADC:       3       8000    8800
 ## Stuff to monitor time dependence of counting rates and the hit pattern
 ## coming from the trigger box....the parameter is the setup file name
 RateMonitor: ./data/monitor/Rate-CBTaggTAPS.dat
@@ -33,9 +35,9 @@ BitPattern:  ./data/monitor/Trig-Pattern.dat
 ##              Name            Class           	Setup file
 Apparatus:      TAGG            TA2Tagger   		Apparatus-Tagger1557.dat
 Apparatus:      CB              TA2CrystalBall		Apparatus-CB.dat
-Apparatus: 		TAPS			TA2Calorimeter 	    Apparatus-TAPS.dat 
+Apparatus:      TAPS            TA2Calorimeter          Apparatus-TAPS.dat 
 Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
-Apparatus:       PairSpec       TA2GenericApp       Apparatus-PairSpec.dat
+Apparatus:      BeamPolMon      TA2BeamPolMon           Apparatus-BeamPolMon.dat
 ##
 ## Turn on apparatus-level reconstruction
 Reconstruct-Analysis:
