@@ -24,7 +24,7 @@
 // Has a multitude of functions, depending on the programing of the FPGA
 // Trigger condition processor
 // DAQ control master, up to 7 slave VME systems
-// 192 channel scaler
+// 196 channel scaler
 // Hit pattern register
 //
 
@@ -131,7 +131,7 @@ VMEreg_t VUPROMreg[] = {
   {0x2e40,      0x0,  'l', 0},       // Set debug output 3
   {0x1800,      0x0,  'l', 0},       // Clear scalers
   {0x1804,      0x0,  'l', 0},       // Load scalers
-  {0x1000,      0x0,  'l', 191},     // Scaler registers 0-191
+  {0x1000,      0x0,  'l', 195},     // Scaler registers 0-195
   {0xffffffff,  0x0,  'l', 0},       // end of list
 };
 
@@ -157,7 +157,7 @@ TVME_VUPROM::TVME_VUPROM( Char_t* name, Char_t* file, FILE* log,
   for(Int_t i=0; i<16; i++) fMThresh[i] = 0;
   fRAMid = 0;
   fInputMask = 0;
-  fNScalerChan = 192;                      // number scaler channels
+  fNScalerChan = 196;                      // number scaler channels
   fNreg = EVU_Scaler + fNScalerChan + 2;   // control and scaler registers
   fIsPattRead = kFALSE;                    // default no pattern read
   fIsScalerRead = kFALSE;                  // default not only a scaler
@@ -463,7 +463,7 @@ void TVME_VUPROM::ReadIRQScaler( void** outBuffer )
   Int_t i,j;
   UInt_t datum;
   Write(EVU_ScalerLoad, 1);          // load scalers into buffer
-  for(i=0; i<fNScalerChan; i++){     // read 192 scaler channels
+  for(i=0; i<fNScalerChan; i++){     // read 196 scaler channels
     j = i + EVU_Scaler;
     datum = Read(j);
     ScalerStore( outBuffer, datum, fBaseIndex+i );
@@ -739,34 +739,34 @@ void TVME_VUPROM::CmdExe(Char_t* input)
     sprintf(fCommandReply,"Input %d prescale set to 2^%d\n",i,(j&0xf));
     fInputPrescale[i] = j;
     break;
-//  case EVUP_L1Prescale:
-//    // Prescale values for L1 output signals (4-bit)
-//    if(sscanf(parm,"%i%i",&i,&j) != 2){
-//      sprintf(fCommandReply,"%s <L1 prescale input Format>\n", parm);
-//      break;
-//    }
-//    if( (i<0) || (i>7)){
-//      sprintf(fCommandReply,"L1 prescale: channel %d outside valid range\n", i);
-//      break;
-//    }
-//    SetPrescale(2, i, j);
-//    fL1Prescale[i] = j;
-//    sprintf(fCommandReply,"L1 %d prescale factor set to %d\n",i,(j+1));
-//    break;
-//  case EVUP_L2Prescale:
-//    // Prescale values for L2 output signals (4-bit)
-//    if(sscanf(parm,"%i%i",&i,&j) != 2){
-//      sprintf(fCommandReply,"%s <L2 prescale input Format>\n", parm);
-//      break;
-//    }
-//    if( (i<0) || (i>7)){
-//      sprintf(fCommandReply,"L2 prescale: channel %d outside valid range\n", i);
-//      break;
-//    }
-//    SetPrescale(3, i, j);
-//    fL2Prescale[i] = j;
-//    sprintf(fCommandReply,"L2 %d prescale factor set to %d\n",i,(j+1));
-//    break;
+  case EVUP_L1Prescale:
+    // Prescale values for L1 output signals (16-bit)
+    if(sscanf(parm,"%i%i",&i,&j) != 2){
+      sprintf(fCommandReply,"%s <L1 prescale input Format>\n", parm);
+      break;
+    }
+    if( (i<0) || (i>7)){
+      sprintf(fCommandReply,"L1 prescale: channel %d outside valid range\n", i);
+      break;
+    }
+    SetPrescale(2, i, j);
+    fL1Prescale[i] = j;
+    sprintf(fCommandReply,"L1 %d prescale factor set to %d\n",i,(j+1));
+    break;
+  case EVUP_L2Prescale:
+    // Prescale values for L2 output signals (16-bit)
+    if(sscanf(parm,"%i%i",&i,&j) != 2){
+      sprintf(fCommandReply,"%s <L2 prescale input Format>\n", parm);
+      break;
+    }
+    if( (i<0) || (i>7)){
+      sprintf(fCommandReply,"L2 prescale: channel %d outside valid range\n", i);
+      break;
+    }
+    SetPrescale(3, i, j);
+    fL2Prescale[i] = j;
+    sprintf(fCommandReply,"L2 %d prescale factor set to %d\n",i,(j+1));
+    break;
   case EVUP_EnPattRead:
     // Enable pattern register read
     // Do nothing
