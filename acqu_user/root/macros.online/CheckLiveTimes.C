@@ -12,6 +12,7 @@ CheckLiveTimes(){
     "LiveTrig",
     "LiveTaggA",
     "LiveTaggB",
+    "LiveBeamPol",
     "LiveADC1A",
     "LiveADC1B",
     "LiveADC2A",
@@ -20,8 +21,6 @@ CheckLiveTimes(){
     "LiveTDCB",
     "LiveMWPCA",
     "LiveMWPCB",
-    "LiveTAPS",
-    "LiveTAPS1",
     "LiveTrigTAPS",
     "LiveBafA",
     "LiveBafB",
@@ -35,35 +34,30 @@ CheckLiveTimes(){
     "LivePbWO4",
  };
   Char_t* xname[] = {
-    "Livetme Total",
-    "Livetme Trig",
-    "Livetme TaggA",
-    "Livetme TaggB",
-    "Livetme ADC1A",
-
-    "Livetme ADC1B",
-    "Livetme ADC2A",
-    "Livetme ADC2B",
-    "Livetme TDCA",
-    "Livetme TDCB",
-
-    "Livetme MWPCA",
-    "Livetme MWPCB",
-    "Livetme TAPS",
-    "Livetme TAPS1",
-    "Livetme TrigTAPS",
-
-    "Livetme BafA",
-    "Livetme BafB",
-    "Livetme BafC",
-    "Livetme BafD",
-    "Livetme BafE",
-
-    "Livetme BafF",
-    "Livetme VetoAB",
-    "Livetme VetoCD",
-    "Livetme VetoEF",
-    "Livetme PbWO4",
+    "Livetime Total",
+    "Livetime Trig",
+    "Livetime TaggA",
+    "Livetime TaggB",
+    "Livetime Beam-Pol-Mon",
+    "Livetime ADC1A",
+    "Livetime ADC1B",
+    "Livetime ADC2A",
+    "Livetime ADC2B",
+    "Livetime TDCA",
+    "Livetime TDCB",
+    "Livetime MWPCA",
+    "Livetime MWPCB",
+    "Livetime TrigTAPS",
+    "Livetime BafA",
+    "Livetime BafB",
+    "Livetime BafC",
+    "Livetime BafD",
+    "Livetime BafE",
+    "Livetime BafF",
+    "Livetime VetoAB",
+    "Livetime VetoCD",
+    "Livetime VetoEF",
+    "Livetime PbWO4",
 };
   Int_t log[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
   Int_t col[] = { 4,4,5,5,2,2,2,2,2,2,5,5,3,3,3,4,4,4,4,4,4,2,2,2,5 };
@@ -72,8 +66,8 @@ CheckLiveTimes(){
   TCanvas* canv;
   canv = new TCanvas("Livetimes-Spectra","LiveTime Spectra",240,180,1240,890);
   canv->SetFillStyle(4000);
-  canv->Divide(5,5,0.01,0.01);
-  for( Int_t i=0; i<25; i++ ){
+  canv->Divide(4,6,0.01,0.01);
+  for( Int_t i=0; i<24; i++ ){
       h1 = (TH1F*)(gROOT->FindObject(hname[i]));
       if( !h1 ){ printf("No root histogram %s\n",hname[i]); continue; }
       h1->SetLineColor(1);

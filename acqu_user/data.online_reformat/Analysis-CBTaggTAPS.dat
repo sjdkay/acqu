@@ -42,7 +42,7 @@ Reconstruct-Analysis:
 ##
 ## Specify physics analysis
 ##			Name	Class		        Config File
-#Physics-Analysis:	EtaM	TA2PhotoPhysics	        CBTaggPhysics.dat
+#Physics-Analysis:	EtaM	TA2BasePhysics	        Physics-CBTaggTAPS.dat
 #Physics-Analysis:	Pi0	TA2PhotoPhysics	        CBTaggPi0Physics.dat
 ##
 ## Do some post initialisation...usually necessary
@@ -212,6 +212,7 @@ Display: Rate	33	500
 Display: Rate	34	500
 Display: Rate	35	500
 Display: Rate	36	500
+Display: Rate	37	500
 ##
 ########################################################################
 ## Display Trigger Patterns (and e-beam polarization bit)

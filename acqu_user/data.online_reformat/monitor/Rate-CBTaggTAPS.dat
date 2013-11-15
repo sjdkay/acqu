@@ -2,11 +2,11 @@
 ##	JRM Annand	 27th Jun 2004
 ##
 ##	Ratios of scalers as a function of time
-Number-Rates: 37
+Number-Rates: 38
 ##	     Name	Scaler	Clock	Frequency	Normalisation
 RateData: ScP2Tagger	203	387	1		100.
-RateData: ScInt4	27	191	1		1000000.
-RateData: ScFC  	3	191	1		1000000.
+RateData: ScInt4	192	191	1		1000000.
+RateData: ScFC  	195	191	1		1000000.
 RateData: ScG175	387	0	1		1000000.
 RateData: ScP2Faraday 	203	202	1		1000000.
 RateData: ScFarady	202	0	1		1000000.
@@ -14,6 +14,7 @@ RateData: LiveTotal	190	191	1		100.
 RateData: LiveTrig	189	191	1		100.
 RateData: LiveTaggA	176	191	1		100.
 RateData: LiveTaggB	177	191	1		100.
+RateData: LiveBeamPol	178	191	1		100.
 RateData: LiveADC1A	179	191	1		100.
 RateData: LiveADC1B	180	191	1		100.
 RateData: LiveADC2A	181	191	1		100.
@@ -36,11 +37,11 @@ RateData: LiveVetoAB	1075	1083	1		100.
 RateData: LiveVetoCD	1076	1083	1		100.
 RateData: LiveVetoEF	1077	1083	1		100.
 RateData: LivePbWO4	1078	1083	1		100.
-RateData: ScEsum	0	191	1		1000000.
-RateData: ScTAPSA	164	191	1		1000000.
-RateData: ScCBOR1  	40	191	1		1000000.
-RateData: ScTAPSped	4	191	1		1000000.
-RateData: ScTAPSM2	6	191	1		1000000.
+RateData: ScCBEsum	1	191	1		1000000.
+RateData: ScTAPSM1	6	191	1		1000000.
+RateData: ScTAPSM2  	7	191	1		1000000.
+RateData: ScCher	8	191	1		1000000.
+RateData: ScTAPSPed	15	191	1		1000000.
 ##
 ##	End
 #RateData: ScCBSum	5	534	1		1000000.
