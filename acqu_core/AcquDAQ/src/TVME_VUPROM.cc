@@ -606,7 +606,7 @@ void TVME_VUPROM::SetPrescale(Int_t section, Int_t chan, Int_t prescale)
       datum = lsb | (msb << 16) ;
       Int_t j = i/2;
       printf("Section %d, Chan:%d Prescale:%d; Chan:%d Prescale:%d\n",
-	     section,i,start[i],i+1,start[i+1]);
+	     section,i,lsb,i+1,msb);
       Write(port+j,datum);
     }
   }
@@ -749,9 +749,10 @@ void TVME_VUPROM::CmdExe(Char_t* input)
       sprintf(fCommandReply,"L1 prescale: channel %d outside valid range\n", i);
       break;
     }
+    j = (j & 0xffff);
     SetPrescale(2, i, j);
     fL1Prescale[i] = j;
-    sprintf(fCommandReply,"L1 %d prescale factor set to %d\n",i,(j+1));
+    sprintf(fCommandReply,"L1 %d prescale factor set to %d\n",i,j);
     break;
   case EVUP_L2Prescale:
     // Prescale values for L2 output signals (16-bit)
@@ -763,9 +764,10 @@ void TVME_VUPROM::CmdExe(Char_t* input)
       sprintf(fCommandReply,"L2 prescale: channel %d outside valid range\n", i);
       break;
     }
+    j = (j & 0xffff);
     SetPrescale(3, i, j);
     fL2Prescale[i] = j;
-    sprintf(fCommandReply,"L2 %d prescale factor set to %d\n",i,(j+1));
+    sprintf(fCommandReply,"L2 %d prescale factor set to %d\n",i,j);
     break;
   case EVUP_EnPattRead:
     // Enable pattern register read
