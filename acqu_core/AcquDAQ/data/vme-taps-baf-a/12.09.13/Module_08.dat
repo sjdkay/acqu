@@ -9,11 +9,11 @@ Enable-Thresholds:
 ## Set TDCs to common-stop mode
 Common-Stop:
 ## Long-gate QDC thresholds
-Thr-LG:       0x1  0x1  0x1  0x1
+Thr-LG:       0x13  0x13  0x13  0x13
 ## Long-gate-S QDC thresholds
 Thr-LGS:      0x1ff  0x1ff  0x1ff  0x1ff
 ## Short-gate QDC thresholds
-Thr-SG:       0x1  0x1  0x1  0x1
+Thr-SG:       0x13  0x13  0x13  0x13
 ## Short-gate-S QDC thresholds
 Thr-SGS:      0x1ff  0x1ff  0x1ff  0x1ff
 ## Bit Pattern enable, by default they are turned off. Set to zero to turn on
