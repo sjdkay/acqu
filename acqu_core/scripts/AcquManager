@@ -15,6 +15,7 @@ use Net::OpenSSH;
 use Logger::Syslog;
 use LWP::Simple;
 use Expect;
+use Storable qw(dclone);
 
 use lib '/opt/epics/base/lib/perl';
 use CA;
@@ -118,6 +119,16 @@ $runsets->{TaggEff} =
               ],
    'TCS' => 'vme-tagg-tdc-b'
   };
+
+# define pedestal versions of TAPS-related runsets
+# it adds to some hosts the string '_Ped' to the tagg column
+# see the subfunction MakePedRunset for details
+$runsets->{TAPSPed}
+  = MakePedRunset($runsets->{TAPS});
+$runsets->{CBTaggTAPSPed}
+  = MakePedRunset($runsets->{CBTaggTAPS});
+
+
 
 # register a cleanup handler for signals
 # quite early
@@ -954,6 +965,24 @@ sub StopHosts {
 sub LoadRunsetfile {
   return unless defined $runsetfile;
   do $runsetfile or Logger("Can't load runsetfile $runsetfile: $!",-1);
+}
+
+sub MakePedRunset {
+  my $r = dclone(shift);
+  $r->{Description} .= ', including pedestals';
+  # patterns for hosts whose taggs should be
+  # suffixed with _Ped
+  my @PedHosts = qw(vme-taps-baf-? vme-taps-pwo);
+
+  foreach my $h (@{$r->{Hosts}}) {
+    foreach my $patt (@PedHosts) {
+      if($h->[0] =~ /$patt/) {
+        $h->[1] .= '_Ped';
+      }
+    }
+  }
+  #print Dumper($r);
+  return $r;
 }
 
 sub GuessStatus {
