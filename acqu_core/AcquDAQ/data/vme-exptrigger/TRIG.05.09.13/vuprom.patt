@@ -14,7 +14,8 @@ BaseSetup:	0		0		ADC		4000
 #Hardware-ID: 1311086f
 #Hardware-ID: 13110973
 #Hardware-ID: 13111375
-Hardware-ID: 01000078
+#Hardware-ID: 01000078
+Hardware-ID: 01000079
 En-Pattern-Read:
 #	End of File
 #
