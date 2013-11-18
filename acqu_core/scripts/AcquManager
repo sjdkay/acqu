@@ -114,7 +114,7 @@ $runsets->{TAPSPulser}->{Hosts}->[0]->[1] = 'MasterP';
 $runsets->{TaggEff} =
   {
    'Description' => 'Tagging efficiency setup without TAPS or CB',
-   'DefaultTriggerId' => 23,
+   'DefaultTriggerId' => 74,
    'Hosts' => [
                ['vme-exptrigger',   'TaggEff'], # first, the host where the AcquDAQ GUI is started
                ['vme-tagg-tdc-a',   'TAGGA'],
