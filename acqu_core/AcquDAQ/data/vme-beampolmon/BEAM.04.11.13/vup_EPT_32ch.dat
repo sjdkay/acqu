@@ -5,7 +5,8 @@
 BaseSetup: 0       0          Scaler     14000
 # firmware id of the VUPROM
 #Hardware-ID: 1309261e
-Hardware-ID: 1310241f
+#Hardware-ID: 1310241f
+Hardware-ID: 02000021
 
 # EPT
 
