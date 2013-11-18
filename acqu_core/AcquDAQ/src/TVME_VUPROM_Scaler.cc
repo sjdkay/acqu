@@ -57,12 +57,16 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
   case EVUPS_Scaler: {
     // ugly workaround for adding the firmware register
     if(fNreg==0) {
-      // we add the register here (not in the constructor)
+      // we add global registers here (not in the constructor)
       // this ensures that fNreg is still zero when BaseSetup: is evaluated 
-      // the first register entry is always the firmware
-      VMEreg_t fw = {0x2f00, 0x0, 'l', 0};
-      fVUPROMregs.push_back(fw);
-      fNreg = 1;      
+      // (needed to properly initialize the register pointers)
+      // the first register entry is the firmware
+      VMEreg_t firmware = {0x2f00, 0x0, 'l', 0};
+      fVUPROMregs.push_back(firmware);
+      // the second one is used to stop/start the scalers
+      VMEreg_t scaler_gate = {0x2200, 0x0, 'l', 0};
+      fVUPROMregs.push_back(scaler_gate);      
+      fNreg = fVUPROMregs.size();      
       fScalerOffset = fNreg; // offset where the scaler blocks start
     }
     
@@ -129,10 +133,16 @@ void TVME_VUPROM_Scaler::PostInit( )
   // this also sets fNReg to the correct value finally!
   InitReg( fVUPROMregs.data() );
   
+ 
+  
   // init the base class  
   TVMEmodule::PostInit();
-    
-  return;
+  
+  
+  // last of all modules tells first one (the "controller") 
+  // to start the scalers the first time
+  if(lastMod==this)
+    firstMod->StartScalers();
 }
 
 //-------------------------------------------------------------------------
@@ -140,7 +150,7 @@ Bool_t TVME_VUPROM_Scaler::CheckHardID( )
 {
   // Read firmware version from register
   // Fatal error if it does not match the hardware ID
-  Int_t id = Read(0);
+  Int_t id = Read(0); // first one is firmware, see SetConfig()
   fprintf(fLogStream,"VUPROM Scaler firmware version Read: %x  Expected: %x\n",
 	  id,fHardID);
   if( id == fHardID ) return kTRUE;
@@ -152,10 +162,9 @@ Bool_t TVME_VUPROM_Scaler::CheckHardID( )
 //-----------------------------------------------------------------------------
 void TVME_VUPROM_Scaler::ReadIRQScaler( void** outBuffer )
 {
-  if(firstMod == this) {
-    // we are the first of the GSI_VUPROM_Scaler,
-    // so set the inhibit signal for us
-  }
+  // first of all scaler modules stops the scalers
+  if(firstMod==this)
+    StopScalers();
   
   // iterate over the blocks, remember
   size_t n = 0; // total number of scalers stored
@@ -171,8 +180,20 @@ void TVME_VUPROM_Scaler::ReadIRQScaler( void** outBuffer )
     Write(offset+1, 1); // clear the scalers
   }
   
-  if(lastMod == this) {
-    // we are the last of the GSI_VUPROM_Scaler,
-    // so release the inhibit signal for us
-  }
+  // last of all modules tells first one (the "controller") 
+  // to start the scalers again 
+  if(lastMod==this)
+    firstMod->StartScalers();
+}
+
+void TVME_VUPROM_Scaler::StopScalers()
+{
+  // second register is global scaler gate, see SetConfig() 
+  Write((UInt_t)1, (UInt_t)0);
+}
+
+void TVME_VUPROM_Scaler::StartScalers()
+{
+  // second register is global scaler gate, see SetConfig()
+  Write((UInt_t)1, (UInt_t)1);
 }
