@@ -120,13 +120,19 @@ $runsets->{TaggEff} =
    'TCS' => 'vme-tagg-tdc-b'
   };
 
+# define TaggEffBg, just another tag for the GUI host
+$runsets->{TaggEffBg} = dclone($runsets->{TaggEff});
+$runsets->{TaggEffBg}->{Description} .= ', background measurement';
+$runsets->{TaggEffBg}->{Hosts}->[0]->[1] = 'TaggEffBg'; # change the tag
+
 # define pedestal versions of TAPS-related runsets
 # it adds to some hosts the string '_Ped' to the tagg column
 # see the subfunction MakePedRunset for details
-$runsets->{TAPSPed}
-  = MakePedRunset($runsets->{TAPS});
-$runsets->{CBTaggTAPSPed}
-  = MakePedRunset($runsets->{CBTaggTAPS});
+# commented out since not needed at the moment?
+#$runsets->{TAPSPed}
+#  = MakePedRunset($runsets->{TAPS});
+#$runsets->{CBTaggTAPSPed}
+#  = MakePedRunset($runsets->{CBTaggTAPS});
 
 
 
@@ -1322,6 +1328,7 @@ sub TriggerStatus {
       $printStatus->($runset);
     }
   } else {
+    Logger("Specified runset '$runset' not found") unless $runsets->{$runset};
     $printStatus->($runset);
   }
   return;
