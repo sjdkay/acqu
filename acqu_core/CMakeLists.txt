@@ -8,6 +8,13 @@ message(STATUS "Configuring acqu_core...")
 set(ACQU_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/AcquRoot/src/CMakeConfig.h")
 configure_file("${CMAKE_SOURCE_DIR}/cmake/CMakeConfig.h.in" "${ACQU_CONFIG_FILE}")
 
+# add a precompiler flag to indicate that 
+# actual VME access is enabled (this allows running AcquDAQ on non-VME machines)
+site_name(MY_HOSTNAME)
+if(MY_HOSTNAME MATCHES "^vme-")
+  add_definitions(-DVME_HOST)
+endif()
+
 # use all "src" subfolders as include directories
 # this is also used by ROOT_PREPARE_LIB as arguments to rootcint 
 file(GLOB ALLSRCDIRS "*/src")
