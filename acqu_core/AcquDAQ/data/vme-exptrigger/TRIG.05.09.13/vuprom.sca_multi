@@ -8,7 +8,6 @@
 ##
 ##              Hex Base	#Registers	Module type	MapSize
 BaseSetup:	0		0		Scaler		4000
-#Hardware-ID: 12120364
 Hardware-ID: 1302156d
 En-Scaler-Read:
 #	End of File
