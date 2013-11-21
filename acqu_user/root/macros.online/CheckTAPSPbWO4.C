@@ -6,7 +6,7 @@
 // Check plots of TAPS PbWO4 spectra
 //
 
-CheckTAPSPbWO4(){
+void CheckTAPSPbWO4(){
   Char_t* hname[] = {
     "PbWO4_NADChits",
     "PbWO4_NTDChits",
@@ -14,34 +14,37 @@ CheckTAPSPbWO4(){
     "PbWO4_ADCHits",
     "PbWO4_TDCHits",
     "PbWO4_Hits",
-    //    "PbWO4_EnergyOR",
+    "PbWO4_EnergyOR",
     "PbWO4_TimeOR",
+    "PbWO4_EnergyOR_v_TimeOR",
     "PbWO4_Hits_v_EnergyOR",
     "PbWO4_Hits_v_TimeOR",
+    "PbWO4_ClPhi_v_ClTheta"
   };
-  Int_t log[] = { 0,0,0,1,1,1,0,1,0 };
-  Int_t col[] = { 2,2,2,4,4,4,3,1,1 };
+  Int_t log[] = { 1,1,1,1,1,1,1,0,0,0,0,0 };
+  Int_t col[] = { 2,2,2,4,4,4,3,3,1,1,1,1 };
   Char_t* xname[] = {
     "Number of TAPS-PbWO4 RAW ADC Hits per Event",
     "Number of TAPS-PbWO4 TDC Hits per Event",
     "Number of TAPS-PbWO4 Hits (ADC and TDC) per Event",
-//
     "TAPS-PbWO4 RAW ADC Hits distribution",
     "TAPS-PbWO4 TDC Hits distribution",
     "TAPS-PbWO4 Hits (ADC and TDC) distribution",
-//
-//    "TAPS-PbWO4 Pulse-Height OR (MeV)",
+    "TAPS-PbWO4 Energy OR (MeV)",
     "TAPS-PbWO4 Time OR (ns)",
+    "TAPS-PbWO4 Energy (MeV) vs Time (ns)",
     "TAPS-PbWO4 Pulse-Height vs Hits",
     "TAPS-PbWO4 Time vs Hits",
+    "TAPS-PbWO4 #theta vs #phi distribution of Cluster Hits"
   };
+
   TH1F* h1;
   TCanvas* canv;
   //
   canv = new TCanvas("TAPS-PbWO4-Spectra","TAPS-PbWO4-Online",240,180,1240,890);
   canv->SetFillStyle(4000);
-  canv->Divide(3,3,0.01,0.01);
-  for( Int_t i=0; i<7; i++ ){
+  canv->Divide(3,4,0.01,0.01);
+  for( Int_t i=0; i<8; i++ ){
       h1 = (TH1F*)(gROOT->FindObject(hname[i]));
       if( !h1 ){
 	printf("No root histogram %s\n",hname[i]);
@@ -56,7 +59,7 @@ CheckTAPSPbWO4(){
   }
   //  return;
   TH2F* h2;
-  for( Int_t i=7; i<9; i++ ){
+  for( Int_t i=8; i<12; i++ ){
     h2 = (TH2F*)(gROOT->FindObject(hname[i]));
     if( !h2 ){
       printf("No root histogram %s\n",hname[i]);

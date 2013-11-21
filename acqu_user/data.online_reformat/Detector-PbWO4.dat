@@ -149,7 +149,8 @@ Display: 1D     Hits        72 0 72
 Display: 1D     TimeOR      200 -1000 1000
 Display: 2D     EnergyOR    200 0 400 -1    Hits   72  0 72 -1
 Display: 2D     TimeOR      200 -1000 1000 -1    Hits   72  0 72 -1
-#Display: 1D     EnergyOR        400  0 400
+Display: 1D     EnergyOR        400  0 400
+Display: 2D     TimeOR      200 -1000 1000 -1 EnergyOR        400  0 400 -1
 #Display: 1D     Etot            400 0 800
 #Display: 1D    Energy          400  0 400     0 72
-#Display: 2D ClTheta 100 0 25 -1    ClPhi  180 -180 180 -1
+Display: 2D ClTheta 100 0 25 -1    ClPhi  180 -180 180 -1

@@ -9,11 +9,11 @@ void CheckTAPS(){
     "BaF2_ADCHits",
     "BaF2_TDCHits",
     "BaF2_Hits",
-    "BaF2_Nhits",
-    "BaF2_Etot",
-    "BaF2_TimeOR",
     "BaF2_ClNhits",
     "BaF2_ClNhitsOR",
+    "BaF2_Nhits",
+    "BaF2_TimeOR",
+    "BaF2_Etot",
     "BaF2_ClNhitsOR_v_ClEnergyOR",
     "BaF2_Hits_v_TimeOR",
     "BaF2_Hits_v_EnergyOR",
@@ -24,17 +24,17 @@ void CheckTAPS(){
     "TAPS Distribution of TDC Hits",
     "TAPS Distribution of Hits",
     "TAPS Number Hits per Event",
-    "TAPS Total Energy in Calorimeter",
-    "TAPS Time OR",
     "TAPS Number of Clusters per Event",
     "TAPS Number of Hits per Cluster",
+    "TAPS Time OR",
+    "TAPS Total Energy in Calorimeter",
     "TAPS Hits per Cluster vs Cluster Energy",
     "TAPS Time vs Hits",
     "TAPS Energy vs Hits",
     "TAPS #theta - #phi distribution of Cluster Hits",
   };
-  Int_t log[] = { 0,0,0,0,1,0,0,0,1,0,1,0 };
-  Int_t col[] = { 4,4,4,2,3,3,2,2,1,1,1,1 };
+  Int_t log[] = { 0,0,0,0,0,0,0,1,1,0,1,0 };
+  Int_t col[] = { 4,4,4,2,2,2,3,3,1,1,1,1 };
   Char_t* opt2d[] = { "cont0", "colz", "colz", "colz" };
   TH1F* h1;
   TH2F* h2;
