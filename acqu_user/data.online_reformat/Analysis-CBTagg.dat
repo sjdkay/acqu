@@ -154,7 +154,7 @@ Display: Rate	24	500
 ## Display Trigger Patterns (and e-beam polarization bit)
 ########################################################################
 ##
-Display: Pattern	0 32 0 32
+Display: Pattern	0 48 0 48
 Display: Pattern	1 64 0 64
 Display: Pattern	2 16 0 16
 Display: Pattern	3 16 0 16

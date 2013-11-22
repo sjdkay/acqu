@@ -92,6 +92,7 @@ VMEreg_t VUPROMreg[] = {
   {0x2360,      0x0,  'l', 0},       // L2 prescale-2
   {0x2370,      0x0,  'l', 0},       // L2 prescale-3
   {0x22a0,      0x0,  'l', 0},       // Input pattern read
+  {0x22b0,      0x0,  'l', 0},       // Read Trigger fired pattern
   {0x22c0,      0x0,  'w', 0},       // Width of shaped L1 output
   {0x22d0,      0x0,  'w', 0},       // L1 strobe internal delay
   {0x22e0,      0x0,  'w', 0},       // L2 strobe internal delay
@@ -234,7 +235,7 @@ void TVME_VUPROM::SetConfig( Char_t* line, Int_t key )
     // Enable readout of L1, L2 and multiplicity input patterns
     // In this case no trigger control is performed
     fIsPattRead = kTRUE;
-    fNChannel = 6+1+1; // patterns + multiplicity + helicity 
+    fNChannel = 6+1+1+1; // patterns + multiplicity + helicity + trigger fired
     fType = EDAQ_ADC;
     break;
   case EVUP_EnScalerRead:
@@ -497,10 +498,15 @@ void TVME_VUPROM::ReadIRQ( void** outBuffer )
   
   // also read the beam helicity bit register,
   // only bit3-bit0 are actually of interest
-  datumlow = Read(EVU_HelicityPattern);
+  datumlow = Read(EVU_HelicityPattern) & 0xffff;
   ADCStore( outBuffer, datumlow, j );
   j++;
-  // TODO: Check if Bit0 (sent from us) and Bit2 (received from MAMI) are equal
+  
+  // read the pattern which trigger has fired
+  // only lowest 8 bits (7-0) are relevant
+  datumlow = Read(EVU_TriggerFiredPatt) & 0xffff;
+  ADCStore( outBuffer, datumlow, j );
+  j++;
 }
 
 //-------------------------------------------------------------------------

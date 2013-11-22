@@ -62,6 +62,7 @@ enum{
   EVU_L2prescale2,
   EVU_L2prescale3,
   EVU_InPattRead,
+  EVU_TriggerFiredPatt,
   EVU_L1Width,
   EVU_L1Delay,
   EVU_L2Delay,
@@ -88,7 +89,7 @@ enum{
   EVU_SetDebug3,
   EVU_ScalerClr,
   EVU_ScalerLoad,
-  EVU_Scaler,
+  EVU_Scaler
 };
 
 class TVME_VUPROM : public TVMEmodule {
