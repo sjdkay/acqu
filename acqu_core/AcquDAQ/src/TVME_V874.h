@@ -83,7 +83,8 @@ class TVME_V874 : public TVMEmodule {
   Bool_t fIsIRQEnabled;                             // Event readout enabled?
   Bool_t fIsThrCFDRaw;                              // Raw CFD thresholds
   Bool_t fIsVeto;                                   // Is it a Veto module
-  Char_t fCommandReply[128];                   // Messages back to DAQ control
+  Char_t fCommandReply[128];                        // Messages back to DAQ control
+  UShort_t fNoOfModule;                             // what number of the same modules, for ReadoutPattern!
  public:
   TVME_V874( Char_t*, Char_t*, FILE*, Char_t* );
   virtual ~TVME_V874();

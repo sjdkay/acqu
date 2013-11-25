@@ -693,6 +693,9 @@ void TDAQexperiment::RunIRQ()
     fSupervise->ExecAutoStart();
   UInt_t nevID = 0;
   UInt_t nevIDprev;
+  UInt_t readoutPatternOffset = fSynchMod ?
+              fSynchMod->GetReadoutPatternOffset() :
+              0;
   for( ; ; ){
     fIRQMod->WaitIRQ();
     out = fEventBuff;
@@ -720,9 +723,15 @@ void TDAQexperiment::RunIRQ()
       if(nevID > 0xffff) nevID = 0;    // reset the event ID
     }
     // Space for synchronisation event ID (if this is defined)
+    // and readout pattern
     else if( fSynchMod ){
       evID = (UShort_t*)out;
-      out = evID + 2;
+      if(readoutPatternOffset>0) {
+        out = evID + 8; // four 16bit ADC indeces and values
+      }
+      else {
+         out = evID + 2; // three 16bit ADC index and value
+      }
     }
     scCnt++;
     slCtrlCnt++;
@@ -812,9 +821,25 @@ void TDAQexperiment::RunIRQ()
     if( IsMk2Format() ) *evLen = (Char_t*)out - (Char_t*)evLen;
     // Event ID determined by external hardware...get the ID from that module
     if( fSynchMod ){
+      // event id
       *evID = fSynchIndex; evID++;
       nevID = fSynchMod->GetEventID();
-      *evID = nevID;
+      *evID = nevID; 
+      // readout bitpattern (for TAPS only)
+      if(readoutPatternOffset>0) {
+        // move to the next 16bit word
+        evID++;        
+        UInt_t status = fSynchMod->GetReadoutPatternStatus(); 
+        UInt_t readoutPattern = fSynchMod->GetReadoutPattern();
+        *evID = readoutPatternOffset+fSynchIndex+0; evID++;
+        *evID = status & 0xffff; evID++; // status reg
+        *evID = readoutPatternOffset+fSynchIndex+1; evID++;
+        *evID = readoutPattern & 0xffff; evID++; // lower 16bit
+        *evID = readoutPatternOffset+fSynchIndex+2; evID++;
+        *evID = (readoutPattern >> 16) & 0xffff; // upper 16 bit
+        // evID++ not needed here, it's the last 16bit word
+      }
+      
       // Check if end-of-run marker supplied and data storage enabled
       if((nevID & EExpEvIDEnd) && fIsStore ){
 	fIsRunTerm = kTRUE;

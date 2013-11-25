@@ -5,7 +5,7 @@
 ## DAQ for Sub-Atomic Physics Experiments.
 ##
 ##              Hex Base	#Registers	Module type	MapSize  <-- Baya Added MapSize
-BaseSetup:	0		0		NULL		4000
+BaseSetup:	0		0		ADC		4000
 Hardware-ID: 0500000d
 TAPS-FrontEnd:
 ##		A CFD	   A CFD      A LED1     A LED1     A LED2     A LED2

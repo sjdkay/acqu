@@ -100,6 +100,10 @@ static Map_t k874Keys[] = {
   {NULL,                  -1}
 };
 
+// count the number of instances of this module,
+// important for ReadoutPattern
+static UShort_t nInstance = 0; 
+
 //-----------------------------------------------------------------------------
 TVME_V874::TVME_V874( Char_t* name, Char_t* file, FILE* log,
 		      Char_t* line ):
@@ -138,6 +142,11 @@ TVME_V874::TVME_V874( Char_t* name, Char_t* file, FILE* log,
     fThrCFD[i] = fThrLED1[i] = fThrLED2[i] = 7820;
   }
   AddCmdList( k874Keys );                  // CAEN-specific setup commands
+  
+  // remember the number of the module, 
+  // should correspond to the bit in the fSynchMod BitPattern
+  fNoOfModule = nInstance; // starts at 0...
+  nInstance++;
 }
 
 //-----------------------------------------------------------------------------
@@ -314,12 +323,19 @@ void TVME_V874::SetConfig( Char_t* line, Int_t key )
 //---------------------------------------------------------------------------
 void TVME_V874::ReadIRQ( void** outBuffer )
 {
+  // check via the readout pattern, if a readout is necessary at all
+  // this can speed up readout...
+  UInt_t readoutPattern = fEXP->GetSynchMod()->GetReadoutPattern();
+  if(kFALSE && ((readoutPattern >> fNoOfModule) & 0x1) == 0) {
+    ResetData();
+    return;
+  }
+    
   // Read and decode the memory of the V874
   // Store the decoded ADC index and value in *outBuffer
   // Any detected errors in the data format are written into the data stream,
   // readout aborted and a software reset made
   // This version decodes a single event and then resets the data buffer
-  //
   UShort_t status1;
   Int_t i;
   for(i=0; i<EV874_Timeout; i++){
@@ -369,6 +385,13 @@ void TVME_V874::ReadIRQ( void** outBuffer )
     ResetData();
     return;
   }
+  // check the data ready again, there should be nothing left
+  status1 = Read(EV874_IStatus1); 
+  if (status1 & 0x1){
+    printf("V874 Still some data in board!\n");
+    ErrorStore(outBuffer, EErrDataFormat);
+  }
+  // reset
   ResetData();
 }
 
@@ -410,7 +433,7 @@ void TVME_V874::PostInit( )
   InitDAC();                      // Setup DACs on piggy back board
   Write(EV874_IBitSet2,0x100);    // Readout mode
   Write(EV874_IBitClr2, 0x2);     // ADC online
-  ResetData();
+  ResetData(); 
   return;
 }
 

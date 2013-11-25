@@ -62,6 +62,7 @@ enum {
   EVUT_PbWOM2PreSc,
   EVUT_PbWOVetoPreSc,
   EVUT_PbWOVetoM2PreSc,
+  EVUT_ReadoutBitpattern,  
   //
   EVUT_ScalerClr,
   EVUT_ScalerLoad,
@@ -102,6 +103,7 @@ class TVME_VUPROMT : public TVME_VUPROM {
   virtual void DisableIRQ(){ fIsIRQEnabled = kFALSE; }
   virtual Bool_t CheckHardID();
   virtual void ReadIRQScaler(void**); 
+  virtual void ReadIRQ(void**); 
   // All TDAQmodules have the following procedures, by default dummies
   // Here they provide control of trigger-related hardware
   virtual void RunTrigCtrl();     // Issue start to TCS and enable triggers

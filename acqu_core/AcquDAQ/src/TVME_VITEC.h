@@ -25,6 +25,8 @@ enum{
   EVIT_EvIDmsb,
   EVIT_Status,
   EVIT_FwID,
+  EVIT_BitPatternLow,
+  EVIT_BitPatternHigh
 };
 enum{ EVIT_EvIDTimeout = 4000 };
 
@@ -32,6 +34,9 @@ class TVME_VITEC : public TVMEmodule {
  protected:
   Bool_t    fIsIRQEnabled;
   UInt_t fEvID;                 // event ID
+  UInt_t fReadoutPatternStatus; // status register (also for readout pattern)
+  UInt_t fReadoutPatternOffset;     // ADC Index Offset for readout pattern
+  UInt_t fReadoutPattern;           // ReadoutPattern (for TAPS fast readout)
  public:
   TVME_VITEC( Char_t*, Char_t*, FILE*, Char_t* );
   virtual ~TVME_VITEC();
@@ -44,6 +49,9 @@ class TVME_VITEC : public TVMEmodule {
   virtual void EnableIRQ(){ fIsIRQEnabled = kTRUE; }
   virtual void DisableIRQ(){ fIsIRQEnabled = kFALSE; }
   virtual UInt_t GetEventID();
+  virtual UInt_t GetReadoutPatternOffset();
+  virtual UInt_t GetReadoutPatternStatus();
+  virtual UInt_t GetReadoutPattern(); 
   Bool_t IsIRQEnabled(){ return fIsIRQEnabled; }
 
   ClassDef(TVME_VITEC,1)   
@@ -54,9 +62,10 @@ class TVME_VITEC : public TVMEmodule {
 inline void TVME_VITEC::WaitIRQ( )
 {
   // Poll the state of the status register
-  // When bit 15 set exit loop
+  // When bit 15 set exit loop, 
+  // read bitpattern,
   // and set NIM output 1: ACK
-  Int_t datum;
+  UInt_t datum;
   for(;;){
     if( fIsIRQEnabled ){                 // "interrupt" software enabled?
       datum = Read(EVIT_Status);         // poll status register
@@ -67,7 +76,19 @@ inline void TVME_VITEC::WaitIRQ( )
       if( datum & 0x8000 ) break;         // exit when bit 15 set
     }
   }
-  SetIRQ();                              // set ACK (NIM output 1)
+  fReadoutPatternStatus = datum & 0xffff;
+  // check bitpattern received
+  if((datum & 0x1f00) == 0x1a00) {
+    // yes, read it
+   fReadoutPattern  =  Read(EVIT_BitPatternLow)  & 0xffff;        // lsb part
+   fReadoutPattern |= (Read(EVIT_BitPatternHigh) & 0xffff) << 16; // msb part
+  }
+  else {
+    // failed? nothing received?
+    fReadoutPattern = 0xffffffff;
+  }
+  // set ACK (NIM output 1)
+  SetIRQ();
 }
 
 //-----------------------------------------------------------------------------
@@ -98,6 +119,24 @@ inline UInt_t TVME_VITEC::GetEventID( )
   datum = Read(EVIT_EvIDmsb);
   evid = evid | (datum << 16);
   return evid;
+}
+
+//-----------------------------------------------------------------------------
+inline UInt_t TVME_VITEC::GetReadoutPatternOffset( )
+{
+  return fReadoutPatternOffset;
+}
+
+//-----------------------------------------------------------------------------
+inline UInt_t TVME_VITEC::GetReadoutPatternStatus( )
+{
+  return fReadoutPatternStatus;
+}
+
+//-----------------------------------------------------------------------------
+inline UInt_t TVME_VITEC::GetReadoutPattern( )
+{
+  return fReadoutPattern;
 }
 
 #endif

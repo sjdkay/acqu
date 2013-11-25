@@ -175,6 +175,7 @@ class TDAQexperiment : public TA2System {
   Char_t* GetFileName(){ return fFileName; }
   TDAQmodule* GetIRQMod(){ return fIRQMod; }
   TDAQmodule* GetStartMod(){ return fStartMod; }
+  TDAQmodule* GetSynchMod(){ return fSynchMod; }
   Int_t GetRunStart(){ return fRunStart; }
   Int_t GetNModule(){ return fNModule; }
   Int_t GetNADC(){ return fNADC; }

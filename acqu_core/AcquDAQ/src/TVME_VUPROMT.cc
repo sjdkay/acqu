@@ -91,6 +91,7 @@ VMEreg_t VUPROMTreg[] = {
   {0x21a0,      0x0,  'l', 0},       // PbWO4 M2+ prescale factor
   {0x21b0,      0x0,  'l', 0},       // PbWO4 Veto OR prescale factor
   {0x21c0,      0x0,  'l', 0},       // PbWO4 Veto M2+ prescale factor
+  {0x2800,      0x0,  'l', 0},       // Readout Bitpattern
   //
   {0x1800,      0x0,  'l', 0},       // Clear scalers
   {0x1804,      0x0,  'l', 0},       // Load scalers
@@ -584,4 +585,21 @@ void TVME_VUPROMT::ReadIRQScaler( void** outBuffer )
     ScalerStore( outBuffer, datum, fBaseIndex+i );
   }
   Write(EVUT_ScalerClr,1);           // clear the scalers
+}
+
+//---------------------------------------------------------------------------
+void TVME_VUPROMT::ReadIRQ( void** outBuffer )
+{
+  // Read and store the trigger pattern register 32 bits and multiplicity input 2 x 31 bits
+  // 16 lsb L1 pattern
+  // 16 msb L2 pattern
+  // 
+  UInt_t datum, datumlow, datumhigh;
+  datum = Read(EVUT_ReadoutBitpattern);         // HitPattern/ReadoutPattern
+  Int_t j = fBaseIndex; // ADC numbering starts at the fBaseIndex
+  datumlow = datum & 0xffff;
+  datumhigh = datum >> 16;
+  ADCStore( outBuffer, datumlow, j );
+  j++; 
+  ADCStore( outBuffer, datumhigh, j );
 }

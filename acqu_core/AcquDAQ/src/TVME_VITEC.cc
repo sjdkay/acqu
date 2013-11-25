@@ -17,11 +17,11 @@
 
 ClassImp(TVME_VITEC)
 
-enum { EVIT_XXX=200, EVIT_YYY };
+enum { EVIT_ReadoutPatternOffset=200, EVIT_YYY };
 static Map_t kVITECKeys[] = {
-  {"XXX:",                EVIT_XXX},
-  {"YYY:",                EVIT_YYY},
-  {NULL,                  -1}
+  {"ReadoutPatternOffset:", EVIT_ReadoutPatternOffset},
+  {"YYY:",                  EVIT_YYY},
+  {NULL,                    -1}
 };
 
 // Internal register offsets
@@ -34,6 +34,8 @@ VMEreg_t VITECreg[] = {
   {0x000a,      0x0,  'w', 0},     // Event ID MSB
   {0x000c,      0x0,  'w', 0},     // Event ID status
   {0x000e,      0x0,  'w', 0},     // Firmware ID
+  {0x0010,      0x0,  'w', 0},     // Bitpattern LSB
+  {0x0012,      0x0,  'w', 0},     // Bitpattern MSB
   {0xffffffff,  0x0,  'w', 0},     // end of list
 };
 
@@ -46,7 +48,10 @@ TVME_VITEC::TVME_VITEC( Char_t* name, Char_t* file, FILE* log,
   fCtrl = new TDAQcontrol( this );         // tack on control functions
   fType = EDAQ_SCtrl;                      // secondary controller
   AddCmdList( kVITECKeys );                // specific setup commands
-  fNreg = EVIT_FwID + 2;   // control and scaler registers
+  fNreg = EVIT_BitPatternHigh + 2;   // control and scaler registers
+  fReadoutPatternOffset = 0;
+  fReadoutPatternStatus = 1; // error flag high by default
+  fReadoutPattern = 0;  
 }
 
 //-----------------------------------------------------------------------------
@@ -60,7 +65,9 @@ void TVME_VITEC::SetConfig( Char_t* line, Int_t key )
 {
   // Configuration from file  
   switch( key ){
-  case EVIT_XXX:
+  case EVIT_ReadoutPatternOffset:
+    if(sscanf(line,"%d",&fReadoutPatternOffset) != 1)
+      PrintError(line,"<ReadoutPatternOffset>",EErrFatal);
     break;
   case EVIT_YYY:
     break;
