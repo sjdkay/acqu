@@ -1228,19 +1228,15 @@ sub TriggerInfo {
       $arr->[$idx] = hex($val); # of course, AcquDAQ wants decimal here
     }
     # convert the input mask
-    elsif($tag =~ /^PreTriggerEnabledCh(\d+)$/) {
-      my $ch = $1;
-      my $bit = hex($val);
-      $cfg->{"Input-Mask"} += $bit << $ch; # now, AcquDAQ wants a bitpattern
+    elsif($tag =~ /^PreTriggerMask$/) {
+      $val =~ s/^0x//;      
+      $cfg->{"Input-Mask"} = $val;
     }
     else {
       # populate the $info
       $info->{$tag} = $val;
     }
   }
-
-  # Input-Mask must be in hex
-  $cfg->{"Input-Mask"} = sprintf("%x", $cfg->{"Input-Mask"});
   # prescalers must be joined to a single line of decimal numbers
   for(keys $cfg) {
     next unless /-Prescale$/; # only if it ends with "-Prescale"
@@ -1354,7 +1350,7 @@ sub TriggerStatusConfig {
     if(defined $tag && exists $cfg->{$tag}) {
       # check the line with expected value
       my $l = sprintf("%s: %s", $tag, $cfg->{$tag});
-      Logger("Trigger config line '$_' does not match website line '$l' on $host_gui",-1) if $_ ne $l;
+      Logger("Trigger config line '$_' on $host_gui does not match website line '$l'",-1) if $_ ne $l;
       delete $cfg->{$tag};
     }
   }
