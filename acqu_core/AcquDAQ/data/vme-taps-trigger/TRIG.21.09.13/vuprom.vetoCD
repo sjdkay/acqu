@@ -6,7 +6,7 @@
 ##
 ##              Hex Base	#Registers	Module type	MapSize  <-- Baya Added MapSize
 BaseSetup:	0		0		NULL		4000
-Hardware-ID: 12112103
+Hardware-ID: 0600000d
 TAPS-FrontEnd:
 ##		C LED      C LED      D LED      D LED
 Set-Front-Veto:	0xfffffff8 0xffffffff 0xfffffff8 0xffffffff
