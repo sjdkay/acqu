@@ -11,7 +11,8 @@ private:
   UShort_t fNPairsPerCh;
   UInt_t fNBins;
   std::vector<UInt_t> fVupromOffset;
-  std::vector<UInt_t*> fTDCs; // pointers to NBins long histogram arrays
+  std::vector<UInt_t*> fTDCs;          // pointers to NBins long histogram arrays
+  std::vector<const char*> fTDCDisplayLines; // pointers to histogram Display line
   Bool_t fReadoutStarted;
   
   UInt_t fNvaluesRead;

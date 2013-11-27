@@ -17,7 +17,11 @@ VupromOffset:  8600
 Initialise:
 
 # show the histograms defined by the detector
-Display: 1D TDC_Vup_Left_Pair_Hel_0_0_0_0 256 0 256
-Display: 1D TDC_Vup_Left_Pair_Hel_0_0_0_1 256 0 256
-Display: 1D TDC_Vup_Left_Pair_Hel_3_9_2_0 256 0 256
-Display: 1D TDC_Vup_Left_Pair_Hel_3_9_2_1 256 0 256
+# show some
+#Display: 1D TDC_Vup_Left_Pair_Hel_0_0_0_0 256 0 256
+#Display: 1D TDC_Vup_Left_Pair_Hel_0_0_0_1 256 0 256
+#Display: 1D TDC_Vup_Left_Pair_Hel_3_9_2_0 256 0 256
+#Display: 1D TDC_Vup_Left_Pair_Hel_3_9_2_1 256 0 256
+
+# show all
+#DisplayAllHistos:

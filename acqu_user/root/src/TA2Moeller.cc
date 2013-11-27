@@ -4,10 +4,11 @@
 #include <iomanip>
 
 // Valid Keywords for command-line setup of CB apparatus
-enum { EMoellerSetup = 2100, EVupromOffset };
+enum { EMoellerSetup = 2100, EVupromOffset, EDisplayAllHistos};
 static const Map_t kMoellerKeys[] = {
-  {"MoellerSetup:",   EMoellerSetup},   
-  {"VupromOffset:",   EVupromOffset},
+  {"MoellerSetup:",     EMoellerSetup},   
+  {"VupromOffset:",     EVupromOffset},
+  {"DisplayAllHistos:", EDisplayAllHistos},
   {NULL,            -1}
 };
 
@@ -59,6 +60,11 @@ void TA2Moeller::SetConfig(Char_t* line, Int_t key)
     fVupromOffset.push_back(offset);
     break;
   }  
+  case EDisplayAllHistos: {
+    for(UInt_t i=0;i<fTDCDisplayLines.size();i++)
+      ParseDisplay(fTDCDisplayLines[i]);
+    break;
+  }
   default: {
     // default main detector SetConfig()
     TA2Detector::SetConfig( line, key );
@@ -86,6 +92,7 @@ void TA2Moeller::LoadVariable( )
   
   // create pointer storage
   fTDCs.resize(fVupromOffset.size()*fNLeftChannels*fNPairsPerCh*2);
+  fTDCDisplayLines.resize(fTDCs.size());
   
   // loop over the combinations
   for(UShort_t i=0;i<fVupromOffset.size();i++) {
@@ -99,16 +106,24 @@ void TA2Moeller::LoadVariable( )
               hel;
           // create the buffer
           UInt_t* ptr = new UInt_t[fNBins];
+          for(UInt_t l=0;l<fNBins;l++)
+            ptr[l] = 0;
           fTDCs[idx] = ptr;
           // construct the name
           stringstream ss; // = new stringstream();        
           ss << "TDC_Vup_Left_Pair_Hel_";
           ss << i << "_" << j << "_" << k << "_" << hel;
-          //cout << ss.str() << endl;
           // str needs to live longer than this scope...
-          // this is just another memory leak here
+          // this is just another memory leak here          
           string* str = new string(ss.str()); 
-          TA2DataManager::LoadVariable(str->c_str(), fTDCs[idx], EIScalerX);        
+          TA2DataManager::LoadVariable(str->c_str(), fTDCs[idx], EIScalerX);
+          
+          // create a parsable display line to easily enable all histograms
+          stringstream ss_display;
+          ss_display << "1D " << ss.str() << " " << 
+                        fNBins << " 0 " << fNBins;
+          string* str_display = new string(ss_display.str()); 
+          fTDCDisplayLines[idx] = str_display->c_str();
         } 
       }
     }
@@ -171,7 +186,7 @@ void TA2Moeller::Decode()
           UInt_t value = 0xffff*data[2]+data[1];
           
           UShort_t hel = ramAddr / fNBins;
-          UShort_t bin = ramAddr % fNBins;
+          UShort_t bin = (ramAddr+fNBins/2) % fNBins; // shift the bins 
           UShort_t idx = i * 2*fNLeftChannels*fNPairsPerCh +
               j * 2*fNPairsPerCh +
               k * 2 +
