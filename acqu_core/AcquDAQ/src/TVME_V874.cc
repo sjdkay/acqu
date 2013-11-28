@@ -326,7 +326,7 @@ void TVME_V874::ReadIRQ( void** outBuffer )
   // check via the readout pattern, if a readout is necessary at all
   // this can speed up readout...
   UInt_t readoutPattern = fEXP->GetSynchMod()->GetReadoutPattern();
-  if(kFALSE && ((readoutPattern >> fNoOfModule) & 0x1) == 0) {
+  if(((readoutPattern >> fNoOfModule) & 0x1) == 0) {
     ResetData();
     return;
   }
@@ -385,13 +385,6 @@ void TVME_V874::ReadIRQ( void** outBuffer )
     ResetData();
     return;
   }
-  // check the data ready again, there should be nothing left
-  status1 = Read(EV874_IStatus1); 
-  if (status1 & 0x1){
-    printf("V874 Still some data in board!\n");
-    ErrorStore(outBuffer, EErrDataFormat);
-  }
-  // reset
   ResetData();
 }
 
