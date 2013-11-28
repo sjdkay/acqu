@@ -60,7 +60,11 @@ inline void TVME_VITEC::WaitIRQ( )
   for(;;){
     if( fIsIRQEnabled ){                 // "interrupt" software enabled?
       datum = Read(EVIT_Status);         // poll status register
-      if( datum & 0x8000 )break;         // exit when bit 15 set
+      // this happens sometimes for whatever reason
+      // then just try again!
+      if( datum == 0xffff)
+        continue;
+      if( datum & 0x8000 ) break;         // exit when bit 15 set
     }
   }
   SetIRQ();                              // set ACK (NIM output 1)
@@ -71,22 +75,25 @@ inline UInt_t TVME_VITEC::GetEventID( )
 {
   // Read the event ID
   //
-  Int_t datum,evid;
-  Int_t i=0;
+  UInt_t datum,evid;
   for(;;){
     datum = Read(EVIT_Status);
-    if( (datum & 0x1a) == 0x1a ) break;   // start/stop bits set...OK
-    else if((datum & 0x11) == 0x11){
-      evid = 0xffffffff;
-      return evid;
-    }
-    else if(i > EVIT_EvIDTimeout){
-      evid = 0xffffffff;
-      return evid;
-    }
-    i++;
-    //   usleep(1);
+    // this happens sometimes for whatever reason
+    // then just try again!
+    if( datum == 0xffff)
+      continue;
+    // check if bit4 is high
+    if( (datum & 0x10) == 0x10 ) 
+      break;
   }
+
+  // something received, check if it's okay
+  if((datum & 0x1f) != 0x1a){
+    evid = 0xffffffff;
+    return evid;
+  }
+
+  // event id ok
   evid = Read(EVIT_EvIDlsb);           // get the event ID
   datum = Read(EVIT_EvIDmsb);
   evid = evid | (datum << 16);
