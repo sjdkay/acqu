@@ -105,9 +105,9 @@ void TVME_VUPROM_Moeller::ClearIndices()
 
 void TVME_VUPROM_Moeller::StartMoellerDAQ()
 {
-  // set reset high and low again, for each module
+  // set reset high and wait until it's low again (strobe reset)
   Write(EVUM_DAQ_reset, (UInt_t)0x1);  // 0x2030
-  Write(EVUM_DAQ_reset, (UInt_t)0x0);  // 0x2030  
+  while(Read(EVUM_DAQ_reset));  // 0x2030
   // finally start a clean new run, 
   // this also starts the scalers
   if(kChainIsLast) {
