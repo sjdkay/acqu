@@ -6,5 +6,6 @@ Hardware-ID: 02000021
 
 # what offsets for the "left" channel
 # and the pairs of the "right" channel?
-#       left   right
-CfgMode:  10      10
+#         left    right
+#         EF      ST
+CfgMode:  1       3

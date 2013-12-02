@@ -2,7 +2,7 @@
 ##         HexBase #Registers ModuleType MapSize
 BaseSetup: 0       0          ADC-Scaler     4000
 # firmware id of the VUPROM
-Hardware-ID: 0300002b
+Hardware-ID: 0300002d
 
 # we define what is the first and the last module
 # (by name) in the chain of readout Vuproms 
@@ -28,4 +28,4 @@ NReadsPerIRQ: 25
 # Number of scaler events between Moeller readout
 # this can be used to optimize the livetime
 # of the Moeller measurement
-ScalerModulo: 50
+ScalerModulo: 25
