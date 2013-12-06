@@ -67,14 +67,18 @@ TA2TAPSAnalysis::TA2TAPSAnalysis(const char* name, TA2Analysis* analysis)
     fH_Veto_Time = 0;
 
     fH_PWO = 0;
+    fH_PWO_CFD = 0;
     fH_PWO_Time = 0;
     
     fH_PWO_S = 0;
+    fH_PWO_S_CFD = 0;
     
     fH_PWO_Veto = 0;
+    fH_PWO_Veto_CFD = 0;
     fH_PWO_Veto_Time = 0;
     
     fH_PWO_Veto_S = 0;
+    fH_PWO_Veto_S_CFD = 0;
 }
 
 //______________________________________________________________________________
@@ -264,11 +268,14 @@ void TA2TAPSAnalysis::PostInit()
     {
         Int_t nElem = fPWO->GetNelement();
         fH_PWO = new TH1*[nElem];
+        fH_PWO_CFD = new TH1*[nElem];
         fH_PWO_Time = new TH1*[nElem];
         for (Int_t i = 0; i < nElem; i++)
         {
             sprintf(tmp, "PWO_%03d", i+1);
             fH_PWO[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
+            sprintf(tmp, "PWO_CFD_%03d", i+1);
+            fH_PWO_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
             sprintf(tmp, "PWO_Time_%03d", i+1);
             fH_PWO_Time[i] = new TH1F(tmp, tmp, 6000, -3000, 3000);
         }
@@ -278,11 +285,14 @@ void TA2TAPSAnalysis::PostInit()
     if (fPWO_S)
     {
         Int_t nElem = fPWO_S->GetNelement();
+        fH_PWO_S_CFD = new TH1*[nElem];
         fH_PWO_S = new TH1*[nElem];
         for (Int_t i = 0; i < nElem; i++)
         {
             sprintf(tmp, "PWO_S_%03d", i+1);
             fH_PWO_S[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
+            sprintf(tmp, "PWO_S_CFD_%03d", i+1);
+            fH_PWO_S_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
         }
     }
     
@@ -291,11 +301,14 @@ void TA2TAPSAnalysis::PostInit()
     {
         Int_t nElem = fPWO_Veto->GetNelement();
         fH_PWO_Veto = new TH1*[nElem];
+        fH_PWO_Veto_CFD = new TH1*[nElem];
         fH_PWO_Veto_Time = new TH1*[nElem];
         for (Int_t i = 0; i < nElem; i++)
         {
             sprintf(tmp, "PWO_Veto_%03d", i+1);
             fH_PWO_Veto[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
+            sprintf(tmp, "PWO_Veto_CFD_%03d", i+1);
+            fH_PWO_Veto_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
             sprintf(tmp, "PWO_Veto_Time_%03d", i+1);
             fH_PWO_Veto_Time[i] = new TH1F(tmp, tmp, 6000, -3000, 3000);
         }
@@ -306,10 +319,13 @@ void TA2TAPSAnalysis::PostInit()
     {
         Int_t nElem = fPWO_Veto_S->GetNelement();
         fH_PWO_Veto_S = new TH1*[nElem];
+        fH_PWO_Veto_S_CFD = new TH1*[nElem];
         for (Int_t i = 0; i < nElem; i++)
         {
             sprintf(tmp, "PWO_Veto_S_%03d", i+1);
             fH_PWO_Veto_S[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
+            sprintf(tmp, "PWO_Veto_S_CFD_%03d", i+1);
+            fH_PWO_Veto_S_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
         }
     }
  
@@ -386,7 +402,7 @@ void TA2TAPSAnalysis::FillTDCHitsM(TA2Detector* det, TH1** h)
 {
     // Fill the TDC multi-hits in the detector 'det' into the histogram array 'h'.
 
-    // loop over all veto hits
+    // loop over all hits
     for (UInt_t i = 0; i < det->GetNhits(); i++)
     {
         // get element number
@@ -516,11 +532,31 @@ void TA2TAPSAnalysis::Reconstruct()
     }
 
     // fill PWO spectra
-    if (fPWO)
+    if (fPWO && fPWO->IsRawHits())
     {
-        // fill raw ADC hits
-        FillADCHits(fPWO, fH_PWO);
-        
+        // loop over ADC hits
+        for (UInt_t i = 0; i < fPWO->GetNADChits(); i++)
+        {
+            // get element number
+            Int_t elem = fPWO->GetRawEnergyHits()[i];
+            
+            // get ADC value
+            UShort_t value_adc = fPWO->GetElement(elem)->GetRawADCValue();
+            
+            // fill uncut ADC hits
+            fH_PWO[elem]->Fill(value_adc);
+            
+            // fill hits where CFD (TDC) fired
+            for (UInt_t j = 0; j < fPWO->GetNTDChits(); j++)
+            {
+                // get element number
+                Int_t tdc = fPWO->GetRawTimeHits()[j];
+                    
+                // fill hits where CFD fired
+                if (tdc == elem) fH_PWO_CFD[elem]->Fill(value_adc);
+            }
+        }
+
         // fill raw TDC hits
         FillTDCHitsM(fPWO, fH_PWO_Time);
     }
@@ -528,16 +564,56 @@ void TA2TAPSAnalysis::Reconstruct()
     // fill PWO_S spectra
     if (fPWO_S)
     {
-        // fill raw ADC hits
-        FillADCHits(fPWO_S, fH_PWO_S);
+        // loop over ADC hits
+        for (UInt_t i = 0; i < fPWO_S->GetNADChits(); i++)
+        {
+            // get element number
+            Int_t elem = fPWO_S->GetRawEnergyHits()[i];
+            
+            // get ADC value
+            UShort_t value_adc = fPWO_S->GetElement(elem)->GetRawADCValue();
+            
+            // fill uncut ADC hits
+            fH_PWO_S[elem]->Fill(value_adc);
+            
+            // fill hits where CFD (TDC) fired
+            for (UInt_t j = 0; j < fPWO_S->GetNTDChits(); j++)
+            {
+                // get element number
+                Int_t tdc = fPWO_S->GetRawTimeHits()[j];
+                    
+                // fill hits where CFD fired
+                if (tdc == elem) fH_PWO_S_CFD[elem]->Fill(value_adc);
+            }
+        }
     }
     
     // fill PWO_Veto spectra
     if (fPWO_Veto)
     {
-        // fill raw ADC hits
-        FillADCHits(fPWO_Veto, fH_PWO_Veto);
-        
+        // loop over ADC hits
+        for (UInt_t i = 0; i < fPWO_Veto->GetNADChits(); i++)
+        {
+            // get element number
+            Int_t elem = fPWO_Veto->GetRawEnergyHits()[i];
+            
+            // get ADC value
+            UShort_t value_adc = fPWO_Veto->GetElement(elem)->GetRawADCValue();
+            
+            // fill uncut ADC hits
+            fH_PWO_Veto[elem]->Fill(value_adc);
+            
+            // fill hits where CFD (TDC) fired
+            for (UInt_t j = 0; j < fPWO_Veto->GetNTDChits(); j++)
+            {
+                // get element number
+                Int_t tdc = fPWO_Veto->GetRawTimeHits()[j];
+                    
+                // fill hits where CFD fired
+                if (tdc == elem) fH_PWO_Veto_CFD[elem]->Fill(value_adc);
+            }
+        }
+         
         // fill raw TDC hits
         FillTDCHitsM(fPWO_Veto, fH_PWO_Veto_Time);
     }
@@ -545,8 +621,29 @@ void TA2TAPSAnalysis::Reconstruct()
     // fill PWO_Veto_S spectra
     if (fPWO_Veto_S)
     {
-        // fill raw ADC hits
-        FillADCHits(fPWO_Veto_S, fH_PWO_Veto_S);
+        // loop over ADC hits
+        for (UInt_t i = 0; i < fPWO_Veto_S->GetNADChits(); i++)
+        {
+            // get element number
+            Int_t elem = fPWO_Veto_S->GetRawEnergyHits()[i];
+            
+            // get ADC value
+            UShort_t value_adc = fPWO_Veto_S->GetElement(elem)->GetRawADCValue();
+            
+            // fill uncut ADC hits
+            fH_PWO_Veto_S[elem]->Fill(value_adc);
+            
+            // fill hits where CFD (TDC) fired
+            for (UInt_t j = 0; j < fPWO_Veto_S->GetNTDChits(); j++)
+            {
+                // get element number
+                Int_t tdc = fPWO_Veto_S->GetRawTimeHits()[j];
+                    
+                // fill hits where CFD fired
+                if (tdc == elem) fH_PWO_Veto_S_CFD[elem]->Fill(value_adc);
+            }
+        }
     }
+
 }
 

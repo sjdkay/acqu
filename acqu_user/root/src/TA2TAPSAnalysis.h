@@ -69,14 +69,18 @@ private:
     TH1** fH_Veto_Time;                                     // Veto TDC 
     
     TH1** fH_PWO;                                           // PWO ADC
+    TH1** fH_PWO_CFD;                                       // PWO ADC with CFD (TDC) cut
     TH1** fH_PWO_Time;                                      // PWO TDC
     
     TH1** fH_PWO_S;                                         // PWO ADC sensitive
+    TH1** fH_PWO_S_CFD;                                     // PWO ADC sensitive with CFD (TDC) cut
     
     TH1** fH_PWO_Veto;                                      // PWO Veto ADC
+    TH1** fH_PWO_Veto_CFD;                                  // PWO Veto ADC with CFD (TDC) cut
     TH1** fH_PWO_Veto_Time;                                 // PWO Veto TDC
     
     TH1** fH_PWO_Veto_S;                                    // PWO ADC sensitive
+    TH1** fH_PWO_Veto_S_CFD;                                // PWO ADC sensitive with CFD (TDC) cut
     
     Int_t GetPatternIndex(const Char_t* patternName, TA2BitPattern* pattern);
     void FillADCHits(TA2Detector* det, TH1** h);
