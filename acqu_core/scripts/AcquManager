@@ -132,8 +132,8 @@ $runsets->{TaggEff} =
 # commented out since not needed at the moment?
 #$runsets->{TAPSPed}
 #  = MakePedRunset($runsets->{TAPS});
-#$runsets->{CBTaggTAPSPed}
-#  = MakePedRunset($runsets->{CBTaggTAPS});
+$runsets->{CBTaggTAPSPed}
+  = MakePedRunset($runsets->{CBTaggTAPS});
 
 
 
@@ -979,7 +979,7 @@ sub MakePedRunset {
   $r->{Description} .= ', including pedestals';
   # patterns for hosts whose taggs should be
   # suffixed with _Ped
-  my @PedHosts = qw(vme-taps-baf-? vme-taps-pwo);
+  my @PedHosts = qw(vme-exptrigger vme-taps-pwo);
 
   foreach my $h (@{$r->{Hosts}}) {
     foreach my $patt (@PedHosts) {
