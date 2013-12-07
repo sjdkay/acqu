@@ -979,7 +979,7 @@ sub MakePedRunset {
   $r->{Description} .= ', including pedestals';
   # patterns for hosts whose taggs should be
   # suffixed with _Ped
-  my @PedHosts = qw(vme-exptrigger vme-taps-pwo);
+  my @PedHosts = qw(vme-exptrigger vme-cb-adc-2b vme-taps-pwo);
 
   foreach my $h (@{$r->{Hosts}}) {
     foreach my $patt (@PedHosts) {
