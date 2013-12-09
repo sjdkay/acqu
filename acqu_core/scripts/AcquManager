@@ -86,7 +86,7 @@ $runsets->{CBTagg} =
   };
 
 # define runset TAPS
-$runsets->{TAPS} =
+$runsets->{TAPS} = MakePedRunset(
   {
    'Description' => 'TAPS in standalone, without CB, MWPC and Tagger',
    'DefaultTriggerId' => undef, # TAPS does not have a trigger ID
@@ -104,7 +104,11 @@ $runsets->{TAPS} =
                ['vme-taps-pwo',     'PbWO4'],
               ],
    'TCS' => undef # TAPS does not know about TCS...
-  };
+  });
+
+$runsets->{TAPSPulser} = dclone($runsets->{TAPS});
+$runsets->{TAPSPulser}->{Description} .= ', Pulser only';
+$runsets->{TAPSPulser}->{Hosts}->[0]->[1] = 'MasterP';
 
 # define runset TaggEff
 $runsets->{TaggEff} =
@@ -1128,7 +1132,7 @@ sub GenerateArgument {
 
 sub GenerateAcquRootCmd {
   my $runset = shift;
-  my $arg = "$runset.Online";
+  my $arg = "Online-$runset.dat";
   return "xterm -hold -title 'AcquRoot $arg' -e AcquRoot $arg";
 }
 
