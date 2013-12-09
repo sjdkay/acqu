@@ -1,7 +1,7 @@
 void SaveOpenSpectras() {
 char *spectra_names[] =    
 	{"CB-Spectra",
-	"TAPS-Spectra",
+	"TAPS-BaF2-Spectra",
         "TAPS-PbWO4-Spectra",
         "TAPS-Veto-Spectra",
 	"Tagger-Spectra",

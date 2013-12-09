@@ -21,7 +21,7 @@ void InitToolbar(){
 			     0};
   
   char* button_actions[] =  {"CheckCB()", "CBClear()",
-			     "CheckTAPS()","TAPSClear()", 
+			     "CheckTAPSBaF2()","TAPSBaF2Clear()", 
 			     "CheckTAPSPbWO4()", "TAPSPbWO4Clear()",
 			     "CheckTAPSVeto()", "TAPSVetoClear()",
 			     "CheckTagger2()", "TaggerClear()",
@@ -38,8 +38,8 @@ void InitToolbar(){
 			     0};
   char* button_comments[] = {"Representative CB spectra", 
 			     "Clear CB spectra",
-			     "Representative TAPS spectra",
-			     "Clear TAPS spectra",
+			     "Representative TAPS BaF2 spectra",
+			     "Clear TAPS BaF2 spectra",
 			     "Representative TAPS-PbWO4 spectra",
 			     "Clear TAPS-PbWO4 spectra",
 			     "Representative TAPS Veto-Time spectra",
@@ -87,7 +87,7 @@ void InitPackages(){
   // at the moment it is not checked it they really exist.
   char macro_path[] = "/home/a2cb/acqu/macros/"; 
   char *macro_names[] =   {"CheckCB.C",
-			   "CheckTAPS.C", 
+			   "CheckTAPSBaF2.C", 
 			   "CheckTAPSPbWO4.C",
 			   "CheckTAPSVeto.C",
 			   "CheckTagger2.C",
