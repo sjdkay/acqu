@@ -29,5 +29,5 @@ Stream-Spec:    File    Mk2     0       32768   1024      0       400
 ## Now the list of data files to analyse
 ##              File Name       1st rec Last rec
 ##
-File-Name:  part1-2013_11-G-E/CBTaggTAPS_302.dat     0   0
+File-Name:  TAPS_47.dat     0   0
 ## END
