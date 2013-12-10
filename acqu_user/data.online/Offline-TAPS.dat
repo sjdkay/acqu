@@ -4,10 +4,10 @@
 ##--Update	JRM Annand...17th May 2005
 ##--Description
 ##                *** Acqu++ <-> Root ***
-## Online/Offline Analysis of Sub-Atomic Physics Experimental Data 
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data
 ##
 ## Parameter File: FPcomm.Offline
-## Master parameter file for Acqu-Root analysis. 
+## Master parameter file for Acqu-Root analysis.
 ## Expected to reside in directory $acqu/data/
 ## To use invoke for example... AcquRoot --offline CBMC.Offline
 ##-----------------------------------------------------------------------
@@ -41,7 +41,7 @@ Branch:	  Mk1_Header            120000
 #TreeFile: /scratch/jrma/CB_5326.rd0
 ##
 ## Directory to save any created ROOT files (include final / )
-Directory: /scratch/jrma/
+Directory: /home/a2cb/TAPS/
 ##
 ## Manual setup of ADC, Scaler, bits-in-ADC numbers
 ## Usually needed only where experiment header information is not given
@@ -63,12 +63,11 @@ Directory: /scratch/jrma/
 Analysis: TA2UserAnalysis
 ##
 ## Analysis setup file
-AnalysisSetup: TaggEffAnalysisMk2.dat
-##
-## Specify non-clearing scalers
-#ScalerNoClear: 12 139
-#ScalerNoClear: 48 171
+AnalysisSetup: AnalysisOffline-TAPS.dat
 ##
 ## Online running...setup of data server
 ## This is ignored for offline running and may be left in
-ServerSetup: TaggEffServer.dat.OnlineMk2
+ServerSetup: ServerOffline-TAPS.dat
+## Experimental
+## GUI to connect to slarti
+##Local-DAQ: GUIctrl.dat

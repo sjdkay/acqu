@@ -2,13 +2,13 @@
 MultiADC:       3       29193   29319     29192
 ##
 # TAPS bit pattern
-BitPattern: data.TAPS/TAPS/TAPS.pat
+BitPattern: Pattern-TAPS.dat
 ##
-Apparatus:          TAPS            TA2GenericApp           data.TAPS/TAPS/TAPS.dat
+Apparatus:          TAPS            TA2GenericApp           ApparatusOffline-TAPS.dat
 ##
 Reconstruct-Analysis:
 ##
-Physics-Analysis:   TAPSAnalysis    TA2TAPSAnalysis         data.TAPS/TAPSAnalysis.dat
+Physics-Analysis:   TAPSAnalysis    TA2TAPSAnalysis         PhysicsOffline-TAPS.dat
 ##
 Initialise:
 ##

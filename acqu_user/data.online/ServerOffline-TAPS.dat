@@ -1,12 +1,13 @@
 ##-----------------------------------------------------------------------
 ##--Author	JRM Annand   13th Jan 2004
-##--Update	JRM Annand... 1st Dec 2004
+##--Update	JRM Annand...
 ##--Description
 ##                *** Acqu++ <-> Root ***
-## Online/Offline Analysis of Sub-Atomic Physics Experimental Data 
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data
 ##
-## Parameter File: FPcommServer.Offline
-## Configuration file for DataServer (data input for analysis)
+## Parameter File: ServerSetup.dat
+## Default master parameter file for DataServer (data input for analysis)
+## Online data taking, merged ACQU & TAPS
 ##
 ##-----------------------------------------------------------------------
 ## Number of Input streams (sources of data), Record length to write data
@@ -16,18 +17,17 @@ Input-Streams:	1		32768		0
 ##
 ## Optional directory spec. If not specified File-Names must contain the full
 ## directory path
-File-Directory:	scratch/
+#File-Directory:	/home/a2cb/acqu/scratch/
 ##
 ## Specify each input stream
-## From disk file, ACQU (Mk1) format, save any output to file (save=1)
+## From disk file, ACQU (Mk2) format, save any output to file (save=1)
 ## Input data record length, Output data record length
 ##
-##            	Source	Format	Save?	RecLen	Buffers	Swap	MarkID
-Stream-Spec:	File	Mk1	0	32768	32	0	400
+##              Source  Format  Save?   RecLen  Buffers Swap    MarkID
+Stream-Spec:    File    Mk2     0       32768   1024      0       400
 ##
 ## Now the list of data files to analyse
-## Tagger test data files
-##		File Name	1st rec	Last rec
-## 2nA
-File-Name:	Feb_RunTest_241.dat	0	0
+##              File Name       1st rec Last rec
+##
+File-Name:  /home/a2cb/acqu/scratch/TAPS_46.dat   0   0
 ## END
