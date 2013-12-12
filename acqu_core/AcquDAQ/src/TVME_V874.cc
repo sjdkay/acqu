@@ -62,6 +62,8 @@ const Int_t DevThrLED2[] = { 0x23, 0x1b, 0x13, 0x0b }; // DAC addr LED2 thr
 const Int_t DevPedVG[] = { 0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17 };
 // DAC Veto LED threshold
 const Int_t DevThrVLED[] = { 0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f };
+// Digital/analog test pulser switch on piggy back
+const Int_t DevTestPuls = 0x30;
 
 
 ClassImp(TVME_V874)
@@ -496,6 +498,9 @@ void TVME_V874::InitDAC()
       SetPiggy( DevThrLED2[i], fThrLED2[i] ); // load LED2 thresholds
     }
   }
+
+  // enable digital test pulser
+  SetPiggy( DevTestPuls, 0x1 );
 }
 
 //--------------------------------------------------------------------------
