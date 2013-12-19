@@ -30,11 +30,11 @@ V-Off: 165
 ## Long gate QDC pedestal set
 Ped-LG: 5398 5424 5416 5519
 ## Long gate sensitive QDC pedestal set
-Ped-LGS: 5781 5707 6019 5977
+Ped-LGS: 5781 5705 6019 5977
 ## Short gate QDC pedestal set
-Ped-SG: 5173 4881 5376 5184
+Ped-SG: 5173 4879 5374 5182
 ## Short gate sensitive QDC pedestal set
-Ped-SGS: 5678 5007 6260 5977
+Ped-SGS: 5681 5004 6259 5977
 ## CFD thresholds in raw values for piggy back
 Thr-CFD-Raw: 8109 8103 8127 8106
 ## LED1 thresholds in mV
