@@ -37,7 +37,8 @@ VMEreg_t VUPROMMoellerReg[] = {
   // this list is from 
   // http://wwwa2/intern/daqwiki/doku.php?id=trigger:moeller:vmeregisters
   {0x2f00,      0x0,  'l', 0},       // Firmware revision
-  {0x2200,      0x0,  'l', 0},       // Global DAQ enable, sent out by first mod 
+  {0x2500,      0x0,  'l', 0},       // Global DAQ enable, sent out by first mod 
+  {0x2510,      0x0,  'l', 0},       // NimOutMode (only set by "external" Tagger Channel Selector)
   {0x2020,      0x0,  'l', 0},       // DAQ status 
   {0x2030,      0x0,  'l', 0},       // DAQ reset 
   {0x2040,      0x0,  'l', 0},       // DAQ enable
@@ -108,17 +109,21 @@ void TVME_VUPROM_Moeller::StartMoellerDAQ()
   // set reset high and wait until it's low again (strobe reset)
   Write(EVUM_DAQ_reset, (UInt_t)0x1);  // 0x2030
   while(Read(EVUM_DAQ_reset));  // 0x2030
+  // ensure correct NimOutMode
+  Write(EVUM_NimOutMode, (UInt_t)0x0); // 0x2510
   // finally start a clean new run, 
   // this also starts the scalers
   if(kChainIsLast) {
-    fChainCtrl->Write(EVUM_GlobalEnable, (UInt_t)0x1); // 0x2200
+    fChainCtrl->Write(EVUM_GlobalEnable, (UInt_t)0x1); // 0x2500
   }
 }
 
 void TVME_VUPROM_Moeller::StopMoellerDAQ()
 {
+  // ensure correct NimOutMode
+  Write(EVUM_NimOutMode, (UInt_t)0x0); // 0x2510
   if(fChainCtrl==this)
-    Write(EVUM_GlobalEnable, (UInt_t)0x0); // 0x2200
+    Write(EVUM_GlobalEnable, (UInt_t)0x0); // 0x2500
 }
 
 //-----------------------------------------------------------------------------

@@ -7,6 +7,7 @@
 enum {
   EVUM_Firmware,
   EVUM_GlobalEnable,
+  EVUM_NimOutMode,
   EVUM_DAQ_status,
   EVUM_DAQ_reset,
   EVUM_DAQ_enable,
