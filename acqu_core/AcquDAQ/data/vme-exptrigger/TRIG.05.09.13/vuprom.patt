@@ -6,7 +6,7 @@
 ## Set VUPROM to read input and multiplicity pattern
 ##              Hex Base	#Registers	Module type	MapSize
 BaseSetup:	0		0		ADC		4000
-Hardware-ID: 01000079
+Hardware-ID: 0100007c
 En-Pattern-Read:
 #	End of File
 #
