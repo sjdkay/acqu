@@ -91,6 +91,7 @@
 #include "TVME_VUPROMT.h"
 #include "TVME_VUPROM_Scaler.h"
 #include "TVME_VUPROM_Moeller.h"
+#include "TVME_VUPROM_Pattern.h"
 #include "TVME_SIS3820.h"
 #include "TEPICSmodule.h"
 #include "TVME_V965.h"
@@ -467,9 +468,13 @@ void TDAQexperiment::AddModule( Char_t* line )
     mod = new TVME_VUPROM_Scaler( name, file, fLogStream, line );
     break;
   case EGSI_VUPROM_Moeller:
-    // VUPROM Simple scaler module
+    // VUPROM Moeller module
     mod = new TVME_VUPROM_Moeller( name, file, fLogStream, line );
     break;
+  case EGSI_VUPROM_Pattern:
+    // VUPROM Simple Pattern module
+    mod = new TVME_VUPROM_Pattern( name, file, fLogStream, line );
+    break;  
   case ESIS_3820:
     // SIS 3820 I/O register and scaler
     mod = new TVME_SIS3820( name, file, fLogStream, line );

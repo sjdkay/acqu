@@ -64,7 +64,7 @@ enum { ECAEN_1465 = 0x0300, ECAEN_1488, ECAEN_V792, ECAEN_V775, ECAEN_V1190,
 enum { EINFN_56001 = 0x0500 };
 enum { EFIADC_64 = 0x0600, ECATCH_TDC, ECATCH_SCA, EGeSiCA, ECATCH_TCS };
 enum { EGSI_VUPROM = 0x0700, EGSI_VUPROMT, 
-       EGSI_VUPROM_Scaler, EGSI_VUPROM_Moeller };
+       EGSI_VUPROM_Scaler, EGSI_VUPROM_Moeller, EGSI_VUPROM_Pattern };
 // VMEbus address modifier codes
 enum{ EVME_A32=0x9, EVME_A24=0x39, EVME_A16=0x29 };
 
@@ -140,6 +140,7 @@ const Map_t kExpModules[] = {
   {"GSI_VUPROMT",EGSI_VUPROMT},
   {"GSI_VUPROM_Scaler", EGSI_VUPROM_Scaler},
   {"GSI_VUPROM_Moeller", EGSI_VUPROM_Moeller},
+  {"GSI_VUPROM_Pattern", EGSI_VUPROM_Pattern},
   {"SIS_3820",   ESIS_3820},
   // CAMAC
   {"CAMAC",      ECAMAC},
