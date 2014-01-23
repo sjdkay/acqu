@@ -57,7 +57,7 @@ $runsets->{CBTaggTAPS} =
                ['vme-taps-veto-ab', 'VetoAB'],
                ['vme-taps-veto-cd', 'VetoCD' ],
                ['vme-taps-veto-ef', 'VetoEF'],
-               ['vme-taps-pwo',     'PbWO4'],
+               ['vme-taps-pwo',     'PbWO4.Sens'],
                ['vme-beampolmon',   'BEAM']
               ],
    'TCS' => undef # a bit unnecessary for the whole system
@@ -101,7 +101,7 @@ $runsets->{TAPS} = MakePedRunset(
                ['vme-taps-veto-ab', 'VetoAB'],
                ['vme-taps-veto-cd', 'VetoCD' ],
                ['vme-taps-veto-ef', 'VetoEF'],
-               ['vme-taps-pwo',     'PbWO4'],
+               ['vme-taps-pwo',     'PbWO4.Sens'],
               ],
    'TCS' => undef # TAPS does not know about TCS...
   });
