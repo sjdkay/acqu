@@ -138,6 +138,8 @@ $runsets->{TaggEff} =
 #  = MakePedRunset($runsets->{TAPS});
 $runsets->{CBTaggTAPSPed}
   = MakePedRunset($runsets->{CBTaggTAPS});
+$runsets->{CBTaggPed}
+  = MakePedRunset($runsets->{CBTagg});
 
 
 
