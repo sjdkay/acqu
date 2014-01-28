@@ -885,8 +885,8 @@ void TDAQexperiment::RunIRQ()
 	if( fSupervise->IsAuto() ) fSupervise->ExecRun();
       }
     }
-    fIRQMod->ResetIRQ();
     fNEvent++;
+    fIRQMod->ResetIRQ();
   }
 }
 
