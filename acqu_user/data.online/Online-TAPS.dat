@@ -21,7 +21,8 @@ Directory: /scratch/
 Analysis: TA2UserAnalysis
 ##
 ## Analysis setup file
-AnalysisSetup: Analysis-TAPS.dat
+#AnalysisSetup: Analysis-TAPS.dat
+AnalysisSetup: AnalysisOffline-TAPS.dat
 ##
 ## Specify non-clearing scalers
 #ScalerNoClear: 12 139
