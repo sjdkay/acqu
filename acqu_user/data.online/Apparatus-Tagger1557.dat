@@ -17,7 +17,7 @@ Initialise:
 #
 #
 Display: 1D Nhit  	   20 0  20  -1
-//Display: 1D PhotonEnergy  352 0 855  -1
+#Display: 1D PhotonEnergy  352 0 855  -1
 Display: 1D PhotonEnergy  352 v2ud_1557_1.88839.plot.ghist
 #Display: 2D Ladder_Hits   352 0 352  -1 Ladder_Time 100 0 200 -1
 
