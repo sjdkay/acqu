@@ -1,4 +1,4 @@
-##--Rev 	JRM Annand... 1st Oct 2005  New DAQ software
+##--Rev 	JRM Annand...29th Jan 2014  E & G observables on Neutron
 ##--Update	JRM Annand...
 ##--Description
 ##                *** AcquDAQ++ <-> Root ***
@@ -8,6 +8,7 @@
 ##              Hex Base	#Registers	Module type	MapSize  <-- Baya Added MapSize
 BaseSetup:	0		0		Scaler		4000
 Hardware-ID: 0100007c
+#Hardware-ID: 01000079
 Enable-CPU: 37ff
 Int-Delay:  0 2000
 Int-Delay:  1 2000
@@ -32,7 +33,7 @@ Enable-TAPS: 0
 Helicity-Inhibit: 0
 Set-M-Threshold: 0 1 2 3
 #L2-Prescale: 65535 65535 65535 65535 0 0 0 65535
-L2-Prescale: 65535 65535 65535 65535 0 0 0 0
+L2-Prescale: 65535 0 0 65535 0 0 0 65535
 GUI-permit:
 #	End of File
 #
