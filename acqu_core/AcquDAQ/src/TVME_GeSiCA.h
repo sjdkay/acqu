@@ -163,14 +163,16 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
   UInt_t nWord = header & 0xffff;
   //datum = Read(EIDStatus);
   datum = *pStatus;
-  if( nWord != ( (datum >> 16) & 0xfff) ){
+  UInt_t nWordS = (datum >> 16) & 0xfff;
+  if( nWord != nWordS ){
     ErrorStore( outBuffer,0x4 );
-    SpyReset();
-    return 0;
+    //  SpyReset();
+    // return 0;
   }
   // Check too many data words
   if( nWord > fMaxSpy ){                            // overflow ?
     ErrorStore( outBuffer, 2 );                     // error code 2
+    SpyReset();
     return 0;
   }
   // Make nword reads from the spy buffer
@@ -181,6 +183,7 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
   datum = *pStatus;
   if((fSpyData[nWord-1] != ECATCH_Trailer) || datum  ){ 
     ErrorStore( outBuffer, 3 );                     // error code 3
+    SpyReset();
     return 0;
   }
   // Forgot to do this....without saving the event ID there is no synch
@@ -193,6 +196,7 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
   if( fEventSendMod ) fEventSendMod->SendEventID( fTCSEventID );  
 //<-- Baya
 //
+  SpyReset();
   return (Int_t)nWord;
 }
 
