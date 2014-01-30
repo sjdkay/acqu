@@ -29,7 +29,9 @@ Finish:             /netroots/common_root/opt/acqu/acqu_user/root/macros/MyFinis
 #Display: ADC 29000 29191
 #Display: ADC 29192 29192
 ###
-#Display: MultiHit 29193 29319 1000 -3500  3500 0
+##### For PWO Time
+###
+Display: MultiHit 29193 29319 12000 -10000  2000 0
 ##
 ## Display VUPROM scalers
 #Display: Scaler 0 95
