@@ -17,6 +17,14 @@ Module: GSI_VUPROM vup0         vuprom.trigT		ea000000 0   196 32
 Module: GSI_VUPROM vup1         vuprom.patt     	ea000000 0   6 8
 Module: GSI_VUPROM vup2         vuprom.sca_coplan 	e8000000 196 32 32
 Module: GSI_VUPROM vup3         vuprom.sca_multi  	e7000000 224 32 32
+## CB Hitpattern readout
+#	module	            Name    configFile
+#Module: GSI_VUPROM_Pattern  vup1a   vuprom.patt_cb     	e1000000 50   8 16
+#Module: GSI_VUPROM_Pattern  vup1b   vuprom.patt_cb     	e2000000 58   8 16
+#Module: GSI_VUPROM_Pattern  vup1c   vuprom.patt_cb     	e3000000 66   8 16
+#Module: GSI_VUPROM_Pattern  vup1d   vuprom.patt_cb     	e4000000 74   8 16
+#Module: GSI_VUPROM_Pattern  vup1e   vuprom.patt_cb     	e5000000 82   8 16
+#Module: GSI_VUPROM_Pattern  vup1f   vuprom.patt_cb     	e6000000 90   8 16
 ##
 Module: CBD_8210   cbd0		cbd8210_0.dat	800000	0	0
 #

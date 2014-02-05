@@ -27,7 +27,7 @@ FC-Delay: 100
 RAM-Download: 72
 Input-Mask: 81c3
 L1-Width: 14
-Strobe-Delay: 0 8
+Strobe-Delay: 0 12
 Enable-TAPS: 0
 Helicity-Inhibit: 0
 Set-M-Threshold: 0 1 2 3
