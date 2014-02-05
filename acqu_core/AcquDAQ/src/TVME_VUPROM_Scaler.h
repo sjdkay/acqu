@@ -1,3 +1,14 @@
+//--Author	A Neiser      XXth Nov 2013 Adapt from TVME_VUPROM
+//--Rev 	...
+//--Update 	JRM Annand  
+//
+//--Description
+//                *** AcquDAQ++ <-> Root ***
+// DAQ for Sub-Atomic Physics Experiments.
+//
+// TVME_VUPROM Scaler
+// scaler reading module configurable via dat file
+
 #ifndef __TVME_VUPROM_Scaler_h__
 #define __TVME_VUPROM_Scaler_h__
 

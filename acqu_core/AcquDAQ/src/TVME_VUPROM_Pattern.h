@@ -1,3 +1,14 @@
+//--Author	A Neiser      XXth Nov 2013 Adapt from TVME_VUPROM
+//--Rev 	...
+//--Update 	JRM Annand    30th Jan 2014 Fix register setup 
+//
+//--Description
+//                *** AcquDAQ++ <-> Root ***
+// DAQ for Sub-Atomic Physics Experiments.
+//
+// TVME_VUPROM_Pattern
+// Hit pattern reading module, configurable via dat file
+
 #ifndef __TVME_VUPROM_Pattern_h__
 #define __TVME_VUPROM_Pattern_h__
 

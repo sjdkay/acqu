@@ -1,6 +1,6 @@
-//--Author	JRM Annand   22nd Sep 2013 Adapt TVME_VUPROM for TAPS trigger
+//--Author	A Neiser      XXth Nov 2013 Adapt from TVME_VUPROM
 //--Rev 	...
-//--Update 	JRM Annand  
+//--Update 	JRM Annand    31st Jan 2014 Fix register setup 
 //
 //--Description
 //                *** AcquDAQ++ <-> Root ***
@@ -50,14 +50,15 @@ VMEreg_t VUPROMMoellerReg[] = {
   {0x20a0,      0x0,  'l', 0},       // InputChannelsDebugMode
   {0x20b0,      0x0,  'l', 0},       // InputChannelsDebugLeftStart
   {0x20c0,      0x0,  'l', 0},       // InputChannelsDebugRightStart
+  // Scaler stuff
+  {0x1800,      0x0,  'l', 0},       // Clear scalers
+  {0x1804,      0x0,  'l', 0},       // Load scalers
+  {0x1000,      0x0,  'l', EVUM_NMoellerScaler-1},      // Scaler registers 0-95
   // RAM interface for Histogram values
   {0x2c00,      0x0,  'l', 0},       // WEB
   {0x2c10,      0x0,  'l', 0},       // AddrB
   {0x2c20,      0x0,  'l', 0},       // DInB
   {0x2800,      0x0,  'l', 0},       // DOutB0 (this is an offset, see PostInit)
-  {0x1800,      0x0,  'l', 0},       // Clear scalers
-  {0x1804,      0x0,  'l', 0},       // Load scalers
-  {0x1000,      0x0,  'l', 95},      // Scaler registers 0-95
   {0xffffffff,  0x0,  'l', 0},       // end of list
 };
 
@@ -202,7 +203,10 @@ void TVME_VUPROM_Moeller::PostInit( )
   // we need one register more to the old readout code from Peter 
   // the histogram at EVUM_RAM_DOutB0 (k=0, see ReadIRQ) is also there
   // but not needed for analysis
-  VUPROMMoellerReg[EVUM_RAM_DOutB0].repeat = fNLeftChannels*fNPairsPerCh;
+  UInt_t rep = fNLeftChannels*fNPairsPerCh;
+  // This is a filthy hack, but for now I can't think of better, jrma
+  Int_t ldoutB0 = EVUM_RAM_DOutB0 - EVUM_NMoellerScaler + 1;
+  VUPROMMoellerReg[ldoutB0].repeat = rep;
   InitReg( VUPROMMoellerReg );
   // init the base class  
   TVMEmodule::PostInit();

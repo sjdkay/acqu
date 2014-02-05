@@ -1,5 +1,13 @@
-// TVME_VUPROM Pattern
-// Pattern reading module configurable via dat file
+//--Author	A Neiser      XXth Nov 2013 Adapt from TVME_VUPROM
+//--Rev 	...
+//--Update 	JRM Annand    30th Jan 2014 Fix register setup 
+//
+//--Description
+//                *** AcquDAQ++ <-> Root ***
+// DAQ for Sub-Atomic Physics Experiments.
+//
+// TVME_VUPROM_Pattern
+// Hit pattern reading module, configurable via dat file
 
 #include "TVME_VUPROM_Pattern.h"
 #include "TDAQexperiment.h"
@@ -74,7 +82,7 @@ void TVME_VUPROM_Pattern::SetConfig( Char_t* line, Int_t key)
     fPatternOffsets.push_back(fPatternOffset);
     fVUPROMregs.push_back(Patterns);    
     // add it to the total number
-    fNChannel += 1;
+    fNChannel += 2;
     // Pattern register offset, 
     fPatternOffset += 1;
     break;
@@ -99,6 +107,7 @@ void TVME_VUPROM_Pattern::PostInit( )
   VMEreg_t end = {0xffffffff, 0x0, 'l', 0};
   fVUPROMregs.push_back(end);
   // this also sets fNReg to the correct value finally!
+  fNreg = 0;
   InitReg( fVUPROMregs.data() );
   
   // init the base class  

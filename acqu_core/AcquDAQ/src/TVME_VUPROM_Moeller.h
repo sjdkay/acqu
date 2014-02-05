@@ -1,9 +1,21 @@
+//--Author	A Neiser      XXth Nov 2013 Adapt from TVME_VUPROM
+//--Rev 	...
+//--Update 	JRM Annand    31st Jan 2014 Fix register setup 
+//
+//--Description
+//                *** AcquDAQ++ <-> Root ***
+// DAQ for Sub-Atomic Physics Experiments.
+//
+// TVME_VUPROM Moeller
+// Readout of the Moeller data
+
 #ifndef __TVME_VUPROM_Moeller_h__
 #define __TVME_VUPROM_Moeller_h__
 
 #include <vector>
 #include "TVMEmodule.h"
 
+enum { EVUM_NMoellerScaler = 96 };
 enum {
   EVUM_Firmware,
   EVUM_GlobalEnable,
@@ -19,15 +31,15 @@ enum {
   EVUM_InputChannelsDebugMode,
   EVUM_InputChannelsDebugLeftStart,
   EVUM_InputChannelsDebugRightStart,
-  // RAM interface
-  EVUM_RAM_WEB,
-  EVUM_RAM_AddrB,
-  EVUM_RAM_DinB,
-  EVUM_RAM_DOutB0,
   // scaler
   EVUM_ScalerClr,
   EVUM_ScalerLoad,
-  EVUM_Scaler
+  EVUM_Scaler,
+  // RAM interface
+  EVUM_RAM_WEB = EVUM_Scaler + EVUM_NMoellerScaler,
+  EVUM_RAM_AddrB,
+  EVUM_RAM_DinB,
+  EVUM_RAM_DOutB0
 };
 
 class TVME_VUPROM_Moeller : public TVMEmodule {

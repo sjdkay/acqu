@@ -1,4 +1,4 @@
-//--Author	JRM Annand   22nd Sep 2013 Adapt TVME_VUPROM for TAPS trigger
+//--Author	A Neiser      XXth Nov 2013 Adapt from TVME_VUPROM
 //--Rev 	...
 //--Update 	JRM Annand  
 //
@@ -143,6 +143,7 @@ void TVME_VUPROM_Scaler::PostInit( )
   // (well this happens if one uses C-style pointer hell...)
   VMEreg_t end = {0xffffffff, 0x0, 'l', 0};
   fVUPROMregs.push_back(end);
+  fNreg = 0;
   // this also sets fNReg to the correct value finally!
   InitReg( fVUPROMregs.data() );
   
