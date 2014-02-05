@@ -72,6 +72,7 @@ TA2TAPSAnalysis::TA2TAPSAnalysis(const char* name, TA2Analysis* analysis)
     
     fH_PWO_S = 0;
     fH_PWO_S_CFD = 0;
+    fH_PWO_S_Time = 0;
     
     fH_PWO_Veto = 0;
     fH_PWO_Veto_CFD = 0;
@@ -79,6 +80,7 @@ TA2TAPSAnalysis::TA2TAPSAnalysis(const char* name, TA2Analysis* analysis)
     
     fH_PWO_Veto_S = 0;
     fH_PWO_Veto_S_CFD = 0;
+    fH_PWO_Veto_S_Time = 0;
 }
 
 //______________________________________________________________________________
@@ -277,7 +279,7 @@ void TA2TAPSAnalysis::PostInit()
             sprintf(tmp, "PWO_CFD_%03d", i+1);
             fH_PWO_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
             sprintf(tmp, "PWO_Time_%03d", i+1);
-            fH_PWO_Time[i] = new TH1F(tmp, tmp, 6000, -3000, 3000);
+            fH_PWO_Time[i] = new TH1F(tmp, tmp, 12000, -10000, 2000);
         }
     }
 
@@ -287,13 +289,16 @@ void TA2TAPSAnalysis::PostInit()
         Int_t nElem = fPWO_S->GetNelement();
         fH_PWO_S_CFD = new TH1*[nElem];
         fH_PWO_S = new TH1*[nElem];
+        fH_PWO_S_Time = new TH1*[nElem];
         for (Int_t i = 0; i < nElem; i++)
         {
             sprintf(tmp, "PWO_S_%03d", i+1);
             fH_PWO_S[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
             sprintf(tmp, "PWO_S_CFD_%03d", i+1);
             fH_PWO_S_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
-        }
+            sprintf(tmp, "PWO_S_Time_%03d", i+1);
+            fH_PWO_S_Time[i] = new TH1F(tmp, tmp, 12000, -10000, 2000);
+         }
     }
     
     // create PWO Veto histograms
@@ -310,7 +315,7 @@ void TA2TAPSAnalysis::PostInit()
             sprintf(tmp, "PWO_Veto_CFD_%03d", i+1);
             fH_PWO_Veto_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
             sprintf(tmp, "PWO_Veto_Time_%03d", i+1);
-            fH_PWO_Veto_Time[i] = new TH1F(tmp, tmp, 6000, -3000, 3000);
+            fH_PWO_Veto_Time[i] = new TH1F(tmp, tmp, 12000, -10000, 2000);
         }
     }
     
@@ -320,13 +325,16 @@ void TA2TAPSAnalysis::PostInit()
         Int_t nElem = fPWO_Veto_S->GetNelement();
         fH_PWO_Veto_S = new TH1*[nElem];
         fH_PWO_Veto_S_CFD = new TH1*[nElem];
+        fH_PWO_Veto_S_Time = new TH1*[nElem];
         for (Int_t i = 0; i < nElem; i++)
         {
             sprintf(tmp, "PWO_Veto_S_%03d", i+1);
             fH_PWO_Veto_S[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
             sprintf(tmp, "PWO_Veto_S_CFD_%03d", i+1);
             fH_PWO_Veto_S_CFD[i] = new TH1F(tmp, tmp, 4096, 0, 4096);
-        }
+            sprintf(tmp, "PWO_Veto_S_Time_%03d", i+1);
+            fH_PWO_Veto_S_Time[i] = new TH1F(tmp, tmp, 12000, -10000, 2000);
+         }
     }
  
     // call PostInit of parent class
@@ -586,6 +594,9 @@ void TA2TAPSAnalysis::Reconstruct()
                 if (tdc == elem) fH_PWO_S_CFD[elem]->Fill(value_adc);
             }
         }
+
+        // fill raw TDC hits
+        FillTDCHitsM(fPWO_S, fH_PWO_S_Time);
     }
     
     // fill PWO_Veto spectra
@@ -643,6 +654,9 @@ void TA2TAPSAnalysis::Reconstruct()
                 if (tdc == elem) fH_PWO_Veto_S_CFD[elem]->Fill(value_adc);
             }
         }
+
+        // fill raw TDC hits
+        FillTDCHitsM(fPWO_Veto_S, fH_PWO_Veto_S_Time);
     }
 
 }
