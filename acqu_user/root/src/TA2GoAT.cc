@@ -179,7 +179,6 @@ void    TA2GoAT::PostInit()
 	treeTagger	= new TTree("treeTagger","treeTagger");
 	treeTrigger	= new TTree("treeTrigger","treeTrigger");
 	treeDetectorHits = new TTree("treeDetectorHits", "treeDetectorHits");
-	treeScaler	= new TTree("treeScaler", "treeScaler");
 	
 	treeRawEvent->Branch("nParticles",&nParticles,"nParticles/I");
 	treeRawEvent->Branch("Ek",  Ek,  "Ek[nParticles]/D");	
@@ -218,11 +217,16 @@ void    TA2GoAT::PostInit()
 	treeDetectorHits->Branch("nVeto_Hits", &nVeto_Hits, "nVeto_Hits/I");
 	treeDetectorHits->Branch("Veto_Hits", Veto_Hits, "Veto_Hits[nVeto_Hits]/I");
 	
+	// Store Scalers for non-MC process
+	if (gAR->GetProcessType() != EMCProcess) 
+	{
+		treeScaler = new TTree("treeScaler", "treeScaler");	
 	treeScaler->Branch("eventNumber", &eventNumber, "eventNumber/I");
 	treeScaler->Branch("eventID", &eventID, "eventID/I");
 	printf("GetMaxScaler: %d\n", GetMaxScaler());
 	sprintf(str, "Scaler[%d]/i", GetMaxScaler());
 	treeScaler->Branch("Scaler", fScaler, str);
+	}
 	
 	gROOT->cd();
 	
@@ -237,7 +241,7 @@ void    TA2GoAT::Reconstruct()
 {
 
 	// Output scaler info on scaler read events
-	if(gAR->IsScalerRead())
+	if((gAR->IsScalerRead()) && (gAR->GetProcessType() != EMCProcess))
 	{
 		eventID	= gAN->GetNDAQEvent();
 		treeScaler->Fill();		
