@@ -3,16 +3,16 @@
 ClassImp(TA2GoAT)
 
 TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, Analysis),
-															file(0),
-                                                            treeRawEvent(0),
-															treeTagger(0),
-															treeTrigger(0),
+                                                                    file(0),
+                                                                    treeRawEvent(0),
+                                                                    treeTagger(0),
+                                                                    treeTrigger(0),
                                                                     treeDetectorHits(0),
                                                                     treeScaler(0),
                                                                     nParticles(0),
                                                                     Ek(0),
-																	Theta(0),
-																	Phi(0),
+                                                                    Theta(0),
+                                                                    Phi(0),
                                                                     time(0),
                                                                     clusterSize(0),
                                                                     Apparatus(0),
@@ -31,15 +31,19 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     nPID_Hits(0),
                                                                     PID_Hits(0),
                                                                     nWC_Hits(0),
-																	WC_Hits(0),
-																	nBaF2_PbWO4_Hits(0),
-																	BaF2_PbWO4_Hits(0),
+                                                                    WC_Hits(0),
+                                                                    nBaF2_PbWO4_Hits(0),
+								    BaF2_PbWO4_Hits(0),
                                                                     nVeto_Hits(0),
                                                                     Veto_Hits(0),
                                                                     ESum(0),
                                                                     Mult(0),
+                                                                    nError(0),
+                                                                    ErrModID(0),
+                                                                    ErrModIndex(0),
+                                                                    ErrCode(0),
                                                                     eventNumber(0),
-                                                                    eventID(0)														
+                                                                    eventID(0)
 {
     	strcpy(outputFolder,"~");
     	strcpy(fileName,"RootTree");
@@ -60,7 +64,7 @@ TA2GoAT::~TA2GoAT()
 		delete treeDetectorHits;
 	if(treeScaler)
 		delete treeScaler;
-    if(file)
+	if(file)
 		delete file;
 }
 
@@ -70,17 +74,17 @@ void    TA2GoAT::LoadVariable()
    	TA2AccessSQL::LoadVariable();
 
 	TA2DataManager::LoadVariable("nParticles", 	&nParticles,EISingleX);
-	TA2DataManager::LoadVariable("Ek", 			Ek,			EDMultiX);
+	TA2DataManager::LoadVariable("Ek", 		Ek,		EDMultiX);
 	TA2DataManager::LoadVariable("Theta", 		Theta,		EDMultiX);   
 	TA2DataManager::LoadVariable("Phi", 		Phi,		EDMultiX);     	 	
 	TA2DataManager::LoadVariable("time", 		time,		EDMultiX);
 
 	TA2DataManager::LoadVariable("nTagged", 	&nTagged,	EISingleX);
-	TA2DataManager::LoadVariable("photonbeam_E",photonbeam_E,EDMultiX);
+	TA2DataManager::LoadVariable("photonbeam_E",    photonbeam_E,   EDMultiX);
 	TA2DataManager::LoadVariable("taggedCh", 	tagged_ch,	EIMultiX);
 	TA2DataManager::LoadVariable("taggedT", 	tagged_t,	EDMultiX);    
 
-	TA2DataManager::LoadVariable("dE", 			d_E,		EDMultiX);
+	TA2DataManager::LoadVariable("dE", 	       	d_E,		EDMultiX);
 	TA2DataManager::LoadVariable("WC0E", 		WC0_E,		EDMultiX);   
 	TA2DataManager::LoadVariable("WC1E", 		WC1_E,		EDMultiX);
 
@@ -118,14 +122,14 @@ void    TA2GoAT::PostInit()
    	Theta		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	Phi		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	time		= new Double_t[TA2GoAT_MAX_PARTICLE];
-   	clusterSize = new UChar_t[TA2GoAT_MAX_PARTICLE];
+   	clusterSize     = new UChar_t[TA2GoAT_MAX_PARTICLE];
     
-   	photonbeam_E= new Double_t[TA2GoAT_MAX_TAGGER];
+   	photonbeam_E    = new Double_t[TA2GoAT_MAX_TAGGER];
    	tagged_ch	= new Int_t[TA2GoAT_MAX_TAGGER];
    	tagged_t	= new Double_t[TA2GoAT_MAX_TAGGER];
     
    	Apparatus	= new UChar_t[TA2GoAT_MAX_PARTICLE];
-   	d_E			= new Double_t[TA2GoAT_MAX_PARTICLE];
+   	d_E    		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	WC0_E		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	WC1_E		= new Double_t[TA2GoAT_MAX_PARTICLE];
     
@@ -138,6 +142,10 @@ void    TA2GoAT::PostInit()
    	WC_Hits		= new Int_t[TA2GoAT_MAX_HITS];
    	BaF2_PbWO4_Hits	= new Int_t[TA2GoAT_MAX_HITS];
    	Veto_Hits	= new Int_t[TA2GoAT_MAX_HITS];
+
+   	ErrModID 	= new Int_t[TA2GoAT_MAX_ERROR];
+   	ErrModIndex 	= new Int_t[TA2GoAT_MAX_ERROR];
+   	ErrCode 	= new Int_t[TA2GoAT_MAX_ERROR];
     
    	printf("---------\n");
    	printf("Init Tree\n");
@@ -164,7 +172,7 @@ void    TA2GoAT::PostInit()
 		sscanf( gAR->GetFileName()+last, "%[^.].dat\n", inFile);	
 
     	sprintf(str, "%s/%s_%s.root", outputFolder, fileName, inFile);        
-   	printf("Root file saved to %s", str);  
+   	printf("Root file saved to %s\n", str);  
 
    	file		= new TFile(str,"RECREATE");
 	treeRawEvent	= new TTree("treeRawEvent", "treeRawEvent");
@@ -194,6 +202,10 @@ void    TA2GoAT::PostInit()
 
 	treeTrigger->Branch("ESum", &ESum, "ESum/D");
 	treeTrigger->Branch("Mult", &Mult, "Mult/I");
+	treeTrigger->Branch("nError", &nError, "nError/I");
+	treeTrigger->Branch("ErrModID", ErrModID, "ErrModID[nError]/I");
+	treeTrigger->Branch("ErrModIndex", ErrModIndex, "ErrModIndex[nError]/I");
+	treeTrigger->Branch("ErrCode", ErrCode, "ErrCode[nError]/I");
 
 	treeDetectorHits->Branch("nNaI_Hits", &nNaI_Hits, "nNaI_Hits/I");
 	treeDetectorHits->Branch("NaI_Hits", NaI_Hits, "NaI_Hits[nNaI_Hits]/I");
@@ -214,7 +226,7 @@ void    TA2GoAT::PostInit()
 	
 	gROOT->cd();
 	
-	eventNumber	= 0;
+	eventNumber = 0;
 	
 	// Default SQL-physics initialisation
     	TA2AccessSQL::PostInit();	
@@ -233,16 +245,16 @@ void    TA2GoAT::Reconstruct()
 
 	if(fTagger && fLadder)
 	{
-        // Get the conversion of tagger channel to photon energy
+               	// Get the conversion of tagger channel to photon energy
 		Double_t electron_E = fTagger->GetBeamEnergy();
-        const Double_t* ChToE = fLadder->GetECalibration();		
+		const Double_t* ChToE = fLadder->GetECalibration();		
 		
 		// Collect Tagger M0 Hits
 		nTagged	= fLadder->GetNhits();
 		for(int i=0; i<nTagged; i++)
 		{
 			tagged_ch[i]	= fLadder->GetHits(i);
-			tagged_t[i]		= (fLadder->GetTimeOR())[i];
+			tagged_t[i]    	= (fLadder->GetTimeOR())[i];
 			photonbeam_E[i] = electron_E - ChToE[tagged_ch[i]];
 		}
 	
@@ -252,7 +264,7 @@ void    TA2GoAT::Reconstruct()
 			for(int i=0; i<fLadder->GetNhitsM(m); i++)
 			{
 				tagged_ch[nTagged+i] 	= (fLadder->GetHitsM(m))[i];
-				tagged_t[nTagged+i]	 	= (fLadder->GetTimeORM(m))[i];
+				tagged_t[nTagged+i]    	= (fLadder->GetTimeORM(m))[i];
 				photonbeam_E[nTagged+i] = electron_E - ChToE[tagged_ch[nTagged+i]];
 			}
 			nTagged	+= fLadder->GetNhitsM(m);
@@ -265,7 +277,7 @@ void    TA2GoAT::Reconstruct()
 	if(fCB)
 	{
 		// Collect CB Hits
-    	nParticles	= fCB->GetNParticle();      
+		nParticles = fCB->GetNParticle();      
 		for(int i=0; i<nParticles; i++)
 		{
 			TA2Particle part = fCB->GetParticles(i);
@@ -274,14 +286,14 @@ void    TA2GoAT::Reconstruct()
 			part.SetMass(0.0);
 			
 			Apparatus[i]	= (UChar_t)EAppCB;			
-			Ek[i]			= part.GetT();
-			Theta[i]		= part.GetThetaDg();
-			Phi[i]			= part.GetPhiDg();			
-			time[i]			= part.GetTime();	
+			Ek[i]	       	= part.GetT();
+			Theta[i]       	= part.GetThetaDg();
+			Phi[i]	       	= part.GetPhiDg();			
+			time[i]	       	= part.GetTime();	
 			clusterSize[i]  = (UChar_t)part.GetClusterSize();
-			d_E[i]			= part.GetVetoEnergy();
-			WC0_E[i]		= part.GetEnergyMwpc0();
-		 	WC1_E[i]		= part.GetEnergyMwpc1();
+			d_E[i]	       	= part.GetVetoEnergy();
+			WC0_E[i]       	= part.GetEnergyMwpc0();
+		 	WC1_E[i]       	= part.GetEnergyMwpc1();
 		 	WC_Vertex_X[i]  = part.GetPsVertex().X();
 	 		WC_Vertex_Y[i]  = part.GetPsVertex().Y();
 		 	WC_Vertex_Z[i]  = part.GetPsVertex().Z();
@@ -299,13 +311,13 @@ void    TA2GoAT::Reconstruct()
 			part.SetMass(0.0);				
 			
 			Apparatus[nParticles+i]		= (UChar_t)EAppTAPS;		
-			Ek[nParticles+i]			= part.GetT();	
-			Theta[nParticles+i]			= part.GetThetaDg();
-			Phi[nParticles+i]			= part.GetPhiDg();					
-			time[nParticles+i]			= part.GetTime();
+			Ek[nParticles+i]	       	= part.GetT();	
+			Theta[nParticles+i]	       	= part.GetThetaDg();
+			Phi[nParticles+i]	       	= part.GetPhiDg();					
+			time[nParticles+i]	       	= part.GetTime();
 			clusterSize[nParticles+i]  	= (UChar_t)part.GetClusterSize();
-			d_E[nParticles+i]			= part.GetVetoEnergy();
-			WC0_E[nParticles+i]			= ENullFloat; 
+			d_E[nParticles+i]	       	= part.GetVetoEnergy();
+			WC0_E[nParticles+i]	       	= ENullFloat; 
 	 		WC1_E[nParticles+i]    		= ENullFloat; 
 		 	WC_Vertex_X[nParticles+i]  	= ENullFloat; 
 		 	WC_Vertex_Y[nParticles+i]  	= ENullFloat; 
@@ -355,6 +367,17 @@ void    TA2GoAT::Reconstruct()
 	if(gAR->GetProcessType() == EMCProcess) MultiplicityMC();
 	else MultiplicityHW();
 
+	nError = gAR->GetHardError();
+	ReadErrorMk2_t *ErrorBlock = gAR->GetHardwareError();
+	ReadErrorMk2_t *Error;
+	for(int i=0; i<nError; i++)
+	{
+		Error = ErrorBlock + i;
+		ErrModID[i] = Error->fModID;
+		ErrModIndex[i] = Error->fModIndex;
+		ErrCode[i] = Error->fErrCode;
+	}
+
 	//Apply EndBuffer
     	Ek[nParticles] 		= EBufferEnd;
     	Theta[nParticles]	= EBufferEnd;
@@ -366,8 +389,8 @@ void    TA2GoAT::Reconstruct()
     	WC_Vertex_Y[nParticles] = EBufferEnd;    
 	WC_Vertex_Z[nParticles] = EBufferEnd;    
 	d_E[nParticles] 	= EBufferEnd;    
-    tagged_ch[nTagged] 	= EBufferEnd;
-    tagged_t[nTagged] 	= EBufferEnd;	
+	tagged_ch[nTagged] 	= EBufferEnd;
+	tagged_t[nTagged] 	= EBufferEnd;	
 	
 	//Fill Trees
 	treeRawEvent->Fill();
