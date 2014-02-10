@@ -309,47 +309,47 @@ void TA2AccessSQL::LoadDetectors(TA2DataManager* parent, Int_t depth)
         TObject* obj = lnk->GetObject();
      
         // look for detectors
-        if (!strcmp(obj->GetName(), "TAGG"))
+        if (!strcmp(obj->ClassName(), "TA2Tagger"))
         {
             fTagger = (TA2Tagger*) obj;
             added = kTRUE;
         }
-        if (!strcmp(obj->GetName(), "FPD"))
+        if (!strcmp(obj->ClassName(), "TA2Ladder"))
         {
             fLadder = (TA2Ladder*) obj;
             added = kTRUE;
         }
-        else if (!strcmp(obj->GetName(), "CB"))
+        else if (!strcmp(obj->ClassName(), "TA2CentralApparatus"))
         {
             fCB = (TA2CentralApparatus*) obj;
             added = kTRUE;
         }
-        else if (!strcmp(obj->GetName(), "NaI"))
+        else if (!strcmp(obj->ClassName(), "TA2CalArray"))
         {
             fNaI = (TA2CalArray*) obj;
             added = kTRUE;
         }
-        else if (!strcmp(obj->GetName(), "PID"))
+        else if (!strcmp(obj->ClassName(), "TA2PlasticPID"))
         {
             fPID = (TA2PlasticPID*) obj;
             added = kTRUE;
         }
-        else if (!strcmp(obj->GetName(), "MWPC"))
+        else if (!strcmp(obj->ClassName(), "TA2CylMWPC"))
         {
             fMWPC = (TA2CylMwpc*) obj;
             added = kTRUE;
         }        
-        else if (!strcmp(obj->GetName(), "TAPS"))
+        else if (!strcmp(obj->ClassName(), "TA2Taps"))
         {
             fTAPS = (TA2Taps*) obj;
             added = kTRUE;
         }
-        else if (!strcmp(obj->GetName(), "BaF2PWO"))
+        else if (!strcmp(obj->ClassName(), "TA2TAPS_BaF2"))
         {
             fBaF2PWO = (TA2TAPS_BaF2*) obj;
             added = kTRUE;
         }
-        else if (!strcmp(obj->GetName(), "VETO"))
+        else if (!strcmp(obj->ClassName(), "TA2TAPS_Veto"))
         {
             fVeto = (TA2TAPS_Veto*) obj;
             added = kTRUE;
