@@ -19,6 +19,7 @@
 #include "TA2Tagger.h"
 #include "TA2Ladder.h"
 #include "TA2CentralApparatus.h"
+#include "TA2CrystalBall.h"
 #include "TA2CalArray.h"
 #include "TA2PlasticPID.h"
 #include "TA2Taps.h"
@@ -71,6 +72,7 @@ protected:
 	TA2Tagger* 				fTagger;         				// pointer to the Tagger
     TA2Ladder* 				fLadder;    					// pointer to the Ladder
     TA2CentralApparatus* 	fCB;    						// pointer to the Crystal Ball
+//    TA2CrystalBall*			fCB;
     TA2CalArray* 			fNaI;        					// pointer to the NaI elements
     TA2PlasticPID* 			fPID;              				// pointer to the PID
     TA2CylMwpc*				fMWPC;							// pointer to the Mwpc

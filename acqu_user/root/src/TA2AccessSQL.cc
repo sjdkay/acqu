@@ -322,6 +322,7 @@ void TA2AccessSQL::LoadDetectors(TA2DataManager* parent, Int_t depth)
         else if (!strcmp(obj->ClassName(), "TA2CentralApparatus"))
         {
             fCB = (TA2CentralApparatus*) obj;
+//			fCB = (TA2CrystalBall*) obj;
             added = kTRUE;
         }
         else if (!strcmp(obj->ClassName(), "TA2CalArray"))
