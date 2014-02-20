@@ -417,8 +417,7 @@ void    TA2GoAT::Finish()
 	}
 	if(treeTagger) 
 	{
-		if(treeTagger->GetEntries()>1)
-			treeTagger->Write();	// Write	
+		treeTagger->Write();	// Write	
 		delete treeTagger; 	// Close and delete in memory
 	}	
 	if(treeTrigger) 
