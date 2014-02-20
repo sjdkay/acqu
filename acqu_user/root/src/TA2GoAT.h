@@ -8,7 +8,7 @@
 
 #define TA2GoAT_MAX_TAGGER	1024
 #define TA2GoAT_MAX_PARTICLE	128
-#define TA2GoAT_MAX_HITS	860
+#define TA2GoAT_MAX_HITS	860  
 #define TA2GoAT_MAX_ERROR	300
 
 enum {
@@ -27,15 +27,46 @@ static const Map_t RootTreeConfigKeys[] = {
 class	TA2GoAT	: public TA2AccessSQL
 {
 private:
-	TFile*		file;			// outFile
-	TTree*		treeRawEvent;		// Raw particle information (filled each event)
-	TTree*		treeTagger;		// Tagger information (filled each event)
-	TTree* 		treeTrigger;		// Trigger information (filled each event)
-	TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
-	TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
+		TFile*		file;				// outFile
+		TTree*		treeRawEvent;		// Raw particle information (filled each event)
+		TTree*		treeTagger;			// Tagger information (filled each event)
+		TTree* 		treeTrigger;		// Trigger information (filled each event)
+		TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
+		TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
 
-    	char  		outputFolder[256];
-    	char 		fileName[64];
+    	char        outputFolder[256];
+    	char        fileName[64];
+
+		TH2*		Check_CBdE_E;
+		TH2*		Check_CBPhiCorr;
+    
+		TH2*		Check_CBdE_E_1PID;
+		TH2*		Check_CBPhiCorr_1PID;
+		
+		TH2*		Check_CBdE_E_pi0;
+		TH2*		Check_CBPhiCorr_pi0;
+
+		TH2*		Check_TAPSdE_E;
+		TH2*		Check_TAPSPhiCorr;
+    
+		TH2*		Check_TAPSdE_E_1Veto;
+		TH2*		Check_TAPSPhiCorr_1Veto;
+		
+		TH2*		Check_CBHits;
+		TH2*		Check_CBADCHits;
+		TH2*		Check_CBTDCHits;
+		
+		TH2*		Check_PIDHits;
+		TH2*		Check_PIDADCHits;
+		TH2*		Check_PIDTDCHits;
+				
+		TH2*		Check_TAPSHits;
+		TH2*		Check_TAPSADCHits;
+		TH2*		Check_TAPSTDCHits;
+
+		TH2*		Check_VetoHits;
+		TH2*		Check_VetoADCHits;
+		TH2*		Check_VetoTDCHits;
     
     	//Particles    
     	Int_t		nParticles;		
@@ -43,7 +74,7 @@ private:
     	Double_t* 	Theta;
     	Double_t*	Phi;
     	Double_t*	time;
-    	UChar_t* 	clusterSize;
+    	UChar_t*    clusterSize;
     
     	//Tagger
     	Int_t		nTagged;
@@ -59,7 +90,7 @@ private:
     	Double_t*	WC0_E;
     	Double_t*	WC1_E;
 
-	//Wire Chamber vertex reconstruction
+		//Wire Chamber vertex reconstruction
     	Double_t* 	WC_Vertex_X;
     	Double_t* 	WC_Vertex_Y;
     	Double_t* 	WC_Vertex_Z;
@@ -79,7 +110,8 @@ private:
     	//Trigger 
     	Double_t 	ESum;	// or Detector Energies
     	Int_t 		Mult; 	
-	UInt_t 		L2Pattern;
+    	Int_t 		nTriggerPattern;
+		Int_t* 		TriggerPattern;
     	Int_t 		nError; 	
     	Int_t* 		ErrModID; 	
     	Int_t* 		ErrModIndex; 	
@@ -91,14 +123,18 @@ private:
 
 	protected:    	
 
-    	void MultiplicityMC();    //Generates the trigger for the MC
-    	void MultiplicityHW();    //Generates the trigger from hardware information
+		void TriggerReconstruction(); // Trigger reconstruction routine
+    	void TriggerMC();    //Generates the trigger for the MC
+    	void TriggerHW();    //Generates the trigger from hardware information
+    	void DefineHistograms();	// Define histograms
+    	void WriteHistograms();
+		void DataCheckHistograms(); // Routine to fill data check histograms
     
 	public:
 	TA2GoAT(const char*, TA2Analysis*);
 	~TA2GoAT();
 	
-	virtual void LoadVariable();            //Creates histograms
+	virtual void LoadVariable();            	//Creates histograms
     	virtual void SetConfig(Char_t*, Int_t); //Parses general information from configuration file
     	virtual void ParseMisc(char* line);     //Parses additional information from configuration file
     	virtual void Reconstruct();             //Event reconstruction
