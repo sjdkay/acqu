@@ -18,7 +18,7 @@ CheckTAPSVeto(){
     "VetoBaF2_Hits_v_EnergyOR",
     "VetoBaF2_Hits_v_TimeOR",
   };
-  Int_t log[] = { 0,0,0,0,0,0,0,1,0 };
+  Int_t log[] = { 0,0,0,1,1,1,0,1,0 };
   Int_t col[] = { 2,2,2,4,4,4,3,1,1 };
   Char_t* xname[] = {
     "Number of TAPS-Veto ADC Hits per Event",

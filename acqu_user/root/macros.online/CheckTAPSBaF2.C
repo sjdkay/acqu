@@ -15,8 +15,8 @@ void CheckTAPSBaF2(){
     "BaF2_Etot",
     "BaF2_TimeOR",
     "BaF2_ClNhitsOR_v_ClEnergyOR",
-    "BaF2_Hits_v_TimeOR",
     "BaF2_Hits_v_EnergyOR",
+    "BaF2_Hits_v_TimeOR",
     "BaF2_ClPhi_v_ClTheta",
   };
   Char_t* xname[] = {
@@ -29,11 +29,11 @@ void CheckTAPSBaF2(){
     "TAPS Total Energy in Calorimeter",
     "TAPS Time OR",
     "TAPS Hits per Cluster vs Cluster Energy",
-    "TAPS Time vs Hits",
     "TAPS Energy vs Hits",
+    "TAPS Time vs Hits",
     "TAPS #theta - #phi distribution of Cluster Hits",
   };
-  Int_t log[] = { 0,0,0,0,0,0,0,1,1,0,1,0 };
+  Int_t log[] = { 0,0,0,0,0,0,1,0,1,1,0,0 };
   Int_t col[] = { 4,4,4,2,2,2,3,3,1,1,1,1 };
   Char_t* opt2d[] = { "cont0", "colz", "colz", "colz" };
   TH1F* h1;

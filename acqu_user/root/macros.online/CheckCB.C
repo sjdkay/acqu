@@ -35,7 +35,7 @@ void CheckCB(){
    "3", "NaI_Hits",            "lin", "",
    "3", "CBHoles",             "lin", "Same",
    "4", "NaI_Nhits",           "lin", "",
-   "5", "NaI_Etot",            "lin", "", 
+   "5", "NaI_Etot",            "log", "", 
    "6", "SumScalers12to139",   "log", "",
    "7", "NaI_ClNhits",         "lin", "",
    "8", "NaI_ClNhitsOR",       "lin", "",

@@ -21,7 +21,7 @@ void CheckTAPSPbWO4(){
     "PbWO4_Hits_v_TimeOR",
     "PbWO4_ClPhi_v_ClTheta"
   };
-  Int_t log[] = { 1,1,1,1,1,1,1,0,0,0,0,0 };
+  Int_t log[] = { 0,0,0,1,1,1,1,0,0,0,0,0 };
   Int_t col[] = { 2,2,2,4,4,4,3,3,1,1,1,1 };
   Char_t* xname[] = {
     "Number of TAPS-PbWO4 RAW ADC Hits per Event",
