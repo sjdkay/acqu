@@ -29,5 +29,5 @@ Stream-Spec:    File    Mk2     0       32768   1024      0       400
 ## Now the list of data files to analyse
 ##              File Name       1st rec Last rec
 ##
-File-Name:  /home/a2cb/acqu/scratch/CBTaggTAPS_2096.dat   0   0
+File-Name:  /home/a2cb/acqu/scratch/CBTaggTAPSPed_2493.dat   0   0
 ## END
