@@ -34,7 +34,8 @@ public:
     // taking account of possible overflows in either the reference
     // or current channel (if neither or both overflow there is no problem)
     for(UInt_t i=0;i<fNstore; i++) {
-      Int_t diff   = fStore[i] - *fRef;
+      // this typecast back to UShort_t of fStore is VERY important!
+      Int_t diff   = (UShort_t)fStore[i] - *fRef;
       Int_t diff_p = diff + ETDCOverflow;    // + overflow
       Int_t diff_m = diff - ETDCOverflow;    // - overflow
       Int_t min = (abs(diff) < abs(diff_p)) ? diff : diff_p;
