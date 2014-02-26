@@ -298,19 +298,38 @@ void    TA2GoAT::Reconstruct()
 			
 			part.SetParticleID(kRootino); // Set mass to 0 (rootino)
 			part.SetMass(0.0);
+
+			// Reset a bunch of inconsistant "no-value" markers
+			if(TMath::Abs(part.GetT()) >= TA2GoAT_NULL) Ek[i] = 0.0;
+			else Ek[i] = part.GetT();
+
+			if(TMath::Abs(part.GetTime()) >= TA2GoAT_NULL) time[i] = 0.0;
+			else time[i] = part.GetTime();
 			
-			Apparatus[i]	= (UChar_t)EAppCB;			
-			Ek[i]			= part.GetT();
+			if(TMath::Abs(part.GetVetoEnergy()) >= TA2GoAT_NULL) d_E[i] = 0.0;
+			else d_E[i]	= part.GetVetoEnergy();
+			
+			if(TMath::Abs(part.GetEnergyMwpc0()) >= TA2GoAT_NULL) WC0_E[i] = 0.0;
+			else WC0_E[i] = part.GetEnergyMwpc0();
+			
+			if(TMath::Abs(part.GetEnergyMwpc1()) >= TA2GoAT_NULL) WC1_E[i] = 0.0;
+			else WC1_E[i] = part.GetEnergyMwpc1();
+			
+			if(TMath::Abs(part.GetPsVertex().X()) >= TA2GoAT_NULL) WC_Vertex_X[i] = 0.0;
+			else WC_Vertex_X[i]  = part.GetPsVertex().X();			
+
+			if(TMath::Abs(part.GetPsVertex().Y()) >= TA2GoAT_NULL) WC_Vertex_Y[i] = 0.0;
+			else WC_Vertex_Y[i]  = part.GetPsVertex().Y();	
+			
+			if(TMath::Abs(part.GetPsVertex().Z()) >= TA2GoAT_NULL) WC_Vertex_Z[i] = 0.0;
+			else WC_Vertex_Z[i]  = part.GetPsVertex().Z();				
+			
+			// Store other values which don't have this "no-value" option
+			Apparatus[i]	= (UChar_t)EAppCB;
 			Theta[i]		= part.GetThetaDg();
 			Phi[i]			= part.GetPhiDg();			
-			time[i]			= part.GetTime();	
 			clusterSize[i]  = (UChar_t)part.GetClusterSize();
-			d_E[i]			= part.GetVetoEnergy();
-			WC0_E[i]		= part.GetEnergyMwpc0();
-		 	WC1_E[i]		= part.GetEnergyMwpc1();
-		 	WC_Vertex_X[i]  = part.GetPsVertex().X();
-	 		WC_Vertex_Y[i]  = part.GetPsVertex().Y();
-		 	WC_Vertex_Z[i]  = part.GetPsVertex().Z();
+
 		}
 	}
 
@@ -323,19 +342,31 @@ void    TA2GoAT::Reconstruct()
 			
 			part.SetParticleID(kRootino); // Set mass to 0 (rootino)
 			part.SetMass(0.0);				
+
+			// Reset a bunch of inconsistant "no-value" markers
+			if(TMath::Abs(part.GetT()) >= TA2GoAT_NULL) Ek[nParticles+i] = 0.0;
+			else Ek[nParticles+i] = part.GetT();
+
+			if(TMath::Abs(part.GetTime()) >= TA2GoAT_NULL) time[nParticles+i] = 0.0;
+			else time[nParticles+i] = part.GetTime();
 			
-			Apparatus[nParticles+i]		= (UChar_t)EAppTAPS;		
-			Ek[nParticles+i]			= part.GetT();	
+			if(TMath::Abs(part.GetVetoEnergy()) >= TA2GoAT_NULL) d_E[nParticles+i] = 0.0;
+			else d_E[nParticles+i]	= part.GetVetoEnergy();
+			
+			// Set WC values to NULL
+			WC0_E[nParticles+i] = 0.0;
+			WC1_E[nParticles+i] = 0.0;
+			WC_Vertex_X[nParticles+i] = 0.0;
+			WC_Vertex_Y[nParticles+i] = 0.0;
+			WC_Vertex_Z[nParticles+i] = 0.0;
+			
+			// Store other values which don't have this "no-value" option
+			Apparatus[nParticles+i]		= (UChar_t)EAppTAPS;
 			Theta[nParticles+i]			= part.GetThetaDg();
-			Phi[nParticles+i]			= part.GetPhiDg();					
-			time[nParticles+i]			= part.GetTime();
+			Phi[nParticles+i]			= part.GetPhiDg();			
+			time[nParticles+i]			= part.GetTime();	
 			clusterSize[nParticles+i]  	= (UChar_t)part.GetClusterSize();
-			d_E[nParticles+i]			= part.GetVetoEnergy();
-			WC0_E[nParticles+i]			= ENullFloat; 
-	 		WC1_E[nParticles+i]    		= ENullFloat; 
-		 	WC_Vertex_X[nParticles+i]  	= ENullFloat; 
-		 	WC_Vertex_Y[nParticles+i]  	= ENullFloat; 
-	 		WC_Vertex_Z[nParticles+i]  	= ENullFloat; 
+
 		}
 		nParticles += fTAPS->GetNParticle(); // update number of particles
 	}
@@ -800,4 +831,3 @@ void 	TA2GoAT::TriggerHW()
 	if (fADC[0] & 1<<13) Mult++;
  	
 }
-

@@ -10,6 +10,7 @@
 #define TA2GoAT_MAX_PARTICLE	128
 #define TA2GoAT_MAX_HITS	860  
 #define TA2GoAT_MAX_ERROR	300
+#define TA2GoAT_NULL 1e6
 
 enum {
     EG_OUTPUT_FOLDER = 30250,
