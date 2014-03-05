@@ -122,82 +122,127 @@ inline Int_t TVME_GeSiCA::SpyRead( void** outBuffer )
   // Check that the module is active..ie has received a trigger
   // If any error detected return 0 words read, reset spy buffer
   // and write error block into data stream
-  //timespec del;
-  //del.tv_sec=0;
-  //del.tv_nsec=1000;
   
   UInt_t datum = 0;
   UInt_t* pStatus = (UInt_t*)fReg[EIDStatus];
-  for( Int_t k=0; k<=EGeSiCATimeout; k++ ){  // NB <= JRMA
-    //datum = Read(EIDStatus);
+  for( Int_t k=0; k<=EGeSiCATimeout; k++ ){  // less equal is important here!
     datum = *pStatus;
     if( datum & 0x1 )break;
     if( k == EGeSiCATimeout ){
-      //fprintf(fLogStream, "<GeSiCA %d Timeout> Buffer empty, event %d\n",
-      //      fBaseIndex, fEXP->GetNEvent());
+      ErrorStore(outBuffer, 7);                 // error code 7
       SpyReset();
       return 0;
     }
-    //    usleep(1);
-    //    nanosleep(&del,&del);
-    // pause();
   }
   UInt_t* pDatum = (UInt_t*)fReg[EIDatum];
+  
   // Examine header, the first data word...should be 0x0
-  //UInt_t header = Read(EIDatum);
   UInt_t header = *pDatum;
   if( header != 0 ){
-    ErrorStore( outBuffer,0x1 );
+    ErrorStore( outBuffer, 1 );                // error code 1
     SpyReset();
     return 0;
   }
+  
   // Check for error flag in 1st non-zero header datum
-  //header = Read(EIDatum);
   header = *pDatum;
   if( header & ECATCH_ErrFlag ){
     ErrorStore( outBuffer,0x1 );
     SpyReset();
     return 0;
   }
+  
   // Check consistency of data-buffer header and data-status register
-  UInt_t nWord = header & 0xffff;
-  //datum = Read(EIDStatus);
-  datum = *pStatus;
-  UInt_t nWordS = (datum >> 16) & 0xfff;
-  if( nWord != nWordS ){
-    ErrorStore( outBuffer,0x4 );
-    //  SpyReset();
-    // return 0;
+  UInt_t nWordHeader = header & 0xffff;
+  UInt_t nWordStatus = 0;
+  UInt_t nWordTries = 0;
+  do {
+    nWordStatus = (*pStatus >> 16) & 0xffff;    
+    if(nWordTries>200) {
+      // reached maximum number of tries, this is 
+      // the NEW error 4 (previously it only checked one time...)
+      ErrorStore( outBuffer, 4 );                  // error code 4
+      SpyReset();
+      return 0;
+    }
+    nWordTries++;
   }
+  while(nWordHeader != nWordStatus);
+  
   // Check too many data words
-  if( nWord > fMaxSpy ){                            // overflow ?
+  if( nWordHeader > fMaxSpy ){                            // overflow ?
     ErrorStore( outBuffer, 2 );                     // error code 2
     SpyReset();
     return 0;
   }
-  // Make nword reads from the spy buffer
-  //for( UInt_t n=0; n<nWord; n++ ) fSpyData[n] = Read(EIDatum);
-  for( UInt_t n=0; n<nWord; n++ ) fSpyData[n] = *pDatum;
-  // Check last data word is the trailer and buffer status reg. is 0
-  //datum = Read(EIDStatus);
+  
+  // Make reads from buffer until we 
+  // find the magic ECATCH_Trailer word, 
+  // or fail after fMaxSpy reads
+  UInt_t nWordRead = 0;
+  while(true) {
+    datum = *pDatum;
+    fSpyData[nWordRead] = datum;
+    nWordRead++;
+    // be careful not to use *pDatum but datum, 
+    // since this reads another word!
+    if(datum == ECATCH_Trailer) {
+      break;
+    }
+    
+    
+    if(nWordRead == fMaxSpy) {
+      // this is a pretty bad error, 
+      // one should probably better stop the DAQ somehow if this occurs...
+      ErrorStore( outBuffer, 5 );                     // error code 5
+      SpyReset();
+      return 0;
+    }
+    
+  }
+  
+  // Check if expected number of words match
+  // number of words in spybuffer
+  if(nWordRead != nWordHeader) {
+    ErrorStore( outBuffer, 6 );                     // error code 6
+    SpyReset();
+    return 0;
+  }
+  
+  
+  // Check and buffer status reg. is 0
   datum = *pStatus;
-  if((fSpyData[nWord-1] != ECATCH_Trailer) || datum  ){ 
+  if( datum != 0 ) { 
+    // we should make sure that the buffer is empty
+    // so read until the status reg becomes zero
+    UInt_t n = 0;
+    do {
+      datum = *pDatum;
+      n++;
+      if(n == fMaxSpy) {
+        // mark this as an error
+        ErrorStore( outBuffer, 3 );                     // error code 8
+        SpyReset();
+        return 0;
+      }
+    }
+    while( *pStatus != 0);
+    // mark this as an error
     ErrorStore( outBuffer, 3 );                     // error code 3
     SpyReset();
     return 0;
   }
-  // Forgot to do this....without saving the event ID there is no synch
+  
+  // Don't forget this: without saving the event ID there is no synch
   fTCSEventID = fSpyData[0];                      // 1st word = TCS event ID
-//
-//-------------
-//<-- Baya
+
   // if the system specifies that this GeSiCA sends the event ID to a remote 
   // system do it here
-  if( fEventSendMod ) fEventSendMod->SendEventID( fTCSEventID );  
-//<-- Baya
-//
-  SpyReset();
-  return (Int_t)nWord;
+  if( fEventSendMod ) 
+    fEventSendMod->SendEventID( fTCSEventID );  
+
+  // no errors at all, return number of read words from SpyBuffer
+  return (Int_t)nWordRead;
 }
 
 //---------------------------------------------------------------------------
