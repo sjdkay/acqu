@@ -225,7 +225,7 @@ void TA2Pi0Compton::PostInit()
 	else {  printf("TAPS included in analysis\n");
 		fTAPSParticles = fTAPS->GetParticles();
 
-	        fBaF2 = (TA2TAPS_BaF2*)((TA2Analysis*)fParent)->GetGrandChild("BaF2");
+	        fBaF2 = (TA2TAPS_BaF2*)((TA2Analysis*)fParent)->GetGrandChild("BaF2PWO");
 	        if (!fBaF2) PrintError( "", "<No BaF2 class found>", EErrFatal);
 	}
 
