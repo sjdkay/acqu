@@ -31,6 +31,16 @@ Use-CaLib-Veto:     0       1
 RootTree-Output-Folder:         ~/
 RootTree-File-Name:		Acqu
 
+# Read in and decode beam helicity ADC
+# First number is the ADC channel, other numbers are the bit pattern
+# to set the beam helicity bit to 'true', where I is an inhibit bit,
+# and L and H represent a 'low' and 'high' (0 and 1) respectively
+#
+# Old setting
+#Beam-Helicity: 6 I H L L H
+# New setting
+#Beam-Helicity: 7 H I H L
+
 Initialise:
 
 Display: 1D nParticles 	15 0 15 

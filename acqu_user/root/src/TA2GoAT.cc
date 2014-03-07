@@ -38,6 +38,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     Veto_Hits(0),
                                                                     ESum(0),
                                                                     Mult(0),
+                                                                    nHelBits(0),
 																	TriggerPattern(0),
                                                                     nError(0),
                                                                     ErrModID(0),
@@ -111,6 +112,24 @@ void    TA2GoAT::SetConfig(Char_t* line, Int_t key)
 						|| fileName[strlen(fileName)-1]=='\r')
 			fileName[strlen(fileName)-1]='\0';
         return;
+    	case EG_BEAM_HELICITY:
+    	    	nHelBits = sscanf(line, "%i%s%s%s%s%s%s%s%s", &HelADC, HelBits[0], HelBits[1], HelBits[2], HelBits[3], HelBits[4], HelBits[5], HelBits[6], HelBits[7]);
+    	    	nHelBits--;
+    	    	if(nHelBits < 2) Error("SetConfig", "Not enough information to construct beam helicity!");
+    	    	else
+    	    	{
+			printf("Helicity");
+			for(int i=0; i<nHelBits; i++)
+			{
+    				HelInh[i] = false;
+    				if(!strcmp(HelBits[i],"I") || !strcmp(HelBits[i],"i")) HelInh[i] = true;
+    				else if(!strcmp(HelBits[i],"L") || !strcmp(HelBits[i],"l")) HelBeam[i] = false;
+    				else if(!strcmp(HelBits[i],"H") || !strcmp(HelBits[i],"h")) HelBeam[i] = true;
+				printf(" - %s %i %i",HelBits[i],HelInh[i],HelBeam[i]);
+			}
+			printf("\n");
+    	    	}
+	return;
     	default:
         	TA2AccessSQL::SetConfig(line, key);
     	}
@@ -204,6 +223,7 @@ void    TA2GoAT::PostInit()
 
 	treeTrigger->Branch("ESum", &ESum, "ESum/D");
 	treeTrigger->Branch("Mult", &Mult, "Mult/I");
+	if(nHelBits > 1) treeTrigger->Branch("Helicity", &Helicity, "Helicity/O");
 	treeTrigger->Branch("nError", &nError, "nError/I");
 	treeTrigger->Branch("ErrModID", ErrModID, "ErrModID[nError]/I");
 	treeTrigger->Branch("ErrModIndex", ErrModIndex, "ErrModIndex[nError]/I");
@@ -420,6 +440,32 @@ void    TA2GoAT::Reconstruct()
 		ErrModIndex[i] = Error->fModIndex;
 		ErrCode[i] = Error->fErrCode;
 	}
+
+	if(nHelBits > 1)
+	{
+		Bool_t HelBit;
+		Helicity = true;
+		HelInver = true;
+		for(int i=0; i<nHelBits; i++)
+		{
+			HelBit = (fADC[HelADC] & 1<<i);
+			if(HelInh[i] && HelBit)
+			{
+				ErrCode[nError] = 9;
+				nError++;
+				break;
+			}
+			else if(HelInh[i]) continue;
+			Helicity = (Helicity && (HelBeam[i] == HelBit));
+			HelInver = (HelInver && (HelBeam[i] != HelBit));
+			if(Helicity == HelInver)
+			{
+				ErrCode[nError] = 10;
+				nError++;
+				break;
+			}
+		}
+	} 
 
 	//Apply EndBuffer
     	Ek[nParticles] 		= EBufferEnd;

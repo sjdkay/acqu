@@ -15,12 +15,14 @@
 enum {
     EG_OUTPUT_FOLDER = 30250,
     EG_FILE_NAME,
+    EG_BEAM_HELICITY,
 };
 
 static const Map_t RootTreeConfigKeys[] = {
     // General keys
     {"RootTree-Output-Folder:"       	, EG_OUTPUT_FOLDER},
     {"RootTree-File-Name:"           	, EG_FILE_NAME},
+    {"Beam-Helicity:"           	, EG_BEAM_HELICITY},
     // Termination
     {NULL       	 		, -1           }
 };
@@ -111,6 +113,14 @@ private:
     	//Trigger 
     	Double_t 	ESum;	// or Detector Energies
     	Int_t 		Mult; 	
+
+	Bool_t  	Helicity;
+	Bool_t  	HelInver;
+	Int_t  	 	HelADC;
+	Int_t  	 	nHelBits;
+    	Char_t  	HelBits[8][8];
+    	Bool_t  	HelInh[8];
+    	Bool_t  	HelBeam[8];
     	Int_t 		nTriggerPattern;
 		Int_t* 		TriggerPattern;
     	Int_t 		nError; 	
