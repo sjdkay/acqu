@@ -38,8 +38,12 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     Veto_Hits(0),
                                                                     ESum(0),
                                                                     Mult(0),
-                                                                    nHelBits(0),
+                                                                    nTriggerPattern(0),
 																	TriggerPattern(0),
+                                                                    nHelBits(0),	
+                                                                    Helicity(0),
+                                                                    HelInver(0),
+                                                                    HelADC(0),															
                                                                     nError(0),
                                                                     ErrModID(0),
                                                                     ErrModIndex(0),
@@ -293,9 +297,9 @@ void    TA2GoAT::Reconstruct()
 		}
 	
 		// Collect Tagger M+ Hits
-		for(int m=1; m<fLadder->GetNMultihit(); m++)
+		for(UInt_t m=1; m<fLadder->GetNMultihit(); m++)
 		{
-			for(int i=0; i<fLadder->GetNhitsM(m); i++)
+			for(UInt_t i=0; i<fLadder->GetNhitsM(m); i++)
 			{
 				tagged_ch[nTagged+i] 	= (fLadder->GetHitsM(m))[i];
 				tagged_t[nTagged+i]	 	= (fLadder->GetTimeORM(m))[i];
@@ -607,7 +611,7 @@ void 	TA2GoAT::DataCheckHistograms()
 			if (part.GetVetoEnergy() < 0)  continue;
 			if (part.GetVetoEnergy() > 10) continue;			
 
-			for(int j=0; j<fPID->GetNhits(); j++)
+			for(UInt_t j=0; j<fPID->GetNhits(); j++)
 			{
 				Check_CBdE_E->Fill(part.GetT(),part.GetVetoEnergy());
 				Check_CBPhiCorr->Fill(fPID->GetHits(j),part.GetPhiDg());
@@ -669,7 +673,7 @@ void 	TA2GoAT::DataCheckHistograms()
 			if (part.GetVetoEnergy() < 0)  continue;
 			if (part.GetVetoEnergy() > 10) continue;			
 
-			for(int j=0; j<fVeto->GetNhits(); j++)
+			for(UInt_t j=0; j<fVeto->GetNhits(); j++)
 			{
 				Check_TAPSdE_E->Fill(part.GetT(),part.GetVetoEnergy());
 				Check_TAPSPhiCorr->Fill(fVeto->GetHits(j),part.GetPhiDg());
@@ -686,15 +690,15 @@ void 	TA2GoAT::DataCheckHistograms()
 	// Fill CB stability histograms
 	if(fNaI)
 	{
-		for(int i=0; i<fNaI->GetNhits(); i++)   
+		for(UInt_t i=0; i<fNaI->GetNhits(); i++)   
 				{ Check_CBHits->Fill(eventNumber,fNaI->GetHits(i)); }
 			
 		if (fNaI->IsRawHits())
 		{
-			for (int i=0; i< fNaI->GetNADChits(); i++)
+			for (UInt_t i=0; i< fNaI->GetNADChits(); i++)
 				{ Check_CBADCHits->Fill(eventNumber,fNaI->GetRawEnergyHits()[i]); }	
 				
-			for (int i=0; i< fNaI->GetNTDChits(); i++)
+			for (UInt_t i=0; i< fNaI->GetNTDChits(); i++)
 				{ Check_CBTDCHits->Fill(eventNumber,fNaI->GetRawTimeHits()[i]);	}	
 							
 		}
@@ -703,15 +707,15 @@ void 	TA2GoAT::DataCheckHistograms()
 	// Fill PID stability histograms
 	if(fPID)
 	{
-		for(int i=0; i<fPID->GetNhits(); i++)   
+		for(UInt_t i=0; i<fPID->GetNhits(); i++)   
 				{ Check_PIDHits->Fill(eventNumber,fPID->GetHits(i)); }
 			
 		if (fPID->IsRawHits())
 		{
-			for (int i=0; i< fPID->GetNADChits(); i++)
+			for (UInt_t i=0; i< fPID->GetNADChits(); i++)
 				{ Check_PIDADCHits->Fill(eventNumber,fPID->GetRawEnergyHits()[i]); }	
 				
-			for (int i=0; i< fPID->GetNTDChits(); i++)
+			for (UInt_t i=0; i< fPID->GetNTDChits(); i++)
 				{ Check_PIDTDCHits->Fill(eventNumber,fPID->GetRawTimeHits()[i]);	}	
 							
 		}
@@ -720,17 +724,17 @@ void 	TA2GoAT::DataCheckHistograms()
 	// Fill TAPS stability histograms
 	if(fBaF2PWO)
 	{
-		for(int i=0; i<fBaF2PWO->GetNhits(); i++)   
+		for(UInt_t i=0; i<fBaF2PWO->GetNhits(); i++)   
 				{ Check_TAPSHits->Fill(eventNumber,fBaF2PWO->GetHits(i)); }
 			
 		if (fBaF2PWO->IsRawHits())
 		{
 			if (!(fADC[0] & 1<<15)) // Ignore TAPS Pulser reads
 			{			
-				for (int i=0; i< fBaF2PWO->GetNADChits(); i++)
+				for (UInt_t i=0; i< fBaF2PWO->GetNADChits(); i++)
 					{ Check_TAPSADCHits->Fill(eventNumber,fBaF2PWO->GetRawEnergyHits()[i]); }	
 					
-				for (int i=0; i< fBaF2PWO->GetNTDChits(); i++)
+				for (UInt_t i=0; i< fBaF2PWO->GetNTDChits(); i++)
 					{ Check_TAPSTDCHits->Fill(eventNumber,fBaF2PWO->GetRawTimeHits()[i]);	}	
 			}
 		}
@@ -739,17 +743,17 @@ void 	TA2GoAT::DataCheckHistograms()
 	// Fill PID stability histograms
 	if(fVeto)
 	{
-		for(int i=0; i<fVeto->GetNhits(); i++)   
+		for(UInt_t i=0; i<fVeto->GetNhits(); i++)   
 				{ Check_VetoHits->Fill(eventNumber,fVeto->GetHits(i)); }
 			
 		if (fVeto->IsRawHits())
 		{
 			if (!(fADC[0] & 1<<15)) // Ingore TAPS Pulser reads
 			{
-				for (int i=0; i< fVeto->GetNADChits(); i++)
+				for (UInt_t i=0; i< fVeto->GetNADChits(); i++)
 					{ Check_VetoADCHits->Fill(eventNumber,fVeto->GetRawEnergyHits()[i]); }	
 
-				for (int i=0; i< fVeto->GetNTDChits(); i++)
+				for (UInt_t i=0; i< fVeto->GetNTDChits(); i++)
 					{ Check_VetoTDCHits->Fill(eventNumber,fVeto->GetRawTimeHits()[i]);	}	
 			}			
 		}

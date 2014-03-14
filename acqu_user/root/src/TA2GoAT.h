@@ -40,6 +40,70 @@ private:
     	char        outputFolder[256];
     	char        fileName[64];
 
+    	//Particles    
+    	Int_t		nParticles;		
+    	Double_t*	Ek;
+    	Double_t* 	Theta;
+    	Double_t*	Phi;
+    	Double_t*	time;
+    	UChar_t*    clusterSize;
+
+    	//Apparatus
+    	UChar_t*	Apparatus;
+
+    	//Charged detector energies
+    	Double_t*	d_E;
+    	Double_t*	WC0_E;
+    	Double_t*	WC1_E;
+
+		//Wire Chamber vertex reconstruction
+    	Double_t* 	WC_Vertex_X;
+    	Double_t* 	WC_Vertex_Y;
+    	Double_t* 	WC_Vertex_Z;
+    
+    	//Tagger
+    	Int_t		nTagged;
+    	Double_t*	photonbeam_E;
+    	Int_t*		tagged_ch;
+    	Double_t*	tagged_t;
+       
+    	//Hits
+    	Int_t		nNaI_Hits;
+    	Int_t*		NaI_Hits;
+    	Int_t		nPID_Hits;
+    	Int_t*		PID_Hits;
+    	Int_t		nWC_Hits;
+    	Int_t*		WC_Hits;
+    	Int_t		nBaF2_PbWO4_Hits;
+    	Int_t*		BaF2_PbWO4_Hits;
+    	Int_t		nVeto_Hits;
+    	Int_t*		Veto_Hits;
+    
+    	//Trigger 
+    	Double_t 	ESum;	// or Detector Energies
+    	Int_t 		Mult; 	
+    	Int_t 		nTriggerPattern;
+		Int_t* 		TriggerPattern;	
+
+		Int_t  	 	nHelBits;
+		Bool_t  	Helicity;
+		Bool_t  	HelInver;
+		Int_t  	 	HelADC;
+
+    	Char_t  	HelBits[8][8];
+    	Bool_t  	HelInh[8];
+    	Bool_t  	HelBeam[8];
+
+    	Int_t 		nError; 	
+    	Int_t* 		ErrModID; 	
+    	Int_t* 		ErrModIndex; 	
+    	Int_t* 		ErrCode; 	
+    
+    	//Scalers
+    	Int_t		eventNumber;
+    	Int_t		eventID;    
+
+		// Display histograms
 		TH2*		Check_CBdE_E;
 		TH2*		Check_CBPhiCorr;
     
@@ -70,67 +134,7 @@ private:
 		TH2*		Check_VetoHits;
 		TH2*		Check_VetoADCHits;
 		TH2*		Check_VetoTDCHits;
-    
-    	//Particles    
-    	Int_t		nParticles;		
-    	Double_t*	Ek;
-    	Double_t* 	Theta;
-    	Double_t*	Phi;
-    	Double_t*	time;
-    	UChar_t*    clusterSize;
-    
-    	//Tagger
-    	Int_t		nTagged;
-    	Double_t*	photonbeam_E;
-    	Int_t*		tagged_ch;
-    	Double_t*	tagged_t;
-    
-    	//Apparatus
-    	UChar_t*	Apparatus;
-    
-    	//Charged detector energies
-    	Double_t*	d_E;
-    	Double_t*	WC0_E;
-    	Double_t*	WC1_E;
 
-		//Wire Chamber vertex reconstruction
-    	Double_t* 	WC_Vertex_X;
-    	Double_t* 	WC_Vertex_Y;
-    	Double_t* 	WC_Vertex_Z;
-    
-    	//Hits
-    	Int_t		nNaI_Hits;
-    	Int_t*		NaI_Hits;
-    	Int_t		nPID_Hits;
-    	Int_t*		PID_Hits;
-    	Int_t		nWC_Hits;
-    	Int_t*		WC_Hits;
-    	Int_t		nBaF2_PbWO4_Hits;
-    	Int_t*		BaF2_PbWO4_Hits;
-    	Int_t		nVeto_Hits;
-    	Int_t*		Veto_Hits;
-    
-    	//Trigger 
-    	Double_t 	ESum;	// or Detector Energies
-    	Int_t 		Mult; 	
-
-	Bool_t  	Helicity;
-	Bool_t  	HelInver;
-	Int_t  	 	HelADC;
-	Int_t  	 	nHelBits;
-    	Char_t  	HelBits[8][8];
-    	Bool_t  	HelInh[8];
-    	Bool_t  	HelBeam[8];
-    	Int_t 		nTriggerPattern;
-		Int_t* 		TriggerPattern;
-    	Int_t 		nError; 	
-    	Int_t* 		ErrModID; 	
-    	Int_t* 		ErrModIndex; 	
-    	Int_t* 		ErrCode; 	
-    
-    	//Scalers
-    	Int_t		eventNumber;
-    	Int_t		eventID;    
 
 	protected:    	
 
