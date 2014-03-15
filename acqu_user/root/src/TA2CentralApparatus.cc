@@ -1106,28 +1106,30 @@ void TA2CentralApparatus::AddParticleInfo(const TA2CentralTrack &track)
   // Add a new particle to the fParticleInfo array
   
   fParticleInfo[fNparticle].Reset();
-  
   fType[fNparticle] = kRootino;
   Double_t mass = fParticleID->GetMassMeV(kRootino);
   Int_t m, iPid;
+
+  if ( track.HasPid()) iPid = fHitsPid[track.GetIhitPid()]; 
+  else iPid = ENullHit;
+  
   //Check dE/E cuts
   if ( fPCut && track.HasPid() && track.HasNaI() )
   {
-    iPid = fHitsPid[track.GetIhitPid()];
-    m = fPCutStart[iPid];					// Start cut index for pid[iPid]
-    for (Int_t i=0; i<fNSectorCut[iPid]; ++i, ++m)		// Loop over specified cuts
-    {
-      if ( static_cast<TA2Cut2DM<Double_t>* >(fPCut[m])->TestXY(track.GetEclNaI(),track.GetEhitPid()) )	// Condition met?
-      {
+	m = fPCutStart[iPid];					// Start cut index for pid[iPid]
+	for (Int_t i=0; i<fNSectorCut[iPid]; ++i, ++m)		// Loop over specified cuts
+	{
+	  if ( static_cast<TA2Cut2DM<Double_t>* >(fPCut[m])->TestXY(track.GetEclNaI(),track.GetEhitPid()) )	// Condition met?
+	  {
 	fType[fNparticle] = GetCutPDGIndex(m);			//Set particle ID code...
 	mass = fParticleID->GetMassMeV(fType[fNparticle]);	//...and particle mass
 	break;							// cut OK so exit loop
-      }
-    }
+	  }
+	}
   }
   else if ( track.IsNeutral() )
   {
-    fType[fNparticle] = kGamma;
+	  fType[fNparticle] = kGamma;
   }
   
   //
@@ -1153,7 +1155,7 @@ void TA2CentralApparatus::AddParticleInfo(const TA2CentralTrack &track)
   fParticleInfo[fNparticle].SetParticleIDA(fType[fNparticle]);
   fParticleInfo[fNparticle].SetVetoTime(track.GetThitPid());
   fParticleInfo[fNparticle].SetVetoEnergy(track.GetEhitPid());
-  fParticleInfo[fNparticle].SetVetoIndex(track.GetIhitPid());
+  fParticleInfo[fNparticle].SetVetoIndex(iPid);
   fParticleInfo[fNparticle].SetDetectorA( fDet[fNparticle] - fParticleInfo[fNparticle].GetDetectors() );
   fParticleInfo[fNparticle].SetTrackIntersects(track.GetIinterMwpc(0),track.GetIinterMwpc(1));
   fParticleInfo[fNparticle].SetTrackEnergy(track.GetEtrackMwpc());

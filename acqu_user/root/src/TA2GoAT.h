@@ -47,6 +47,8 @@ private:
     	Double_t*	Phi;
     	Double_t*	time;
     	UChar_t*    clusterSize;
+		Int_t*		centralCrys;
+		Int_t*		centralVeto;
 
     	//Apparatus
     	UChar_t*	Apparatus;

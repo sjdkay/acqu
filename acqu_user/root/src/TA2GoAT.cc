@@ -15,6 +15,8 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
 																	Phi(0),
                                                                     time(0),
                                                                     clusterSize(0),
+                                                                    centralCrys(0),
+                                                                    centralVeto(0),
                                                                     Apparatus(0),
                                                                     d_E(0),
                                                                     WC0_E(0),
@@ -147,7 +149,9 @@ void    TA2GoAT::PostInit()
    	Phi		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	time		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	clusterSize = new UChar_t[TA2GoAT_MAX_PARTICLE];
-    
+   	centralCrys  = new Int_t[TA2GoAT_MAX_PARTICLE];
+	centralVeto = new Int_t[TA2GoAT_MAX_PARTICLE];
+	
    	photonbeam_E= new Double_t[TA2GoAT_MAX_TAGGER];
    	tagged_ch	= new Int_t[TA2GoAT_MAX_TAGGER];
    	tagged_t	= new Double_t[TA2GoAT_MAX_TAGGER];
@@ -212,6 +216,8 @@ void    TA2GoAT::PostInit()
 	treeRawEvent->Branch("Phi",  Phi,  "Phi[nParticles]/D");	
 	treeRawEvent->Branch("time", time, "time[nParticles]/D");
 	treeRawEvent->Branch("clusterSize", clusterSize, "clusterSize[nParticles]/b");
+	treeRawEvent->Branch("centralCrys", centralCrys, "centralCrys[nParticles]/I");
+	treeRawEvent->Branch("centralVeto", centralVeto, "centralVeto[nParticles]/I");
 	treeRawEvent->Branch("Apparatus", Apparatus, "Apparatus[nParticles]/b");
 	treeRawEvent->Branch("d_E", d_E, "d_E[nParticles]/D");	
 	treeRawEvent->Branch("WC0_E", WC0_E, "WC0_E[nParticles]/D");	
@@ -310,6 +316,7 @@ void    TA2GoAT::Reconstruct()
 	}
 	else nTagged = 0;
 	
+	
 	// Gather particle information
 	nParticles = 0;
 	if(fCB)
@@ -348,6 +355,12 @@ void    TA2GoAT::Reconstruct()
 			if(TMath::Abs(part.GetPsVertex().Z()) >= TA2GoAT_NULL) WC_Vertex_Z[i] = 0.0;
 			else WC_Vertex_Z[i]  = part.GetPsVertex().Z();				
 			
+			if(part.GetCentralIndex() == ENullHit) centralCrys[i] = -1;
+			else centralCrys[i] = part.GetCentralIndex();
+						
+			if(part.GetVetoIndex() == ENullHit) centralVeto[i] = -1;
+			else centralVeto[i]	= part.GetVetoIndex();		
+			
 			// Store other values which don't have this "no-value" option
 			Apparatus[i]	= (UChar_t)EAppCB;
 			Theta[i]		= part.GetThetaDg();
@@ -376,13 +389,19 @@ void    TA2GoAT::Reconstruct()
 			
 			if(TMath::Abs(part.GetVetoEnergy()) >= TA2GoAT_NULL) d_E[nParticles+i] = 0.0;
 			else d_E[nParticles+i]	= part.GetVetoEnergy();
+		
+			if(part.GetCentralIndex() == ENullHit) centralCrys[nParticles+i] = -1;
+			else centralCrys[nParticles+i]	= part.GetCentralIndex();
+			
+			if(part.GetVetoIndex() == ENullHit) centralVeto[nParticles+i] = -1;
+			else centralVeto[nParticles+i]	= part.GetVetoIndex();		
 			
 			// Set WC values to NULL
 			WC0_E[nParticles+i] = 0.0;
 			WC1_E[nParticles+i] = 0.0;
 			WC_Vertex_X[nParticles+i] = 0.0;
 			WC_Vertex_Y[nParticles+i] = 0.0;
-			WC_Vertex_Z[nParticles+i] = 0.0;
+			WC_Vertex_Z[nParticles+i] = 0.0;	
 			
 			// Store other values which don't have this "no-value" option
 			Apparatus[nParticles+i]		= (UChar_t)EAppTAPS;
