@@ -14,6 +14,7 @@
 
 enum {
     EG_OUTPUT_FOLDER = 30250,
+    EG_INPUT_NAME,
     EG_FILE_NAME,
     EG_BEAM_HELICITY,
 };
@@ -21,6 +22,7 @@ enum {
 static const Map_t RootTreeConfigKeys[] = {
     // General keys
     {"RootTree-Output-Folder:"       	, EG_OUTPUT_FOLDER},
+    {"RootTree-Input-Name:"           	, EG_INPUT_NAME},
     {"RootTree-File-Name:"           	, EG_FILE_NAME},
     {"Beam-Helicity:"           	, EG_BEAM_HELICITY},
     // Termination
@@ -38,6 +40,7 @@ private:
 		TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
 
     	char        outputFolder[256];
+    	char        inputName[64];
     	char        fileName[64];
 
     	//Particles    

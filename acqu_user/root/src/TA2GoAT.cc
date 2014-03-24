@@ -53,7 +53,8 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     eventNumber(0),
                                                                     eventID(0)														
 {
-    	strcpy(outputFolder,"~");
+    	strcpy(outputFolder,"");
+    	strcpy(inputName,"");
     	strcpy(fileName,"Acqu");
 
     	AddCmdList(RootTreeConfigKeys);
@@ -111,6 +112,12 @@ void    TA2GoAT::SetConfig(Char_t* line, Int_t key)
      	   while(outputFolder[strlen(outputFolder)-1]=='\n' 
 						|| outputFolder[strlen(outputFolder)-1]=='\r')
 			outputFolder[strlen(outputFolder)-1]='\0';
+        return;
+    	case EG_INPUT_NAME:
+        	strcpy(inputName,line);
+        	while(inputName[strlen(inputName)-1]=='\n' 
+						|| inputName[strlen(inputName)-1]=='\r')
+			inputName[strlen(inputName)-1]='\0';
         return;
     	case EG_FILE_NAME:
         	strcpy(fileName,line);
@@ -186,25 +193,17 @@ void    TA2GoAT::PostInit()
    	if(gAR->GetProcessType() == EMCProcess) fullName = gAR->GetTreeFileList(0);        
    	else  fullName = gAR->GetFileName();
 		
-	int length = fullName.Length();
-	int last = 0;
-	for (int i = 0; i < length; i++)
-	{
-		int index = fullName.Index("/"); 
-		fullName.Remove(0,index+1);	
-		if (index == -1) break;
-		last += index+1; 
-	}
-	Char_t inFile[256], str[256];
-    	if(gAR->GetProcessType() == EMCProcess) 
-		sscanf( gAR->GetTreeFileList(0)+last, "%[^.].root\n", inFile);       
-    	else    
-		sscanf( gAR->GetFileName()+last, "%[^.].dat\n", inFile);	
+	while(fullName.Contains("/")) fullName.Remove(0,1+fullName.Index("/"));
+	fullName.ReplaceAll(".dat",".root");
+	if(strlen(inputName) && fullName.BeginsWith(inputName)) fullName.Remove(0,strlen(inputName));
+	else fullName.Prepend("_");
+	fullName.Prepend(fileName);
+	if(!strcmp(outputFolder,"")) strcpy(outputFolder, gAR->GetTreeDir());
+	if(strcmp(outputFolder+strlen(outputFolder)-1,"/")) strcat(outputFolder, "/");
+	fullName.Prepend(outputFolder);
+   	printf("Root file saved to %s\n", fullName.Data());  
 
-    	sprintf(str, "%s/%s_%s.root", outputFolder, fileName, inFile);        
-   	printf("Root file saved to %s\n", str);  
-
-   	file		= new TFile(str,"RECREATE");
+   	file		= new TFile(fullName.Data(),"RECREATE");
 	treeRawEvent	= new TTree("treeRawEvent", "treeRawEvent");
 	treeTagger	= new TTree("treeTagger","treeTagger");
 	treeTrigger	= new TTree("treeTrigger","treeTrigger");
@@ -259,6 +258,7 @@ void    TA2GoAT::PostInit()
 		treeScaler->Branch("eventNumber", &eventNumber, "eventNumber/I");
 		treeScaler->Branch("eventID", &eventID, "eventID/I");
 		printf("GetMaxScaler: %d\n", GetMaxScaler());
+	        Char_t str[256];
 		sprintf(str, "Scaler[%d]/i", GetMaxScaler());
 		treeScaler->Branch("Scaler", fScaler, str);
 	}
