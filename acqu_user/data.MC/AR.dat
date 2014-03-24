@@ -45,16 +45,17 @@ Branch:   emwpc         1024
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ROOT file(s) (GEANT4 output) to be analysed. Add more lines for more files
 #
-TreeFile: $HOME/Geant4/A2/out/acquMC/Compton_g4_out.root
-#TreeFile: $HOME/Geant4/A2/out/acquMC/Pi0_g4_out.root
-#TreeFile: $HOME/Geant4/A2/out/acquMC/PiPlusN_g4_out.root
+TreeFile: /home/martel/work1/analysis/old_A2G4/root/A2G4_g-p_g-p_isot_01.root
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
-#TreeFile: $HOME/Geant4/A2/out/Evgen/Compton_p_250_out.root
-#TreeFile: $HOME/Geant4/A2/out/Evgen/Pi0_p_250_out.root
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Batch mode operation...redirect output directory for log files etc.
+BatchDir: /home/martel/acqu/acqu_user/
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Directory to save any created ROOT files (include final '/')
-Directory:  $acqu/
+Directory:  /home/martel/acqu/acqu_user/
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
