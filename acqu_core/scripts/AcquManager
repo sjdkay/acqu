@@ -206,6 +206,11 @@ if ($verbose) {
   $warnings = 1;
 }
 
+if($force && $warnings) {
+  Logger("YOU ARE USING FORCE (-f, --force), DO NOT USE THIS WITHOUT REASON!",-1);
+  Logger("FORCE disables all checks which can prevent bad things!",-1); 
+}
+
 # syslog prefix
 logger_prefix("AcquManager");
 
