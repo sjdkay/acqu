@@ -1,0 +1,166 @@
+#!/bin/sh
+#Give the args some sensible names
+SetupFile=$1
+JobName=$2
+FileList=$3
+
+
+####################################################
+###### Beginning of section requiring editing ######
+####################################################
+
+#Location of input files
+#InputDir="/local/raid1/work/${USER}/analysis/${JobName}"
+
+#Location of output files
+OutputDir="/local/raid1/work/${USER}/analysis/${JobName}"
+
+#Who'll get the emails from the farm
+MailAddress="martel@kph.uni-mainz.de"
+
+####################################################
+###### End of section requiring editing ############
+####################################################
+
+
+#No of Acqu data files in each job
+RunsPerJob="1"
+
+#get the name of this executable
+exe=`basename $0`
+
+#the maximum time the job will be allowed HH:MM:SS
+#This is the max allowed on the batch_x86 queue.
+#Set high in case 
+WALLTIME=24:00:00
+
+print_usage(){
+    echo
+    echo "Usage:"
+    echo "$exe <AcquRootSetup> <JobName> <FileList>"
+    echo
+    echo "<AcquRootSetup>: Top level AcquRoot setup file"
+    echo "<JobName>:       A directory jobs/<JobName> will be created"
+    echo "                 if it doesn't exist and scripts put there"
+    echo "<FileList>:      (Optional) list of files to run, otherwise"
+    echo "                 run files in <AcquRootSetup> file"
+    echo "Examples: "
+    echo "$exe data/MyTaggTaps.dat myjob MCFiles.dat"
+    echo "$exe data/MyTaggTaps.dat myjob"
+}
+
+#check that we have all the args, otherwise print use
+if [ $# -lt 2 ]; then
+    print_usage;
+    exit 0;
+fi
+
+#Go through the top level setup file and make jobs for groups of
+#<RunsPerJob> data files in the setup file, or in FileList if specified
+
+MainDir=`pwd`
+
+#make some subdirectories for job and setup files
+JobDir="jobs/$JobName"
+mkdir -p $JobDir
+mkdir -p "$JobDir/jobfiles"
+
+AcquSetupDir="${JobDir}/acqusetups"
+mkdir -p $AcquSetupDir
+
+mkdir -p $OutputDir
+mkdir -p "${OutputDir}/root"
+mkdir -p "${OutputDir}/log"
+
+#if there's no file list specified, then scan input directory  
+if [ $# -lt 3 ]; then
+    FileList="${JobDir}/FileList.dat"
+    #Make a file where each line is a list of the datafiles per job by
+    #going over all the "TreeFile:" lines in the setup file.
+    gawk -v n="$RunsPerJob" '{if($1=="TreeFile:"){printf"%s ",$2;if(c++ ==n-1){printf"\n";c=0}}}END{if(c!=0)printf"\n"}' $SetupFile > $FileList
+fi
+
+
+#Make a main setup file template with all non-comment lines except the "TreeFile:" lines
+AcquTemplate="${AcquSetupDir}/AcquTemplate.dat"
+echo "#AcquRoot setup file created automatically using MCAcquFarm with $SetupFile as basis." > $AcquTemplate
+echo "#All comments are stripped out" >> $AcquTemplate
+gawk '{if(($1!~"TreeFile:")&&($1!~"#"))print $0}' $SetupFile >> $AcquTemplate
+
+#Loop over each line and create the job files
+#each line is like this: "CBTaggTAPS_500.dat CBTaggTAPS_501.dat ....."
+while read line           
+do
+
+    echo "Making a job for Files: $line";
+    
+
+    #Take the 1st data file in the line to do the naming of things"
+    firstFile=`echo $line | gawk '{print $1}'`
+    
+    #strip off the input suffix, and any directory paths
+    basename=`basename $firstFile .root`
+    jobfile="${JobDir}/jobfiles/$basename.sub"
+    acquSetupFile="${AcquSetupDir}/${basename}_Setup.dat"
+    nodeOutputDir="/scratch/${USER}/${basename}"
+
+    batchDirLine="BatchDir: ${nodeOutputDir}/"
+    outDirLine="Directory: ${nodeOutputDir}/"
+
+    #write the main setup file replacing directory names as appropriate
+    gawk -v bd="$batchDirLine" -v dl="$outDirLine" '{if($1=="BatchDir:")$0=bd; if($1=="Directory:")$0=dl; if($1!~"#")print $0;}' $AcquTemplate > ${acquSetupFile}
+
+    for file in $line
+    do
+	echo "TreeFile: $file" >> $acquSetupFile
+    done
+
+    #now make the job file
+    echo "#!/bin/sh" > $jobfile;
+    echo "#PBS -N AcquFarm_${USER}" >> $jobfile;
+    echo "#PBS -m abe" >> $jobfile;
+    echo "#PBS -M $MailAddress"  >> $jobfile;
+    echo "#PBS -V"  >> $jobfile;
+    echo "#PBS -lwalltime=${WALLTIME}" >> $jobfile;
+    echo "#PBS -e ${JobDir}/jobfiles"  >> $jobfile;
+    echo "#PBS -o ${JobDir}/jobfiles"  >> $jobfile;
+    echo "#PBS -q batch_x86_64" >> $jobfile;
+    echo "#"  >> $jobfile;
+#    echo "#InputDir: ${InputDir}" >> $jobfile; 
+    echo "#InputFiles: $line"   >> $jobfile;
+    echo "#"  >> $jobfile;
+    echo "export ACQU_MAINDIR=\"$MainDir\""  >> $jobfile;
+    echo "export ACQU_SETUPFILE=\"$acquSetupFile\""  >> $jobfile;
+    echo "export ACQU_OUTPUTDIR=\"$OutputDir\""  >> $jobfile;
+    echo "#"  >> $jobfile;
+    echo "#This is the executable that gets run on the node"  >> $jobfile;
+    echo "MCAcquNode"  >> $jobfile;
+    echo "#"  >> $jobfile;
+    echo "exit 0"  >> $jobfile;
+    echo "##end of job script"  >> $jobfile;
+
+    chmod +x $jobfile;
+    
+
+done < $FileList
+
+topFile=`ls -1 -r ${AcquSetupDir}/*_Setup.dat | tail -1`
+topJob=`ls -1 -r ${JobDir}/jobfiles/*.sub | tail -1`
+
+echo
+echo "Job submission scripts are in ${JobDir}/jobfiles."
+echo "AcquRoot setup files are in ${AcquSetupDir}"
+echo 
+echo "Running AcquHierarchy $topFile:"
+echo
+AcquHierarchy $topFile
+echo 
+echo "Please check that the result looks sensible"
+echo 
+echo "Here's the corrseponding job submission script:"
+echo "cat $topJob"
+echo
+cat $topJob
+
+echo
+echo
