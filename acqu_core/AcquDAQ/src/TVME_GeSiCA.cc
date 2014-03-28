@@ -172,7 +172,9 @@ void TVME_GeSiCA::ReadIRQ( void** outBuffer )
 	for(Int_t j=0; j<adcBlock; j++){
 	  index = 16 * chipID + (0xf & (*pdatum >> 26)) + fBaseIndex;//adc ind
 	  value = 0xffff & *pdatum++;
-	  ADCStore(outBuffer, value, index);   
+	  ADCStore(outBuffer, 0, index);
+	  ADCStore(outBuffer, value, index);
+	  ADCStore(outBuffer, 0, index);
 	}
 	break;
       default:
