@@ -20,7 +20,7 @@ void PeriodMacro() {
       Double_t gated = PairSpec_Gated->GetBinContent(n);
       Double_t gated_dly = PairSpec_GatedDly->GetBinContent(n);
       Double_t taggeff = (gated-gated_dly)/open;
-      if(isnan(taggeff))
+      if(!TMath::Finite(taggeff))
           taggeff = 0;
       cmd << taggeff << " ";
     }
