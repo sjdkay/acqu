@@ -379,13 +379,6 @@ void TVME_GeSiCA::SetConfig( Char_t* line, Int_t key )
 //-----------------------------------------------------------------------------
 void TVME_GeSiCA::ProgFPGA()
 {
-  // check if TCS clocks are locked, then skip programming
-  // this should make initing the system less painful...
-  UInt_t gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
-  if((gesica_SCR & 0b11) == 0b11) {
-    cout << "Skip programming of GeSiCa, TCS is already locked" << endl;
-    return;
-  }
   // load the RBT file
   vector<UInt_t> rbt_data;
   if(!load_rbt(fFPGAfile, rbt_data)) {
@@ -437,32 +430,6 @@ void TVME_GeSiCA::ProgFPGA()
     exit (EXIT_FAILURE); 
   }
   cout << "Programming done, status = 0x" << hex << status << dec << endl;
-
-  // check if clocks are locked (if not there's a maybe ConfigTCS needed...?!)
-  // SCR = status and control register
-  gesica_SCR = 0;
-  UInt_t tries = 0;
-  do {
-     gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
-     tries++;
-     if(tries>1000000) {
-       cerr << "Timeout while waiting for any clocks getting locked..." << endl;
-       exit(EXIT_FAILURE);
-     }
-  }
-  while((gesica_SCR & 0b11) == 0);
-
-  if((gesica_SCR & 0x1) == 0) {
-    cerr << "TCS clock not locked: Status = 0x"
-         << hex << gesica_SCR << dec << endl;
-    exit(EXIT_FAILURE);
-  }
-  if((gesica_SCR & 0x2) == 0) {
-    cerr << "Internal clocks not locked. Status = 0x"
-         << hex << gesica_SCR << dec << endl;
-    exit(EXIT_FAILURE);
-  }
-
 }
 
 //-----------------------------------------------------------------------------
@@ -545,8 +512,11 @@ void TVME_GeSiCA::ProgOpMode(){
   bool check = true;
   
   for(UInt_t i=0; i<fNSADC; i++){
-    i2c_set_port(i);
-
+    Write(EI2CPortSelect,i);       // set port i
+    //    usleep(2);
+    Write(EIHlPort,i); 
+    //    usleep(2);
+    
     // set all adcs to latch or sparse mode
     check &= i2c_write_reg(0, 0x3, fADCmode, true); 
     check &= i2c_write_reg(1, 0x3, fADCmode, true);
@@ -599,8 +569,8 @@ void TVME_GeSiCA::ProgThresh(){
     PrintError("","<Incompatible number thresholds read in>", EErrFatal);
   bool check = true;
   for( Int_t i=0; i<fNthresh; i++ ){
-    i2c_set_port(fSADCport[i]);
-
+    i2c_set_port(i);
+    
     if( fSADCchan[i] < 16 ){
       chip = 0;
       reg = fSADCchan[i] + 0x10;
@@ -822,15 +792,39 @@ bool TVME_GeSiCA::init_gesica(bool skip_i2c) {
   // if the Gesica FPGA itself is programmed,
   // the TCS (and thus i2c) might not be working...
   if(skip_i2c)
-    return true;
-
+    return true;    
+  
+  // check if clocks are locked (if not there's a ConfigTCS needed...)
+  // SCR = status and control register
+  UInt_t gesica_SCR = 0;
+  UInt_t tries = 0;
+  do {
+     gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
+     tries++;
+     if(tries>1000000) {
+       cerr << "Timeout while waiting for clocks getting locked..." << endl;
+       return false;
+     }
+  }
+  while((gesica_SCR & 0b11) != 0b11);
+  
+  if((gesica_SCR & 0x1) == 0) {
+    cerr << "TCS clock not locked: Status = 0x"
+         << hex << gesica_SCR << dec << endl;
+    return false;
+  }
+  if((gesica_SCR & 0x2) == 0) {
+    cerr << "Internal clocks not locked. Status = 0x"
+         << hex << gesica_SCR << dec << endl;
+    return false;
+  }
+  
   // reset the i2c...
   if(!i2c_reset()) {
     cerr << "I2C reset failed" << endl;
     return false;
   }
-
-  UInt_t gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
+  
   // Init connected iSADC cards
   vector<UInt_t> ports;  
   for(UInt_t port_id=0;port_id<fNSADC;port_id++) {
