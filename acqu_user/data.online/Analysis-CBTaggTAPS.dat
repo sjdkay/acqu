@@ -54,7 +54,7 @@ Reconstruct-Analysis:
 Initialise:
 ##
 ## Macros
-Period:  500	linPolMacro.C	linPolMacro()
+Period:  500	PeriodMacro.C	PeriodMacro()
 #EndFile:	EndFileMacro.C  EndFileMacro()
 #Finish:	FinishMacro.C	FinishMacro()
 ##
