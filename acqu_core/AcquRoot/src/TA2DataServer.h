@@ -21,7 +21,8 @@
 //                                              in data merging
 //--Rev 	JRM Annand...    1st Mar 2013   More Mk2 merge debugging
 //--Rev 	JRM Annand...    6th Mar 2013   Add TA2TAPSMk2Format
-//--Update	JRM Annand...   18th Sep 2013   Start sources inc usleep 100-200
+//--Rev 	JRM Annand...   18th Sep 2013   Start sources inc usleep 100-200
+//--Update	JRM Annand...   29th Mar 2014   Merged data written at end-run 
 //				      
 //--Description
 //                *** Acqu++ <-> Root ***

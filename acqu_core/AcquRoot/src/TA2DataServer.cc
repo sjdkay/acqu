@@ -21,7 +21,8 @@
 //                                              in data merging
 //--Rev 	JRM Annand...    1st Mar 2013   More Mk2 merge debugging
 //--Rev 	JRM Annand...    6th Mar 2013   Add TA2TAPSMk2Format
-//--Update	JRM Annand...   18th Sep 2013   Start sources inc usleep 100-200
+//--Rev 	JRM Annand...   18th Sep 2013   Start sources inc usleep 100-200
+//--Update	JRM Annand...   29th Mar 2014   Merged data written at end-run 
 //
 //--Description
 //                *** Acqu++ <-> Root ***
@@ -486,6 +487,17 @@ void TA2DataServer::MultiProcess()
 	finished = ETrue;
       case EEndBuff:
 	PrintMessage("End of run detected\n");
+	// If data storage enabled
+	// Check if anything left in the merged output buffer
+	// Write it to merged file....JRMA 29/3/14
+	if( fIsStore ){
+	  UInt_t* bStart = (UInt_t*)(fSortBuff->GetStore());
+	  if( fOutBuff > (bStart + 1) ){
+	    *fOutBuff = EBufferEnd;
+	    fOutBuff = NULL; 
+	    fDataOutFile->WriteBuffer(fSortBuff->GetStore(),fRecLen);
+	  }
+	}
 	// Check that the other data sources have reached the end-of-file
 	// state....flush any extraneous data buffers from these sources
 	FlushBuffers();
