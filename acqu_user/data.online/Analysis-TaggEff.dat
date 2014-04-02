@@ -39,12 +39,12 @@ Period:  3000	PeriodMacro.C	PeriodMacro()
 #Display: All
 ## Histogram QDCs
 ## Tagger QDCs
-Display: ADC 800  991
+Display: ADC 800 1183
 ## Microscope QDCs
 #Display: ADC 1184 1279
 #
 ## Pb-Glass, paddle QDCs
-Display: ADC 1280 1375
+#Display: ADC 1280 1375
 ##
 ## Display Reference TDC
 Display: ADC 1400 1400

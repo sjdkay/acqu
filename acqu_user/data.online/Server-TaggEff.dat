@@ -18,7 +18,7 @@ Stream-Spec:	Network	Mk2	1	vme-exptrigger	3030	32	400
 File-Name:	Trig		0	0
 Stream-Spec:	Network	Mk2	1	vme-beampolmon	3031	32	400
 File-Name:	Beam		0	0
-Stream-Spec:	Network	Mk2	1	vme-tagg-tdc-a	3028	64	400
+Stream-Spec:	Network	Mk2	1	vme-tagg-tdc-a	3028	128	400
 File-Name:	TaggA		0	0
 Stream-Spec:	Network	Mk2	1	vme-tagg-tdc-b	3029	64	400
 File-Name:	TaggB		0	0

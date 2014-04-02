@@ -6,7 +6,6 @@ File-Name: scratch/AcquDAQ 32	5000000	32768 ENet  32768  3028
 Event-Counters:	10000		200000
 Start-Run: 0
 #
-#Control:  Slave    0     0
 #Control:   ENet	    localhost 4028
 #Control:   ENetSlave	    localhost 4028
 Control:  Slave    0     0
