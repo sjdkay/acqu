@@ -11,7 +11,8 @@ Reconstruct:
 #
 
 # General:      dbhost       		dbname   dbuser      dbpass        calibration
-Use-CaLib:      a2calib.online.a2.kph   calib    calib       basel10       Compton_2012_12
+#Use-CaLib:      a2calib.online.a2.kph   calib    calib       basel10       Compton_2012_12
+Use-CaLib:      localhost   2012_12    calib    123456       Compton_2012_12
 #
 #
 # miscellaneous calibrations    # target position  (0=off/1=on)
