@@ -43,4 +43,25 @@ void PeriodMacro() {
       NHardwareError->Reset();
     }
   }
+
+  // look for hole in MWPC
+  if(gROOT->FindObject("MWPC_Wires_Hits")){
+    if((MWPC_Wires_Hits->Integral()) > (400*528)){
+      Int_t iPrev, iThis;
+      Double_t dDiff;
+      Int_t iProb = 0;
+      iThis = MWPC_Wires_Hits->GetBinContent(1);
+      for(Int_t i=1; i<528; i++){
+	iPrev = iThis;
+	iThis = MWPC_Wires_Hits->GetBinContent(i+1);
+	dDiff = (TMath::Abs((iThis-iPrev)/(1.*iPrev)));
+	if(dDiff > 0.5) iProb++;
+      }
+      if(iProb > 5){
+	printf("Possible Problem in MWPC Wires!!!\n");
+	system("ssh macrobusy ogg123 -q /usr/share/sounds/extra/achtung.ogg &");
+      }
+      MWPC_Wires_Hits->Reset();
+    }
+  }  
 }
