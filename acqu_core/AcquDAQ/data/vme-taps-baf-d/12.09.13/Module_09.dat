@@ -40,7 +40,7 @@ Thr-CFD-Raw: 8097 8156 8113 8098
 ## LED1 thresholds in mV
 Thr-LED1: 39 87 60 25
 ## LED2 thresholds in mV
-Thr-LED2: 39 90 56 24
+Thr-LED2: 39 88 56 23
 #
 # Global data ready signal
 Data-Ready: 2
