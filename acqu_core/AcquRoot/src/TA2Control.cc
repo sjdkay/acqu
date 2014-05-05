@@ -73,6 +73,7 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   Bool_t online = ETrue;
   fBatch = EFalse;
   char setfile[128];
+  char datafile[256] = "";
   strcpy( setfile, "ROOTsetup.dat" );
 
   // Handle any command-line option here online/offline or setup file
@@ -80,6 +81,7 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
     if( strcmp("--offline", argv[i]) == 0 ) online = EFalse;
     else if( strcmp("--rootfile", argv[i]) == 0 ) online = EFalse;
     else if( strcmp("--batch", argv[i]) == 0 ) fBatch = ETrue;
+    else if( strcmp("--datafile", argv[i]) == 0 ) strcpy( datafile, argv[++i] );
     else if( strcmp("--", argv[i]) != 0 ) strcpy( setfile, argv[i] );
   }
 
@@ -111,6 +113,10 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
     if( gAR->GetDataServerSetup() ){
       gDS = new TA2DataServer("DataServer",gAR);
       gDS->FileConfig( gAR->GetDataServerSetup() );  // configure it
+      if (strcmp(datafile, "")){
+	gDS->GetDataSource(0)->ClearList();
+	gDS->GetDataSource(0)->InputList(datafile, 0, 0);
+      }
       gDS->StartSources();                   // start front-end I/O threads
       gDS->Start();                          // start DataServer thread
       //      gAR->LinkDataServer( gDS );            // Header, if in data
