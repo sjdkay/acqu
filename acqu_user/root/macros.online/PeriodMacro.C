@@ -33,15 +33,12 @@ void PeriodMacro() {
     }
   }
 
-  // determine percent of events with a hardware error
+  // determine number of events with a hardware error
   if(gROOT->FindObject("NHardwareError")){
-    if((NHardwareError->Integral()) > 0){
-      stringstream cmd;
-      Double_t per_err = (100*(1.-((NHardwareError->GetBinContent(1))/(NHardwareError->Integral()))));
-      cmd << "caput GEN:MON:EventsWithError.A " << per_err << " > /dev/null";
-      system(cmd.str().c_str());
-      NHardwareError->Reset();
-    }
+    if((gAN->GetNDAQEvent()) < 3000) NHardwareError->Reset();
+    stringstream cmd;
+    cmd << "caput GEN:MON:EventsWithError.A " << (NHardwareError->Integral(2,-1)) << " > /dev/null";
+    system(cmd.str().c_str());
   }
 
   // look for hole in MWPC
@@ -57,7 +54,7 @@ void PeriodMacro() {
 	dDiff = (TMath::Abs((iThis-iPrev)/(1.*iPrev)));
 	if(dDiff > 0.5) iProb++;
       }
-      if(iProb > 5){
+      if(iProb > 7){
 	printf("Possible Problem in MWPC Wires!!!\n");
 	system("ssh macrobusy ogg123 -q /usr/share/sounds/extra/achtung.ogg &");
       }
