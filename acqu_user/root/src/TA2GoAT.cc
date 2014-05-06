@@ -490,6 +490,20 @@ void    TA2GoAT::Reconstruct()
 		}
 	} 
 
+        if(fMulti[400])
+	{
+		int eventIDcheck = fMulti[400]->GetHit(0);
+		for(int i=1; i<23; i++)
+		{
+			if(eventIDcheck != fMulti[400]->GetHit(i))
+			{
+				ErrCode[nError] = 11;
+				nError++;
+				break;
+			}
+		}
+	}
+
 	//Apply EndBuffer
     	Ek[nParticles] 		= EBufferEnd;
     	Theta[nParticles]	= EBufferEnd;
