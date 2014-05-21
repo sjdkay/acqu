@@ -54,8 +54,8 @@ void PeriodMacro() {
 	dDiff = (TMath::Abs((iThis-iPrev)/(1.*iPrev)));
 	if(dDiff > 0.5) iProb++;
       }
-      if(iProb > 7){
-	printf("Possible Problem in MWPC Wires!!!\n");
+      if(iProb > 8){
+	printf("%d problems found in MWPC Wires!!!\n",iProb);
 	system("ssh macrobusy ogg123 -q /usr/share/sounds/extra/achtung.ogg &");
       }
       MWPC_Wires_Hits->Reset();
