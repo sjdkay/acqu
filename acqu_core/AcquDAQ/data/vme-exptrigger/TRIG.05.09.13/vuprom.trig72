@@ -37,4 +37,4 @@ GUI-permit:
 #	End of File
 #
 L1-Prescale: 65535 0 0 65535 65535 0 0 0
-Input-Prescale: 0 0 15 15 15 15 15 15 0 15 15 15 15 15 15 0
+Input-Prescale: 0 0 15 15 15 15 0 0 0 15 15 15 15 15 15 0
