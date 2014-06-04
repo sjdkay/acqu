@@ -39,21 +39,21 @@ static const Map_t kMyTAPS_BaF2PWOKeys[] = {
   {NULL, -1 }
 };
 
-
+/*
 enum ETAPSType {
     ENoType,
     EBaF2,
     EBaF2_PWO_08,
     EBaF2_PWO_09,
 };
-typedef ETAPSType TAPSType_t;
+typedef ETAPSType TAPSType_t;*/
 
 
 class TA2MyTAPS_BaF2PWO : public TA2ClusterDetector 
 {
 
 protected:
-    TAPSType_t fType;                                   // type of TAPS configuration
+ //   TAPSType_t fType;                                   // type of TAPS configuration
     HitD2A_t** fSGElement;                              // short-gate detector elements
     HitD2A_t** fLGElement;                              // long-gate detector elements
     UInt_t fMaxSGElements;                              // size of short-gate arrays
@@ -68,7 +68,7 @@ public:
     void ReadDecoded();
     void SetConfig(Char_t*, Int_t);
 
-    TAPSType_t GetType() const { return fType; }
+ //   TAPSType_t GetType() const { return fType; }
 
     HitD2A_t* GetLGElement(Int_t i)
     {

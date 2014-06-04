@@ -23,7 +23,7 @@ TA2MyTAPS_BaF2PWO::TA2MyTAPS_BaF2PWO(const char* name, TA2System* apparatus)
     : TA2ClusterDetector(name, apparatus)
 {
     // Ensure Short/Long gate array stuff is tagged as uninitialised
-    fType = ENoType;
+//    fType = ENoType;
     fSGElement = NULL;
     fLGElement = NULL;
     fMaxSGElements = 0;
@@ -127,7 +127,7 @@ void TA2MyTAPS_BaF2PWO::PostInit()
     TA2ClusterDetector::PostInit();
 
     // init the type
-    switch (GetNelement())
+/*    switch (GetNelement())
     {
         case 384:
             fType = EBaF2;
@@ -142,7 +142,7 @@ void TA2MyTAPS_BaF2PWO::PostInit()
             fType = ENoType;
             break;
     }
-
+*/
     // init the long-gate pointer
     fLGElement = TA2Detector::GetElement();
 }
