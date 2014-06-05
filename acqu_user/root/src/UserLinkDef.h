@@ -37,12 +37,8 @@
 // TA2My... extension classes
 //#pragma link C++ class TA2MyAnalysis+;
 #pragma link C++ class TA2MyCaLib+;
-#pragma link C++ class TA2MyClusterCalib+;
 #pragma link C++ class TA2MyRateEstimation+;
 #pragma link C++ class TA2MyPhysics+;
-#pragma link C++ class TA2MyCrystalBall+;
-#pragma link C++ class TA2MyTAPS+;
-#pragma link C++ class TA2MyTAPS_BaF2PWO+;
 // Apparatus classes
 #pragma link C++ class TA2GenericApp+;
 #pragma link C++ class TA2Calorimeter+;

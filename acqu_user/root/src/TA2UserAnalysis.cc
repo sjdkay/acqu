@@ -30,12 +30,9 @@
 #include "TA2BasePhysics.h"
 #include "TA2TriggerPhysics.h"
 #include "TA2Pi0Compton.h"
-#include "TA2MyCrystalBall.h"
-#include "TA2MyTAPS.h"
 #include "TA2GenericApp.h"
 #include "TA2BeamPolMon.h"
 #include "TA2MyCaLib.h"
-#include "TA2MyClusterCalib.h"
 #include "TA2MyRateEstimation.h"
 #include "TA2TAPSAnalysis.h"
 
@@ -59,11 +56,7 @@ enum {
   EA2BasePhysics,
   EA2TriggerPhysics,
   EA2Pi0Compton,
-  EA2MyCrystalBall, 
-  EA2MyTAPS,
-  EA2MyAnalysis, 
   EA2MyCaLib, 
-  EA2MyClusterCalib, 
   EA2MyRateEstimation,
   EA2TAPSAnalysis };
 
@@ -79,20 +72,17 @@ static const Map_t kKnownChild[] =
   {"TA2CentralApparatus", EA2CentralApparatus},
   {"TA2GenericApp",       EA2GenericApp},  
   {"TA2BeamPolMon",       EA2BeamPolMon},  
-  {"TA2MyCrystalBall",    EA2MyCrystalBall},
-  {"TA2MyTAPS",           EA2MyTAPS},
   //Physics
   {"TA2Pi0Compton",       EA2Pi0Compton},
   {"TA2Physics",          EA2Physics},
   {"TA2UserPhysics",      EA2UserPhysics},
   {"TA2MesonPhysics",     EA2MesonPhysics},
-  {"TA2AccessSQL",		  EA2AccessSQL},
-  {"TA2GoAT",			  EA2GoAT},
+  {"TA2AccessSQL",	  EA2AccessSQL},
+  {"TA2GoAT",		  EA2GoAT},
   {"TA2BasePhysics",      EA2BasePhysics},
   {"TA2TriggerPhysics",   EA2TriggerPhysics},
-  {"TA2MyAnalysis",       EA2MyAnalysis},
+ // {"TA2MyAnalysis",       EA2MyAnalysis},
   {"TA2MyCaLib",          EA2MyCaLib},
-  {"TA2MyClusterCalib",   EA2MyClusterCalib},
   {"TA2MyRateEstimation", EA2MyRateEstimation},
   {"TA2TAPSAnalysis",     EA2TAPSAnalysis},
   {NULL,                  -1}
@@ -149,12 +139,6 @@ TA2DataManager* TA2UserAnalysis::CreateChild(const char* name, Int_t a)
   case EA2BeamPolMon:
     // BeamPolMon
     return new TA2BeamPolMon(name, this);
-  case EA2MyCrystalBall:
-    // My Moded CB stuff
-    return new TA2MyCrystalBall( name, this );
-  case EA2MyTAPS:
-    // My TAPS stuff
-    return new TA2MyTAPS( name, this );
 
    //Physics stuff:
    case EA2Pi0Compton:
@@ -184,9 +168,6 @@ TA2DataManager* TA2UserAnalysis::CreateChild(const char* name, Int_t a)
   case EA2MyCaLib:
     // CaLib
     return new TA2MyCaLib( name, this );
-  case EA2MyClusterCalib:
-    // cluster calibration
-    return new TA2MyClusterCalib( name, this );
   case EA2MyRateEstimation:
     // rate estimation
     return new TA2MyRateEstimation( name, this );
