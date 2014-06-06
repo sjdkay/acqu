@@ -42,7 +42,10 @@ Int_t	TA2AccessSQL::GetRunNumber()
 
 
 //______________________________________________________________________________
-TA2AccessSQL::TA2AccessSQL(const char* name, TA2Analysis* analysis)	: TA2Physics(name, analysis), fCaLibReader(0), fRunNumber(0), CBEnergyPerRunCorrection(false)
+TA2AccessSQL::TA2AccessSQL(const char* name, TA2Analysis* analysis)	: TA2Physics(name, analysis), 
+    fCaLibReader(0),  
+    CBEnergyPerRunCorrection(false),
+    fRunNumber(0)
 {
     // command-line recognition for SetConfig()
     AddCmdList(AccessSQLConfigKeys);
@@ -433,14 +436,14 @@ void TA2AccessSQL::PostInit()
 	{
 		if(CBEnergyPerRunCorrection)
 		{
-			for(int i=0; i<fNaI->GetNelement(); i++)
+			for(UInt_t i=0; i<fNaI->GetNelement(); i++)
 				fNaI->GetElement(i)->SetA1(CBEnergyPerRunCorrectionFactor * (fNaI->GetElement(i)->GetA1()));
 		}
 		printf("gain after calib:		%lf\n", fNaI->GetElement(10)->GetA1());
 	
 		if(CBEnergyPerRunCorrection)
 		{
-			for(int i=0; i<fNaI->GetNelement(); i++)
+			for(UInt_t i=0; i<fNaI->GetNelement(); i++)
 				fNaI->GetElement(i)->SetA1(CBEnergyPerRunCorrectionFactor * (fNaI->GetElement(i)->GetA1()));
 		}
 		printf("gain after correction:	%lf\n", fNaI->GetElement(10)->GetA1());
