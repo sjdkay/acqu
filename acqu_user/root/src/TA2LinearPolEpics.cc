@@ -270,6 +270,10 @@ void TA2LinearPolEpics::PostInitialise( )
       fPolArray = new Double_t[fLadder->GetNelem()];
       fPolArray[0] =  (Double_t)ENullHit;
       fLadderHits = fLadder->GetHits();
+
+      //This version will have the pol for the multihits tagged on at the end
+      fPolArrayM = new Double_t[fLadder->GetNelem()];
+      fPolArrayM[0] =  (Double_t)ENullHit;
     }
     else{
       fprintf(stderr,"Warning: Couldn't find TA2Ladder *%s\n",fLadderName);
@@ -278,7 +282,10 @@ void TA2LinearPolEpics::PostInitialise( )
     
     fBeamEnergy = fTagger->GetBeamEnergy();	//get the beam energy
     fTaggerChannels = fLadder->GetNelem();	//get the no of elements in the Ladder
-
+    fCurrentPolTable = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
+    for(int n=0;n<fLadder->GetNelem();n++){
+      fCurrentPolTable[n]=-1.0;
+    }
 
     fNormChannel=fTaggerChannels/2;			// default norm chan to .5 of range
 
@@ -784,9 +791,17 @@ void TA2LinearPolEpics::Reconstruct( ){
       }
       
       if((fHaveIncScaler)&&(fHEnh)){			//find the coherent edge
-	
-	xmax=fHEnh->GetBinCenter(fHEnh->GetMaximumBin());
-	ymax=fHEnh->GetMaximum();
+
+	binx=0;
+	ymax=0;
+	for(int b=fHEnh->FindBin(fEdgeMin);b<fHEnh->FindBin(fEdgeMax);b++){
+	  if(fHEnh->GetBinContent(b)>ymax){
+	    ymax=fHEnh->GetBinContent(b);
+	    binx=b;
+	  }
+	}
+	xmax=fHEnh->GetBinCenter(binx);
+	ymax=fHEnh->GetBinContent(binx);
 	
 	
 	if(!edgeFit)edgeFit=new TF1("edgeFit",GausOnBase,0,100,4);
@@ -796,7 +811,6 @@ void TA2LinearPolEpics::Reconstruct( ){
 	edgeFit->SetParameter(2,10.0);
 	edgeFit->SetParameter(3,100.0);
 	fHEnh->Fit(edgeFit,"QNR");
-	
 	
 	maxgrad=0;
 	for(fitedge=xmax+1;fitedge<xmax+39;
@@ -1071,11 +1085,22 @@ Double_t *TA2LinearPolEpics::FillPolArray(){
   //if no valid plane or edge
   if(((fPlane!=ETablePara)&&(fPlane!=ETablePerp))|| ((fEdge<(fEdgeSetting-fEdgeRange))||(fEdge>(fEdgeSetting+fEdgeRange)))){
     while(fLadderHits[n]!=(Int_t)ENullHit){
-      fPolArray[n++]=-1.0;
+      fPolArray[n]=-1.0;
+      fPolArrayM[n++]=-1.0;
     }
     fPolArray[n]=(Double_t)ENullHit;
+    
+    //now add on all the multihit ones
+    for(int m=1; m<fLadder->GetNMultihit(); m++){
+      for(int i=0; i<fLadder->GetNhitsM(m); i++){
+	fPolArrayM[n]=-1.0;
+	n++;
+      }
+    }
+    fPolArrayM[n]=(Double_t)ENullHit;
     return NULL;
   }
+  
   if((fEdge<(fLastEdge-fDeadband))||(fEdge>(fLastEdge+fDeadband))){
     fLastEdge=fEdge;
     fBeforeEdgeBin=fHistP->FindBin(fEdge-fBeforeEdge); //find channels
@@ -1087,14 +1112,17 @@ Double_t *TA2LinearPolEpics::FillPolArray(){
     bin=fHistP->GetNbinsX()-fLadderHits[n];
     if((bin<fBeforeEdgeBin)||(bin>fAfterEdgeBin)){
       fPolArray[n]=-1.0;
+      fPolArrayM[n]=-1.0;
     } 
     else{
       pol=fHistP->GetBinContent(bin);
       if(pol<fPolMin){
 	fPolArray[n]=-1.0;
+	fPolArrayM[n]=-1.0;
       }
       else{
 	fPolArray[n]=fHistP->GetBinContent(bin); //fill
+	fPolArrayM[n]=fHistP->GetBinContent(bin); //fill
 	if((fHPolCount)&&(fHPolMean)){           //if the hists are there, fill the meam and count
 	  counter = fHPolCount->GetBinContent(bin);
 	  oldmean = fHPolMean->GetBinContent(bin);
@@ -1106,6 +1134,20 @@ Double_t *TA2LinearPolEpics::FillPolArray(){
     n++;
   }
   fPolArray[n]=(Double_t)ENullHit;
+  
+  //now add on all the multihit ones
+  for(int m=1; m<fLadder->GetNMultihit(); m++){
+    for(int i=0; i<fLadder->GetNhitsM(m); i++){
+      bin=fHistP->GetNbinsX()-fLadder->GetHitsM(m)[i];
+      if((bin<fBeforeEdgeBin)||(bin>fAfterEdgeBin)){
+	fPolArrayM[n]=-1.0;
+      }
+      else{
+	fPolArrayM[n]=fHistP->GetBinContent(bin); //fill
+      }
+    }
+  }
+  
   return fPolArray; 
 }
 
@@ -1240,14 +1282,9 @@ void  TA2LinearPolEpics::enhFromParams(){
     fHistP->Fill(fHistP->GetBinCenter(bin),polSum);
   } 
   //
-  if(fHPolTableEnh){
     for(int n=0;n<=fTaggerChannels;n++){
-      fHPolTableEnh->SetBinContent(n,fHistE->GetBinContent(n));
+      if(fHPolTableEnh) fHPolTableEnh->SetBinContent(n+1,fHistE->GetBinContent(n+1));
+      if(fHPolTablePol)fHPolTablePol->SetBinContent(n+1,fHistP->GetBinContent(n+1));
+      fCurrentPolTable[n]=fHistP->GetBinContent(n+1);
     }
-  }
-  if(fHPolTablePol){
-    for(int n=0;n<=fTaggerChannels;n++){
-      fHPolTablePol->SetBinContent(n,fHistP->GetBinContent(n));
-    }
-  }  
 }

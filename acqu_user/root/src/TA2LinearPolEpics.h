@@ -63,8 +63,9 @@ class TA2LinearPolEpics : public TA2Apparatus {
   Bool_t   fIsNewFile;		// To when a new file is opened
   Int_t    fRunNo;
   Double_t *fPolArray;          // Hold the polarizations for all the hits in the ladder.
+  Double_t *fPolArrayM;         // Hold the polarizations for all the hits in the ladder, including multihit.
   Int_t   *fLadderHits;         // pointer to ladder hits array
-
+  
   Double_t fEdge;		// for position of coherent edge chans
   Double_t fEdgeSetting;	// for nominal edge setting
   Double_t fEdgeRange;	        // how much it can drift from the nominal setting 
@@ -89,6 +90,7 @@ class TA2LinearPolEpics : public TA2Apparatus {
   Double_t fPolTableParams[50][2][11];
   Int_t    fPolRangeIndex[2];
   Int_t    fLastPolRangeIndex[2];
+  Double_t *fCurrentPolTable;
   
   Int_t    fNRunRanges;
   Int_t    fRunRangeMin[100];
@@ -225,11 +227,12 @@ class TA2LinearPolEpics : public TA2Apparatus {
   virtual void 	Reconstruct( );			//the main event reconstruction function
   Int_t  	LoadAmoRef(Char_t *refFilename);//load the amorphoes reference scalers
   Int_t		GetPolPlane(){return fPlane;};  //para,perp or unknown
-  Double_t	GetCohEdge(){return fEdge;};	//get pol for given photon energy
+  Double_t	*GetPolTable(){return fCurrentPolTable;};       //get pol for given photon energy
   Double_t	GetPolDegree(Double_t energy);	//get pol for given photon energy
   Int_t 	GetNormChannel(){return fNormChannel;};		//return the normalisation channel
   Double_t 	*GetEnergyCalib(){return fEnergyCalib;};	//get the energy calibration table
   Double_t 	*GetPolArray(){return fPolArray;};	//array of polarizations for all ladder hits.
+  Double_t 	*GetPolArrayM(){return fPolArrayM;};	//array of polarizations for all ladder Multi hits.
   
  private:
   Int_t		CreateCurrentPolTable();	//create one for the current edge position
