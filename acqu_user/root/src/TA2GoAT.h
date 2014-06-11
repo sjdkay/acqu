@@ -35,6 +35,7 @@ private:
 		TFile*		file;				// outFile
 		TTree*		treeRawEvent;		// Raw particle information (filled each event)
 		TTree*		treeTagger;			// Tagger information (filled each event)
+		TTree*		treeLinPol;			// Tagger information (filled each event)		
 		TTree* 		treeTrigger;		// Trigger information (filled each event)
 		TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
 		TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
@@ -71,6 +72,13 @@ private:
     	Double_t*	photonbeam_E;
     	Int_t*		tagged_ch;
     	Double_t*	tagged_t;
+       
+       //LinPol
+       Int_t 		plane;
+       Double_t		edge;
+       Double_t		edgeSetting;       
+       Double_t* 	currentpolTable;
+       Double_t* 	polTable;       
        
     	//Hits
     	Int_t		nNaI_Hits;

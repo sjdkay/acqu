@@ -358,7 +358,11 @@ void TA2AccessSQL::LoadDetectors(TA2DataManager* parent, Int_t depth)
             fVeto = (TA2TAPS_Veto*) obj;
             added = kTRUE;
         }
-
+        else if (!strcmp(obj->ClassName(), "TA2LinearPolEpics"))
+        {
+            fLinPol = (TA2LinearPolEpics*) obj;
+            added = kTRUE;
+        }
         // print information if a detector was added
         if (added)
         {
