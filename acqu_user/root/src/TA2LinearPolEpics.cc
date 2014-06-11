@@ -283,8 +283,10 @@ void TA2LinearPolEpics::PostInitialise( )
     fBeamEnergy = fTagger->GetBeamEnergy();	//get the beam energy
     fTaggerChannels = fLadder->GetNelem();	//get the no of elements in the Ladder
     fCurrentPolTable = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
+    fCurrentEnhTable = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
     for(int n=0;n<fLadder->GetNelem();n++){
       fCurrentPolTable[n]=-1.0;
+      fCurrentEnhTable[n]= 0.0;
     }
     // to allow for summing consecutive scaler buffers to get better stats.
     fAccScaler=new Double_t*[fNScalerBuffers];
@@ -1111,15 +1113,6 @@ Double_t *TA2LinearPolEpics::FillPolArray(){
       fPolArrayM[n++]=-1.0;
     }
     fPolArray[n]=(Double_t)ENullHit;
-    
-    //now add on all the multihit ones
-    for(int m=1; m<fLadder->GetNMultihit(); m++){
-      for(int i=0; i<fLadder->GetNhitsM(m); i++){
-	fPolArrayM[n]=-1.0;
-	n++;
-      }
-    }
-    fPolArrayM[n]=(Double_t)ENullHit;
     return NULL;
   }
   
@@ -1134,17 +1127,14 @@ Double_t *TA2LinearPolEpics::FillPolArray(){
     bin=fHistP->GetNbinsX()-fLadderHits[n];
     if((bin<fBeforeEdgeBin)||(bin>fAfterEdgeBin)){
       fPolArray[n]=-1.0;
-      fPolArrayM[n]=-1.0;
     } 
     else{
       pol=fHistP->GetBinContent(bin);
       if(pol<fPolMin){
 	fPolArray[n]=-1.0;
-	fPolArrayM[n]=-1.0;
       }
       else{
 	fPolArray[n]=fHistP->GetBinContent(bin); //fill
-	fPolArrayM[n]=fHistP->GetBinContent(bin); //fill
 	if((fHPolCount)&&(fHPolMean)){           //if the hists are there, fill the meam and count
 	  counter = fHPolCount->GetBinContent(bin);
 	  oldmean = fHPolMean->GetBinContent(bin);
@@ -1156,19 +1146,6 @@ Double_t *TA2LinearPolEpics::FillPolArray(){
     n++;
   }
   fPolArray[n]=(Double_t)ENullHit;
-  
-  //now add on all the multihit ones
-  for(int m=1; m<fLadder->GetNMultihit(); m++){
-    for(int i=0; i<fLadder->GetNhitsM(m); i++){
-      bin=fHistP->GetNbinsX()-fLadder->GetHitsM(m)[i];
-      if((bin<fBeforeEdgeBin)||(bin>fAfterEdgeBin)){
-	fPolArrayM[n]=-1.0;
-      }
-      else{
-	fPolArrayM[n]=fHistP->GetBinContent(bin); //fill
-      }
-    }
-  }
   
   return fPolArray; 
 }
@@ -1308,5 +1285,6 @@ void  TA2LinearPolEpics::enhFromParams(){
       if(fHPolTableEnh) fHPolTableEnh->SetBinContent(n+1,fHistE->GetBinContent(n+1));
       if(fHPolTablePol)fHPolTablePol->SetBinContent(n+1,fHistP->GetBinContent(n+1));
       fCurrentPolTable[n]=fHistP->GetBinContent(n+1);
+      fCurrentEnhTable[n]=fHistE->GetBinContent(n+1);
     }
 }
