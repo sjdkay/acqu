@@ -286,7 +286,14 @@ void TA2LinearPolEpics::PostInitialise( )
     for(int n=0;n<fLadder->GetNelem();n++){
       fCurrentPolTable[n]=-1.0;
     }
-
+    // to allow for summing consecutive scaler buffers to get better stats.
+    fAccScaler=new Double_t*[fNScalerBuffers];
+    for(int n=0;n<fNScalerBuffers;n++){
+      fAccScaler[n]=new Double_t[fLadder->GetNelem()];
+      for(int m=0;m<fLadder->GetNelem();m++) fAccScaler[n][m]=0.0;
+    }
+    fScalerEvent=0;
+    
     fNormChannel=fTaggerChannels/2;			// default norm chan to .5 of range
 
     if((ladderECal = fLadder->GetECalibration())){	//get the ladder energy calibration
@@ -729,9 +736,24 @@ void TA2LinearPolEpics::Reconstruct( ){
       
       //Fill the various arrays in ascending E_g order
       for(int n=0;n<fTaggerChannels;n++){	           //fill various hists (in ascending E_g order)
-	fCohSpectrum[fTaggerChannels-1-n]=fScalerCurr[n];
-	coh_sum+=fScalerCurr[n];
+	fAccScaler[fScalerEvent%fNScalerBuffers][fTaggerChannels-1-n]=fScalerCurr[n];
       }
+      
+      for(int n=0;n<fTaggerChannels;n++){
+	fCohSpectrum[n]=0.0;
+      }
+      for(int b=0;b<fNScalerBuffers;b++){
+	for(int n=0;n<fTaggerChannels;n++){
+	  fCohSpectrum[n]+=fAccScaler[b][n];
+	  coh_sum+=fAccScaler[b][n];
+	}
+      }
+      fScalerEvent++;
+      //Fill the various arrays in ascending E_g order
+      //      for(int n=0;n<fTaggerChannels;n++){	           //fill various hists (in ascending E_g order)
+      //	fCohSpectrum[fTaggerChannels-1-n]=fScalerCurr[n];
+      //	coh_sum+=fScalerCurr[n];
+      //}
       
       for(int v=fNormChannel-10;v<fNormChannel+10;v++){
 	if((fCohSpectrum[v]>1.0)&&(fIncSpectrum[v]>1.0)){
@@ -888,8 +910,8 @@ void TA2LinearPolEpics::ParseMisc(char *line){	// read parameters in the setup f
   type=Map2Key(miscType,kValidMiscParams);
   switch(type){
   case ELpMiscApp:
-    if(sscanf(line, "%*s%lf%lf%lf%s%s%s%s%s%lf",&fNormEnergy,&fEdgeMin,&fEdgeMax,fTaggerName,fLadderName,
-	      fRunRefFiles[0],fEdgeString,fPlaneString,&fDeadband)!=8){
+    if(sscanf(line, "%*s%lf%lf%lf%s%s%s%d%s%s%lf",&fNormEnergy,&fEdgeMin,&fEdgeMax,fTaggerName,fLadderName,
+	      fRunRefFiles[0],&fNScalerBuffers,fEdgeString,fPlaneString,&fDeadband)!=10){
       PrintError( line, "Linear Pol app  parameters" );
     }
     fHaveApp=kTRUE;
