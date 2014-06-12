@@ -29,11 +29,6 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     photonbeam_E(0),
                                                                     tagged_ch(0),
                                                                     tagged_t(0),
-                                                                    plane(0),
-                                                                    edge(0),
-                                                                    edgeSetting(0),
-                                                                    polTable(0),
-                                                                    currentpolTable(0),
                                                                     nNaI_Hits(0),
                                                                     NaI_Hits(0),
                                                                     nPID_Hits(0),
@@ -172,8 +167,6 @@ void    TA2GoAT::PostInit()
    	photonbeam_E= new Double_t[TA2GoAT_MAX_TAGGER];
    	tagged_ch	= new Int_t[TA2GoAT_MAX_TAGGER];
    	tagged_t	= new Double_t[TA2GoAT_MAX_TAGGER];
- 
-	polTable 	= new Double_t[TA2GoAT_MAX_TAGGER];
     
    	Apparatus	= new UChar_t[TA2GoAT_MAX_PARTICLE];
    	d_E			= new Double_t[TA2GoAT_MAX_PARTICLE];
@@ -246,10 +239,10 @@ void    TA2GoAT::PostInit()
 	if(fLinPol)
 	{
 		treeLinPol = new TTree("treeLinPol", "treeLinPol");		
-		treeLinPol->Branch("plane", &plane,"plane/I");
-		treeLinPol->Branch("edge", &edge,"edge/D");
-		treeLinPol->Branch("edgeSetting", &edgeSetting,"edgeSetting/D");
-		treeLinPol->Branch("polTable", polTable, "polTable[352]/D");
+		treeLinPol->Branch("plane", &fLinPol->GetPolPlane(),"plane/I");
+		treeLinPol->Branch("edge", &fLinPol->GetEdge(),"edge/D");
+		treeLinPol->Branch("edgeSetting", &fLinPol->GetEdgeSetting(),"edgeSetting/D");
+		treeLinPol->Branch("polTable", fLinPol->GetPolTable(), "polTable[352]/D");
 	}
 
 	treeTrigger->Branch("ESum", &ESum, "ESum/D");
@@ -305,19 +298,7 @@ void    TA2GoAT::Reconstruct()
 		eventID	= gAN->GetNDAQEvent();
 		treeScaler->Fill();		
 		
-		if(fLinPol)
-		{
-			plane 		= fLinPol->GetPolPlane();
-			edge 		= fLinPol->GetEdge();
-			edgeSetting = fLinPol->GetEdgeSetting();
-			currentpolTable 	= fLinPol->GetPolTable();
-			for (UInt_t i = 0; i < fLadder->GetNelem(); i++)
-			{
-				polTable[i] = currentpolTable[i];
-			}
-			
-			treeLinPol->Fill();	
-		}				
+		if(fLinPol)	treeLinPol->Fill();
 	}
 
 	if(fTagger && fLadder)
