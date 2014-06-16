@@ -72,6 +72,11 @@ private:
     	Double_t*	photonbeam_E;
     	Int_t*		tagged_ch;
     	Double_t*	tagged_t;
+    	
+    	//LinPol
+    	Int_t 		plane;
+    	Double_t	edge;
+    	Double_t	edgeSetting;
              
     	//Hits
     	Int_t		nNaI_Hits;
