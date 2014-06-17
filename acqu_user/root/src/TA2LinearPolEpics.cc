@@ -283,10 +283,14 @@ void TA2LinearPolEpics::PostInitialise( )
     fBeamEnergy = fTagger->GetBeamEnergy();	//get the beam energy
     fTaggerChannels = fLadder->GetNelem();	//get the no of elements in the Ladder
     fCurrentPolTable = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
+    fCurrentPolTable_TC = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
     fCurrentEnhTable = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
+    fCurrentEnhTable_TC = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
     for(int n=0;n<fLadder->GetNelem();n++){
-      fCurrentPolTable[n]=-1.0;
-      fCurrentEnhTable[n]= 0.0;
+      fCurrentPolTable[n]	=-1.0;
+      fCurrentPolTable_TC[n]=-1.0;
+      fCurrentEnhTable[n]	= 0.0;      
+      fCurrentEnhTable_TC[n]= 0.0;
     }
     // to allow for summing consecutive scaler buffers to get better stats.
     fAccScaler=new Double_t*[fNScalerBuffers];
@@ -1284,7 +1288,10 @@ void  TA2LinearPolEpics::enhFromParams(){
     for(int n=0;n<=fTaggerChannels;n++){
       if(fHPolTableEnh) fHPolTableEnh->SetBinContent(n+1,fHistE->GetBinContent(n+1));
       if(fHPolTablePol)fHPolTablePol->SetBinContent(n+1,fHistP->GetBinContent(n+1));
-      fCurrentPolTable[n]=fHistP->GetBinContent(n+1);
-      fCurrentEnhTable[n]=fHistE->GetBinContent(n+1);
+      fCurrentPolTable[n]	=fHistP->GetBinContent(n+1);
+      fCurrentEnhTable[n]	=fHistE->GetBinContent(n+1);      
+
+      fCurrentPolTable_TC[fTaggerChannels-n]=fHistP->GetBinContent(n+1);
+      fCurrentEnhTable_TC[fTaggerChannels-n]=fHistE->GetBinContent(n+1);
     }
 }

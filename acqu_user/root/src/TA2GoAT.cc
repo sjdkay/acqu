@@ -245,7 +245,8 @@ void    TA2GoAT::PostInit()
 		treeLinPol->Branch("plane", &plane, "plane/I");
 		treeLinPol->Branch("edge", &edge, "edge/D");
 		treeLinPol->Branch("edgeSetting", &edgeSetting, "edgeSetting/D");
-		treeLinPol->Branch("polTable", fLinPol->GetPolTable(), "polTable[352]/D");
+		treeLinPol->Branch("polTable", fLinPol->GetPolTable_TC(), "polTable[352]/D");
+		treeLinPol->Branch("enhTable", fLinPol->GetEnhTable_TC(), "enhTable[352]/D");
 	}
 
 	treeTrigger->Branch("ESum", &ESum, "ESum/D");

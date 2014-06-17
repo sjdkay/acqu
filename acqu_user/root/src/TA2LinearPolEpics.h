@@ -94,7 +94,9 @@ class TA2LinearPolEpics : public TA2Apparatus {
   Int_t    fPolRangeIndex[2];
   Int_t    fLastPolRangeIndex[2];
   Double_t *fCurrentPolTable;
-  Double_t *fCurrentEnhTable;
+  Double_t *fCurrentPolTable_TC;
+  Double_t *fCurrentEnhTable;  
+  Double_t *fCurrentEnhTable_TC;
   
   Int_t    fNRunRanges;
   Int_t    fRunRangeMin[100];
@@ -235,6 +237,8 @@ class TA2LinearPolEpics : public TA2Apparatus {
   Double_t	GetEdgeSetting(){return fEdgeSetting;};  //coherent edge
   Double_t	*GetPolTable(){return fCurrentPolTable;};       //get pol for given photon energy
   Double_t	*GetEnhTable(){return fCurrentEnhTable;};       //get pol for given photon energy
+  Double_t	*GetPolTable_TC(){return fCurrentPolTable_TC;};       //get pol for Tagger channels
+  Double_t	*GetEnhTable_TC(){return fCurrentEnhTable_TC;};       //get pol for Tagger Channels
   Double_t	GetPolDegree(Double_t energy);	//get pol for given photon energy
   Int_t 	GetNormChannel(){return fNormChannel;};		//return the normalisation channel
   Double_t 	*GetEnergyCalib(){return fEnergyCalib;};	//get the energy calibration table
