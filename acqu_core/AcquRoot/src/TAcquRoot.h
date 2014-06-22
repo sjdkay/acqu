@@ -235,6 +235,13 @@ public:
      else
        return((AcquExptInfo_t*)((UInt_t*)fHeaderBuff + 1))->fOutFile;
    }
+   Int_t GetRunNumber(){
+     // ONLINE...access the current run number from the ACQU header record
+     if( fIsMk2Format )
+       return((AcquMk2Info_t*)((UInt_t*)fHeaderBuff + 1))->fRun;
+     else
+       return((AcquExptInfo_t*)((UInt_t*)fHeaderBuff + 1))->fRun;
+   }
    void* GetHeaderBuff(){ return fHeaderBuff; }
    TFile* GetTreeFile(){ return fTreeFile; }
    Char_t** GetTreeFileList(){ return fTreeFileList; }
