@@ -16,7 +16,7 @@ void InitToolbar(){
 			     "Check Trigger", "Clear Trigger",
 			     "Check LiveTimes", "Clear LiveTimes",                        
 			     "Check Physics", "Clear Physics",
-              		     "Save All as PNG",
+              		     "Save All to Elog",
 			     "Clear Everything",
 			     0};
   
