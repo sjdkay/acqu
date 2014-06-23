@@ -737,7 +737,7 @@ void TA2LinearPolEpics::Reconstruct( ){
     if(gAR->IsScalerRead()&&(!fIsEpics)){            //if scaler read, and no epics events
       fIsNewFile=EFalse;	                           //no longer a new file
     }
-    
+
     if((fDoingScalers)&&(gAR->IsScalerRead())){ 	   // only do this bit for scaler events
       
       //Fill the various arrays in ascending E_g order
@@ -775,7 +775,6 @@ void TA2LinearPolEpics::Reconstruct( ){
       if((fHEnhPara!=NULL)&&(fPlane==ETablePara))fHEnhPara->Reset("ICE");
       if((fHCohPerp!=NULL)&&(fPlane==ETablePerp))fHCohPerp->Reset("ICE");
       if((fHEnhPerp!=NULL)&&(fPlane==ETablePerp))fHEnhPerp->Reset("ICE");
-      
       
       for(int n=0;n<fTaggerChannels;n++){		    		//fill various hists
 	if(fHCoh!=NULL){
@@ -819,7 +818,11 @@ void TA2LinearPolEpics::Reconstruct( ){
       }
       
       if((fHaveIncScaler)&&(fHEnh)){			//find the coherent edge
-
+		 
+		  if(fPlane == ETableAmo) fEdge = 0;
+		  else
+		  {
+			   
 	binx=0;
 	ymax=0;
 	for(int b=fHEnh->FindBin(fEdgeMin);b<fHEnh->FindBin(fEdgeMax);b++){
@@ -848,7 +851,7 @@ void TA2LinearPolEpics::Reconstruct( ){
 	    fEdge = fitedge;
 	  }
 	}
-	
+	}
 	if(fHEdge){
 	  if(fScalerCount%(fHEdge->GetNbinsX()-1)==0){
 	    fHEdge->Reset("ICE");
