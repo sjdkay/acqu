@@ -73,7 +73,7 @@ SADCFile:   ./data//FPGA/i_adc_mainz_20140327_0.rbt
 #GeSiCAMode:	1	64		90		3
 #GeSiCAMode:	1	62		90		3
 # Increase latency by 22 to compensate for trigger coming 550ns later - EJD  07.02.10
-GeSiCAMode:	1	69		90		6
+GeSiCAMode:	5	69		90		6
 # Testing the new firmware-versions
 #GeSiCAMode:	1	62		90		6
 #
