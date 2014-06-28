@@ -344,6 +344,7 @@ void TVME_GeSiCA::SetConfig( Char_t* line, Int_t key )
   case ESADCReg: 
     // "Expert Tool": Directly write to SADCs registers
     // Not currently supported
+    fprintf(fLogStream,"<SADCReg not supported>\n");
     break;
   case ESADCFile:
     // Read the file for download to the SADCs
