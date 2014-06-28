@@ -282,27 +282,35 @@ void TVME_GeSiCA::PostInit( )
   //  printf(" Data-Buffer-Status: 0x%x\n", Read(EIDStatus));
   InitReg( GeSiCAReg );
   TVMEmodule::PostInit();
-  if( fInitLevel > EExpInit0 ){
-    // first program the gesica, to get i2c ready...
-    // ports is actually not modified then
-    if(!init_gesica(true)) {
-      PrintError("","Could not find Gesica...",EErrFatal);
-    }
-    ProgFPGA();           // GeSiCA FPGA file
-    
-    // try to init the i2c then,
-    // this needs luck since according to Igor, 
-    // the TCS clocks only lock when it's in IDLE mode....
+
+  if(fInitLevel == EExpInit0) {
+    // init the Gesica always,
+    // this also checks if the Gesica are properly
+    // connected via i2c
     if(!init_gesica()) {
-      PrintError("","Could not init i2c...",EErrFatal);
+      PrintError("","Could not init i2c Gesica...see output above",EErrFatal);
     }
-        
-    // then do the rest
-    ProgSADC();           // SADC FPGA files
-    ProgOpMode();         // GeSiCA operational mode 
-    ProgSampleSum();      // Sample integration boundaries 
-    ProgThresh();         // SADC thresholds
+    return;
   }
+
+  // deep init of the GeSiCA / SADCs cards
+  if(!init_gesica(true)) {
+    PrintError("","Could not find Gesica...see output above",EErrFatal);
+  }
+  ProgFPGA();           // GeSiCA FPGA file
+
+  // try to init the i2c then,
+  // this needs luck since according to Igor,
+  // the TCS clocks only lock when it's in IDLE mode....
+  if(!init_gesica()) {
+    PrintError("","Could not init i2c Gesica...see output above",EErrFatal);
+  }
+
+  // then do the rest
+  ProgSADC();           // SADC FPGA files
+  ProgOpMode();         // GeSiCA operational mode
+  ProgSampleSum();      // Sample integration boundaries
+  ProgThresh();         // SADC thresholds
 }
 
 //---------------------------------------------------------------------------
