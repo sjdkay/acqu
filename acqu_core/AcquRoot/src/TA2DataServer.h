@@ -123,7 +123,9 @@ public:
   Bool_t IsStore(){ return fIsStore; }
   Bool_t IsSortLock(){ return fIsSortLock; }
   Bool_t IsHeaderInit(){ return fIsHeaderInit; }
- 
+  
+  const TThread::EState GetThreadState() { return fServerThread->GetState(); }
+  static const Map_t kDataSrvKeys[];
 
   ClassDef(TA2DataServer,1)     // for ROOT dictionary
 };

@@ -56,7 +56,7 @@ enum {
   EDataSrvMk1, EDataSrvMk2, EDataSrvTAPS, EDataSrvTAPSMk2
 };
 // Basic Server setup keys
-static const Map_t kDataSrvKeys[] = {
+const Map_t TA2DataServer::kDataSrvKeys[] = {
   {"Input-Streams:",     EDataSrvInputStreams},
   {"Stream-Spec:",       EDataSrvStreamSpec},
   {"File-Name:",         EDataSrvFileName},
