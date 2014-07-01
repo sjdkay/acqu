@@ -135,16 +135,12 @@ TA2DataServer::TA2DataServer( const Char_t* name, TAcquRoot* ar )
   fIsStore = EFalse;
   fIsSortLock = ETrue;
   fIsHeaderInit = EFalse;
-  Char_t* logfile;
   // Check batch log-file redirection
   if( fAcquRoot->IsBatch() ){
     if( fAcquRoot->GetBatchDir() )
-      logfile = BuildName(fAcquRoot->GetBatchDir(), "DataServer.log");
+      SetLogFile(BuildName(fAcquRoot->GetBatchDir(), "DataServer.log"));
   }
-  else logfile = BuildName("DataServer.log");
-  SetLogFile(logfile);
-  delete[] logfile;
-  return;
+  else SetLogFile(BuildName("DataServer.log"));
 }
 
 //-----------------------------------------------------------------------------
