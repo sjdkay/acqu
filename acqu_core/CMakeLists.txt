@@ -66,10 +66,18 @@ endif()
 # install some scripts to the bin directory
 # by creating symlinks
 file(GLOB CORE_EXTRA_SCRIPTS "scripts/*")
+# also add a custom command which deletes all output binaries
+add_custom_target(_link_dummy
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${EXECUTABLE_OUTPUT_PATH}
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${EXECUTABLE_OUTPUT_PATH}
+  )
+set_source_files_properties(_link_dummy PROPERTIES SYMBOLIC ON)
 foreach(f ${CORE_EXTRA_SCRIPTS})
   get_filename_component(f_name ${f} NAME)
   add_custom_target(link_${f_name} ALL
-    COMMAND ${CMAKE_COMMAND} -E create_symlink "${f}" "${EXECUTABLE_OUTPUT_PATH}/${f_name}")
+    COMMAND ${CMAKE_COMMAND} -E create_symlink "${f}" "${EXECUTABLE_OUTPUT_PATH}/${f_name}"
+    DEPENDS _link_dummy
+    )
 endforeach()
 
 # now build the binaries (but only if DAQ mode is on!),
