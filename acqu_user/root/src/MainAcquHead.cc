@@ -55,8 +55,10 @@ header_info_t GetHeaderInfo(const string& filename, const string& format) {
   // Input-Streams:	1 32768 0
   // Stream-Spec:	File Mk2 0 32768 32 0 400
   // File-Name:	Run_Compton_May13_1620.dat 	0	0
-  TAcquRoot* ar = new TAcquRoot("AcquRoot", kFALSE); // batch mode makes it segfault...
+  TAcquRoot* ar = new TAcquRoot("AcquRoot", kTRUE);
+  ar->SetLogFile("/dev/null");
   TA2DataServer* ds = new TA2DataServer("DataServer", ar);
+  ds->SetLogFile("/dev/null");
   
   char cfgInputStreams[] = "1 32768 0"; // needed to prevent const-correctness warning...
   ds->SetConfig(cfgInputStreams, Map2Key("Input-Streams:", TA2DataServer::kDataSrvKeys));
