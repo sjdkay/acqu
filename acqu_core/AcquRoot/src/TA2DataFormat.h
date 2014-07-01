@@ -100,6 +100,11 @@ public:
   virtual UInt_t GetStartOffset(){ return fStartOffset; }
   Int_t GetNsrc(){ return fNsrc; }
   // Retrieve header info
+  virtual const Char_t* GetTime() {return "";}
+  virtual const Char_t* GetDescription() {return "";}
+  virtual const Char_t* GetRunNote() {return "";}
+  virtual const Char_t* GetOutFile() {return "";}
+  virtual const Int_t GetRunNumber() {return 0;}
   virtual Int_t GetNScaler(){ return 0; }
   virtual Int_t GetNADC(){ return 0; }
   virtual Int_t GetNEPICS(){ return 0; }
