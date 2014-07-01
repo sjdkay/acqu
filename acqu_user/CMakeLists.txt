@@ -30,7 +30,10 @@ set(MOD "AcquRoot")
 add_executable(${MOD} "root/src/Main${MOD}.cc" ${ADDITIONAL_FILES})
 target_link_libraries(${MOD} libUserRoot)
 
+set(MOD "AcquHead")
+add_executable(${MOD} "root/src/Main${MOD}.cc")
+target_link_libraries(${MOD} libUserRoot)
+
 set(MOD "AcquMC")
 add_executable(${MOD} "root/src-mc/Main${MOD}.cc")
 target_link_libraries(${MOD} libMCUserRoot)
-
