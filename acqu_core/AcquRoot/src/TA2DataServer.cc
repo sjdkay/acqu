@@ -107,6 +107,7 @@ TA2DataServer::TA2DataServer( const Char_t* name, TAcquRoot* ar )
 
   if( !ar->InheritsFrom("TAcquRoot") )
     PrintError(" ","<Load AcquRoot ptr>",EErrFatal);
+  nStreamSpecs = 0;
   fAcquRoot = ar;
   fDataOutFile = NULL;
   fDataSource = NULL;
@@ -170,7 +171,7 @@ void TA2DataServer::SetConfig( Char_t* line, int key )
   UInt_t socketPort, recl, save, rsize, start, stop, swap, mid;
   Char_t name1[EMaxName];
   Char_t name2[EMaxName];
-  static Int_t n = 0;
+  Int_t n = nStreamSpecs; // shortcut
 
   switch( key ){
   case EDataSrvInputStreams:
@@ -282,7 +283,7 @@ void TA2DataServer::SetConfig( Char_t* line, int key )
     fSourceBuff[n] = new TA2RingBuffer( fDataSource[n]->GetBuffer() );
     fDataFormat[n]->SetLogStream( fLogStream );   // same log file  
     fDataFormat[n]->Initialise( fHeaderBuff, fSortBuff, fSourceBuff[n], mid );
-    n++;                                // for next possible source channel
+    nStreamSpecs++;                               // for next possible source channel
     break;
   case EDataSrvFileName:
     // Input file specification source=name, start record, stop record

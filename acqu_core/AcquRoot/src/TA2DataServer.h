@@ -51,6 +51,8 @@ enum{ ESubEventOK, ESubEventLow, ESubEventHigh };
 class ARFile_t;
 
 class TA2DataServer : public TA2System {
+private:
+  Int_t nStreamSpecs;           // counts number of Stream-Spec: statements
 protected:
   TAcquRoot* fAcquRoot;         // ptr to main Acqu - Root class
   ARFile_t* fDataOutFile;       // file to write output
