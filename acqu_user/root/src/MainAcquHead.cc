@@ -104,11 +104,11 @@ header_info_t GetHeaderInfo(const string& filename, const string& format) {
 }
 
 void PrintHeaderInfo(const header_info_t& info) {
-  cout << "Time: '"        << info.Time << "'" << endl;
-  cout << "Description: '" << info.Description << "'" << endl;
-  cout << "RunNote: '"     << info.RunNote << "'" << endl;
-  cout << "OutFile: '"     << info.OutFile << "'" << endl;
-  cout << "RunNumber: '"   << info.RunNumber << "'" << endl;
+  cout << "Time: "        << info.Time  << endl;
+  cout << "Description: " << info.Description << endl;
+  cout << "RunNote: "     << info.RunNote << endl;
+  cout << "OutFile: "     << info.OutFile << endl;
+  cout << "RunNumber: "   << info.RunNumber  << endl;
   cout << "Mk2?: "         << info.IsMaybeMk2 << endl;
   cout << "Sane?: "        << info.IsSane << endl;
 }
