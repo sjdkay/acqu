@@ -75,7 +75,7 @@ header_info_t GetHeaderInfo(const string& filename, const string& format) {
   strcat(cfgFileName, " 0 1"); // read one record, start=0, stop=1
   ds->SetConfig(cfgFileName, Map2Key("File-Name:", TA2DataServer::kDataSrvKeys));
   ds->StartSources();
-  usleep(10000);
+  usleep(100000);
   ds->Start();
   
   while(1) {
