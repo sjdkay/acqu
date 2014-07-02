@@ -8,10 +8,46 @@
 #include <sstream>
 
 #include <TAcquRoot.h>
-#include <TA2DataServer.h>
-#include <TA2DataFormat.h>
+#include <ARFile_t.h>
 
 using namespace std;
+
+// copy&paste from Acqu source files...
+
+struct header_mk1_t {	       	// 1st part of header buffer
+  Char_t fTime[26];		// run start time (ascii)
+  Char_t fDescription[133];	// description of experiment
+  Char_t fRunNote[133];		// particular run note
+  Char_t fOutFile[40];		// output file
+  UShort_t fRun;		// run number
+  UShort_t fNslave;		// no. of slave VME crates
+  UShort_t fNmodule;		// total no. modules
+  UShort_t fNvme;	       	// no. VME modules
+  UShort_t fNcamac;		// no. CAMAC modules
+  UShort_t fNfastb;		// no. FASTBUS modules
+  UShort_t fNspect;		// no. ADC's read out
+  UShort_t fNscaler;		// no. scalers readout
+  UShort_t fCIrq;	       	// no. CAMAC ADC module readouts
+  UShort_t fCIrqS;		// no. CAMAC scaler module readouts 
+  UShort_t fFIrq;	       	// no. FASTBUS ADC module readouts
+  UShort_t fFIrqS;		// no. FASTBUS scaler module readouts
+  UShort_t fRecLen;		// maximum buffer length = record len
+};
+
+struct header_mk2_t {	       	      // 1st part of header buffer
+  UInt_t fMk2;                        // Mark as Mk2 data
+  Char_t fTime[EMk2SizeTime];	      // run start time (ascii)
+  Char_t fDescription[EMk2SizeDesc];  // description of experiment
+  Char_t fRunNote[EMk2SizeComment];   // particular run note
+  Char_t fOutFile[EMk2SizeFName];     // output file
+  Int_t fRun;		              // run number
+  Int_t fNModule;		      // total no. modules
+  Int_t fNADCModule;	       	      // no. ADC modules
+  Int_t fNScalerModule;	              // no. scaler modules
+  Int_t fNADC;		              // no. ADC's read out
+  Int_t fNScaler;	    	      // no. scalers readout
+  Int_t fRecLen;		      // maximum buffer length = record len
+};
 
 // our personal data container of interesting header info
 struct header_info_t {
@@ -24,18 +60,6 @@ struct header_info_t {
   Bool_t IsSane;     // check if fields have meaningful contents
 }; 
 
-Int_t Map2Key(const Char_t* function, const Map_t* map)
-{
-  // Return integer matched to string from map array
-  // -1 return on error
-  if( !map ) return -1;
-  const Char_t* f;
-  for( Int_t i=0; ; i++ ){
-    f = map[i].fFnName;
-    if( !f ) return -1;
-    if( !strcmp(function, f)  ) return map[i].fFnKey;
-  }
-}
 
 string sanitize(const char* in) {
   string s(in);
@@ -49,58 +73,68 @@ string sanitize(const char* in) {
   return s;
 }
 
-header_info_t GetHeaderInfo(const string& filename, const string& format) {
-  // create a fake AcquRoot analysis, provide input file
-  // feed in the following DataServer config file:
-  // Input-Streams:	1 32768 0
-  // Stream-Spec:	File Mk2 0 32768 32 0 400
-  // File-Name:	Run_Compton_May13_1620.dat 	0	0
+UInt_t* ReadFileBuffer(const string& filename) {
+  
+  // this is really ugly, but using ARFile_t way we can read 
+  // also compressed files...
+  
+  const UInt_t recLen = 32768;
   TAcquRoot* ar = new TAcquRoot("AcquRoot", kTRUE);
-  ar->SetLogFile("/dev/null");
-  TA2DataServer* ds = new TA2DataServer("DataServer", ar);
-  ds->SetLogFile("/dev/null");
+  ar->SetLogFile("/dev/null"); // no log file creation...
   
-  char cfgInputStreams[] = "1 32768 0"; // needed to prevent const-correctness warning...
-  ds->SetConfig(cfgInputStreams, Map2Key("Input-Streams:", TA2DataServer::kDataSrvKeys));
+  ARFile_t* datafile = new ARFile_t(filename.c_str(), O_RDONLY, 0, ar);
+  char* filebuffer = new char[recLen];  
   
-  
-  stringstream ss;
-  ss << "File " << format << " 0 32768 32 0 400";
-  char cfgStreamSpec[ss.str().length()];
-  strcpy(cfgStreamSpec, ss.str().c_str());
-  ds->SetConfig(cfgStreamSpec, Map2Key("Stream-Spec:", TA2DataServer::kDataSrvKeys));
-  
-  char cfgFileName[filename.length()+10];  
-  strcpy(cfgFileName, filename.c_str());
-  strcat(cfgFileName, " 0 1"); // read one record, start=0, stop=1
-  ds->SetConfig(cfgFileName, Map2Key("File-Name:", TA2DataServer::kDataSrvKeys));
-  ds->StartSources();
-  usleep(100000);
-  ds->Start();
-  
-  while(1) {
-    const TThread::EState state = ds->GetThreadState(); 
-    if(state != TThread::kRunningState) {
-      break;
-    }
+  UInt_t bytes = 0;
+  if(datafile->GetPath() == -2) {
+    bytes = fread(filebuffer,1,recLen,datafile->GetStart());
   }
+  else {
+    bytes = read(datafile->GetPath(),filebuffer,recLen);
+  }
+ 
+  if(bytes != recLen) {
+    cerr << "Error: Cannot read " << recLen << " bytes from file: " << 
+            strerror(errno) << endl; 
+    exit(EXIT_FAILURE);
+  }
+
+  // we really don't care about memory management...AcquRoot does neither...
   
-  TA2DataFormat* df = ds->GetDataFormat(0);  
-  
-  // sanitize the strings...due to C struct alignment...
+  return (UInt_t*)filebuffer + 1;  // advance to the beginning of the header struct already
+}
+
+header_info_t GetHeaderInfo_Mk1(UInt_t* filebuffer) {
+  header_mk1_t* h = (header_mk1_t*)filebuffer;
   header_info_t info;
-  info.Time = sanitize(df->GetTime());
-  info.Description = sanitize(df->GetDescription());
-  info.RunNote = sanitize(df->GetRunNote());
-  info.OutFile = sanitize(df->GetOutFile());
-  info.RunNumber = df->GetRunNumber();
-  info.IsMaybeMk2 = df->IsMaybeMk2();
+  info.Time = sanitize(h->fTime);
+  info.Description = sanitize(h->fDescription);
+  info.RunNote = sanitize(h->fRunNote);
+  info.OutFile = sanitize(h->fOutFile);
+  info.RunNumber = h->fRun;
+  info.IsMaybeMk2 =  *filebuffer == EHeadBuff;
   info.IsSane  = true;
   // check a few conditions for saneness
   info.IsSane &= info.Time.length() == 24;
   info.IsSane &= info.OutFile.length() != 0;
   info.IsSane &= info.RunNumber >= 0; 
-  
+  return info;
+}
+
+header_info_t GetHeaderInfo_Mk2(UInt_t* filebuffer) {
+  header_mk2_t* h = (header_mk2_t*)filebuffer;
+  header_info_t info;
+  info.Time = sanitize(h->fTime);
+  info.Description = sanitize(h->fDescription);
+  info.RunNote = sanitize(h->fRunNote);
+  info.OutFile = sanitize(h->fOutFile);
+  info.RunNumber = h->fRun;
+  info.IsMaybeMk2 =  *filebuffer == EHeadBuff;
+  info.IsSane  = true;
+  // check a few conditions for saneness
+  info.IsSane &= info.Time.length() == 24;
+  info.IsSane &= info.OutFile.length() != 0;
+  info.IsSane &= info.RunNumber >= 0; 
   return info;
 }
 
@@ -130,9 +164,12 @@ int main(int argc, char **argv)
   }
   cout << "# Working on " << filename << endl;
   
+  UInt_t* filebuffer = ReadFileBuffer(filename);
+  
   // heurestically guess Mk1 or Mk2
-  header_info_t header_mk1 = GetHeaderInfo(filename, "Mk1");
-  header_info_t header_mk2 = GetHeaderInfo(filename, "Mk2");
+  header_info_t header_mk1 = GetHeaderInfo_Mk1(filebuffer);
+  header_info_t header_mk2 = GetHeaderInfo_Mk2(filebuffer);
+  
   
   if(header_mk1.IsSane && 
      !header_mk1.IsMaybeMk2 && // header_mk2.IsMaybeMk2 is identical...
