@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include <TAcquRoot.h>
 #include <ARFile_t.h>
@@ -70,6 +71,7 @@ string sanitize(const char* in) {
     return string("");
   s.erase(0,start);
   s.erase((end - start) + 1);
+  s.erase(remove(s.begin(), s.end(), '\n'), s.end());
   return s;
 }
 
