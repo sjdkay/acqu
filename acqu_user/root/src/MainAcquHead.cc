@@ -75,6 +75,7 @@ header_info_t GetHeaderInfo(const string& filename, const string& format) {
   strcat(cfgFileName, " 0 1"); // read one record, start=0, stop=1
   ds->SetConfig(cfgFileName, Map2Key("File-Name:", TA2DataServer::kDataSrvKeys));
   ds->StartSources();
+  usleep(100000);
   ds->Start();
   
   while(1) {
@@ -130,10 +131,7 @@ int main(int argc, char **argv)
   
   // heurestically guess Mk1 or Mk2
   header_info_t header_mk1 = GetHeaderInfo(filename, "Mk1");
-  //PrintHeaderInfo(header_mk1);
   header_info_t header_mk2 = GetHeaderInfo(filename, "Mk2");
-  //PrintHeaderInfo(header_mk2);
-  
   
   if(header_mk1.IsSane && 
      !header_mk1.IsMaybeMk2 && // header_mk2.IsMaybeMk2 is identical...
