@@ -13,8 +13,8 @@ BaseSetup:	0		22		SlowCtrl
 ## Enter CNAFS
 ##		Datum	F	A0	A1	Register Type
 CAMAC-CNAF:	fffff	9	0	0	Init	
-# threshold to 0x19
-CAMAC-CNAF:	19	16	0	15	Init	
+# threshold setting in hex
+CAMAC-CNAF:	20	16	0	15	Init	
 CAMAC-CNAF:	0000	17	0	0	Init	
 CAMAC-CNAF:	ff	17	1	1	Init	
 CAMAC-CNAF:	ff	17	2	2	Init	
