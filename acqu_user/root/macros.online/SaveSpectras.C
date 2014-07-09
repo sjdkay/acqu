@@ -23,7 +23,7 @@ void SaveOpenSpectras() {
 	stringstream elog_cmd;
 	elog_cmd << "echo Run " << gAR->GetRunNumber() << " Online Spectra | ";
 	elog_cmd << "elog -h elog.office.a2.kph -u a2online a2messung ";
-	elog_cmd << "-l 'Main Group Logbook' -a Experiment=None ";
+	elog_cmd << "-l 'Main Group Logbook' -a Experiment='EPT test 2014-07' ";
 	elog_cmd << "-a Author='PLEASE FILL IN' -a Type=Routine ";
 	elog_cmd << "-a Subject='Online Spectra Run " << gAR->GetRunNumber() << "' ";
 	
