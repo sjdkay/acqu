@@ -434,8 +434,13 @@ Int_t TFB_1821SMI::R_Block(UShort_t addr, UInt_t *data, Int_t *n_word, UShort_t 
   fFBCtrlMod->W_KPH(7,0x10);	// strobe SMI DMAR load 
   fFBCtrlMod->W_KPH(3,pipe);	// set up SMI pipeline -> data memory wrt 
   fFBCtrlMod->W_KPH(2,addr);
+
+  usleep(10); // Fastbus is slooooooooooooow
+
   X = Exec1821(ESMIBlkRd);	// run SMI block read routine 
   
+
+
   fFBCtrlMod->R_KPH(6,&status);	// get number of words read into SMI memory 
   *n_word = n_a = status & 0x0fff;
   
