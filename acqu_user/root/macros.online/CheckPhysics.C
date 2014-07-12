@@ -1,4 +1,9 @@
-void CheckPhysics(){
+
+
+void CheckPhysics(TCanvas* canv){
+	if(canv==NULL)
+		return;
+	
   Char_t* hname[] = {
     "1",  "EtaM_Nphoton",   "log",  "",
     "2",  "EtaM_Nproton",   "log",  "",
@@ -53,7 +58,6 @@ void CheckPhysics(){
   //  TH1F* h3 = new TH1F("h3x","Photo-Hist",10000,-5000,5000);
   //  TH1F* h4 = new TH1F("h4x","Photo-Hist",10000,-5000,5000);
   //  TH1F* h5 = new TH1F("h5x","Photo-Hist",10000,-5000,5000);
-  TCanvas* canv = new TCanvas("Physics-Spectra","Physics-Online",240,180,1240,890);
   canv->Divide(4,3);
   Int_t i = 0;
   Int_t k = 0;
@@ -103,13 +107,4 @@ void CheckPhysics(){
     i++;
   }
   return;
-}
-
-PhysicsClear(){
-  // Does not work properly. (Reset()!)
-  //  TA2Apparatus* t = (TA2Apparatus*)gROOT->FindObject("EtaM");
-  //  if(t)  t->ZeroAll();
-  //  else printf("EtaM Physics not found\n");
-  //  Scalers364to491->Reset();
-  printf("Clear Physics spectra not implemented...try Clear Everything\n");
 }

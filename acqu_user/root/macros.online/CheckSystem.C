@@ -1,121 +1,241 @@
+#include <TGFrame.h>
+#include <TGButton.h>
+#include <TGLabel.h>
+#include <TGComboBox.h>
+#include <TRootEmbeddedCanvas.h>
+#include <TCanvas.h>
+#include <TROOT.h>
+#include <TSystem.h>
+#include <TGClient.h>
+#include <TImage.h>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
-void InitToolbar(){
-  // create a toolbar and connect macros to the buttons.
-  // the nacros need to be loaded before.
+class MacroEntry : public TObject {
+public:
+	string name;
+	string desc;
+	static MacroEntry* Make(const string& _name, const string& _desc) {
+		MacroEntry* h = new MacroEntry();
+		h->name = _name;
+		h->desc = _desc;
+		return h;
+	}
+	ClassDef(MacroEntry,0);
+};
 
-  char *button_names[] =    {"Check CB",   "Clear CB",
-			     "Check TAPS BaF2", "Clear TAPS BaF2",
-			     "Check TAPS PWO", "Clear TAPS PWO",
-			     "Check TAPS Veto", "Clear TAPS Veto",
-			     "Check Tagger", "Clear Tagger",
-			     //"Check Microscope", "Clear Microscope",
-			     //"Check EPT", "Clear EPT",
-	      		     //"Check LinPol",
-			     "Check PID", "Clear PID",
-			     "Check MWPC", "Clear MWPC",
-			     "Check Trigger", "Clear Trigger",
-			     "Check LiveTimes", "Clear LiveTimes",                        
-			     "Check Physics", "Clear Physics",
-              		     "Save All to Elog",
-			     "Clear Everything",
-			     0};
-  
-  char* button_actions[] =  {"CheckCB()", "CBClear()",
-			     "CheckTAPSBaF2()","TAPSBaF2Clear()", 
-			     "CheckTAPSPbWO4()", "TAPSPbWO4Clear()",
-			     "CheckTAPSVeto()", "TAPSVetoClear()",
-			     "CheckTagger2()", "TaggerClear()",
-			     //"CheckMicro()", "MicroClear()",
-                             //"CheckEPT()", "EPTClear()",
-	      		     //"CheckLinPolDave()",
-			     "CheckPID()", "PIDClear()",
-			     "CheckMWPC()", "MWPCClear()",
-			     "CheckTrigger()", "TriggerClear()",
-                             "CheckLiveTimes()","LiveTimesClear()",
-			     "CheckPhysics()", "PhysicsClear()",
-		             "SaveOpenSpectras()",
-			     "gAN->ZeroAll()",
-			     0};
-  char* button_comments[] = {"Representative CB spectra", 
-			     "Clear CB spectra",
-			     "Representative TAPS BaF2 spectra",
-			     "Clear TAPS BaF2 spectra",
-			     "Representative TAPS-PbWO4 spectra",
-			     "Clear TAPS-PbWO4 spectra",
-			     "Representative TAPS Veto-Time spectra",
-			     "Clear TAPS Veto-Time spectra", 
-			     "Representative Tagger spectra", 
-			     "Clear Tagger spectra",
-			     "Representative Microscope spectra", 
-			     "Clear Microscope spectra",
-                             //"Representative EPT spectra",
-	    		     //"Clear EPT spectra",
-	      		     "Representative coherent bremsstrahlung spectra", 
-			     "Representative Particle ID (CB) spectra",
-			     "Clear Particle ID spectra",
-			     "Representative MWPC (CB) tracker spectra",
-			     "Clear MWPC spectra",
-			     "Representative trigger and CB-Tagger-TAPS synchronisation",
-			     "Clear trigger spectra", 
-                             "LiveTime spectra",
-                             "Clear livetime spectra"
-			     "Online reconstruction of detected particles",
-			     "Clear particle reconstruction", 
-			     "Save all open spectras",
-			     "Clear ALL ONLINE Spectra", 
-			     0};
+TGMainFrame *fMainFrame;
+TGComboBox *fCbxItems;
+TCanvas *fCanvas;
+TObjArray *items;
 
-  TControlBar* bar = new TControlBar("vertical", "Check CB-TAPS-Tagger Setup");
-  UInt_t i = 0;
-  char bar_title[50];
-  char bar_action[50];
-  char bar_comment[255];
-
-  while (button_names[i]){
-    sprintf(bar_title,   "%s", button_names[i]);
-    sprintf(bar_action,  "%s", button_actions[i]);
-    sprintf(bar_comment, "%s", button_comments[i]);
-    bar->AddButton(bar_title, bar_action, bar_comment);
-    i++;
-  }
-  bar->Show();
-
+void CallMacro(Int_t i, const string& arg) {
+	MacroEntry* item = (MacroEntry*)items->At(i);
+	fCanvas->Clear();
+	stringstream cmd;
+	cmd << ".x " << item->name << "(" << arg << ")";
+	gROOT->ProcessLine(cmd.str().c_str());
+	fCanvas->Update();
 }
 
-void InitPackages(){
-  // load some macro packages
-  // at the moment it is not checked it they really exist.
-  char macro_path[] = "/home/a2cb/acqu/macros/"; 
-  char *macro_names[] =   {"CheckCB.C",
-			   "CheckTAPSBaF2.C", 
-			   "CheckTAPSPbWO4.C",
-			   "CheckTAPSVeto.C",
-			   "CheckTagger2.C",
-			   "CheckMicro.C",
- 			   //"CheckEPT.C",
-			   "CheckLinPol.C",
-			   "CheckPID.C",
-			   "CheckMWPC.C",
-			   "CheckTrigger.C",
-                           "CheckLiveTimes.C",
-			   "CheckPhysics.C",
-			   "PrintThesis.C",
-			   "SaveSpectras.C",
-			    0};
-  UInt_t i = 0;
-  char cmd[255];
-  while (macro_names[i]){
-    strcpy(cmd, ".L ");
-    strcat(cmd, macro_path);
-    strcat(cmd, macro_names[i]);
-    printf("%s\n", cmd);
-    gROOT->ProcessLine(cmd);
-    i++;
-  }
+void OnCbxItemsSelected(Int_t i) {
+	if(i<0 || i>=items->GetEntriesFast())
+		return;
+	// execute the macro with fCanvas as argument
+	CallMacro(i, "fCanvas");
 }
 
-CheckSystem(){
-  InitPackages();
-  InitToolbar();
- gStyle->SetPalette(1);
+void SelectItem(Int_t step) {
+	Int_t i = fCbxItems->GetSelected();
+	Int_t n = fCbxItems->GetNumberOfEntries();
+	if(i==-1 && n>0) {
+		i=0;
+	}
+	i += step;
+	if(i<0)
+		i=n-1;
+	if(i>=n)
+		i=0;
+	fCbxItems->Select(i);
+}
+
+void OnBtnPrevClicked() {
+	SelectItem(-1);
+}
+
+void OnBtnNextClicked() {
+	SelectItem(+1);
+}
+
+void OnBtnClearClicked() {
+	CallMacro(fCbxItems->GetSelected(), "NULL");
+	CallMacro(fCbxItems->GetSelected(), "fCanvas");
+}
+
+void OnBtnClearAllClicked() {
+	gROOT->ProcessLine("gAN->ZeroAll()");
+}
+
+void OnBtnSaveAllClicked() {
+	// clean up directory...
+	printf("\nDelete all PNG images on daq-master in /home/a2cb/OnlineSpectra/\n");
+	stringstream CmdStr;
+	CmdStr << "rm /home/a2cb/acqu/OnlineSpectra/*.png";
+	system(CmdStr.str().c_str());
+
+	// prepare elog command, note the blank space at every line!
+	stringstream elog_cmd;
+	Long_t runNum = gROOT->ProcessLine("gAR->GetRunNumber()");
+	elog_cmd << "echo Run " << runNum << " Online Spectra | ";
+	elog_cmd << "elog -h elog.office.a2.kph -u a2online a2messung ";
+	elog_cmd << "-l 'Main Group Logbook' -a Experiment='EPT test 2014-07' ";
+	elog_cmd << "-a Author='PLEASE FILL IN' -a Type=Routine ";
+	elog_cmd << "-a Subject='Online Spectra Run " << runNum << "' ";
+
+	
+	Int_t i_save = fCbxItems->GetSelected();
+	for(Int_t i=0;i<items->GetEntriesFast(); i++) {
+		MacroEntry* item = (MacroEntry*)items->At(i);
+		fCbxItems->Select(i);
+		stringstream filename;
+		filename << "/home/a2cb/acqu/OnlineSpectra/"
+		         << setw(2) << setfill('0') << i
+		         << "-" << item->desc << "-Spectra.png";
+
+		TImage *img = TImage::Create();
+		img->FromPad((TVirtualPad*)fCanvas);
+		img->WriteImage(filename.str().c_str());
+		delete img;
+
+		elog_cmd << "-f " << filename.str() << " ";
+	}
+	
+	printf("\nPosting all PNG images to the Elog...Please Wait...\n");
+	system(elog_cmd.str().c_str());
+	printf("\nPLEASE EDIT THE ELOG ENTRY TO MAKE IT COMPLETE!\n\n");
+	
+	// restore previously selected item
+	fCbxItems->Select(i_save);
+}
+
+void CheckSystem()
+{
+	
+	// init the list of macros to be called
+	items = new TObjArray();
+	items->Add(MacroEntry::Make("CheckCB.C","Crystal_Ball"));
+	items->Add(MacroEntry::Make("CheckTAPSBaF2.C","TAPS_BaF2"));
+	items->Add(MacroEntry::Make("CheckTAPSPbWO4.C","TAPS_PbWO4"));
+	items->Add(MacroEntry::Make("CheckTAPSVeto.C","TAPS_Veto"));
+	items->Add(MacroEntry::Make("CheckTagger.C","Tagger"));
+	items->Add(MacroEntry::Make("CheckPID.C","PID"));
+	items->Add(MacroEntry::Make("CheckMWPC.C","MWPC"));
+	items->Add(MacroEntry::Make("CheckTrigger.C","Trigger"));
+	items->Add(MacroEntry::Make("CheckLiveTimes.C","LiveTimes"));
+	items->Add(MacroEntry::Make("CheckPhysics.C","Physics"));	
+	
+	// main frame
+	fMainFrame = new TGMainFrame(gClient->GetRoot(), 1240, 890, kMainFrame | kVerticalFrame);
+	fMainFrame->SetName("fMainFrame");
+	fMainFrame->SetWindowName("CheckSystem.C");
+	fMainFrame->SetCleanup(kDeepCleanup);	
+	//fMainFrame->Connect("CloseWindow()", 0, 0, "OnMainFrameClose()");
+
+	
+	// vertical frame
+	TGVerticalFrame *fVerticalFrame1093 = new TGVerticalFrame(fMainFrame,874,496,kVerticalFrame);
+	fVerticalFrame1093->SetName("fVerticalFrame1093");
+
+	// horizontal frame
+	TGHorizontalFrame *fHorizontalFrame1104 = new TGHorizontalFrame(fVerticalFrame1093,870,26,kHorizontalFrame);
+	fHorizontalFrame1104->SetName("fHorizontalFrame1104");
+	TGTextButton *fBtnPrev = new TGTextButton(fHorizontalFrame1104,"Prev");
+	fBtnPrev->SetTextJustify(36);
+	fBtnPrev->SetMargins(0,0,0,0);
+	fBtnPrev->SetWrapLength(-1);
+	fBtnPrev->Resize(34,22);
+	fHorizontalFrame1104->AddFrame(fBtnPrev, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+
+	ULong_t ucolor;        // will reflect user color changes
+	gClient->GetColorByName("#ffffff",ucolor);
+
+	// combo box
+	fCbxItems = new TGComboBox(fHorizontalFrame1104,-1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
+	fCbxItems->SetName("fCbxItems");
+
+	fCbxItems->Resize(122,22);
+
+	fHorizontalFrame1104->AddFrame(fCbxItems, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+	TGTextButton *fBtnNext = new TGTextButton(fHorizontalFrame1104,"Next");
+	fBtnNext->SetTextJustify(36);
+	fBtnNext->SetMargins(0,0,0,0);
+	fBtnNext->SetWrapLength(-1);
+	fBtnNext->Resize(33,22);
+	fHorizontalFrame1104->AddFrame(fBtnNext, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+	TGLabel *fLblSpacer1 = new TGLabel(fHorizontalFrame1104,"      ");
+	fLblSpacer1->SetTextJustify(36);
+	fLblSpacer1->SetMargins(0,0,0,0);
+	fLblSpacer1->SetWrapLength(-1);
+	fHorizontalFrame1104->AddFrame(fLblSpacer1, new TGLayoutHints(kLHintsLeft | kLHintsExpandY,2,2,2,2));
+	TGTextButton *fBtnClear = new TGTextButton(fHorizontalFrame1104,"Clear");
+	fBtnClear->SetTextJustify(36);
+	fBtnClear->SetMargins(0,0,0,0);
+	fBtnClear->SetWrapLength(-1);
+	fBtnClear->Resize(38,22);
+	fHorizontalFrame1104->AddFrame(fBtnClear, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+	TGTextButton *fBtnClearAll = new TGTextButton(fHorizontalFrame1104,"Clear ALL");
+	fBtnClearAll->SetTextJustify(36);
+	fBtnClearAll->SetMargins(0,0,0,0);
+	fBtnClearAll->SetWrapLength(-1);
+	fBtnClearAll->Resize(65,22);
+	fHorizontalFrame1104->AddFrame(fBtnClearAll, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+	TGLabel *fLblSpacer2 = new TGLabel(fHorizontalFrame1104,"      ");
+	fLblSpacer2->SetTextJustify(36);
+	fLblSpacer2->SetMargins(0,0,0,0);
+	fLblSpacer2->SetWrapLength(-1);
+	fHorizontalFrame1104->AddFrame(fLblSpacer2, new TGLayoutHints(kLHintsLeft | kLHintsExpandY,2,2,2,2));
+	TGTextButton *fBtnSaveAll = new TGTextButton(fHorizontalFrame1104,"Save to Elog");
+	fBtnSaveAll->SetTextJustify(36);
+	fBtnSaveAll->SetMargins(0,0,0,0);
+	fBtnSaveAll->SetWrapLength(-1);
+	fBtnSaveAll->Resize(97,22);
+	fHorizontalFrame1104->AddFrame(fBtnSaveAll, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+
+	fVerticalFrame1093->AddFrame(fHorizontalFrame1104, new TGLayoutHints(kLHintsTop | kLHintsExpandX,2,2,2,2));
+
+	// embedded canvas
+	TRootEmbeddedCanvas *fEmbeddedCanvas = new TRootEmbeddedCanvas(0,fVerticalFrame1093,870,462);
+	fEmbeddedCanvas->SetName("fEmbeddedCanvas");
+	fVerticalFrame1093->AddFrame(fEmbeddedCanvas, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY,2,2,2,2));
+
+	fMainFrame->AddFrame(fVerticalFrame1093, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY,1,1,1,1));
+
+	fMainFrame->SetMWMHints(kMWMDecorAll,
+	                        kMWMFuncAll,
+	                        kMWMInputModeless);
+	fMainFrame->MapSubwindows();
+
+	fMainFrame->Resize(fMainFrame->GetDefaultSize());
+	fMainFrame->MapWindow();
+	fMainFrame->Resize(1240,1000);
+
+	// Connect signals
+	fBtnPrev->Connect("Clicked()", 0, 0, "OnBtnPrevClicked()");
+	fCbxItems->Connect("Selected(Int_t)", 0, 0, "OnCbxItemsSelected(Int_t)");
+	fBtnNext->Connect("Clicked()", 0, 0, "OnBtnNextClicked()");
+	fBtnClear->Connect("Clicked()", 0, 0, "OnBtnClearClicked()");
+	fBtnClearAll->Connect("Clicked()", 0, 0, "OnBtnClearAllClicked()");
+	fBtnSaveAll->Connect("Clicked()", 0, 0, "OnBtnSaveAllClicked()");
+	
+	// Set the canvas pointer
+	fCanvas = fEmbeddedCanvas->GetCanvas();
+
+	// init combobox
+	for(Int_t i=0;i<items->GetEntriesFast(); i++) {
+		MacroEntry* item = (MacroEntry*)items->At(i);
+		fCbxItems->AddEntry(item->desc.c_str(), i);
+	}
+	fCbxItems->Select(0);
+
 }
