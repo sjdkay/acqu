@@ -122,7 +122,11 @@ void OnBtnSaveAllClicked() {
 
 void CheckGUI()
 {
-	
+	static bool loaded = false;
+	if(loaded) {
+		cout << "CheckSystem already loaded..." << endl;
+		return;
+	}
 	// init the list of macros to be called
 	items = new TObjArray();
 	items->Add(MacroEntry::Make("CheckCB.C","Crystal_Ball"));
@@ -142,7 +146,7 @@ void CheckGUI()
 	fMainFrame->SetWindowName("CheckSystem.C");
 	fMainFrame->SetCleanup(kDeepCleanup);	
 	//fMainFrame->Connect("CloseWindow()", 0, 0, "OnMainFrameClose()");
-
+	fMainFrame->DontCallClose();
 	
 	// vertical frame
 	TGVerticalFrame *fVerticalFrame1093 = new TGVerticalFrame(fMainFrame,874,496,kVerticalFrame);
@@ -238,5 +242,6 @@ void CheckGUI()
 		fCbxItems->AddEntry(item->desc.c_str(), i);
 	}
 	fCbxItems->Select(0);
-
+	
+	loaded = true;
 }
