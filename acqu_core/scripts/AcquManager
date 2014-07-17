@@ -57,7 +57,7 @@ $runsets->{CBTaggTAPS} =
                ['vme-taps-veto-ab', 'VetoAB'],
                ['vme-taps-veto-cd', 'VetoCD' ],
                ['vme-taps-veto-ef', 'VetoEF'],
-               ['vme-taps-pwo',     'PbWO4.Sens'],
+               ['vme-taps-pwo',     'PbWO4'],
                ['vme-beampolmon',   'BEAM']
               ],
    'TCS' => undef # a bit unnecessary for the whole system
