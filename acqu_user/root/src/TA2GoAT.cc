@@ -38,6 +38,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     PID_Hits(0),
                                                                     nWC_Hits(0),
 																	WC_Hits(0),
+                                                                    nWC_Tracks(0),
 																	nBaF2_PbWO4_Hits(0),
 																	BaF2_PbWO4_Hits(0),
                                                                     nVeto_Hits(0),
@@ -265,6 +266,7 @@ void    TA2GoAT::PostInit()
 	treeDetectorHits->Branch("PID_Hits", PID_Hits, "PID_Hits[nPID_Hits]/I");
 	treeDetectorHits->Branch("nWC_Hits", &nWC_Hits, "nWC_Hits/I");
 	treeDetectorHits->Branch("WC_Hits", WC_Hits, "WC_Hits[nWC_Hits]/I");	
+    treeDetectorHits->Branch("nWC_Tracks", &nWC_Tracks, "nWC_Tracks/I");
 	treeDetectorHits->Branch("nBaF2_PbWO4_Hits", &nBaF2_PbWO4_Hits, "nBaF2_PbWO4_Hits/I");
 	treeDetectorHits->Branch("BaF2_PbWO4_Hits", BaF2_PbWO4_Hits, "BaF2_PbWO4_Hits[nBaF2_PbWO4_Hits]/I");
 	treeDetectorHits->Branch("nVeto_Hits", &nVeto_Hits, "nVeto_Hits/I");
@@ -455,6 +457,7 @@ void    TA2GoAT::Reconstruct()
 	if(fMWPC)
 	{
 		nWC_Hits = fMWPC->GetNhits();
+        nWC_Tracks = fMWPC->GetNtracks();
 		for(int i=0; i<nWC_Hits; i++)    
 			{ WC_Hits[i] = fMWPC->GetHits(i); }
 	}
