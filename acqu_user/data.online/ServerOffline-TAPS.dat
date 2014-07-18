@@ -24,7 +24,7 @@ Input-Streams:	1		327680		0
 ## Input data record length, Output data record length
 ##
 ##              Source  Format  Save?   RecLen  Buffers Swap    MarkID
-Stream-Spec:    File    Mk2     0       32768   1024      0       400
+Stream-Spec:    File    Mk2     0       327680   1024      0       400
 ##
 ## Now the list of data files to analyse
 ##              File Name       1st rec Last rec

@@ -23,7 +23,7 @@ File-Directory:	scratch/
 ## Input data record length, Output data record length
 ##
 ##            	Source	Format	Save?	RecLen	Buffers	Swap	MarkID
-Stream-Spec:	File	Mk2	0	32768	32	0	400
+Stream-Spec:	File	Mk2	0	327680	32	0	400
 ##
 ## Now the list of data files to analyse
 ## Tagger test data files
