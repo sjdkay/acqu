@@ -287,6 +287,9 @@ sub StartAcquDAQ {
 
   my $xauth = `xauth list $ENV{DISPLAY}`;
   Logger("Xauth: $xauth",3);
+  if($xauth =~ /^\s*$/) {
+    Logger("Xauth is empty. Check if daq-master disk is full, and relogin to daq-master");
+  }
 
   # this opens the SSH sessions in $r->{SSH}, if not already done
   InitSSH($r);
