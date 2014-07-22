@@ -74,6 +74,8 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   fBatch = EFalse;
   char setfile[128];
   char datafile[256] = "";
+  char directory[256] = "";
+  char batchdir[256] = "";
   strcpy( setfile, "ROOTsetup.dat" );
 
   // Handle any command-line option here online/offline or setup file
@@ -82,6 +84,8 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
     else if( strcmp("--rootfile", argv[i]) == 0 ) online = EFalse;
     else if( strcmp("--batch", argv[i]) == 0 ) fBatch = ETrue;
     else if( strcmp("--datafile", argv[i]) == 0 ) strcpy( datafile, argv[++i] );
+    else if( strcmp("--directory", argv[i]) == 0 ) strcpy( directory, argv[++i] );
+    else if( strcmp("--batchdir", argv[i]) == 0 ) strcpy( batchdir, argv[++i] );
     else if( strcmp("--", argv[i]) != 0 ) strcpy( setfile, argv[i] );
   }
 
@@ -92,6 +96,9 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   if( online ) gAR->SetIsOnline();               // AcquRoot online procedures
   gAR->FileConfig( setfile );                    // user-def setup
   if( gAR->GetProcessType() == EMCProcess ) online = EFalse;
+
+  if (strcmp(directory, "")) gAR->SetTreeDir(gAR->BuildName(directory));
+  if (fBatch && strcmp(batchdir, "")) gAR->SetBatchDir(gAR->BuildName(batchdir));
 
   // "online" means receiving data from TA2DataServer which has 3 options
   // 1) network input from remote (usually DAQ) node

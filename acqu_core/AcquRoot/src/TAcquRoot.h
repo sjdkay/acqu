@@ -261,6 +261,9 @@ public:
    Bool_t* GetEpicsIndex(){ return fEpicsIndex; }
    Int_t   GetNEpics(){ return fNEpics; }
    
+   void SetTreeDir(Char_t* dir){ fTreeDir = dir; }
+   void SetBatchDir(Char_t *dir){ fBatchDir = dir; }
+
    void SetIsOnline(){ fIsOnline = ETrue; }
    void SetRecLen( Int_t len ){ fRecLen = len; }
    void SetMulti(MultiADC_t** multi){ fMulti = multi; }
