@@ -844,7 +844,7 @@ void TVME_VUPROM::CmdExe(Char_t* input)
     break;
   case EVUP_ResetTrigCtrl:
     ResetTrigCtrl();
-    printf(fCommandReply, "ResetTrigCtrl executed.");
+    sprintf(fCommandReply, "ResetTrigCtrl executed.\n");
     break;
   default:
     sprintf(fCommandReply,"<Unrecognised VUPROM command>\n");
