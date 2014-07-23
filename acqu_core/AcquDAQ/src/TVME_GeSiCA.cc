@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <bitset>
+#include <unistd.h>
 
 using namespace std;
 
@@ -293,7 +294,9 @@ void TVME_GeSiCA::PostInit( )
     return;
   }
 
-  // deep init of the GeSiCA / SADCs cards
+  // start deep init of the GeSiCA / SADCs cards
+ 
+  // check if Gesica is there at all, no i2c business yet
   if(!init_gesica(true)) {
     PrintError("","Could not find Gesica...see output above",EErrFatal);
   }
@@ -390,11 +393,11 @@ void TVME_GeSiCA::ProgFPGA()
 {
   // check if TCS clocks are locked, then skip programming
   // this should make initing the system less painful...
-  UInt_t gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
-  if((gesica_SCR & 0b11) == 0b11) {
-    cout << "Skip programming of GeSiCa, TCS is already locked" << endl;
-    return;
-  }
+  //UInt_t gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
+  //if((gesica_SCR & 0b11) == 0b11) {
+  //  cout << "Skip programming of GeSiCa, TCS is already locked" << endl;
+  //  return;
+  //}
   // load the RBT file
   vector<UInt_t> rbt_data;
   if(!load_rbt(fFPGAfile, rbt_data)) {
@@ -449,7 +452,7 @@ void TVME_GeSiCA::ProgFPGA()
 
   // check if clocks are locked (if not there's a maybe ConfigTCS needed...?!)
   // SCR = status and control register
-  gesica_SCR = 0;
+  UInt_t gesica_SCR = 0;
   UInt_t tries = 0;
   do {
      gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
@@ -459,7 +462,7 @@ void TVME_GeSiCA::ProgFPGA()
        exit(EXIT_FAILURE);
      }
   }
-  while((gesica_SCR & 0b11) == 0);
+  while((gesica_SCR & 0b11) != 0b11);
 
   if((gesica_SCR & 0x1) == 0) {
     cerr << "TCS clock not locked: Status = 0x"
@@ -471,7 +474,6 @@ void TVME_GeSiCA::ProgFPGA()
          << hex << gesica_SCR << dec << endl;
     exit(EXIT_FAILURE);
   }
-
 }
 
 //-----------------------------------------------------------------------------
@@ -488,8 +490,11 @@ void TVME_GeSiCA::ProgSADC() {
     cout << ">>>> Programming SADC at Port = " << i << endl;
     i2c_set_port(i);
     if(!ProgramSgFPGA(rbt_data)) {
-      cerr << "Could not successfully program, exit." << endl;
-      exit(EXIT_FAILURE);
+      cerr << "Try reprogramming once, sometimes necessary after GeSiCa reprogramming..." << endl;
+      if(!ProgramSgFPGA(rbt_data)) {
+	cerr << "Could not successfully program, exit." << endl;
+	exit(EXIT_FAILURE);
+      }
     }
   }
 }
@@ -635,7 +640,7 @@ void TVME_GeSiCA::ProgThresh(){
 bool TVME_GeSiCA::i2c_wait(bool check_ack) {
   // poll status register 0x4c bit 0,
   // wait until deasserted
-  for(UInt_t n=0;n<100;n++) {
+  for(UInt_t n=0;n<1000;n++) {
     UInt_t status = Read(EI2CStatus); // *(gesica+0x4c/4);
     if((status & 0x1) == 0) {
       //cout << "# After " << n << " reads: 0x4c = 0x" << hex << (status & 0x7f) << dec << endl;
@@ -833,49 +838,64 @@ bool TVME_GeSiCA::init_gesica(bool skip_i2c) {
   if(skip_i2c)
     return true;
 
-  // reset the i2c...
-  if(!i2c_reset()) {
-    cerr << "I2C reset failed" << endl;
-    return false;
-  }
-
-  UInt_t gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
+  
   // Init connected iSADC cards
-  vector<UInt_t> ports;  
-  for(UInt_t port_id=0;port_id<fNSADC;port_id++) {
-    if( (gesica_SCR & (1 << (port_id+8))) == 0) {
-      // silently ignore unconnected cards...
-      continue;
+  UInt_t init_tries = 10;
+  
+  do {
+    UInt_t gesica_SCR = Read(EIMStatus); // *(gesica+0x20/4);
+    vector<UInt_t> ports;  
+    for(UInt_t port_id=0;port_id<fNSADC;port_id++) {
+      if( (gesica_SCR & (1 << (port_id+8))) == 0) {
+	//cout << "Skipped..." << endl;
+	// silently ignore unconnected cards...
+	continue;
+      }
+      // set to broadcast mode
+      i2c_set_port(port_id, true);
+      // read hardwired id
+      UInt_t hard_id;
+      if(!i2c_read(1, 0x0, hard_id))
+	continue;
+      // write geo id as port_id:
+      // hard_id as the lower 8 bits, port id the higher 8 bits!
+      if(!i2c_write(2, 0x1, hard_id  + (port_id <<8)))
+	continue;
+      // readback geo id
+      UInt_t geo_id;
+      if(!i2c_read(1, 0x1, geo_id))
+	continue;
+      if(geo_id != port_id) {
+	cerr << "Setting Geo ID for port " << port_id << " failed: GeoID=" << geo_id << endl;
+	continue;
+      }
+      ports.push_back(port_id);
+      // enable interface for readout (two VME accesses, too lazy too use bitset here...)
+      //*(gesica+0x20/4) |= 1 << (port_id+16);
+      UInt_t data = Read(EIMStatus);
+      data |= 1 << (port_id+16);
+      Write(EIMStatus, data);
+      //cout << "Found..." << endl;
     }
-    // set to broadcast mode
-    i2c_set_port(port_id, true);
-    // read hardwired id
-    UInt_t hard_id;
-    if(!i2c_read(1, 0x0, hard_id))
-      continue;
-    // write geo id as port_id:
-    // hard_id as the lower 8 bits, port id the higher 8 bits!
-    if(!i2c_write(2, 0x1, hard_id  + (port_id <<8)))
-      continue;
-    // readback geo id
-    UInt_t geo_id;
-    if(!i2c_read(1, 0x1, geo_id))
-      continue;
-    if(geo_id != port_id) {
-      cerr << "Setting Geo ID for port " << port_id << " failed: GeoID=" << geo_id << endl;
-      continue;
+    init_tries--;
+
+    if(ports.size() == fNSADC)
+      break;
+    
+    if(init_tries==0) {
+      cerr << "Expected " << fNSADC << " SADCs connected, " 
+	   << " but found " << ports.size() << endl;
+      cerr << "Try replugging the optical cable connection, or powercycling the crate" << endl;
+      return false;
     }
-    ports.push_back(port_id);
-    // enable interface for readout (two VME accesses, too lazy too use bitset here...)
-    //*(gesica+0x20/4) |= 1 << (port_id+16);
-    UInt_t data = Read(EIMStatus);
-    data |= 1 << (port_id+16);
-    Write(EIMStatus, data);
+    
+    cerr << "Retrying initing the SADC modules. Sometimes necessary after GeSiCa reprogramming." << endl;
+
+    // give the GeSiCa some time to find the SADC modules...
+    usleep(10000);
   }
-  if(ports.size() != fNSADC) {
-    cerr << "Did not find expected number of SADCs..." << endl;
-    return false;
-  }
+  while(init_tries>0);
+
   return true;
 }
 
