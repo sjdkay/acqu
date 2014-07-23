@@ -295,22 +295,35 @@ void TVME_GeSiCA::PostInit( )
   }
 
   // start deep init of the GeSiCA / SADCs cards
- 
+  
+
   // check if Gesica is there at all, no i2c business yet
   if(!init_gesica(true)) {
     PrintError("","Could not find Gesica...see output above",EErrFatal);
   }
-  ProgFPGA();           // GeSiCA FPGA file
+  UInt_t nTries = 10;
 
-  // try to init the i2c then,
-  // this needs luck since according to Igor,
-  // the TCS clocks only lock when it's in IDLE mode....
-  if(!init_gesica()) {
-    PrintError("","Could not init i2c Gesica...see output above",EErrFatal);
+  do {
+    ProgFPGA();           // GeSiCA FPGA file
+    // try to init the i2c then,
+    // if it fails, try programming the GeSiCa again
+    // failure is usually indicated by red Rs LED on SADC module
+    if(init_gesica()) 
+      break;
+    
+    nTries--;
+    if(nTries==0) {
+      PrintError("","Could init i2c eventually...see output above",EErrFatal);
+    }
+    
+    cerr << "Retrying GeSiCa programming" << endl;
+    usleep(10000);
   }
+  while(nTries>0);
 
   // then do the rest
   ProgSADC();           // SADC FPGA files
+  
   ProgOpMode();         // GeSiCA operational mode
   ProgSampleSum();      // Sample integration boundaries
   ProgThresh();         // SADC thresholds
