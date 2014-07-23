@@ -182,8 +182,6 @@ my $statusToString =
 my $trigger_baseurl = 'http://wwwa2.kph.uni-mainz.de/intern/trigger';
 my $acqu_datadir = '$HOME/acqu/data'; # were to find the data dir on VME hosts
 my $AcquBin = '/opt/acqu/build/bin'; # where can we find RSupervise, AcquControl, ...
-my $InitTriggerId = 73; # trigger providing some interrupts
-my $InitCPUEnable = '0x2000'; # the correct CPU Enable for init (all hosts disabled)
 
 Getopt::Long::Configure(qw(gnu_getopt));
 GetOptions(
@@ -631,13 +629,6 @@ sub Init {
   my $prefix = '== Init:';
 
   # first of all, the TCS must be initialized
-  # we start the AcquDAQ process on the TCS host,
-  # which is stopped again by the following init
-  # Logger("$prefix Starting AcquDAQ on $host_tcs (just for checking)",1);
-  # StartAcquDAQ($runset, 'start',
-  #              [],               # blacklist none, since we...
-  #              [$host_tcs]       # ...whitelist only TCS host
-  #             );
   Logger("$prefix Initializing TCS (and TDCs) on '$host_tcs'. ".
          "Be patient (takes about one minute to finish!)",1);
   StartAcquDAQ($runset, '-t 80 init', # give it 80 s to finish
@@ -645,28 +636,8 @@ sub Init {
                [$host_tcs]            # ...whitelist only TCS host
               );
 
-  
-  
-  # # get the old trigger in NoStore mode
-  # my ($trigid_old, undef, undef) = TriggerGuessId($runset);
-  # Logger("$prefix Current trigger ID: $trigid_old (will be restored in the end)",1);
-
-  # # activate the special trigger needed for programming the GeSiCas
-  # # and register the callback to properly restore it if something fails
-  # Logger("$prefix Activating specific trigger $InitTriggerId",1);
-  
-  # TriggerSetup($runset, $InitTriggerId);
-  # push(@$cleanup,
-  #      sub {
-  #        # never use force to restore the trigger
-  #        $force=0;
-  #        Logger("$prefix Cleanup: Trying to restore the old trigger $trigid_old",1);
-  #        TriggerSetup($runset, $trigid_old);
-  #        });
-
-
   # start the whole runset in NoStore mode
-  # (this can fail since we base it on the existing config)
+  # (this might fail since we base it on the existing config)
   # we use a modified config file, which let's us remotely control
   # the AcquDAQ experiment via RSupervise
   Logger("$prefix Creating specific config file for $host_gui based on current one", 1);
