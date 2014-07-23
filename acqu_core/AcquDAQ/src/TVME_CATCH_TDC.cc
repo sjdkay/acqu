@@ -196,7 +196,7 @@ Int_t TVME_CATCH_TDC::F1Setup(F1Data_t* f1data){
   for (i=0;i<17;i++) {
     val = f1data->registers[p[i]];
     Write(ECATCH_IF1Setup, val);
-    //usleep(3); /* not on Linux ? */
+    usleep(3); /* not on Linux ? */
   }
   return 0;
 }
