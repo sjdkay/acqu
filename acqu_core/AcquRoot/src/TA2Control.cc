@@ -74,8 +74,8 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   fBatch = EFalse;
   char setfile[128];
   char datafile[256] = "";
-  char directory[256] = "";
-  char batchdir[256] = "";
+  char directory[256] = "./";
+  char batchdir[256] = "./";
   strcpy( setfile, "ROOTsetup.dat" );
 
   // Handle any command-line option here online/offline or setup file
@@ -94,11 +94,25 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
 
   gAR = new TAcquRoot("A2Acqu", fBatch);         // Acqu - Root interface
   if( online ) gAR->SetIsOnline();               // AcquRoot online procedures
+
+  // Set output and batch log files directories before
+  // using config file to give command line preference
+  if (strcmp(directory, "./")) gAR->SetTreeDir(gAR->BuildName(directory));
+  if (fBatch && strcmp(batchdir, "./")){
+    gAR->SetBatchDir(gAR->BuildName(batchdir));
+    gAR->SetLogFile(gAR->BuildName(batchdir, "AcquRoot.log"));
+  }
+
+  // Perform remaining config from file
   gAR->FileConfig( setfile );                    // user-def setup
   if( gAR->GetProcessType() == EMCProcess ) online = EFalse;
 
-  if (strcmp(directory, "")) gAR->SetTreeDir(gAR->BuildName(directory));
-  if (fBatch && strcmp(batchdir, "")) gAR->SetBatchDir(gAR->BuildName(batchdir));
+  // If batch directory was not set by command line or file
+  // give default to avoid crashing when running batch
+  if (fBatch && ((gAR->GetBatchDir()) == NULL)){
+    gAR->SetBatchDir(gAR->BuildName(batchdir));
+    gAR->SetLogFile(gAR->BuildName(batchdir, "AcquRoot.log"));
+  }
 
   // "online" means receiving data from TA2DataServer which has 3 options
   // 1) network input from remote (usually DAQ) node
