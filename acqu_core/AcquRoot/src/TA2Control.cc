@@ -150,7 +150,10 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   // offline running means read from ROOT Tree files...
   // Look for ADC info as a branch of the Tree
   else if( gAR->GetProcessType() == EMCProcess ){
-    if (strcmp(datafile, "")) gAR->SaveTreeFile(datafile);
+    if (strcmp(datafile, "")){
+      gAR->SetNTreeFiles(0);
+      gAR->SaveTreeFile(datafile);
+    }
     if( !gAR->GetADC() ){
       Error("TA2Control","Manual ADC setup required for MC running>");
       exit(-1);
