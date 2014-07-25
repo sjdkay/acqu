@@ -1,73 +1,62 @@
 #!/bin/sh
-#This is called from the when a farm job is submitted to a node.
-#It cannot take arguments, rather it pick up environmental variables 
+# This is called from the when a farm job is submitted to a node.
+# It cannot take arguments, rather it picks up environmental variables 
 #
-#Currently expecting the following to be set up in the submission script.
-#ACQU_MAINDIR:       Location of the Acqu main directory
-#ACQU_SETUPFILE:     Top level AcquRoot setup file
-#ACQU_LOCALOUTDIR:   Where to put the output on /local/raid
-#ACQU_DATADIR:       Location of the Acqu data files on /local/raid
+# Currently expecting the following to be set up in the submission script.
+# ACQU_MAINDIR:       Location of the Acqu main directory
+# ACQU_SETUPFILE:     Top level AcquRoot setup file
+# ACQU_INPUTDIR:      Location of the Acqu data files on /local/raid
+# ACQU_REMOTEDIR:     Where to scp files from if not in ACQU_INPUTDIR
+# ACQU_OUTPUTDIR:     Where to put the output on /local/raid
+# ACQU_BASENAME:      Basename of this job
+# ACQU_NODEDIR:       Where to store temporary files
+# ACQU_INPUTFILE:     File to analyze
  
-cd $ACQU_MAINDIR
+cd ${ACQU_MAINDIR}
 
-#get info required from the setupfiles:
+# Make any required directories
+mkdir -p ${ACQU_NODEDIR}
 
-batchdir=`gawk '{if($1=="BatchDir:") print $2}' ${ACQU_SETUPFILE}`
-directory=`gawk '{if($1=="Directory:") print $2}' ${ACQU_SETUPFILE}`
-serversetup=`gawk '{if($1=="ServerSetup:") print $2}' ${ACQU_SETUPFILE}`
+# Create log file for this process
+LogFile="${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_AcquNode.log"
 
-if [ -z $directory ]; then
-    echo "Error in ${ACQU_SETUPFILE}: Directory:";
-    exit 0;
-fi
+# Now run AcquRoot in batch mode
+echo "AcquRoot --batch --batchdir ${ACQU_NODEDIR}/ --directory ${ACQU_NODEDIR}/ --datafile ${ACQU_INPUTDIR}/${ACQU_INPUTFILE} ${ACQU_SETUPFILE} &> $LogFile"
+AcquRoot --batch --batchdir ${ACQU_NODEDIR}/ --directory ${ACQU_NODEDIR}/ --datafile ${ACQU_INPUTDIR}/${ACQU_INPUTFILE} ${ACQU_SETUPFILE} &> $LogFile
 
-#make any required directories
-mkdir -p $batchdir
-mkdir -p $directory
-
-#find the directory where the Acqu data files will be and make in case it's not there
-localdatadir=`gawk '{if($1=="File-Directory:") print $2}' ${serversetup}`
-mkdir -p $localdatadir
-
-#find the datafiles in the server setup
-datafiles=`gawk '{if($1=="File-Name:"){printf"%s ",$2}}' ${serversetup}`
-
-tag=`basename ${directory}`
-
-#make these in case they don't exist
-mkdir -p ${ACQU_LOCALOUTDIR}
-mkdir -p "${ACQU_LOCALOUTDIR}/root"
-mkdir -p "${ACQU_LOCALOUTDIR}/log"
-
-logFile="${ACQU_LOCALOUTDIR}/log/${tag}_AcquNode.log"
-
-#Now run AcquRoot in batch mode
-echo "AcquRoot --batch $ACQU_SETUPFILE &> $logFile"
-AcquRoot --batch $ACQU_SETUPFILE &> $logFile
-
-#list all the files in the output directory
+# List all the files in the output directory
 echo 
 echo "List all the files in the output directory:" 
-echo "ls -lrt $directory" 
-ls -lrt $directory  
-echo "Copying all the files from temporary directory $directory to ${ACQU_LOCALOUTDIR}" 
-echo "cp ${directory}*.root ${ACQU_LOCALOUTDIR}/root" 
-cp ${directory}*.root ${ACQU_LOCALOUTDIR}/root
+echo "ls -lrt ${ACQU_NODEDIR}/" 
+ls -lrt ${ACQU_NODEDIR}/
+echo
 
+# Copy output root files to raid array
+echo "Copying all the files from temporary directory ${ACQU_NODEDIR} to ${ACQU_OUTPUTDIR}"
+echo
+echo "cp ${ACQU_NODEDIR}/*.root ${ACQU_OUTPUTDIR}/root/" 
+cp ${ACQU_NODEDIR}/*.root ${ACQU_OUTPUTDIR}/root/
 
-echo "cp ${batchdir}AcquRoot.log ${ACQU_LOCALOUTDIR}/log/${tag}_AcquRoot.log"
-echo "cp ${batchdir}Analysis.log ${ACQU_LOCALOUTDIR}/log/${tag}_Analysis.log"
-echo "cp ${batchdir}DataServer.log ${ACQU_LOCALOUTDIR}/log/${tag}_DataServer.log"
-cp ${batchdir}AcquRoot.log ${ACQU_LOCALOUTDIR}/log/${tag}_AcquRoot.log
-cp ${batchdir}Analysis.log ${ACQU_LOCALOUTDIR}/log/${tag}_Analysis.log
-cp ${batchdir}DataServer.log ${ACQU_LOCALOUTDIR}/log/${tag}_DataServer.log
+# Copy output log files to raid array
+echo "cp ${ACQU_NODEDIR}/AcquRoot.log ${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_AcquRoot.log"
+cp ${ACQU_NODEDIR}/AcquRoot.log ${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_AcquRoot.log
 
+echo "cp ${ACQU_NODEDIR}/Analysis.log ${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_Analysis.log"
+cp ${ACQU_NODEDIR}/Analysis.log ${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_Analysis.log
 
-echo "deleting temporary directory $directory" 
-echo "/bin/rm -f  ${directory}*.*" 
-/bin/rm -f ${directory}*.*
-echo "rmdir ${directory}"
-rmdir ${directory}
+# DataServer.log does not exist for MC running, so check if it exists first
+if [ -e ${ACQU_NODEDIR}/DataServer.log ]; then
+    echo "cp ${ACQU_NODEDIR}/DataServer.log ${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_DataServer.log"
+    cp ${ACQU_NODEDIR}/DataServer.log ${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_DataServer.log
+fi
+echo
+
+# Delete files and directory from local scratch
+echo "deleting temporary directory ${ACQU_NODEDIR}" 
+echo "/bin/rm -f  ${ACQU_NODEDIR}/*.*" 
+/bin/rm -f ${ACQU_NODEDIR}/*.*
+echo "rmdir ${ACQU_NODEDIR}"
+rmdir ${ACQU_NODEDIR}
 
 exit 0;
 

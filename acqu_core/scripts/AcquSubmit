@@ -49,10 +49,11 @@ print_usage()
 init_values()
 {
 #set the defaults
-    sleeptime=5
+    sleeptime=5;
     default_maxq="500";
     rev="";
     maxq="${default_maxq}";
+    waittime="5m";
 }
 
 #  Function to set the command line options
@@ -112,50 +113,43 @@ do
 
 	#copy the files to the local raid if required by getting the info from the comments at top of the jobfile
 	#get the stuff after the keyword in each requiredline
-	LocalDataDir=`gawk -v f1="#LocalDataDir: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
-	RemoteDataDir=`gawk -v f1="#RemoteDataDir: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
-	DataFiles=`gawk -v f1="#DataFiles: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
+	LocalDir=`gawk -v f1="#InputDir: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
+	RemoteDir=`gawk -v f1="#RemoteDir: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
+	InputFile=`gawk -v f1="#InputFile: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
 
 	#if there are files to be copied (ie non zero list of files) 
-	if [ ! -z $DataFiles ]; then
-	    echo "Checking for files on local RAID: $DataFiles"
-	    #loop over the files in the line
-	    for dfile in $DataFiles
-	    do
-		LocalFile=${LocalDataDir}"/"${dfile}
-		RemoteFile=${RemoteDataDir}"/"${dfile}
-		
-		if [ ! -f $LocalFile ]; then
-		    echo
-		    echo "Copying data: scp $RemoteFile $LocalFile"
-		    scp -q "$RemoteFile" "$LocalFile"
+	if [ ! -z $InputFile ]; then
+	    echo "Checking for file on local RAID: $InputFile"
 
-	       	    #make it group writeable to allow removal by other a2kph
-		    chmod g+w $LocalFile
-		else
-		    echo "Found $LocalFile"
-		fi
-	    done
+	    LocalFile=${LocalDir}"/"${InputFile}
+	    RemoteFile=${RemoteDir}"/"${InputFile}
+	    
+	    if [ ! -f $LocalFile ]; then
+		echo
+		echo "Copying data: scp $RemoteFile $LocalFile"
+		scp -q "$RemoteFile" "$LocalFile"
+		
+	       	#make it group writeable to allow removal by other a2kph
+		chmod g+w $LocalFile
+	    else
+		echo "Found $LocalFile"
+	    fi
 	fi
 	
-	#count no of jobs already queued on farm
-	jobcount=`qstat -u ${USER} | gawk '{if(($10=="Q")||($10=="H")) print $0}' | wc -l`
+	#count no of jobs already queued or running on farm
+	jobcount=`qstat -u ${USER} | gawk '{if(($10=="Q")||($10=="H")||($10=="R")) print $0}' | wc -l`
 
 	#go if less than the (self imposed) maximum
-	jobgo=`echo $jobcount | gawk -v maxq=$maxq '{if ($1>maxq){print"wait"}else{print"go"}}'`
+	jobgo=`echo $jobcount | gawk -v maxq=$maxq '{if ($1>=maxq){print"wait"}else{print"go"}}'`
 
-	if [ "$jobgo" = "wait" ]; then
-	    while [ "$jobgo" = "wait" ]; do
-	        jobcount=`qstat -u ${USER} | gawk '{if(($10=="Q")||($10=="H")) print $0}' | wc -l`
-		echo "There are aleady $jobcount jobs queued. Waiting until it drops below $maxq. Trying again in 1hr"
-		jobgo=`echo $jobcount | gawk -v maxq=$maxq '{if ($1>maxq){print"wait"}else{print"go"}}'`
-		sleep 5m
-##		sleep 10
-	    done
-	fi
+	while [ "$jobgo" = "wait" ]; do
+	    jobcount=`qstat -u ${USER} | gawk '{if(($10=="Q")||($10=="H")||($10=="R")) print $0}' | wc -l`
+	    echo "There are aleady $jobcount jobs queued. Waiting until it drops below $maxq. Trying again in $waittime"
+	    jobgo=`echo $jobcount | gawk -v maxq=$maxq '{if ($1>=maxq){print"wait"}else{print"go"}}'`
+	    sleep $waittime
+	done
 
 	#OK to go
-        #echo "$jobcount jobs on already in the queue, submitting $subfile "
 	echo "qsub $subfile >&  ${subfile}.done"
 	qsub $subfile >&  ${subfile}.done
 	sleep $sleeptime

@@ -1,20 +1,31 @@
 #!/bin/sh
-#Give the args some sensible names
-TopSetupFile=$1
+# Give the args some sensible names
+SetupFile=$1
 JobName=$2
+FileList=$3
 
-#These need to be set up for any specific data set
-localOutputDir="/local/raid1/work/${USER}/analysis/${JobName}"
 
-#data will be scp'd from here to $LocalDataDir if it's not already found on the farm RAID
-DataDir="a2cb@a2kallisti.online.a2.kph:/exports/RAID_a2kallisti/2013_11-G-E" 
+####################################################
+###### Beginning of section requiring editing ######
+####################################################
 
-#Location for Acqu data files on the farm RAID array. This is writeable by all kpha2 users.
-#Everyone should Keep using the location under /local/raid0/work/a2data for now.
-LocalDataDir="/local/raid0/work/a2data/2013_11-G-E" 
+# Location of experiment or MC data files on the farm
+InputDir="/local/raid0/A2/rundata/2014-05_Compton_Sigma2z"
 
-#Who'll get the emails from the farm
-MailAddress="martel@kph.uni-mainz.de"
+# Remote location of experiment or MC data files not already on farm
+# Data will be automatically scp'd from here to $InputDir
+RemoteDir="a2cb@a2datastore1.online.a2.kph:/exports/RAID0_a2datastore1/rundata" 
+
+# Location of output root and log files
+OutputDir="/local/raid1/work/${USER}/analysis/${JobName}"
+
+# Who'll get the emails from the farm
+MailAddress="@kph.uni-mainz.de"
+
+####################################################
+###### End of section requiring editing ############
+####################################################
+
 
 #No of Acqu data files in each job
 RunsPerJob="1"
@@ -30,155 +41,162 @@ WALLTIME=24:00:00
 print_usage(){
     echo
     echo "Usage:"
-    echo "$exe <AcquRootSetup> <JobName>"
+    echo "$exe <AcquRootSetup> <JobName> <FileList>"
     echo
     echo "<AcquRootSetup>: Top level AcquRoot setup file"
-    echo "<JobName>:       A directory jobs/<JobName> will be created if it doesn't exist"
-    echo "                 and scripts put there"
-    echo "Example: "
-    echo "$exe data/MyTaggTaps.dat myjob"
+    echo "<JobName>:       A directory jobs/<JobName> will be created"
+    echo "                 if it doesn't exist and scripts put there"
+    echo "<FileList>:      (Optional) list of files to run, otherwise"
+    echo "                 run files in <AcquRootSetup> file"
+    echo "Examples: "
+    echo "$exe data/Offline-CBTaggTaps.dat myjob"
+    echo "$exe data/MC-CBTaggTaps.dat myjob"
+    echo "$exe data/MC-CBTaggTaps.dat myjob MCFiles.dat"
 }
 
-#check that we have all the args, otherwise print use
+# Check that we have all the args, otherwise print use
 if [ $# -lt 2 ]; then
     print_usage;
     exit 0;
 fi
 
-#go through a top level setup file.
-#Make jobs for groups of <RunsPerJob> data files in the server setup, with a corresponding 
-#top level setup file for each job
-
-#Find the server setup file
-ServerSetupFile=`gawk '{if($1=="ServerSetup:")print $2}' $TopSetupFile`
-
 MainDir=`pwd`
 
-#make some subdirectories for job and setup files
+# Make some subdirectories for job and setup files
 JobDir="jobs/$JobName"
 mkdir -p $JobDir
 mkdir -p "$JobDir/jobfiles"
 
-AcquSetupDir="${JobDir}/acqusetups"
-mkdir -p $AcquSetupDir
-
-mkdir -p $localOutputDir
-mkdir -p "${localOutputDir}/root"
-mkdir -p "${localOutputDir}/log"
+mkdir -p $OutputDir
+mkdir -p "${OutputDir}/root"
+mkdir -p "${OutputDir}/log"
 
 
-dataFileLists="${JobDir}/filelists.dat"
+# If there's no file list specified then scan config files or input directory
+if [ $# -lt 3 ]; then
+    FileList="${JobDir}/FileList.dat"
 
-#Make a main setup file template with all non-comment lines 
-AcquTemplate="${AcquSetupDir}/AcquTemplate.dat"
-echo "#AcquRoot setup file created automatically using AcquFarm with $TopSetupFile as basis." > $AcquTemplate
-echo "#All comments are stripped out"  >> $AcquTemplate
-gawk '{if($1!~"#")print $0}' $TopSetupFile >> $AcquTemplate
+    # Scan top config file for MC 'TreeFile' lines
+    gawk -v n="$RunsPerJob" '{if($1=="TreeFile:"){printf"%s ",$2;if(c++ ==n-1){printf"\n";c=0}}}END{if(c!=0)printf"\n"}' $SetupFile > $FileList
 
-#Make a server template, with all the lines from the server setup except the "File-Name:" lines
+    # If 'FileList.dat' is still empty check for a server file
+    if [ ! -s $FileList ]; then
+	ServerFile=`gawk '{if($1=="ServerSetup:")print $2}' $SetupFile`
+	if [ ! -z $ServerFile ]; then
 
-AcquServerTemplate="${AcquSetupDir}/AcquServerTemplate.dat"
-echo "#AcquRoot setup file created automatically using AcquFarm with $ServerSetupFile as basis." > $AcquServerTemplate
-echo "#All comments are stripped out"  >> $AcquServerTemplate
+	    # Check that Server file exists
+	    if [ -e $ServerFile ]; then
 
-#copy all the non-comment lines and set the correct directory
-localDataDirLine="File-Directory: ${LocalDataDir}/"
+		# Scan server file for experiment 'File-Directory' line
+		ConfigDir=`gawk '{if($1=="File-Directory:")print $2}' $ServerFile`
 
-gawk -v ld="$localDataDirLine" '{\
-if($1=="File-Directory:")$0=ld;if(($1!~"File-Name:")&&($1!~"#"))print $0;\
-}' $ServerSetupFile >> $AcquServerTemplate;
+		# If File-Directory line existed and InputDir was either not specified or doesn't exist, use this directory
+		if [ ! -z $ConfigDir ]; then
+		    if [ -z $InputDir ]
+		    then InputDir=$ConfigDir
+		    elif [ ! -d $InputDir ]
+		    then InputDir=$ConfigDir
+		    fi
+		fi
 
-#Make a file where each line is a list of the datafiles per job by going over all the "File-Name:" lines in the server setup file.
-gawk -v n="$RunsPerJob" '{if($1=="File-Name:"){printf"%s ",$2;if(c++ ==n-1){printf"\n";c=0}}}END{if(c!=0)printf"\n"}' $ServerSetupFile > $dataFileLists
+		# Scan server file for experiment 'File-Name' lines
+		gawk -v n="$RunsPerJob" '{if($1=="File-Name:"){printf"%s ",$2;if(c++ ==n-1){printf"\n";c=0}}}END{if(c!=0)printf"\n"}' $ServerFile > $FileList
+	    fi
+	fi
+    fi
 
-#Loop over each line and create the job files
-#each line is like this: "CBTaggTAPS_500.dat CBTaggTAPS_501.dat ....."
-while read line           
+    # If 'FileList.dat' is still empty scan input directory
+    if [ ! -s $FileList ]; then
+	ls -1 $InputDir/ | grep ".root\|.dat" > $FileList
+    fi    
+fi
+
+# Make a main setup file template with all non-comment lines 
+AcquSetup="${JobDir}/AcquSetup.dat"
+echo "#AcquRoot setup file created automatically using AcquFarm with $SetupFile as basis." > $AcquSetup
+echo "#All unnecessary lines are stripped out"  >> $AcquSetup
+gawk '{if(($1!~"Directory:")&&($1!~"BatchDir:")&&($1!~"TreeFile:")&&($1!~"#"))print $0}' $SetupFile >> $AcquSetup
+
+# Loop over each line and create the job files
+# each line is like this: "CBTaggTAPS_500.dat CBTaggTAPS_501.dat ....."
+while read line         
 do
 
-    echo "Making a job for Files: $line";
-    
+    # Set individual file name and directory
+    File=`basename $line`
+    echo "Making a job for File: $File";
+    FileDir=$InputDir
 
-    #Take the 1st data file in the line to do the naming of things"
-    firstFile=`echo $line | gawk '{print $1}'`
-    
-    #strip off the .dat, and any directory paths
-    basename=`basename $firstFile .dat`
-    jobfile="${JobDir}/jobfiles/$basename.sub"
-    acquSetupFile="${AcquSetupDir}/${basename}_Setup.dat"
-    serverSetupFile="${AcquSetupDir}/${basename}_ServerSetup.dat"
-    nodeOutputDir="/scratch/${USER}/${basename}"
-    #nodeOutputDir="batch/${basename}"
-
-    #write the server setup file
-    #by copying the template and tagging on lines for the data files
-    cp $AcquServerTemplate $serverSetupFile
-
-
-    for file in $line
-    do
-	echo "File-Name: $file   0   0" >> $serverSetupFile
-    done
-
-    serverSetupLine="ServerSetup:  $serverSetupFile";
-    batchDirLine="BatchDir: ${nodeOutputDir}/"
-    outDirLine="Directory: ${nodeOutputDir}/"
-    #
-
-    #write the main setup file replacing directory names as appropriate
-    gawk -v ss="$serverSetupLine" -v bd="$batchDirLine" -v dl="$outDirLine" '{\
-if($1=="ServerSetup:")$0=ss; if($1=="BatchDir:")$0=bd; if($1=="Directory:")$0=dl; if($1!~"#")print $0;\
-}' $AcquTemplate > ${acquSetupFile}
-
+    # If input file doesn't exist in InputDir...
+    if [ ! -e $FileDir/$File ]; then
+        # check for input directory in file line
+	FileDir=`dirname $line`
+	# If input file doesn't exist in this directory...
+	if [ ! -e $FileDir/$File ]; then
+	    # check for input directory from config file
+	    FileDir=$ConfigDir
+	    # If input file doesn't exist in this directory...
+	    if [ ! -e $FileDir/$File ]; then
+		# reset to original input directory, and trust the files to be in the remote directory
+		FileDir=$InputDir
+	    fi
+	fi
+    fi
+        
+    # Strip off the input suffix, and any directory paths
+    BaseName=`basename $File | sed 's/.root//' | sed 's/.dat//'`
+    JobFile="${JobDir}/jobfiles/$BaseName.sub"
+    NodeDir="/scratch/${USER}/${BaseName}"
 
     #now make the job file
-    echo "#!/bin/sh" > $jobfile;
-    echo "#PBS -N AcquFarm_${USER}" >> $jobfile;
-    echo "#PBS -m abe" >> $jobfile;
-    echo "#PBS -M $MailAddress"  >> $jobfile;
-    echo "#PBS -V"  >> $jobfile;
-    echo "#PBS -lwalltime=${WALLTIME}" >> $jobfile;
-    echo "#PBS -e ${JobDir}/jobfiles"  >> $jobfile;
-    echo "#PBS -o ${JobDir}/jobfiles"  >> $jobfile;
-    echo "#PBS -q batch_x86_64" >> $jobfile;
-    echo "#"  >> $jobfile;
-    echo "#LocalDataDir: ${LocalDataDir}" >> $jobfile; 
-    echo "#RemoteDataDir: ${DataDir}" >> $jobfile; 
-    echo "#DataFiles: $line"   >> $jobfile;
-    echo "#"  >> $jobfile;
-    echo "export ACQU_MAINDIR=\"$MainDir\""  >> $jobfile;
-    echo "export ACQU_SETUPFILE=\"$acquSetupFile\""  >> $jobfile;
-    echo "export ACQU_LOCALOUTDIR=\"$localOutputDir\""  >> $jobfile;
-    echo "export ACQU_DATADIR=\"$DataDir\""  >> $jobfile;
-    echo "#"  >> $jobfile;
-    echo "#This is the executable that gets run on the node"  >> $jobfile;
-    echo "AcquNode"  >> $jobfile;
-    echo "#"  >> $jobfile;
-    echo "exit 0"  >> $jobfile;
-    echo "##end of job script"  >> $jobfile;
+    echo "#!/bin/sh" > $JobFile;
+    echo "#PBS -N Acqu_${USER}" >> $JobFile;
+    echo "#PBS -m abe" >> $JobFile;
+    echo "#PBS -M $MailAddress"  >> $JobFile;
+    echo "#PBS -V"  >> $JobFile;
+    echo "#PBS -lwalltime=${WALLTIME}" >> $JobFile;
+    echo "#PBS -e ${JobDir}/jobfiles"  >> $JobFile;
+    echo "#PBS -o ${JobDir}/jobfiles"  >> $JobFile;
+    echo "#PBS -q batch_x86_64" >> $JobFile;
+    echo "#"  >> $JobFile;
+    echo "#InputDir: $FileDir" >> $JobFile;
+    echo "#RemoteDir: $RemoteDir" >> $JobFile;
+    echo "#InputFile: $File" >> $JobFile;
+    echo "#"  >> $JobFile;
+    echo "export ACQU_MAINDIR=\"$MainDir\""  >> $JobFile;
+    echo "export ACQU_SETUPFILE=\"$AcquSetup\""  >> $JobFile;
+    echo "export ACQU_INPUTDIR=\"$FileDir\""  >> $JobFile;
+    echo "export ACQU_REMOTEDIR=\"$RemoteDir\""  >> $JobFile;
+    echo "export ACQU_OUTPUTDIR=\"$OutputDir\""  >> $JobFile;
+    echo "export ACQU_BASENAME=\"$BaseName\""  >> $JobFile;
+    echo "export ACQU_NODEDIR=\"$NodeDir\""  >> $JobFile;
+    echo "export ACQU_INPUTFILE=\"$File\""  >> $JobFile;
+    echo "#"  >> $JobFile;
+    echo "#This is the executable that gets run on the node"  >> $JobFile;
+    echo "AcquNode"  >> $JobFile;
+    echo "#"  >> $JobFile;
+    echo "exit 0"  >> $JobFile;
+    echo "##end of job script"  >> $JobFile;
 
-    chmod +x $jobfile;
+    chmod +x $JobFile;
     
+done < $FileList
 
-done < $dataFileLists
-
-topFile=`ls -1 -r ${AcquSetupDir}/*_Setup.dat | tail -1`
-topJob=`ls -1 -r ${JobDir}/jobfiles/*.sub | tail -1`
+TopJob=`ls -1 -r ${JobDir}/jobfiles/*.sub | tail -1`
 
 echo
 echo "Job submission scripts are in ${JobDir}/jobfiles."
-echo "AcquRoot top and server setup files are in ${AcquSetupDir}"
 echo 
-echo "Running AcquHierarchy $topFile:"
+echo "Running AcquHierarchy $AcquSetup:"
 echo
-AcquHierarchy $topFile
+AcquHierarchy $AcquSetup
 echo 
 echo "Please check that the result looks sensible"
 echo 
 echo "Here's the corrseponding job submission script:"
-echo "cat $topJob"
+echo "cat $TopJob"
 echo
-cat $topJob
+cat $TopJob
 
 echo
 echo
