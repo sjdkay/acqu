@@ -25,6 +25,7 @@ private:
   std::vector< std::pair<size_t,size_t> > fScalerBlockOffsets; 
   UInt_t fScalerOffset;
   Bool_t kChainIsLast;
+  Bool_t kUseEPT;
   
   void StopScalers();
   void StartScalers();

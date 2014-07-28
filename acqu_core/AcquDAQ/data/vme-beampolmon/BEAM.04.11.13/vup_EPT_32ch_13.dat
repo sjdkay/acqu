@@ -11,16 +11,15 @@ Hardware-ID: 02000024
 # (controls the global NIM DAQ enable signal) 
 ModuleChain: vup1 vup_mon
 
-# Two full tagger sectors (2x32=64)
-# no EPT
+# EPT uses the same scaler blocks,
+# but different VUPROM inputs. Enable this by the 
+# following statement
+UseEPT:
+
+# EPT
 
 #       offset    clear    load   number of scalers
 #       hex       hex      hex    dec
 
-# open scalers tagger
-Scaler: 0x10000   0x800    0x804  64  
-# Scalers delayed and gated with PairSpec
-Scaler: 0x12000   0x800    0x804  64
-# Scalers *un*delayed (out of coinc) 
-# and gated with PairSpec
-Scaler: 0x13000   0x800    0x804  64
+# scalers EPT, undelayed and gated with PairSpec
+Scaler: 0x13000   0x800    0x804  32  
