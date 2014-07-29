@@ -17,14 +17,13 @@
 
 ClassImp(TVME_VUPROM_Scaler)
 
-enum { EVUPS_ModuleChain=400, EVUPS_Scaler, EVUPS_UseEPT };
+enum { EVUPS_ModuleChain=400, EVUPS_Scaler };
 
 using namespace std;
 
 static Map_t kVUPROMScalerKeys[] = {
   {"ModuleChain:",  EVUPS_ModuleChain}, 
   {"Scaler:",       EVUPS_Scaler},
-  {"UseEPT:",       EVUPS_UseEPT},
   {NULL,      -1}
 };
 
@@ -49,7 +48,6 @@ TVME_VUPROM_Scaler::TVME_VUPROM_Scaler( Char_t* name, Char_t* file, FILE* log,
   fScalerOffset = 0;
   
   kChainIsLast = kFALSE;
-  kUseEPT = kFALSE;
 }
 
 //-----------------------------------------------------------------------------
@@ -76,19 +74,12 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
       // we add global registers here (not in the constructor)
       // this ensures that fNreg is still zero when BaseSetup: is evaluated 
       // (needed to properly initialize the register pointers later in PostInit)
-     
       // the first register entry is the firmware
       VMEreg_t firmware = {0x2f00, 0x0, 'l', 0};
       fVUPROMregs.push_back(firmware);
-      
       // the second one is used to stop/start the scalers
       VMEreg_t scaler_gate = {0x2200, 0x0, 'l', 0};
-      fVUPROMregs.push_back(scaler_gate);     
-      
-      // the third one is used to enable the EPT mode
-      VMEreg_t useEPT = {0x2210, 0x0, 'l', 0};
-      fVUPROMregs.push_back(useEPT); 
-      
+      fVUPROMregs.push_back(scaler_gate);      
       fNreg = fVUPROMregs.size();      
       fScalerOffset = fNreg; // offset where the scaler blocks start
     }
@@ -133,10 +124,6 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
     fScalerOffset += numberOfScalers+2;
     break;
   } 
-  case EVUPS_UseEPT: {
-    kUseEPT = kTRUE;
-    break;
-  }
   default:
     // default try commands of TVMEmodule
     TVMEmodule::SetConfig(line, key);
@@ -163,13 +150,6 @@ void TVME_VUPROM_Scaler::PostInit( )
   // init the base class  
   TVMEmodule::PostInit();
   
-  // enable the EPT mode
-  if(kUseEPT) {
-    Write((UInt_t)2, (UInt_t)1);
-  }
-  else {
-    Write((UInt_t)2, (UInt_t)0);
-  }
   
   // last of all modules tells first one (the "controller") 
   // to start the scalers the first time
@@ -204,7 +184,7 @@ void TVME_VUPROM_Scaler::ReadIRQScaler( void** outBuffer )
   for(size_t block=0;block<fScalerBlockOffsets.size();block++) {
     size_t offset = fScalerBlockOffsets[block].first;
     size_t nScalers = fScalerBlockOffsets[block].second;
-    Write(offset+0, (UInt_t)1); // load scalers into buffer
+    Write(offset+0, 1); // load scalers into buffer
     for(size_t i=0; i<nScalers; i++ ) {
       UInt_t datum = Read(offset+2+i); // +2 due to clear/load register in the beginning
       ScalerStore(outBuffer, datum, fBaseIndex+n); // use n to get all blocks consecutive
