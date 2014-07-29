@@ -163,12 +163,16 @@ void TVME_VUPROM_Scaler::PostInit( )
   // init the base class  
   TVMEmodule::PostInit();
   
-  // enable the EPT mode
-  if(kUseEPT) {
-    Write((UInt_t)2, (UInt_t)1);
-  }
-  else {
-    Write((UInt_t)2, (UInt_t)0);
+  // set the EPT mode
+  // if not the last module
+  // this is a pretty stupid workaround...
+  if(!kChainIsLast) {
+    if(kUseEPT) {
+      Write((UInt_t)2, (UInt_t)1);
+    }
+    else {
+      Write((UInt_t)2, (UInt_t)0);
+    }
   }
   
   // last of all modules tells first one (the "controller") 
