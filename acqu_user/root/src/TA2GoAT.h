@@ -85,7 +85,6 @@ private:
     	Int_t*		PID_Hits;
     	Int_t		nWC_Hits;
     	Int_t*		WC_Hits;
-        Int_t		nWC_Tracks;
     	Int_t		nBaF2_PbWO4_Hits;
     	Int_t*		BaF2_PbWO4_Hits;
     	Int_t		nVeto_Hits;
