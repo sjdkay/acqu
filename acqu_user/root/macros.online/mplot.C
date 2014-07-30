@@ -1,6 +1,11 @@
 // D.Watts 24th Jan 2004
 // J.R.M. Annand 24th Jan 2004...generalise for single & multi-value
 
+#include <sstream>
+#include <fstream>
+#include <iostream>
+
+
 void mplot(int cstart, int nx = 1, int ny = 1, int multi = -1, int log = 0 )
 {
 // plot multiple spectra (of the same type)
@@ -26,7 +31,10 @@ void mplot(int cstart, int nx = 1, int ny = 1, int multi = -1, int log = 0 )
 	sprintf(h+1,"%d\0",multi);
     }
     else strcpy(h,"");
-//            
+//       
+
+    ofstream myfile;
+    myfile.open ("qdc-ept-fits.txt");
     for (int t=cstart; t<(cstart+nx*ny); t++)
     {
 	sprintf(hist_name,"ADC%d",t);
@@ -37,7 +45,16 @@ void mplot(int cstart, int nx = 1, int ny = 1, int multi = -1, int log = 0 )
 	if( hist ){
 	  hist->SetLineColor(1);
 	  hist->SetFillColor(2);
+          stringstream ss;
+	  ss << "fit_" << t;
+	  TF1 *myfit = new TF1(ss.str().c_str(),"gaus(0)", 800, 3000);
+	  myfit->SetParameter(1, 1500);
+	  myfit->SetParameter(2, 100);
+	  hist->Fit(myfit, "rq");
+	  myfile << hist_name << " " << myfit->GetParameter(1) << endl;
+	  cout << hist_name << " " << myfit->GetParameter(1) << endl;
 	  hist->Draw();
+	  
 	}
 	else printf("Histogram %s not found\n",hist_name);
 	w++;
@@ -46,6 +63,7 @@ void mplot(int cstart, int nx = 1, int ny = 1, int multi = -1, int log = 0 )
     }
     rawcanv->Update();
     rawcanv->Draw();
+    myfile.close();
     return;
 }
 //                                           
