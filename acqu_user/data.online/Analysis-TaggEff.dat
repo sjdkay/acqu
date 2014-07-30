@@ -41,6 +41,12 @@ Period:  3000	PeriodMacro.C	PeriodMacro()
 ## Histogram QDCs
 ## Tagger QDCs
 Display: ADC 800 1183
+## EPT - TDCs, Microscope Sector E, D, C
+Display: MultiHit 1817 1863 6000 -4000 -2000 0
+Display: MultiHit 1817 1863 6000 -4000 -2000 1
+Display: MultiHit 1817 1863 6000 -4000 -2000 2
+## EPT - ADCs
+Display: ADC 1184 1231
 ## Microscope QDCs
 #Display: ADC 1184 1279
 #
