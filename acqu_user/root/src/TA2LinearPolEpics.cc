@@ -243,13 +243,11 @@ void TA2LinearPolEpics::LoadVariable( )
 //-----------------------------------------------------------------------------
 void TA2LinearPolEpics::PostInitialise( )
 {
+	
   //we need more than one pass at this (ie an Initialise: must come before and after the Display lines in
   //the setup file for this if we're to get the histograms filled.
   Char_t histName[100];
-  FILE *fp;
-  Char_t line[82];
-  Int_t channel;
-  Double_t content;
+
   const Double_t *ladderECal;
   Double_t energy;
 
@@ -286,7 +284,7 @@ void TA2LinearPolEpics::PostInitialise( )
     fCurrentPolTable_TC = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
     fCurrentEnhTable = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
     fCurrentEnhTable_TC = new Double_t[fLadder->GetNelem()]; //get the no of elements in the Ladder
-    for(int n=0;n<fLadder->GetNelem();n++){
+    for(UInt_t n=0;n<fLadder->GetNelem();n++){
       fCurrentPolTable[n]	=-1.0;
       fCurrentPolTable_TC[n]=-1.0;
       fCurrentEnhTable[n]	= 0.0;      
@@ -296,7 +294,7 @@ void TA2LinearPolEpics::PostInitialise( )
     fAccScaler=new Double_t*[fNScalerBuffers];
     for(int n=0;n<fNScalerBuffers;n++){
       fAccScaler[n]=new Double_t[fLadder->GetNelem()];
-      for(int m=0;m<fLadder->GetNelem();m++) fAccScaler[n][m]=0.0;
+      for(UInt_t m=0;m<fLadder->GetNelem();m++) fAccScaler[n][m]=0.0;
     }
     fScalerEvent=0;
     
@@ -571,24 +569,13 @@ void TA2LinearPolEpics::Reconstruct( ){
   
   Double_t normValue=0.0;
   int ncount=0;
-  int maxchan,minchan;
   TF1 *edgeFit=NULL;
   Double_t fitedge;
   Double_t maxgrad;
   Double_t coh_sum=0.0;
   int binx=0;
-  int biny=0;
   Double_t xmax=0.0; 
   Double_t ymax=0.0;
-
-  float maxheight=0.0;		                //set init for max and min search
-  float minderiv=0.0;
-  float deriv=0.0;
-  
-  float grad;
-  float max=0;
-  int peakchan=0;
-  TList *fList;
   
   fLastPolRangeIndex[ETablePara]=-1;
   fLastPolRangeIndex[ETablePerp]=-1;
@@ -614,8 +601,9 @@ void TA2LinearPolEpics::Reconstruct( ){
 	  }
 	}
 	if(fPolRangeIndex[ETablePara]<0){
-	  fprintf(stderr,"Fatal Error: No para pol Table run range for run %d",fRunNo);
-	  exit;
+	fprintf(stderr,"Fatal Error: No para pol Table run range for run %d",fRunNo);
+	// not a good way to exit (it will segfault)
+	exit(1);
 	}
 	for(int index=0;index<fPolTableNRanges[ETablePerp];index++){ //find the pol table run range for this run
 	  if((fRunNo>=fPolTableRangesMin[index][ETablePerp])&&(fRunNo<=fPolTableRangesMax[index][ETablePerp])){
@@ -624,8 +612,9 @@ void TA2LinearPolEpics::Reconstruct( ){
 	  }
 	}
 	if(fPolRangeIndex[ETablePerp]<0){
-	  fprintf(stderr,"Fatal Error: No perp Pol Table run range for run %d",fRunNo);
-	  exit;
+	fprintf(stderr,"Fatal Error: No perp Pol Table run range for run %d",fRunNo);
+	// not a good way to exit (it will segfault)
+	exit(1);
 	}
       }
       for(int index=0;index<fNRunRanges;index++){ //find the run table run range for this run
@@ -641,8 +630,9 @@ void TA2LinearPolEpics::Reconstruct( ){
 	}
       }
       else{
-	fprintf(stderr,"Fatal Error: No plane info range for run %d",fRunNo);
-	exit;
+		fprintf(stderr,"Fatal Error: No plane info range for run %d",fRunNo);
+		// not a good way to exit (it will segfault)
+		exit(1);
       }
     }
     
@@ -737,7 +727,7 @@ void TA2LinearPolEpics::Reconstruct( ){
     if(gAR->IsScalerRead()&&(!fIsEpics)){            //if scaler read, and no epics events
       fIsNewFile=EFalse;	                           //no longer a new file
     }
-    
+
     if((fDoingScalers)&&(gAR->IsScalerRead())){ 	   // only do this bit for scaler events
       
       //Fill the various arrays in ascending E_g order
@@ -775,7 +765,6 @@ void TA2LinearPolEpics::Reconstruct( ){
       if((fHEnhPara!=NULL)&&(fPlane==ETablePara))fHEnhPara->Reset("ICE");
       if((fHCohPerp!=NULL)&&(fPlane==ETablePerp))fHCohPerp->Reset("ICE");
       if((fHEnhPerp!=NULL)&&(fPlane==ETablePerp))fHEnhPerp->Reset("ICE");
-      
       
       for(int n=0;n<fTaggerChannels;n++){		    		//fill various hists
 	if(fHCoh!=NULL){
@@ -819,7 +808,11 @@ void TA2LinearPolEpics::Reconstruct( ){
       }
       
       if((fHaveIncScaler)&&(fHEnh)){			//find the coherent edge
-
+		 
+		  if(fPlane == ETableAmo) fEdge = 0;
+		  else
+		  {
+			   
 	binx=0;
 	ymax=0;
 	for(int b=fHEnh->FindBin(fEdgeMin);b<fHEnh->FindBin(fEdgeMax);b++){
@@ -848,7 +841,7 @@ void TA2LinearPolEpics::Reconstruct( ){
 	    fEdge = fitedge;
 	  }
 	}
-	
+	}
 	if(fHEdge){
 	  if(fScalerCount%(fHEdge->GetNbinsX()-1)==0){
 	    fHEdge->Reset("ICE");
@@ -960,7 +953,7 @@ void TA2LinearPolEpics::ParseMisc(char *line){	// read parameters in the setup f
     break;
     
   case ELpMiscPolCuts:
-    if(sscanf(line, "%*s%d%d%d%d",&fBeforeEdge,&fAfterEdge,&fPolMin,&fDeadband)!=4){
+    if(sscanf(line, "%*s%lf%lf%lf%lf",&fBeforeEdge,&fAfterEdge,&fPolMin,&fDeadband)!=4){
       PrintError( line, "Linear Pol PolLookupTable parameters" );
     }
     break;
