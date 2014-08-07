@@ -36,13 +36,10 @@ BitPattern:  ./data/monitor/Trig-Pattern.dat
 ##
 ## Apparatus setup....
 ##              Name            Class           	Setup file
-##
-## Apparatus setup....
-## Raw analysis may be performed without Apparati
-##              Name            Class           	Setup file
 Apparatus:      TAGG            TA2Tagger   		Apparatus-EPT.dat
-Apparatus:      CB              TA2CentralApparatus	Apparatus-CentApp.dat
-Apparatus:      TAPS            TA2Taps		  	Apparatus-TAPS.dat
+Apparatus:      CB              TA2CrystalBall		Apparatus-CB.dat
+Apparatus:      TAPS            TA2Calorimeter          Apparatus-TAPS.dat 
+Apparatus:      MWPC	        TA2GenericApp  		Apparatus-MWPC.dat
 Apparatus:      BeamPolMon      TA2BeamPolMon           Apparatus-BeamPolMon.dat
 ##
 ## Turn on apparatus-level reconstruction
@@ -52,7 +49,7 @@ Reconstruct-Analysis:
 ##			Name	Class		        Config File
 #Physics-Analysis:	EtaM	TA2BasePhysics	        Physics-CBTaggTAPS.dat
 #Physics-Analysis:	Pi0	TA2PhotoPhysics	        CBTaggPi0Physics.dat
-#Physics-Analysis:	PHYS	TA2OnlinePhys	Physics-Online.dat
+Physics-Analysis:	PHYS	TA2OnlinePhys	Physics-Online.dat
 ##
 ## Do some post initialisation...usually necessary
 Initialise:
