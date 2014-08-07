@@ -25,7 +25,7 @@
 #include "TA2Taps.h"
 #include "TA2TAPS_BaF2.h"
 #include "TA2TAPS_Veto.h"
-
+#include "TA2LinearPolEpics.h"
 
 enum {
     ESQL_USE_CALIB = 20200,
@@ -79,7 +79,8 @@ protected:
     TA2Taps* 				fTAPS;       					// pointer to TAPS
     TA2TAPS_BaF2* 			fBaF2PWO;       				// pointer to the BaF2 (or the BaF2/PWO) array
     TA2TAPS_Veto* 			fVeto;           				// pointer to the TAPS Vetos
-    
+    TA2LinearPolEpics* 		fLinPol;           				// pointer to the Linear Polarisation class
+        
 	Int_t	GetRunNumber();
     
 public:

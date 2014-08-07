@@ -31,8 +31,15 @@
 
 #include "TA2Physics.h"
 #include "TA2Tagger.h"
-#include "TA2MyCrystalBall.h"
-#include "TA2MyTAPS.h"
+#include "TA2Ladder.h"
+#include "TA2CentralApparatus.h"
+#include "TA2CrystalBall.h"
+#include "TA2CalArray.h"
+#include "TA2PlasticPID.h"
+#include "TA2Taps.h"
+#include "TA2TAPS_BaF2.h"
+#include "TA2TAPS_Veto.h"
+
 #include "TA2LongScint.h"
 #include "TA2GenericApparatus.h"
 #include "TA2GenericDetector.h"
@@ -159,7 +166,7 @@ protected:
     Double_t* fTaggerPhotonTime;                            // pointer to the Tagger photon time array
 
     // ------------------------------------- CB ------------------------------------- 
-    TA2MyCrystalBall* fCB;                                  // pointer to the Crystal Ball
+    TA2CentralApparatus* fCB;                               // pointer to the Crystal Ball
     TA2ClusterDetector* fNaI;                               // pointer to the NaI elements
     UInt_t fNaINhits;                                       // number of NaI hits
     Int_t* fNaIHits;                                        // pointer to the NaI hits
@@ -181,8 +188,8 @@ protected:
     TVector3** fPIDHitPos;                                  // pointer to the PID hit position list
 
     // ------------------------------------ TAPS ------------------------------------ 
-    TA2MyTAPS* fTAPS;                                       // pointer to TAPS
-    TA2MyTAPS_BaF2PWO* fBaF2PWO;                            // pointer to the BaF2 (or the BaF2/PWO) array
+    TA2Taps* fTAPS;                                       	// pointer to TAPS
+    TA2TAPS_BaF2* fBaF2PWO;                            		// pointer to the BaF2 (or the BaF2/PWO) array
     UInt_t fBaF2PWONhits;                                   // number of BaF2/PWO hits
     Int_t* fBaF2PWOHits;                                    // pointer to the BaF2/PWO hits
     Double_t* fBaF2PWOEnergy;                               // pointer the the BaF2/PWO energy array

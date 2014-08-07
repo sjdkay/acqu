@@ -569,8 +569,10 @@ void TAcquRoot::SetConfig( char* line, int key )
       PrintError(line, "<Output ROOT tree directory parse>");
       return;
     }
-    fTreeDir = BuildName(name);
-    fprintf(fLogStream," ROOT output stored in directory: %s\n\n", fTreeDir );
+    if( fTreeDir == NULL ){
+      fTreeDir = BuildName(name);
+      fprintf(fLogStream," ROOT output stored in directory: %s\n\n", fTreeDir );
+    }
     break;
   case ERootEVENT:
     // no action & no error message
@@ -582,12 +584,14 @@ void TAcquRoot::SetConfig( char* line, int key )
       PrintError(line, "<Output batch-log-file directory parse>");
       return;
     }
-    fBatchDir = BuildName( name );;
-    logfile = BuildName( fBatchDir, "AcquRoot.log" );
-    SetLogFile( logfile );
-    delete logfile;
-    fprintf(fLogStream," Batch-mode log files stored in directory: %s\n\n",
-	    fBatchDir );
+    if( fBatchDir == NULL ){
+      fBatchDir = BuildName( name );;
+      logfile = BuildName( fBatchDir, "AcquRoot.log" );
+      SetLogFile( logfile );
+      delete logfile;
+      fprintf(fLogStream," Batch-mode log files stored in directory: %s\n\n",
+	      fBatchDir );
+    }
     break;
   case ERootSplitScaler:
     // fragmented scaler reads (from multiple data sources)

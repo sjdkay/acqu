@@ -313,11 +313,11 @@ void TA2MyCaLib::PostInit()
     if (fCalib_CB_Time)
     {
         fHCalib_CB_Time      = new TH2F("CaLib_CB_Time", "CaLib_CB_Time;CB cluster time [ns];CB element",
-                                        2000, -100, 100, fNelemCB, 0, fNelemCB);
+                                        10000, -1000, 1000, fNelemCB, 0, fNelemCB);
         fHCalib_CB_Time_Neut = new TH2F("CaLib_CB_Time_Neut", "CaLib_CB_Time_Neut;CB neutral cluster time [ns];CB element", 
-                                        2000, -100, 100, fNelemCB, 0, fNelemCB);
+                                        10000, -1000, 1000, fNelemCB, 0, fNelemCB);
         fHCalib_CB_Time_Ind = new TH2F("CaLib_CB_Time_Ind", "CaLib_CB_Time_Ind;CB neutral cluster time [ns];CB element", 
-                                        1700, -200.1, 200.1, fNelemCB, 0, fNelemCB);
+                                        10000, -1000, 1000, fNelemCB, 0, fNelemCB);
     }
     
     // prepare for CB time walk calibration
@@ -355,11 +355,11 @@ void TA2MyCaLib::PostInit()
     if (fCalib_TAPS_Time)
     {
         fHCalib_TAPS_Time      = new TH2F("CaLib_TAPS_Time", "CaLib_TAPS_Time;TAPS cluster time [ns];TAPS element", 
-                                          2000, -100, 100, fNelemTAPS, 0, fNelemTAPS);
+                                          10000, -1000, 1000, fNelemTAPS, 0, fNelemTAPS);
         fHCalib_TAPS_Time_Neut = new TH2F("CaLib_TAPS_Time_Neut", "CaLib_TAPS_Time_Neut;TAPS neutral cluster time [ns];TAPS element", 
-                                          2000, -100, 100, fNelemTAPS, 0, fNelemTAPS);
+                                          10000, -1000, 1000, fNelemTAPS, 0, fNelemTAPS);
         fHCalib_TAPS_Time_Ind = new TH2F("CaLib_TAPS_Time_Ind", "CaLib_TAPS_Time_Ind;TAPS neutral cluster time [ns];TAPS element", 
-                                          2000, -200, 200, fNelemTAPS, 0, fNelemTAPS);
+                                          10000, -1000, 1000, fNelemTAPS, 0, fNelemTAPS);
     }
     
     // prepare for TAPS quadratic energy correction

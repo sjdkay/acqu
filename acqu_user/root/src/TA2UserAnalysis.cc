@@ -17,6 +17,7 @@
 #include "TA2UserAnalysis.h"
 #include "TA2Calorimeter.h"
 #include "TA2Tagger.h"
+#include "TA2LinearPolEpics.h"
 #include "TA2CosmicCal.h"
 #include "TA2CrystalBall.h"
 #include "TA2CB.h"
@@ -31,21 +32,19 @@
 #include "TA2TriggerPhysics.h"
 #include "TA2Pi0Compton.h"
 #include "TA2OnlinePhys.h"
-#include "TA2MyCrystalBall.h"
-#include "TA2MyTAPS.h"
 #include "TA2GenericApp.h"
 #include "TA2BeamPolMon.h"
-#include "TA2MyCalibration.h"
 #include "TA2MyCaLib.h"
-#include "TA2MyClusterCalib.h"
 #include "TA2MyRateEstimation.h"
 #include "TA2TAPSAnalysis.h"
+#include "TA2GeomCalibPhysics.h"
 
 // Recognised apparatus classes.
 // The "standard" set is held in TA2Analysis
 enum { 
   EA2Calorimeter,
   EA2Tagger,
+  EA2LinearPolEpics,
   EA2CosmicCal,
   EA2CrystalBall,
   EA2CB,
@@ -62,13 +61,9 @@ enum {
   EA2TriggerPhysics,
   EA2Pi0Compton,
   EA2OnlinePhys,
-  EA2MyCrystalBall, 
-  EA2MyTAPS,
-  EA2MyAnalysis, 
-  EA2MyCalibration, 
   EA2MyCaLib, 
-  EA2MyClusterCalib, 
   EA2MyRateEstimation,
+  EA2GeomCalibPhysics,
   EA2TAPSAnalysis };
 
 static const Map_t kKnownChild[] =
@@ -76,6 +71,7 @@ static const Map_t kKnownChild[] =
   //Apparati
   {"TA2Calorimeter",      EA2Calorimeter},
   {"TA2Tagger",           EA2Tagger},
+  {"TA2LinearPolEpics",   EA2LinearPolEpics},
   {"TA2CosmicCal",        EA2CosmicCal},
   {"TA2CrystalBall",      EA2CrystalBall},
   {"TA2CB",               EA2CB},
@@ -83,22 +79,19 @@ static const Map_t kKnownChild[] =
   {"TA2CentralApparatus", EA2CentralApparatus},
   {"TA2GenericApp",       EA2GenericApp},  
   {"TA2BeamPolMon",       EA2BeamPolMon},  
-  {"TA2MyCrystalBall",    EA2MyCrystalBall},
-  {"TA2MyTAPS",           EA2MyTAPS},
   //Physics
+  {"TA2GeomCalibPhysics", EA2GeomCalibPhysics},
   {"TA2Pi0Compton",       EA2Pi0Compton},
   {"TA2OnlinePhys",		  EA2OnlinePhys},
   {"TA2Physics",          EA2Physics},
   {"TA2UserPhysics",      EA2UserPhysics},
   {"TA2MesonPhysics",     EA2MesonPhysics},
-  {"TA2AccessSQL",		  EA2AccessSQL},
-  {"TA2GoAT",			  EA2GoAT},
+  {"TA2AccessSQL",	  EA2AccessSQL},
+  {"TA2GoAT",		  EA2GoAT},
   {"TA2BasePhysics",      EA2BasePhysics},
   {"TA2TriggerPhysics",   EA2TriggerPhysics},
-  {"TA2MyAnalysis",       EA2MyAnalysis},
-  {"TA2MyCalibration",    EA2MyCalibration},
+ // {"TA2MyAnalysis",       EA2MyAnalysis},
   {"TA2MyCaLib",          EA2MyCaLib},
-  {"TA2MyClusterCalib",   EA2MyClusterCalib},
   {"TA2MyRateEstimation", EA2MyRateEstimation},
   {"TA2TAPSAnalysis",     EA2TAPSAnalysis},
   {NULL,                  -1}
@@ -131,6 +124,9 @@ TA2DataManager* TA2UserAnalysis::CreateChild(const char* name, Int_t a)
    case EA2Tagger:
     //Standard tagger
     return new TA2Tagger(name, this);
+   case EA2LinearPolEpics:
+    //Standard LinearPolEpics
+    return new TA2LinearPolEpics(name, this);
    case EA2Calorimeter:
     //General calorimeter... TAPS, CB etc.
     return new TA2Calorimeter(name, this);
@@ -155,12 +151,6 @@ TA2DataManager* TA2UserAnalysis::CreateChild(const char* name, Int_t a)
   case EA2BeamPolMon:
     // BeamPolMon
     return new TA2BeamPolMon(name, this);
-  case EA2MyCrystalBall:
-    // My Moded CB stuff
-    return new TA2MyCrystalBall( name, this );
-  case EA2MyTAPS:
-    // My TAPS stuff
-    return new TA2MyTAPS( name, this );
 
    //Physics stuff:
    case EA2Pi0Compton:
@@ -191,18 +181,15 @@ TA2DataManager* TA2UserAnalysis::CreateChild(const char* name, Int_t a)
    case EA2TriggerPhysics:
     //Trigger threshold physics class
     return new TA2TriggerPhysics(name, this);
-   case EA2MyCalibration:
-    // calibration
-    return new TA2MyCalibration( name, this );
   case EA2MyCaLib:
     // CaLib
     return new TA2MyCaLib( name, this );
-  case EA2MyClusterCalib:
-    // cluster calibration
-    return new TA2MyClusterCalib( name, this );
   case EA2MyRateEstimation:
     // rate estimation
     return new TA2MyRateEstimation( name, this );
+  case EA2GeomCalibPhysics:
+    // Geometrical calibration for the TA2Mwpc and TA2CentralApparatus
+    return new TA2GeomCalibPhysics( name, this );
   case EA2TAPSAnalysis:
     // TAPS analysis
     return new TA2TAPSAnalysis( name, this );
