@@ -78,6 +78,10 @@ void OnBtnClearAllClicked() {
 	CallMacro(fCbxItems->GetSelected(), "fCanvas");
 }
 
+void OnBtnUpdateClicked() {
+	CallMacro(fCbxItems->GetSelected(), "fCanvas");
+}
+
 void OnBtnSaveAllClicked() {
 	// clean up directory...
 	printf("\nDelete all PNG images on daq-master in /home/a2cb/OnlineSpectra/\n");
@@ -200,6 +204,17 @@ void CheckGUI()
 	fLblSpacer2->SetMargins(0,0,0,0);
 	fLblSpacer2->SetWrapLength(-1);
 	fHorizontalFrame1104->AddFrame(fLblSpacer2, new TGLayoutHints(kLHintsLeft | kLHintsExpandY,2,2,2,2));
+	TGTextButton *fBtnUpdate = new TGTextButton(fHorizontalFrame1104,"Update");
+	fBtnUpdate->SetTextJustify(36);
+	fBtnUpdate->SetMargins(0,0,0,0);
+	fBtnUpdate->SetWrapLength(-1);
+	fBtnUpdate->Resize(52,22);
+	fHorizontalFrame1104->AddFrame(fBtnUpdate, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+	TGLabel *fLblSpacer3 = new TGLabel(fHorizontalFrame1104,"      ");
+	fLblSpacer3->SetTextJustify(36);
+	fLblSpacer3->SetMargins(0,0,0,0);
+	fLblSpacer3->SetWrapLength(-1);
+	fHorizontalFrame1104->AddFrame(fLblSpacer3, new TGLayoutHints(kLHintsLeft | kLHintsExpandY,2,2,2,2));
 	TGTextButton *fBtnSaveAll = new TGTextButton(fHorizontalFrame1104,"Save to Elog");
 	fBtnSaveAll->SetTextJustify(36);
 	fBtnSaveAll->SetMargins(0,0,0,0);
@@ -231,6 +246,7 @@ void CheckGUI()
 	fBtnNext->Connect("Clicked()", 0, 0, "OnBtnNextClicked()");
 	fBtnClear->Connect("Clicked()", 0, 0, "OnBtnClearClicked()");
 	fBtnClearAll->Connect("Clicked()", 0, 0, "OnBtnClearAllClicked()");
+        fBtnUpdate->Connect("Clicked()", 0, 0, "OnBtnUpdateClicked()");
 	fBtnSaveAll->Connect("Clicked()", 0, 0, "OnBtnSaveAllClicked()");
 	
 	// Set the canvas pointer
