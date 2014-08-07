@@ -53,7 +53,6 @@ Reconstruct-Analysis:
 #Physics-Analysis:	EtaM	TA2BasePhysics	        Physics-CBTaggTAPS.dat
 #Physics-Analysis:	Pi0	TA2PhotoPhysics	        CBTaggPi0Physics.dat
 #Physics-Analysis:	PHYS	TA2OnlinePhys	Physics-Online.dat
-Physics-Analysis:	GoAT	TA2GoAT	        Physics-GoAT.dat
 ##
 ## Do some post initialisation...usually necessary
 Initialise:
