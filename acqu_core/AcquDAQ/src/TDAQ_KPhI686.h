@@ -64,6 +64,8 @@ inline void TDAQ_KPhI686::Read( void* addr, void* data, Int_t am, Int_t dw )
     *((UInt_t*)data) = *((UInt_t*)addr);
     break;
   }    
+#else
+  *((UInt_t*)data) = 0;
 #endif
 }
 
