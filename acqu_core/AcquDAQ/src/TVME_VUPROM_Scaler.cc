@@ -112,6 +112,10 @@ void TVME_VUPROM_Scaler::SetConfig( Char_t* line, Int_t key)
     if(!(ss >> numberOfScalers)) {
       PrintError(line,"<VUPROM_Scaler number of scalers>",EErrFatal);
     }
+    
+    if(numberOfScalers==0)
+      break;
+    
     // create the corresponding registers
     VMEreg_t scalers = {offsetAddr, 0x0, 'l', numberOfScalers-1}; // use the repeat attribute    
     VMEreg_t clear = {offsetAddr+clearAddr, 0x0, 'l', 0};
