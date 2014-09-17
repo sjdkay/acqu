@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibVetoCorr.cxx 912 2011-05-18 22:09:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -204,7 +202,7 @@ void TCCalibVetoCorr::ReadNeighbours()
 } 
 
 //______________________________________________________________________________
-void TCCalibVetoCorr::Write()
+void TCCalibVetoCorr::WriteValues()
 {
     // Disable this method.
 

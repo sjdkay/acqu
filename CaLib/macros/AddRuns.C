@@ -4,30 +4,28 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// AddSet.C                                                             //
+// AddRuns.C                                                            //
 //                                                                      //
-// Add manually a new set to the database.                              //
+// Add runs to the run database.                                        //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
 //______________________________________________________________________________
-void AddSet()
+void AddRuns()
 {
     // load CaLib
     gSystem->Load("libCaLib.so");
  
-    // macro configuration: just change here for your beamtime and leave
+    // macro configuration: just change here for your needs and leave
     // the other parts of the code unchanged
-    const Int_t firstRun            = 13089;
-    const Int_t lastRun             = 13841;
-    const Char_t calibName[]        = "LD2_Dec_07";
-    const Char_t calibDesc[]        = "Standard calibration for December 2007 beamtime";
-    const Char_t calibType[]        = "Type.Tagger.Eff";
+    const Char_t rawfilePath[]      = "/kernph/data/A2/H-Butanol/Nov_13";
+    const Char_t target[]           = "H-Butanol";
 
-    // add set
-    TCMySQLManager::GetManager()->AddSet(calibType, calibName, calibDesc, firstRun, lastRun, 0);
-     
+    // add raw files to the database
+    TCMySQLManager::GetManager()->AddRunFiles(rawfilePath, target, "CBTaggTAPS");
+    TCMySQLManager::GetManager()->AddRunFiles(rawfilePath, target, "CBTaggTAPSPed");
+  
     gSystem->Exit(0);
 }
 

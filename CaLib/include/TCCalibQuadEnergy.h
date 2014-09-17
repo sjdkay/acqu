@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibQuadEnergy.h 912 2011-05-18 22:09:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -64,7 +62,7 @@ public:
                       Int_t nElem);
     virtual ~TCCalibQuadEnergy();
     
-    virtual void Write();
+    virtual void WriteValues();
     virtual void PrintValues();
 
     ClassDef(TCCalibQuadEnergy, 0) // Base quadratic energy correction class

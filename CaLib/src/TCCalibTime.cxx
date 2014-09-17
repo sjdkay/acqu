@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibTime.cxx 912 2011-05-18 22:09:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, Irakli Keshelashvili
  *************************************************************************/
@@ -161,7 +159,8 @@ void TCCalibTime::Fit(Int_t elem)
 	fFitFunc = new TF1("fFitFunc", "pol1(0)+gaus(2)");
 	fFitFunc->SetLineColor(2);
 	
-	// get important parameter positions
+	// get important parameter positionsa
+        fFitHisto->GetXaxis()->SetRange(2, fFitHisto->GetNbinsX()-1);
 	Double_t fMean = fFitHisto->GetXaxis()->GetBinCenter(fFitHisto->GetMaximumBin());
 	Double_t max = fFitHisto->GetBinContent(fFitHisto->GetMaximumBin());
 

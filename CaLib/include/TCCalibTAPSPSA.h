@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibTAPSPSA.h 945 2011-07-04 16:24:05Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -52,7 +50,7 @@ public:
     TCCalibTAPSPSA();
     virtual ~TCCalibTAPSPSA();
     
-    virtual void Write();
+    virtual void WriteValues();
     virtual void PrintValues();
 
     ClassDef(TCCalibTAPSPSA, 0) // TAPS PSA

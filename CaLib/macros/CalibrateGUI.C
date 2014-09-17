@@ -1,5 +1,3 @@
-// SVN Info: $Id: CalibrateGUI.C 976 2011-08-31 17:16:34Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, Irakli Keshelashvili
  *************************************************************************/
@@ -282,7 +280,7 @@ void ButtonWindow::DoWrite()
     // Write the values of the current module to the database.
 
     if (gCurrentModule)
-        ((TCCalib*)gCurrentModule)->Write();
+        ((TCCalib*)gCurrentModule)->WriteValues();
 }
 
 //______________________________________________________________________________

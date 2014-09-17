@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibData.h 913 2011-05-18 22:15:42Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -36,7 +34,7 @@ public:
 
     void SetTableName(TString tName) { fTableName = tName; }
     
-    void Print();
+    virtual void Print(Option_t* option = "") const;
     virtual ULong_t Hash() const { return fName.Hash(); }
 
     ClassDef(TCCalibData, 1) // Calibration data class

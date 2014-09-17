@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibVetoCorr.h 768 2011-01-26 16:57:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -42,7 +40,7 @@ public:
     TCCalibVetoCorr();
     virtual ~TCCalibVetoCorr();
 
-    virtual void Write();
+    virtual void WriteValues();
     virtual void PrintValues();
     virtual void PrintValuesChanged();
 

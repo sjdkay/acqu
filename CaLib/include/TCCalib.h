@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalib.h 912 2011-05-18 22:09:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -94,7 +92,7 @@ public:
           fTimer(0), fTimerRunning(kFALSE) { }
     virtual ~TCCalib();
     
-    virtual void Write();
+    virtual void WriteValues();
     virtual void PrintValues();
     virtual void PrintValuesChanged();
 

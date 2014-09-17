@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibTargetPosition.h 768 2011-01-26 16:57:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -39,7 +37,7 @@ public:
     TCCalibTargetPosition();
     virtual ~TCCalibTargetPosition();
 
-    virtual void Write();
+    virtual void WriteValues();
     virtual void PrintValues();
 
     ClassDef(TCCalibTargetPosition, 0) // target position calibration

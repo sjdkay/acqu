@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibCBTimeWalk.h 768 2011-01-26 16:57:17Z werthm $
-
 /*************************************************************************
  * Author: Irakli Keshelashvili, Dominik Werthmueller
  *************************************************************************/
@@ -47,7 +45,7 @@ public:
     TCCalibCBTimeWalk();
     virtual ~TCCalibCBTimeWalk();
 
-    virtual void Write();
+    virtual void WriteValues();
     virtual void PrintValues();
 
     Double_t TWFunc(Double_t* x, Double_t* par);

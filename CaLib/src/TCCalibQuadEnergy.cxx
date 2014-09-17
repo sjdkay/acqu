@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibQuadEnergy.cxx 912 2011-05-18 22:09:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -435,7 +433,7 @@ void TCCalibQuadEnergy::PrintValues()
 }
 
 //______________________________________________________________________________
-void TCCalibQuadEnergy::Write()
+void TCCalibQuadEnergy::WriteValues()
 {
     // Write the obtained calibration values to the database.
     

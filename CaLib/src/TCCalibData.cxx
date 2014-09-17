@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibData.cxx 913 2011-05-18 22:15:42Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -28,7 +26,7 @@ TCCalibData::TCCalibData(const Char_t* name, const Char_t* title, Int_t nSize)
 }
 
 //______________________________________________________________________________
-void TCCalibData::Print()
+void TCCalibData::Print(Option_t* option) const
 {
     // Print the content of this class.
     

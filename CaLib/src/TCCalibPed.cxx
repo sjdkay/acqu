@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCCalibPed.cxx 1082 2012-03-28 11:50:17Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -96,6 +94,9 @@ void TCCalibPed::Fit(Int_t elem)
     sprintf(tmp, "ADC%d", fADC[elem]);
     fFitHisto = fFileManager->GetHistogram(tmp);
     
+    // skip empty channels
+    if (!fFitHisto) return;
+
     // dummy position
     fMean = 100;
 
@@ -109,46 +110,20 @@ void TCCalibPed::Fit(Int_t elem)
         fFitFunc->SetLineColor(2);
         
         // estimate peak position
-	//Double_t fTotMaxPos = fFitHisto->GetBinCenter(fFitHisto->GetMaximumBin());
-	Double_t fTotMaxPos = TCUtils::PedFinder((TH1D*)fFitHisto);
-
-	// find first big jump
-	for(int i=10; i<200; i++)
-	{
-            if(fFitHisto->GetBinContent(i) > 100 &&
-	       fFitHisto->GetBinContent(i) > 5*fFitHisto->GetBinContent(i-3) && 
-	       fFitHisto->GetBinContent(i) > 5*fFitHisto->GetBinContent(i+3))
-	    {
-	        Double_t fTotMaxPos = i+2;
-	        fMean = fFitHisto->GetBinCenter( fTotMaxPos );
-	        break;
-	    }
-    }
-
+        TH1* hDeriv = TCUtils::DeriveHistogram(fFitHisto);
+        hDeriv->GetXaxis()->SetRangeUser(0, 1000);
+        fMean = hDeriv->GetBinCenter(hDeriv->GetMaximumBin());
+        delete hDeriv;
+        
         // configure fitting function
-        fFitFunc->SetRange(fMean - 2, fMean + 2);
+        fFitFunc->SetRange(fMean - 5, fMean + 2);
         fFitFunc->SetLineColor(2);
         fFitFunc->SetParameters(1, fMean, 0.1);
-	fFitFunc->SetParLimits(2, 0.001, 1);
-	if (fTotMaxPos > fMean)
-	{
-	    fFitFunc->SetRange(fMean - 7, fMean + 5);
-	    fFitFunc->SetParLimits(2, 0.0000001, 5);
-	}
+	fFitFunc->SetParLimits(2, 0.001, 5);
         fFitHisto->Fit(fFitFunc, "RB0Q");
 	
-	// second iteration for elements where pedestal isn't the maximum
-	if (fTotMaxPos > fMean)
-	{
-	  fFitFunc->SetRange(fFitFunc->GetParameter(1) - 15, fFitFunc->GetParameter(1) + 10);
-	  fFitHisto->Fit(fFitFunc, "RB0Q");
-	}
-
         // final results
         fMean = fFitFunc->GetParameter(1); 
-
-        // check if reasonable
-        if (fMean < 50 || fMean > 130) fMean = 100;
 
         // draw mean indicator line
         fLine->SetY1(0);
@@ -163,8 +138,7 @@ void TCCalibPed::Fit(Int_t elem)
     // draw histogram
     fFitHisto->SetFillColor(35);
     fCanvasFit->cd(2);
-    //fFitHisto->GetXaxis()->SetRangeUser(fMean-10, fMean+10);
-    fFitHisto->GetXaxis()->SetRangeUser(0, 150);
+    fFitHisto->GetXaxis()->SetRangeUser(fMean-10, fMean+30);
     fFitHisto->Draw("hist");
     
     // draw fitting function
@@ -191,6 +165,18 @@ void TCCalibPed::Calculate(Int_t elem)
     // Calculate the new value of the element 'elem'.
     
     Bool_t unchanged = kFALSE;
+    
+    // check if histogram was loaded
+    if (!fFitHisto)
+    {
+        printf("Element: %03d    "
+               "old pedestal: %12.8f    new pedestal: %12.8f    diff: %6.2f %%",
+               elem, fOldVal[elem], fNewVal[elem],
+               TCUtils::GetDiffPercent(fOldVal[elem], fNewVal[elem]));
+        printf("    -> unchanged");
+        printf("\n");
+        return;
+    }
 
     // check if fit was performed
     if (fFitHisto->GetEntries())
@@ -245,7 +231,6 @@ void TCCalibPed::ReadADC()
         return;
     }
     else filename = TCReadConfig::GetReader()->GetConfig(tmp)->Data();
-    printf("%s %s\n", GetName(), TCReadConfig::GetReader()->GetConfig(tmp)->Data());
     
     // read the calibration file with the correct element identifier
     if (this->InheritsFrom("TCCalibTAPSPedSG")) strcpy(tmp, "TAPSSG:");

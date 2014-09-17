@@ -1,5 +1,3 @@
-// SVN Info: $Id: MainCaLibManager.cxx 917 2011-05-24 16:28:19Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -20,6 +18,7 @@
 
 #define KEY_ENTER_MINE 13
 #define KEY_ESC 27
+#define MAX_SCR_BAD_STRING 30000
 
 
 // locally used enum for run entries
@@ -206,16 +205,16 @@ WINDOW* FormatRunTable(TCContainer& c, Int_t* outColLengthTot, WINDOW** outHeade
 
     // define col headers
     const Char_t* colHead[] = { "Run", "Path", "File name", "Time", "Description",
-                                "Run note", "File size", "Target", "Target pol.",
+                                "Run note", "File size", "Scaler reads", "Bad scaler reads", "Target", "Target pol.",
                                 "Target pol. deg.", "Beam pol.", "Beam pol. deg." };
 
     // determine maximum col lengths
-    Char_t tmp_str[256];
+    Char_t tmp_str[65536];
     const Char_t* tmp = 0;
-    UInt_t colLength[12];
+    UInt_t colLength[14];
 
     // loop over headers
-    for (Int_t i = 0; i < 12; i++) colLength[i] = strlen(colHead[i]);
+    for (Int_t i = 0; i < 14; i++) colLength[i] = strlen(colHead[i]);
 
     // loop over runs
     for (Int_t i = 0; i < nRuns; i++)
@@ -248,30 +247,39 @@ WINDOW* FormatRunTable(TCContainer& c, Int_t* outColLengthTot, WINDOW** outHeade
         sprintf(tmp_str, "%lld", c.GetRun(i)->GetSize());
         if (strlen(tmp_str) > colLength[6]) colLength[6] = strlen(tmp_str);
 
+        // scaler reads
+        sprintf(tmp_str, "%d", c.GetRun(i)->GetNScalerReads());
+        if (strlen(tmp_str) > colLength[7]) colLength[7] = strlen(tmp_str);
+        
+        // bad scaler reads
+        tmp = c.GetRun(i)->GetBadScalerReads();
+        if (strlen(tmp) > colLength[8]) colLength[8] = strlen(tmp);
+        if (colLength[8] > MAX_SCR_BAD_STRING) colLength[8] = MAX_SCR_BAD_STRING;
+
         // target
         tmp = c.GetRun(i)->GetTarget();
-        if (strlen(tmp) > colLength[7]) colLength[7] = strlen(tmp);
+        if (strlen(tmp) > colLength[9]) colLength[9] = strlen(tmp);
         
         // target polarization
         tmp = c.GetRun(i)->GetTargetPol();
-        if (strlen(tmp) > colLength[8]) colLength[8] = strlen(tmp);
+        if (strlen(tmp) > colLength[10]) colLength[10] = strlen(tmp);
         
         // target polarization degree
         sprintf(tmp_str, "%f", c.GetRun(i)->GetTargetPolDeg());
-        if (strlen(tmp_str) > colLength[9]) colLength[9] = strlen(tmp_str);
+        if (strlen(tmp_str) > colLength[11]) colLength[11] = strlen(tmp_str);
         
         // beam polarization
         tmp = c.GetRun(i)->GetBeamPol();
-        if (strlen(tmp) > colLength[10]) colLength[10] = strlen(tmp);
+        if (strlen(tmp) > colLength[12]) colLength[12] = strlen(tmp);
  
         // beam polarization degree
         sprintf(tmp_str, "%f", c.GetRun(i)->GetBeamPolDeg());
-        if (strlen(tmp_str) > colLength[11]) colLength[11] = strlen(tmp_str);
+        if (strlen(tmp_str) > colLength[13]) colLength[13] = strlen(tmp_str);
     }
     
-    // calculate the maximum col length (12*4 spaces)
-    Int_t colLengthTot = 12*4;
-    for (Int_t i = 0; i < 12; i++) colLengthTot += colLength[i];
+    // calculate the maximum col length (14*4 spaces)
+    Int_t colLengthTot = 14*4;
+    for (Int_t i = 0; i < 14; i++) colLengthTot += colLength[i];
     *outColLengthTot = colLengthTot;
 
     // create the table and the header window
@@ -280,7 +288,7 @@ WINDOW* FormatRunTable(TCContainer& c, Int_t* outColLengthTot, WINDOW** outHeade
      
     // add header content
     wmove(header, 0, 0);
-    for (Int_t i = 0; i < 12; i++) 
+    for (Int_t i = 0; i < 14; i++) 
         WriteTableEntry(header, colHead[i], colLength[i], A_BOLD);
 
     // add table content
@@ -312,22 +320,31 @@ WINDOW* FormatRunTable(TCContainer& c, Int_t* outColLengthTot, WINDOW** outHeade
         sprintf(tmp_str, "%lld", c.GetRun(i)->GetSize());
         WriteTableEntry(table, tmp_str, colLength[6]);
 
+        // scaler reads
+        sprintf(tmp_str, "%d", c.GetRun(i)->GetNScalerReads());
+        WriteTableEntry(table, tmp_str, colLength[7]);
+
+        // bad scaler reads
+        strncpy(tmp_str, c.GetRun(i)->GetBadScalerReads(), MAX_SCR_BAD_STRING);
+        tmp_str[MAX_SCR_BAD_STRING] = '\0';
+        WriteTableEntry(table, tmp_str, colLength[8]);
+        
         // target
-        WriteTableEntry(table, c.GetRun(i)->GetTarget(), colLength[7]);
+        WriteTableEntry(table, c.GetRun(i)->GetTarget(), colLength[9]);
         
         // target polarization
-        WriteTableEntry(table, c.GetRun(i)->GetTargetPol(), colLength[8]);
+        WriteTableEntry(table, c.GetRun(i)->GetTargetPol(), colLength[10]);
         
         // target polarization degree
         sprintf(tmp_str, "%f", c.GetRun(i)->GetTargetPolDeg());
-        WriteTableEntry(table, tmp_str, colLength[9]);
+        WriteTableEntry(table, tmp_str, colLength[11]);
 
         // beam polarization
-        WriteTableEntry(table, c.GetRun(i)->GetBeamPol(), colLength[10]);
+        WriteTableEntry(table, c.GetRun(i)->GetBeamPol(), colLength[12]);
         
         // beam polarization degree
         sprintf(tmp_str, "%f", c.GetRun(i)->GetBeamPolDeg());
-        WriteTableEntry(table, tmp_str, colLength[11]);
+        WriteTableEntry(table, tmp_str, colLength[13]);
     }
     
     *outHeader = header;
@@ -1122,7 +1139,7 @@ void ExportRuns()
         Int_t nRun = TCMySQLManager::GetManager()->DumpRuns(container, first_run, last_run);
 
         // save container to ROOT file
-        Bool_t ret = container->SaveAs(filename, kTRUE);
+        Bool_t ret = container->Save(filename, kTRUE);
     
         // clean-up
         delete container;
@@ -1179,7 +1196,7 @@ void ExportCalibration()
     mvprintw(4, 2, "EXPORT CALIBRATION");
     attroff(A_UNDERLINE);
   
-    // ask first run, last run and file name
+    // ask calibration and output file
     mvprintw(6, 2, "Calibration to export                      : %s", gCalibration);
     mvprintw(7, 2, "Name of output file                        : ");
     scanw((Char_t*)"%s", filename);
@@ -1201,7 +1218,7 @@ void ExportCalibration()
         Int_t nCalib = TCMySQLManager::GetManager()->DumpAllCalibrations(container, gCalibration);
 
         // save container to ROOT file
-        Bool_t ret = container->SaveAs(filename, kTRUE);
+        Bool_t ret = container->Save(filename, kTRUE);
     
         // clean-up
         delete container;
@@ -1487,6 +1504,86 @@ void ImportCalibration()
 }
 
 //______________________________________________________________________________
+void CloneCalibration()
+{
+    // Clone calibration.
+    
+    Char_t calib[256];
+    Char_t desc[256];
+    Char_t answer[16];
+    Int_t firstRun, lastRun;
+
+    // select a calibration
+    SelectCalibration();
+ 
+    // clear the screen
+    clear();
+    
+    // echo input 
+    echo();
+    
+    // draw header
+    DrawHeader();
+    
+    // draw title
+    attron(A_UNDERLINE);
+    mvprintw(4, 2, "CLONE CALIBRATION");
+    attroff(A_UNDERLINE);
+  
+    // ask new calibration, description, first and last runs
+    mvprintw(6, 2, "Calibration to export                      : %s", gCalibration);
+    mvprintw(7, 2, "Name of cloned calibration                 : ");
+    scanw((Char_t*)"%s", calib);
+    mvprintw(8, 2, "Description of cloned calibration          : ");
+    scanw((Char_t*)"%s", desc);
+    mvprintw(9, 2, "First run of cloned calibration            : ");
+    scanw((Char_t*)"%d", &firstRun);
+    mvprintw(10, 2, "Last run of cloned calibration             : ");
+    scanw((Char_t*)"%d", &lastRun);
+
+    // ask confirmation
+    mvprintw(12, 2, "Cloning the calibration '%s' to '%s' for runs [%d,%d]", 
+             gCalibration, calib, firstRun, lastRun);
+    mvprintw(14, 6, "Are you sure to continue? (yes/no) : ");
+    scanw((Char_t*)"%s", answer);
+    if (strcmp(answer, "yes")) 
+    {
+        mvprintw(16, 2, "Aborted.");
+    }
+    else
+    {
+        // clone the calibration
+        Bool_t ret = TCMySQLManager::GetManager()->CloneCalibration(gCalibration, calib, desc, 
+                                                                    firstRun, lastRun);
+        
+        // check return value
+        if (ret)
+            mvprintw(16, 2, "Cloned the calibration '%s' to '%s'", gCalibration, calib);
+        else
+            mvprintw(16, 2, "Could not clone the calibration '%s' to '%s!", gCalibration, calib);
+    }
+    
+    // user information
+    PrintStatusMessage("Hit ESC or 'q' to exit");
+  
+    // wait for input
+    for (;;)
+    {
+        // get key
+        Int_t c = getch();
+        
+        // leave loop
+        if (c == KEY_ESC || c == 'q') break;
+    }
+ 
+    // don't echo input 
+    noecho();
+    
+    // go back
+    Administration();
+}
+
+//______________________________________________________________________________
 void RenameCalibration()
 {
     // Rename a calibration.
@@ -1538,6 +1635,156 @@ void RenameCalibration()
         else
             mvprintw(13, 2, "There was an error during renaming the calibration '%s' to '%s'!", 
                             gCalibration, newName);
+    }
+    
+    // user information
+    PrintStatusMessage("Hit ESC or 'q' to exit");
+  
+    // wait for input
+    for (;;)
+    {
+        // get key
+        Int_t c = getch();
+        
+        // leave loop
+        if (c == KEY_ESC || c == 'q') break;
+    }
+ 
+    // don't echo input 
+    noecho();
+    
+    // go back
+    CalibEditor();
+}
+
+//______________________________________________________________________________
+void ChangeRunRange()
+{
+    // Change the run range of a calibration.
+    
+    Char_t answer[16];
+    Int_t newFirstRun;
+    Int_t newLastRun;
+
+    // select a calibration
+    SelectCalibration();
+    
+    // clear the screen
+    clear();
+    
+    // echo input 
+    echo();
+    
+    // draw header
+    DrawHeader();
+    
+    // draw title
+    attron(A_UNDERLINE);
+    mvprintw(4, 2, "CHANGE RUN RANGE OF CALIBRATION");
+    attroff(A_UNDERLINE);
+  
+    // ask new name
+    mvprintw(6, 2, "Selected calibration                                       : %s", gCalibration);
+    mvprintw(7, 2, "New first run (run has to be in DB, 0 to keep current one) : ");
+    scanw((Char_t*)"%d", &newFirstRun);
+    mvprintw(8, 2, "New last run (run has to be in DB, 0 to keep current one)  : ");
+    scanw((Char_t*)"%d", &newLastRun);
+
+    // ask confirmation
+    mvprintw(10, 2, "Changing run range to [%d,%d]", newFirstRun, newLastRun);
+    mvprintw(12, 6, "Are you sure to continue? (yes/no) : ");
+    scanw((Char_t*)"%s", answer);
+    if (strcmp(answer, "yes")) 
+    {
+        mvprintw(14, 2, "Aborted.");
+    }
+    else
+    {
+        // rename calibration
+        Bool_t ret = TCMySQLManager::GetManager()->ChangeCalibrationRunRange(gCalibration, newFirstRun, newLastRun);
+
+        // check return value
+        if (ret)
+        {
+            mvprintw(14, 2, "Changed run range of calibration '%s' to [%d,%d]", 
+                            gCalibration, newFirstRun, newLastRun);
+        }
+        else
+            mvprintw(14, 2, "There was an error during changing the run range!");
+    }
+    
+    // user information
+    PrintStatusMessage("Hit ESC or 'q' to exit");
+  
+    // wait for input
+    for (;;)
+    {
+        // get key
+        Int_t c = getch();
+        
+        // leave loop
+        if (c == KEY_ESC || c == 'q') break;
+    }
+ 
+    // don't echo input 
+    noecho();
+    
+    // go back
+    CalibEditor();
+}
+
+//______________________________________________________________________________
+void ChangeDescription()
+{
+    // Change the description of a calibration.
+    
+    Char_t newDesc[256];
+    Char_t answer[16];
+
+    // select a calibration
+    SelectCalibration();
+    
+    // clear the screen
+    clear();
+    
+    // echo input 
+    echo();
+    
+    // draw header
+    DrawHeader();
+    
+    // draw title
+    attron(A_UNDERLINE);
+    mvprintw(4, 2, "CHANGE DESCRIPTION OF CALIBRATION");
+    attroff(A_UNDERLINE);
+  
+    // ask new description
+    mvprintw(6, 2, "Selected calibration                       : %s", gCalibration);
+    mvprintw(7, 2, "Enter new description                      : ");
+    scanw((Char_t*)"%[^\n]s", newDesc);
+
+    // ask confirmation
+    mvprintw(9, 2, "Changing description of calibration '%s' to '%s'", gCalibration, newDesc);
+    mvprintw(11, 6, "Are you sure to continue? (yes/no) : ");
+    scanw((Char_t*)"%s", answer);
+    if (strcmp(answer, "yes")) 
+    {
+        mvprintw(13, 2, "Aborted.");
+    }
+    else
+    {
+        // change description
+        Bool_t ret = TCMySQLManager::GetManager()->ChangeCalibrationDescription(gCalibration, newDesc);
+
+        // check return value
+        if (ret)
+        {
+            mvprintw(13, 2, "Changed description of calibration '%s' to '%s'", 
+                            gCalibration, newDesc);
+        }
+        else
+            mvprintw(13, 2, "There was an error during changing the description of the calibration '%s' to '%s'!", 
+                            gCalibration, newDesc);
     }
     
     // user information
@@ -1674,9 +1921,11 @@ void CalibEditor()
     // menu configuration
     const Char_t mTitle[] = "CALIBRATION EDITOR";
     const Char_t mMsg[] = "Select a calibration operation";
-    const Int_t mN = 5;
+    const Int_t mN = 7;
     const Char_t* mEntries[] = { "Browse calibration data",
                                  "Manipulate calibration sets",
+                                 "Change run range",
+                                 "Change description",
                                  "Rename calibration",
                                  "Delete calibration",
                                  "Go back" };
@@ -1689,9 +1938,11 @@ void CalibEditor()
     {
         case 0: CalibBrowser(kFALSE);
         case 1: CalibBrowser(kTRUE);
-        case 2: RenameCalibration();
-        case 3: DeleteCalibration();
-        case 4: MainMenu();
+        case 2: ChangeRunRange();
+        case 3: ChangeDescription();
+        case 4: RenameCalibration();
+        case 5: DeleteCalibration();
+        case 6: MainMenu();
     }
 }
 
@@ -1703,11 +1954,12 @@ void Administration()
     // menu configuration
     const Char_t mTitle[] = "ADMINISTRATION";
     const Char_t mMsg[] = "Select an administration operation";
-    const Int_t mN = 5;
+    const Int_t mN = 6;
     const Char_t* mEntries[] = { "Export runs",
                                  "Export calibration",
                                  "Import runs",
                                  "Import calibration",
+                                 "Clone calibration",
                                  "Go back" };
     
     // show menu
@@ -1720,7 +1972,8 @@ void Administration()
         case 1: ExportCalibration();
         case 2: ImportRuns();
         case 3: ImportCalibration();
-        case 4: MainMenu();
+        case 4: CloneCalibration();
+        case 5: MainMenu();
     }
 }
 
@@ -1743,11 +1996,13 @@ void About()
     // print some information
     mvprintw(6,  2, "CaLib Manager");
     mvprintw(7,  2, "an ncurses-based CaLib administration software");
-    mvprintw(8,  2, "(c) 2011 by Dominik Werthmueller");
-    mvprintw(10, 2, "CaLib - calibration database");
+    mvprintw(8,  2, "(c) 2011-2014 by Dominik Werthmueller");
+    mvprintw(10, 2, "CaLib - A2 calibration system");
     mvprintw(11, 2, "Version %s", TCConfig::kCaLibVersion);
-    mvprintw(12, 2, "(c) 2010-2011 by Dominik Werthmueller and Irakli Keshelashvili");
-    mvprintw(13, 2, "                 University of Basel");
+    mvprintw(12, 2, "(c) 2010-2014 by Dominik Werthmueller,");
+    mvprintw(13, 2, "                 Irakli Keshelashvili,");
+    mvprintw(14, 2, "                 Thomas Strub,");
+    mvprintw(15, 2, "                 University of Basel");
 
     // user information
     PrintStatusMessage("Hit ESC or 'q' to exit");

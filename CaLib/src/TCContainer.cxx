@@ -1,5 +1,3 @@
-// SVN Info: $Id: TCContainer.cxx 860 2011-03-18 20:15:57Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -78,21 +76,21 @@ TCCalibration* TCContainer::AddCalibration(const Char_t* calibration)
 }
 
 //______________________________________________________________________________
-Bool_t TCContainer::SaveAs(const Char_t* filename, Bool_t silence)
+Bool_t TCContainer::Save(const Char_t* filename, Bool_t silence)
 {
     // Save this container to the ROOT file 'filename'.
-    // Return kFALSE if an error occured, otherwise kTRUE.
+    // Return kFALSE if an error occurred, otherwise kTRUE.
 
     // try to open the ROOT file
     TFile* f = new TFile(filename, "CREATE");
     if (!f)
     {
-        if (!silence) Error("SaveAs", "Could not create file '%s'!", filename);
+        if (!silence) Error("Save", "Could not create file '%s'!", filename);
         return kFALSE;
     }
     if (f->IsZombie())
     {
-        if (!silence) Error("SaveAs", "Could not create file '%s'!", filename);
+        if (!silence) Error("Save", "Could not create file '%s'!", filename);
         return kFALSE;
     }
 
@@ -100,7 +98,7 @@ Bool_t TCContainer::SaveAs(const Char_t* filename, Bool_t silence)
     this->Write();
     
     // user information
-    if (!silence) Info("SaveAs", "CaLib data was saved to '%s'", filename);
+    if (!silence) Info("Save", "CaLib data was saved to '%s'", filename);
 
     // close file
     delete f;
@@ -109,7 +107,7 @@ Bool_t TCContainer::SaveAs(const Char_t* filename, Bool_t silence)
 }
 
 //______________________________________________________________________________
-void TCContainer::Print()
+void TCContainer::Print(Option_t* option) const
 {
     // Print content information.
 
