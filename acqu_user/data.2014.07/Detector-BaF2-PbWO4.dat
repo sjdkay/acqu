@@ -986,8 +986,8 @@ Initialise:
 ## NaI hit frequency distribution, 720 elements, range 0 -- 720
 ##              Name            ch/low/high     imin/imax
 Display: 1D     Hits            438 0 438 
-Display: 1D	ADCHits		438 0 438 
-Display: 1D	TDCHits		438 0 438 
+#Display: 1D	ADCHits		438 0 438 
+#Display: 1D	TDCHits		438 0 438 
 #Display: 2D     ADCs 100 50 150 -1    ADCHits   384 0 384 -1
 #Display: 2D     TDCs 200 0 4000 -1    TDCHits   384 0 384 -1
 ##

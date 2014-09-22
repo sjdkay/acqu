@@ -43,6 +43,8 @@ CaLib-Veto-Corr: 1
 
 ### STEP TWO 
 
+# Uncomment Display: lines for in Analysis.dat for 
+
 # target position calibration
 #CaLib-Target-Position: 1
 
