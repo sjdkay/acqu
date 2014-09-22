@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibPIDDroop.h 906 2011-05-17 13:42:29Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -51,7 +53,7 @@ public:
     TCCalibPIDDroop();
     virtual ~TCCalibPIDDroop();
 
-    virtual void WriteValues();
+    virtual void Write();
     virtual void PrintValues();
 
 

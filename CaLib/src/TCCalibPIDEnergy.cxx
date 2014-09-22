@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibPIDEnergy.cxx 997 2011-09-11 18:59:16Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -409,7 +411,7 @@ void TCCalibPIDEnergy::PrintValues()
 }
 
 //______________________________________________________________________________
-void TCCalibPIDEnergy::WriteValues()
+void TCCalibPIDEnergy::Write()
 {
     // Write the obtained calibration values to the database.
     

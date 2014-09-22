@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCReadACQU.cxx 862 2011-03-19 20:22:10Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -6,7 +8,7 @@
 //                                                                      //
 // TCReadACQU                                                           //
 //                                                                      //
-// Read a list of ACQU raw files.                                       //
+// Read raw ACQU MK1 files.                                             //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -15,12 +17,13 @@
 
 ClassImp(TCReadACQU)
 
-
-//______________________________________________________________________________
-TCReadACQU::TCReadACQU(const Char_t* path, const Char_t* runPrefix) 
+TCReadACQU::TCReadACQU(const Bool_t isFileMk2) : fPath(0), fFiles(0), isMk2(isFileMk2)
 {
-    // Constructor using the path of the raw files 'path' and the prefix 'runPrefix'
-    // for the data files.
+}
+//______________________________________________________________________________
+TCReadACQU::TCReadACQU(const Char_t* path, const Bool_t isFileMk2) : isMk2(isFileMk2)
+{
+    // Constructor using the path of the raw files 'path'.
     
     // init members
     fPath = new Char_t[256];
@@ -31,7 +34,7 @@ TCReadACQU::TCReadACQU(const Char_t* path, const Char_t* runPrefix)
     strcpy(fPath, path);
 
     // read all files
-    ReadFiles(runPrefix);
+    ReadFiles();
 }
 
 //______________________________________________________________________________
@@ -44,13 +47,9 @@ TCReadACQU::~TCReadACQU()
 }
 
 //______________________________________________________________________________
-void TCReadACQU::ReadFiles(const Char_t* runPrefix)
+void TCReadACQU::ReadFiles()
 {
-    // Read all raw files using the run prefix 'runPrefix'.
-
-    // format full prefix string
-    Char_t fullPre[256];
-    sprintf(fullPre, "%s_", runPrefix);
+    // Read all raw files.
 
     // user information
     Info("ReadFiles", "Looking for ACQU raw files in '%s'", fPath);
@@ -74,25 +73,19 @@ void TCReadACQU::ReadFiles(const Char_t* runPrefix)
     {
         // look for ACQU raw files
         TString str(f->GetName());
-        
-        // select only files with the correct prefix
-        if (!str.BeginsWith(fullPre)) continue;
-
-        // get data files
-        if (str.EndsWith(".dat") || str.EndsWith(".dat.gz") || str.EndsWith(".dat.xz"))
+        if (str.BeginsWith("CB_") && (str.EndsWith(".dat") || str.EndsWith(".dat.gz")))
         {
             // user information
             Info("ReadFiles", "Reading '%s/%s'", fPath, f->GetName());
             
             // create file object
-            TCACQUFile* acqufile = new TCACQUFile();
+            TCACQUFile* acqufile = new TCACQUFile(isMk2);
             acqufile->ReadFile(fPath, f->GetName());
-
+            
             // check file 
-            if (!acqufile->IsGoodDataFile())
+            if (!acqufile->IsGoodStartMarker())
             {
-                Error("ReadFiles", "Unknown file header found in '%s/%s' - skipping file", fPath, f->GetName());
-                continue;
+                Warning("ReadFiles", "Bad file header found in '%s/%s'", fPath, f->GetName());
             }
             
             // add file to list

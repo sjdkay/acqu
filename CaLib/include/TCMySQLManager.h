@@ -1,5 +1,7 @@
+// SVN Info: $Id: TCMySQLManager.h 1038 2011-11-14 13:01:17Z werthm $
+
 /*************************************************************************
- * Author: Dominik Werthmueller, Irakli Keshelashvili, Thomas Strub
+ * Author: Dominik Werthmueller, Irakli Keshelashvili
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -42,6 +44,7 @@ private:
     THashList* fData;                           // calibration data
     THashList* fTypes;                          // calibration types
     static TCMySQLManager* fgMySQLManager;      // pointer to static instance of this class
+    Bool_t	isMk2;								// if true Mk2 filesystem is used
     
     Bool_t ReadCaLibData();
     Bool_t ReadCaLibTypes();
@@ -60,8 +63,7 @@ private:
                           const Char_t* name, const Char_t* value);
     
     Bool_t AddDataSet(const Char_t* data, const Char_t* calibration, const Char_t* desc,
-                      Int_t first_run, Int_t last_run, Double_t* par, Int_t length, 
-                      Bool_t skipChecks = kFALSE);
+                      Int_t first_run, Int_t last_run, Double_t* par, Int_t length);
     Bool_t AddDataSet(const Char_t* data, const Char_t* calibration, const Char_t* desc,
                       Int_t first_run, Int_t last_run, Double_t par);
     Bool_t RemoveDataSet(const Char_t* data, const Char_t* calibration, Int_t set);
@@ -114,14 +116,8 @@ public:
     Bool_t ChangeRunTargetPolDeg(Int_t first_run, Int_t last_run, Double_t target_pol_deg);
     Bool_t ChangeRunBeamPol(Int_t first_run, Int_t last_run, const Char_t* beam_pol);
     Bool_t ChangeRunBeamPolDeg(Int_t first_run, Int_t last_run, Double_t beam_pol_deg);
-
-    Bool_t ChangeRunTotNScR(const Int_t run, const Int_t nscr);
-    Bool_t ChangeRunBadScR(const Int_t run, const Int_t nbadscr, const Int_t* const badscr);
     
-    Bool_t ChangeCalibrationRunRange(const Char_t* calibration, const UInt_t firstRun, 
-                                     const UInt_t lastRun);
     Bool_t ChangeCalibrationName(const Char_t* calibration, const Char_t* newCalibration);
-    Bool_t ChangeCalibrationDescription(const Char_t* calibration, const Char_t* newDesc);
     Bool_t RemoveCalibration(const Char_t* calibration, const Char_t* data);
     Int_t RemoveAllCalibrations(const Char_t* calibration);
 
@@ -133,16 +129,14 @@ public:
     Bool_t MergeSets(const Char_t* type, const Char_t* calibration, 
                      Int_t set1, Int_t set2);
 
-    void AddRunFiles(const Char_t* path, const Char_t* target,
-                     const Char_t* runPrefix = "CBTaggTAPS");
+    void AddRunFiles(const Char_t* path, const Char_t* target);
     void AddRun(Int_t run, const Char_t* target, const Char_t* desc);
     void AddCalibAR(CalibDetector_t det, const Char_t* calibFileAR,
                     const Char_t* calib, const Char_t* desc,
                     Int_t first_run, Int_t last_run);
     
-    Bool_t InitDatabase();
-    Bool_t UpgradeDatabase(Int_t version); 
-
+    void InitDatabase();
+    
     TCContainer* LoadContainer(const Char_t* filename);
     
     Int_t DumpRuns(TCContainer* container, Int_t first_run = 0, Int_t last_run = 0);
@@ -153,12 +147,15 @@ public:
     Int_t ImportRuns(TCContainer* container);
     Int_t ImportCalibrations(TCContainer* container, const Char_t* newCalibName = 0,
                              const Char_t* data = 0);
-    Bool_t CloneCalibration(const Char_t* calibration, const Char_t* newCalibrationName,
-                            const Char_t* newDesc, Int_t new_first_run, Int_t new_last_run);
+    void CloneCalibration(const Char_t* calibration, const Char_t* newCalibrationName,
+                          const Char_t* newDesc, Int_t new_first_run, Int_t new_last_run);
     void Export(const Char_t* filename, Int_t first_run, Int_t last_run, 
                 const Char_t* calibration);
     void Import(const Char_t* filename, Bool_t runs, Bool_t calibrations,
                 const Char_t* newCalibName = 0);
+              
+    void SetMk1()	{isMk2 = kFALSE;}	//default one
+    void SetMk2()	{isMk2 = kTRUE;}
 
     static TCMySQLManager* GetManager()
     {

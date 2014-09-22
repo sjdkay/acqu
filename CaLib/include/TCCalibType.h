@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibType.h 913 2011-05-18 22:15:42Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -34,7 +36,7 @@ public:
     TCCalibData* GetData(Int_t n) { return fData ? (TCCalibData*)fData->At(n) : 0; }
 
     void AddData(TCCalibData* data) { if (fData) fData->Add(data); }
-    virtual void Print(Option_t* option = "") const;
+    void Print();
 
     ClassDef(TCCalibType, 1) // Calibration type class
 };

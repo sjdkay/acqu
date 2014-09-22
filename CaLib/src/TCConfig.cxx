@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCConfig.cxx 1138 2012-04-26 12:11:14Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -36,8 +38,6 @@ namespace TCConfig
                     "description VARCHAR(256),"
                     "run_note VARCHAR(256),"
                     "size BIGINT DEFAULT 0,"
-                    "scr_n INT DEFAULT -1,"
-                    "scr_bad TEXT,"
                     "target VARCHAR(20),"
                     "target_pol VARCHAR(128),"
                     "target_pol_deg DOUBLE DEFAULT 0,"
@@ -60,8 +60,8 @@ namespace TCConfig
     const Char_t* kCalibDataTableSettings = ",PRIMARY KEY (calibration, first_run) ";
     
     // version numbers
-    const Char_t kCaLibVersion[] = "0.3.0beta";
-    const Int_t kContainerFormatVersion = 4;
+    const Char_t kCaLibVersion[] = "0.1.10";
+    const Int_t kContainerFormatVersion = 2;
     extern const Char_t kCaLibDumpName[] = "CaLib_Dump";
 
     // constants

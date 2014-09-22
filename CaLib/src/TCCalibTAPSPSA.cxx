@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibTAPSPSA.cxx 945 2011-07-04 16:24:05Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -357,7 +359,7 @@ void TCCalibTAPSPSA::PrintValues()
 }
 
 //______________________________________________________________________________
-void TCCalibTAPSPSA::WriteValues()
+void TCCalibTAPSPSA::Write()
 {
     // Write the obtained calibration values to the database.
     

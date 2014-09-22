@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibPIDPhi.cxx 912 2011-05-18 22:09:17Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -311,7 +313,7 @@ TH1* TCCalibPIDPhi::GetMappedHistogram(TH1* histo)
 }
 
 //______________________________________________________________________________
-void TCCalibPIDPhi::WriteValues()
+void TCCalibPIDPhi::Write()
 {
     // Overwrite this method of the parent class to save also the second
     // overview canvas.

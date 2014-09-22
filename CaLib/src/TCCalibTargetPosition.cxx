@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibTargetPosition.cxx 912 2011-05-18 22:09:17Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -250,7 +252,7 @@ void TCCalibTargetPosition::Calculate(Int_t elem)
 }   
 
 //______________________________________________________________________________
-void TCCalibTargetPosition::WriteValues()
+void TCCalibTargetPosition::Write()
 {
     // Save the overview plot.
     

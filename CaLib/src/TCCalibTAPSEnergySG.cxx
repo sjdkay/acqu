@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibTAPSEnergySG.cxx 912 2011-05-18 22:09:17Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -394,7 +396,7 @@ void TCCalibTAPSEnergySG::PrintValues()
 }
 
 //______________________________________________________________________________
-void TCCalibTAPSEnergySG::WriteValues()
+void TCCalibTAPSEnergySG::Write()
 {
     // Write the obtained calibration values to the database.
     

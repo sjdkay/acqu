@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibPIDEnergyTrad.h 904 2011-05-15 16:51:57Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -55,7 +57,7 @@ public:
     TCCalibPIDEnergyTrad();
     virtual ~TCCalibPIDEnergyTrad();
 
-    virtual void WriteValues();
+    virtual void Write();
     virtual void PrintValues();
 
 

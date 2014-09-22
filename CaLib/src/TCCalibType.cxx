@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibType.cxx 913 2011-05-18 22:15:42Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -34,7 +36,7 @@ TCCalibType::~TCCalibType()
 }
 
 //______________________________________________________________________________
-void TCCalibType::Print(Option_t* option) const
+void TCCalibType::Print()
 {
     // Print the content of this class.
     

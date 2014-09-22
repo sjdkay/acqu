@@ -1,5 +1,7 @@
+// SVN Info: $Id: TCMySQLManager.cxx 1076 2012-03-13 13:19:04Z werthm $
+
 /*************************************************************************
- * Author: Dominik Werthmueller, Irakli Keshelashvili, Thomas Strub
+ * Author: Dominik Werthmueller, Irakli Keshelashvili
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -13,7 +15,7 @@
 
 #include "TCMySQLManager.h"
 
-ClassImp(TCMySQLManager)
+ClassImp(TCMySQLManager);
 
 
 // init static class members
@@ -31,6 +33,7 @@ TCMySQLManager::TCMySQLManager()
     fData->SetOwner(kTRUE);
     fTypes = new THashList();
     fTypes->SetOwner(kTRUE);
+    isMk2	= kFALSE;
 
     // read CaLib data
     if (!ReadCaLibData())
@@ -118,7 +121,7 @@ TCMySQLManager::~TCMySQLManager()
 Bool_t TCMySQLManager::ReadCaLibData()
 {
     // Read the CaLib data definitions from the configuration file.
-    // Return kTRUE on success, kFALSE if an error occurred.
+    // Return kTRUE on success, kFALSE if an error occured.
     
     // try to get the CaLib source path from the shell variable CALIB
     // otherwise use the current directory
@@ -226,7 +229,7 @@ Bool_t TCMySQLManager::ReadCaLibData()
 Bool_t TCMySQLManager::ReadCaLibTypes()
 {
     // Read the CaLib type definitions from the configuration file.
-    // Return kTRUE on success, kFALSE if an error occurred.
+    // Return kTRUE on success, kFALSE if an error occured.
     
     // try to get the CaLib source path from the shell variable CALIB
     // otherwise use the current directory
@@ -406,7 +409,6 @@ Bool_t TCMySQLManager::SearchRunEntry(Int_t run, const Char_t* name, Char_t* out
     {
         if (!fSilence) Error("SearchRunEntry", "Could not find the information '%s' for run %d!",
                                                name, run);
-        delete res;
         return kFALSE;
     }
 
@@ -746,7 +748,7 @@ Int_t TCMySQLManager::GetSetForRun(const Char_t* data, const Char_t* calibration
     Int_t nSet = GetNsets(data, calibration);
     if (!nSet) return -1;
     
-    // check if run exists
+    // check if  run exists
     Char_t tmp[256];
     if (!SearchRunEntry(run, "run", tmp))
     {
@@ -775,7 +777,7 @@ Bool_t TCMySQLManager::ReadParametersRun(const Char_t* data, const Char_t* calib
 {
     // Read 'length' parameters of the calibration data 'data' for the calibration identifier
     // 'calibration' valid for the run 'run' from the database to the value array 'par'.
-    // Return kFALSE if an error occurred, otherwise kTRUE.
+    // Return kFALSE if an error occured, otherwise kTRUE.
 
     // get set
     Int_t set = GetSetForRun(data, calibration, run);
@@ -798,7 +800,7 @@ Bool_t TCMySQLManager::ReadParameters(const Char_t* data, const Char_t* calibrat
 {
     // Read 'length' parameters of the 'set'-th set of the calibration data 'data'
     // for the calibration identifier 'calibration' from the database to the value array 'par'.
-    // Return kFALSE if an error occurred, otherwise kTRUE.
+    // Return kFALSE if an error occured, otherwise kTRUE.
 
     Char_t query[256];
     Char_t table[256];
@@ -867,7 +869,7 @@ Bool_t TCMySQLManager::WriteParameters(const Char_t* data, const Char_t* calibra
 {
     // Write 'length' parameters of the 'set'-th set of the calibration data 'data'
     // for the calibration identifier 'calibration' from the value array 'par' to the database.
-    // Return kFALSE if an error occurred, otherwise kTRUE.
+    // Return kFALSE if an error occured, otherwise kTRUE.
 
     Char_t table[256];
  
@@ -924,18 +926,10 @@ Bool_t TCMySQLManager::WriteParameters(const Char_t* data, const Char_t* calibra
 }
 
 //______________________________________________________________________________
-Bool_t TCMySQLManager::InitDatabase()
+void TCMySQLManager::InitDatabase()
 {
     // Init a new CaLib database on a MySQL server.
-    // Return kTRUE on success, otherwise kFALSE.
     
-    // check server connection
-    if (!IsConnected())
-    {
-        if (!fSilence) Error("InitDatabase", "No connection to the database!");
-        return kFALSE;
-    }
-
     // ask for user confirmation
     Char_t answer[256];
     printf("\nWARNING: You are about to initialize a new CaLib database.\n"
@@ -946,7 +940,7 @@ Bool_t TCMySQLManager::InitDatabase()
     if (strcmp(answer, "yes")) 
     {
         printf("Aborted.\n");
-        return kFALSE;
+        return;
     }
     
     // create the main table
@@ -960,106 +954,16 @@ Bool_t TCMySQLManager::InitDatabase()
         // create the data table
         CreateDataTable(d->GetName(), d->GetSize());
     }
-
-    return kTRUE;
 }
 
 //______________________________________________________________________________
-Bool_t TCMySQLManager::UpgradeDatabase(Int_t version)
+void TCMySQLManager::AddRunFiles(const Char_t* path, const Char_t* target)
 {
-    // Upgrade the CaLib database to version 'version'.
-    // Return kTRUE on success, otherwise kFALSE.
-    
-    // create queries (update only this part in the future)
-    Int_t nQuery = 0;
-    Char_t query[3][256];
-    switch (version)
-    {
-        // version 3: 
-        // - add two columns in run_main for bad scaler reads
-        // - remove livetime table
-        case 3:
-        {
-            nQuery = 3;
-            strcpy(query[0], "ALTER TABLE run_main ADD scr_n INT DEFAULT -1 AFTER size");
-            strcpy(query[1], "ALTER TABLE run_main ADD scr_bad VARCHAR(512) AFTER scr_n");
-            strcpy(query[2], "DROP TABLE IF EXISTS livetime");
-            break;
-        }
-        // version 4:
-        // - change type of table scr_bad to TEXT
-        case 4:
-        {
-            nQuery = 1;
-            strcpy(query[0], "ALTER TABLE run_main MODIFY scr_bad TEXT");
-            break;
-        }
-        default:
-        {
-            Error("UpgradeDatabase", "Database upgrade to version %d not implemented!", version);
-            return kFALSE;
-        }
-    }
-    
-    // check server connection
-    if (!IsConnected())
-    {
-        if (!fSilence) Error("UpgradeDatabase", "No connection to the database!");
-        return kFALSE;
-    }
-
-    // ask for user confirmation
-    Char_t answer[256];
-    printf("\nWARNING: You are about to update your existing CaLib database '%s' on '%s'\n"
-           "         It is highly recommended to create a complete backup using\n"
-           "         e.g. mysqldump before proceeding!\n\n", fDB->GetDB(), fDB->GetHost());
-    printf("Are you sure to continue? (yes/no) : ");
-    scanf("%s", answer);
-    if (strcmp(answer, "yes")) 
-    {
-        printf("Aborted.\n");
-        return kFALSE;
-    }
-    
-    // loop over queries
-    Int_t queryOk = 0;
-    for (Int_t i = 0; i < nQuery; i++)
-    {
-        // send query
-        TSQLResult* res = SendQuery(query[i]);
-    
-        // check result
-        if (!res) Error("UpgradeDatabase", "Could not execute query %d!", i+1);
-        else
-        {
-            Info("UpgradeDatabase", "Executed query %d", i+1);
-            delete res;
-            queryOk++;
-        }
-    }
-
-    // check final result
-    if (queryOk == nQuery)
-    {
-        Info("UpgradeDatabase", "Performed upgrade of database");
-        return kTRUE;
-    }
-    else
-    {
-        Error("UpgradeDatabase", "Could not perform upgrade of database!");
-        return kFALSE;
-    }
-}
-
-//______________________________________________________________________________
-void TCMySQLManager::AddRunFiles(const Char_t* path, const Char_t* target,
-                                 const Char_t* runPrefix)
-{
-    // Look for raw ACQU files in 'path' and add all runs with the prefix 'runPrefix'
-    // to the database using the target specifier 'target'.
+    // Look for raw ACQU files in 'path' and add all runs to the database
+    // using the target specifier 'target'.
 
     // read the raw files
-    TCReadACQU r(path, runPrefix);
+    TCReadACQU r(path, isMk2);
     Int_t nRun = r.GetNFiles();
     
     // ask for user confirmation
@@ -1081,6 +985,17 @@ void TCMySQLManager::AddRunFiles(const Char_t* path, const Char_t* target,
     {
         TCACQUFile* f = r.GetFile(i);
         
+        /*printf("INSERT INTO %s SET, run = %d, path = %s, filename = %s, description = %s, run_note = %s, size = %lld, target = %s",
+											TCConfig::kCalibMainTableName, 
+                                            f->GetRun(),
+                                            path,
+                                            f->GetFileName(),
+                                            f->GetTime(),
+                                            f->GetDescription(),
+                                            f->GetRunNote(),
+                                            f->GetSize(),
+                                            target);*/
+        
         // prepare the insert query
         TString ins_query = TString::Format("INSERT INTO %s SET "
                                             "run = %d, "
@@ -1091,7 +1006,7 @@ void TCMySQLManager::AddRunFiles(const Char_t* path, const Char_t* target,
                                             "run_note = \"%s\", "
                                             "size = %lld,"
                                             "target = \"%s\"",
-                                            TCConfig::kCalibMainTableName,
+                                            TCConfig::kCalibMainTableName, 
                                             f->GetRun(),
                                             path,
                                             f->GetFileName(),
@@ -1102,6 +1017,8 @@ void TCMySQLManager::AddRunFiles(const Char_t* path, const Char_t* target,
                                             target);
 
         // try to write data to database
+	//printf( "\n %s \n", ins_query.Data());
+		//printf(ins_query.Data());
         TSQLResult* res = SendQuery(ins_query.Data());
         if (res == 0)
         {
@@ -1215,79 +1132,6 @@ Bool_t TCMySQLManager::ChangeRunBeamPolDeg(Int_t first_run, Int_t last_run, Doub
 }
 
 //______________________________________________________________________________
-Bool_t TCMySQLManager::ChangeRunTotNScR(const Int_t run, const Int_t nscr)
-{
-    // Change the number of total scaler reads for run 'run' to 'nscr'.  
-    // Returns kTRUE on success, kFALSE otherwise.
-
-    // create string
-    Char_t tmp[16];
-    sprintf(tmp, "%d", nscr);
-
-    // change number of scaler reads
-    return ChangeRunEntries(run, run, "scr_n", tmp);
-}
-
-//______________________________________________________________________________
-Bool_t TCMySQLManager::ChangeRunBadScR(const Int_t run, const Int_t nbadscr, const Int_t* const badscr)
-{
-    // Change the bad scaler reads list string for run 'run' to a string of
-    // comma and colon separated (ASCII) integers describing the 'nbadscr' bad
-    // scaler reads in 'badscr'.
-    //
-    // e.g.: badscr = {1,3,4,5,7,8,10} --> s = "1,3:5,7,8,10"
-    //
-    // With a 512 byte string and number of scaler reads <= 1000:
-    //     Supported number of bad scaler reads: 128 (guaranteed) or more
-    //     Supported number of scaler reads:     218 (guaranteed) or more
-    //
-    // Returns kTRUE on success, kFALSE otherwise.
-
-    // init query string
-    TString s = "";
-
-    // loop over input bad scaler reads list
-    for (Int_t i = 0; i < nbadscr; i++)
-    {
-        Char_t tmp[16];
-        Int_t j = 0;
-
-        // loop over subsequent values in order to detect series, i.e., badscr[k]+1 == badscr[k+1]
-        for (j = 0; i + j < nbadscr - 1; j++)
-            if (badscr[i+j] + 1 != badscr[i+j+1]) break;
-
-        // check for series with more than 2 elements
-        if (j > 1)
-        {
-            // separate first and last value of series with ':'
-            sprintf(tmp, "%d:%d,", badscr[i], badscr[i+j]);
-            i += j; 
-        }
-        else
-        {
-            // separate with ','
-            sprintf(tmp, "%d,", badscr[i]);
-        }
-
-        // append to query string
-        s.Append(tmp);
-    }
-
-    // remove trailing comma
-    s.Chop();
-
-    // check length
-    if (s.Length() >= 512)
-    {
-        if (!fSilence) Error("ChangeRunBadScR", "Too many bad scaler reads!");
-        return kFALSE;
-    }
-
-    // change list of bad scaler reads
-    return ChangeRunEntries(run, run, "scr_bad", s.Data());
-}
-
-//______________________________________________________________________________
 Bool_t TCMySQLManager::ContainsCalibration(const Char_t* calibration)
 {
     // Check if the calibration 'calibration' exists in the database.
@@ -1345,7 +1189,6 @@ Bool_t TCMySQLManager::ChangeCalibrationName(const Char_t* calibration, const Ch
     // loop over calibration data
     TIter next(fData);
     TCCalibData* d;
-    Bool_t succ = kTRUE;
     while ((d = (TCCalibData*)next()))
     {
         // create the query
@@ -1360,198 +1203,19 @@ Bool_t TCMySQLManager::ChangeCalibrationName(const Char_t* calibration, const Ch
         // check result
         if (!res)
         {
-            if (!fSilence) Error("ChangeCalibrationName", "Could not rename table '%s' of calibration '%s'!",
-                                 d->GetTableName(), calibration);
-            succ = kFALSE;
+            if (!fSilence) Error("ChangeCalibrationName", "Could not rename calibration '%s' to '%s'!",
+                                 calibration, newCalibration);
+            return kFALSE;
         }
 
         // clean-up
         delete res;
     }
     
-    if (!fSilence) 
-    {
-        if (succ)
-            Info("ChangeCalibrationName", "Renamed calibration '%s' to '%s'", calibration, newCalibration);
-        else
-            Error("ChangeCalibrationName", "Some problem(s) occurred - check your database for inconsistencies!");
-    }
-    
-    return succ;
-}
-
-//______________________________________________________________________________
-Bool_t TCMySQLManager::ChangeCalibrationDescription(const Char_t* calibration, const Char_t* newDesc)
-{
-    // Change the calibration description of the 'calibration' in all calibration sets
-    // to 'newDesc'.
-    
-    Char_t query[256];
-    
-    // check if calibration was not found
-    if (!ContainsCalibration(calibration))
-    {
-        if (!fSilence) Error("ChangeCalibrationDescription", "Calibration '%s' was not found in database!",
-                             calibration);
-        return kFALSE;
-    }
-
-    // loop over calibration data
-    TIter next(fData);
-    TCCalibData* d;
-    Bool_t succ = kTRUE;
-    while ((d = (TCCalibData*)next()))
-    {
-        // create the query
-        sprintf(query,
-                "UPDATE %s SET description = '%s' "
-                "WHERE calibration = '%s'",
-                d->GetTableName(), newDesc, calibration);
-
-        // read from database
-        TSQLResult* res = SendQuery(query);
-        
-        // check result
-        if (!res)
-        {
-            if (!fSilence) Error("ChangeCalibrationDescription", "Could not change description in table '%s' of calibration '%s'!",
-                                 d->GetTableName(), calibration);
-            succ = kFALSE;
-        }
-
-        // clean-up
-        delete res;
-    }
-    
-    if (!fSilence) 
-    {
-        if (succ)
-            Info("ChangeCalibrationDescription", "Changed description of calibration '%s' to '%s'", calibration, newDesc);
-        else
-            Error("ChangeCalibrationDescription", "Some problem(s) occurred - check your database for inconsistencies!");
-    }
-
-    return succ;
-}
-
-//______________________________________________________________________________
-Bool_t TCMySQLManager::ChangeCalibrationRunRange(const Char_t* calibration, const UInt_t firstRun,
-                                                 const UInt_t lastRun)
-{
-    // Change the run range in all sets of the calibration 'calibration' to start from 'firstRun'
-    // and to end at 'lastRun'. The runs must be present in the run database.
-    // If 'firstRun'/'lastRun' is zero, the current start/stop run are kept.
-
-    Char_t query[256];
-    Char_t tmp[256];
-
-    // check if calibration was not found
-    if (!ContainsCalibration(calibration))
-    {
-        if (!fSilence) Error("ChangeCalibrationRunRange", "Calibration '%s' was not found in database!",
-                             calibration);
-        return kFALSE;
-    }
-    
-    // quit if both firstRun and lastRun are zero
-    if (!firstRun && !lastRun)
-    {
-        if (!fSilence) Error("ChangeCalibrationRunRange", "First and/or last run has to be non-zero!");
-        return kFALSE;
-    }
-    
-    // check if first run exists
-    if (firstRun && !SearchRunEntry(firstRun, "run", tmp))
-    {
-        if (!fSilence) Error("ChangeCalibrationRunRange", "First run %d has no valid run number!", 
-                             firstRun);
-        return kFALSE;
-    }
-    
-    // check if last run exists
-    if (lastRun && !SearchRunEntry(lastRun, "run", tmp))
-    {
-        if (!fSilence) Error("ChangeCalibrationRunRange", "Last run %d has no valid run number!", 
-                             lastRun);
-        return kFALSE;
-    }
-
-    // check if first runs is smaller than last run
-    if (firstRun && lastRun && firstRun > lastRun)
-    {
-        if (!fSilence) Error("ChangeCalibrationRunRange", "First run %d has to be smaller than last run %d", 
-                             firstRun, lastRun);
-        return kFALSE;
-    }
+    if (!fSilence) Info("ChangeCalibrationName", "Renamed calibration '%s' to '%s'!",
+                        calibration, newCalibration);
  
-    // loop over calibration data
-    TIter next(fData);
-    TCCalibData* d;
-    Bool_t succ = kTRUE;
-    while ((d = (TCCalibData*)next()))
-    {
-        // 
-        // first run
-        //
-        
-        if (firstRun)
-        {
-            // get the first run of the first set
-            Int_t oldFirstRun = GetFirstRunOfSet(d->GetName(), calibration, 0);
-
-            // execute the query
-            sprintf(query, "UPDATE %s SET first_run = %d WHERE calibration = '%s' and first_run = %d", 
-                           d->GetTableName(), firstRun, calibration, oldFirstRun);
-            TSQLResult* res = SendQuery(query);
-            
-            // check result
-            if (!res)
-            {
-                if (!fSilence) Error("ChangeCalibrationRunRange", "Could not change first run in table '%s' of calibration '%s'!",
-                                     d->GetTableName(), calibration);
-                succ = kFALSE;
-            }
-
-            // clean-up
-            delete res;
-        }
-        
-        // 
-        // last run
-        //
-        
-        if (lastRun)
-        {
-           // get the last run of the last set
-            Int_t oldLastRun = GetLastRunOfSet(d->GetName(), calibration, GetNsets(d->GetName(), calibration)-1);
-
-            // execute the query
-            sprintf(query, "UPDATE %s SET last_run = %d WHERE calibration = '%s' and last_run = %d", 
-                           d->GetTableName(), lastRun, calibration, oldLastRun);
-            TSQLResult* res = SendQuery(query);
-            
-            // check result
-            if (!res)
-            {
-                if (!fSilence) Error("ChangeCalibrationRunRange", "Could not change last run in table '%s' of calibration '%s'!",
-                                     d->GetTableName(), calibration);
-                succ = kFALSE;
-            }
-
-            // clean-up
-            delete res;
-        }
-    }
-    
-    if (!fSilence) 
-    {
-        if (succ)
-            Info("ChangeCalibrationRunRange", "Changed run range of calibration '%s' to [%d,%d]", calibration, firstRun, lastRun);
-        else
-            Error("ChangeCalibrationRunRange", "Some problem(s) occurred - check your database for inconsistencies!");
-    }
-
-    return succ;
+    return kTRUE;
 }
 
 //______________________________________________________________________________
@@ -1589,7 +1253,7 @@ Bool_t TCMySQLManager::RemoveCalibration(const Char_t* calibration, const Char_t
     // clean-up
     delete res;
     
-    if (!fSilence) Info("RemoveCalibration", "Removed calibration '%s' of calibration '%s'",
+    if (!fSilence) Info("RemoveCalibration", "Removed calibration '%s' of calibration '%s'!",
                         ((TCCalibData*) fData->FindObject(data))->GetTitle(), calibration);
  
     return kTRUE;
@@ -1888,80 +1552,74 @@ TList* TCMySQLManager::GetAllCalibrations(const Char_t* data)
 
 //______________________________________________________________________________
 Bool_t TCMySQLManager::AddDataSet(const Char_t* data, const Char_t* calibration, const Char_t* desc,
-                                  Int_t first_run, Int_t last_run, Double_t* par, Int_t length, 
-                                  Bool_t skipChecks)
+                                  Int_t first_run, Int_t last_run, Double_t* par, Int_t length)
 {
     // Create a new set of the calibration data 'data' with the calibration identifier
     // 'calibration' for the runs 'first_run' to 'last_run'. Use 'desc' as a 
     // description. Read the 'length' parameters from 'par'.
-    // Check run numbers if 'skipChecks' is kFALSE (default) and abort on errors.
-    // Return kFALSE when an error occurred, otherwise kTRUE.
+    // Return kFALSE when an error occured, otherwise kTRUE.
  
     Char_t table[256];
     
-    // do some checks concerning the run numbers
-    if (!skipChecks)
+    //
+    // check if first and last run exist
+    //
+    
+    // check first run
+    if (!SearchRunEntry(first_run, "run", table))
     {
-        //
-        // check if first and last run exist
-        //
-        
-        // check first run
-        if (!SearchRunEntry(first_run, "run", table))
+        if (!fSilence) Error("AddDataSet", "First run has no valid run number!");
+        return kFALSE;
+    }
+    
+    // check last run
+    if (!SearchRunEntry(last_run, "run", table))
+    {
+        if (!fSilence) Error("AddDataSet", "Last run has no valid run number!");
+        return kFALSE;
+    }
+
+    //
+    // check if the run range is ok
+    //
+
+    // check if first run is smaller than last run
+    if (first_run > last_run)
+    {
+        if (!fSilence) Error("AddDataSet", "First run of set has to be smaller than last run!");
+        return kFALSE;
+    }
+
+    // get number of existing sets
+    Int_t nSet = GetNsets(data, calibration);
+
+    // loop over sets
+    for (Int_t i = 0; i < nSet; i++)
+    {
+        // get first and last runs of set
+        Int_t setLow = GetFirstRunOfSet(data, calibration, i);
+        Int_t setHigh = GetLastRunOfSet(data, calibration, i);
+
+        // check if first run is member of this set
+        if (first_run >= setLow && first_run <= setHigh)
         {
-            if (!fSilence) Error("AddDataSet", "First run has no valid run number!");
+            if (!fSilence) Error("AddDataSet", "First run is already member of set %d", i);
             return kFALSE;
         }
-        
-        // check last run
-        if (!SearchRunEntry(last_run, "run", table))
+
+        // check if last run is member of this set
+        if (last_run >= setLow && last_run <= setHigh)
         {
-            if (!fSilence) Error("AddDataSet", "Last run has no valid run number!");
+            if (!fSilence) Error("AddDataSet", "Last run is already member of set %d", i);
             return kFALSE;
         }
 
-        //
-        // check if the run range is ok
-        //
-
-        // check if first run is smaller than last run
-        if (first_run > last_run)
+        // check if sets are not overlapping
+        if ((setLow >= first_run && setLow <= last_run) ||
+            (setHigh >= first_run && setHigh <= last_run))
         {
-            if (!fSilence) Error("AddDataSet", "First run of set has to be smaller than last run!");
+            if (!fSilence) Error("AddDataSet", "Run overlap with set %d", i);
             return kFALSE;
-        }
-
-        // get number of existing sets
-        Int_t nSet = GetNsets(data, calibration);
-
-        // loop over sets
-        for (Int_t i = 0; i < nSet; i++)
-        {
-            // get first and last runs of set
-            Int_t setLow = GetFirstRunOfSet(data, calibration, i);
-            Int_t setHigh = GetLastRunOfSet(data, calibration, i);
-
-            // check if first run is member of this set
-            if (first_run >= setLow && first_run <= setHigh)
-            {
-                if (!fSilence) Error("AddDataSet", "First run is already member of set %d", i);
-                return kFALSE;
-            }
-
-            // check if last run is member of this set
-            if (last_run >= setLow && last_run <= setHigh)
-            {
-                if (!fSilence) Error("AddDataSet", "Last run is already member of set %d", i);
-                return kFALSE;
-            }
-
-            // check if sets are not overlapping
-            if ((setLow >= first_run && setLow <= last_run) ||
-                (setHigh >= first_run && setHigh <= last_run))
-            {
-                if (!fSilence) Error("AddDataSet", "Run overlap with set %d", i);
-                return kFALSE;
-            }
         }
     }
 
@@ -2014,7 +1672,7 @@ Bool_t TCMySQLManager::AddDataSet(const Char_t* data, const Char_t* calibration,
     // Create a new set of the calibration data 'data' with the calibration identifier
     // 'calibration' for the runs 'first_run' to 'last_run'. Use 'desc' as a 
     // description. Set all parameters to the value 'par'.
-    // Return kFALSE when an error occurred, otherwise kTRUE.
+    // Return kFALSE when an error occured, otherwise kTRUE.
     
     // get maximum number of parameters
     Int_t length = ((TCCalibData*) fData->FindObject(data))->GetSize();
@@ -2034,7 +1692,7 @@ Bool_t TCMySQLManager::AddSet(const Char_t* type, const Char_t* calibration, con
     // Create new sets for the calibration type 'type' with the calibration identifier
     // 'calibration' for the runs 'first_run' to 'last_run'. Use 'desc' as a 
     // description. Set all parameters to the value 'par'.
-    // Return kFALSE when an error occurred, otherwise kTRUE.
+    // Return kFALSE when an error occured, otherwise kTRUE.
     
     Bool_t ret = kTRUE;
     
@@ -2107,7 +1765,6 @@ Bool_t TCMySQLManager::RemoveDataSet(const Char_t* data, const Char_t* calibrati
     {
         if (!fSilence) Info("RemoveDataSet", "Deleted set %d in '%s' of calibration '%s'",
                                          set, ((TCCalibData*) fData->FindObject(data))->GetTitle(), calibration);
-        delete res;
         return kTRUE;
     }
 }
@@ -2185,7 +1842,6 @@ Bool_t TCMySQLManager::SplitDataSet(const Char_t* data, const Char_t* calibratio
     if (!res->GetRowCount())
     {
         if (!fSilence) Error("SplitDataSet", "Cannot find first run of second set!");
-        delete res;
         return kFALSE;
     }
     
@@ -2404,7 +2060,7 @@ Int_t TCMySQLManager::DumpRuns(TCContainer* container, Int_t first_run, Int_t la
     // Return the number of dumped runs.
 
     Char_t query[256];
-    Char_t tmp[65536];
+    Char_t tmp[256];
 
     // create the query
     if (!first_run && !last_run)
@@ -2464,13 +2120,7 @@ Int_t TCMySQLManager::DumpRuns(TCContainer* container, Int_t first_run, Int_t la
             sscanf(tmp, "%lld", &size);
             run->SetSize(size);
         }
-        
-        // set scaler reads
-        if (SearchRunEntry(run_number, "scr_n", tmp)) run->SetNScalerReads(atoi(tmp));
-        
-        // set bad scaler reads
-        if (SearchRunEntry(run_number, "scr_bad", tmp)) run->SetBadScalerReads(tmp);
-        
+
         // set target
         if (SearchRunEntry(run_number, "target", tmp)) run->SetTarget(tmp);
         
@@ -2607,8 +2257,6 @@ Int_t TCMySQLManager::ImportRuns(TCContainer* container)
                                             "description = '%s', "
                                             "run_note = '%s', "
                                             "size = %lld, "
-                                            "scr_n = %d, "
-                                            "scr_bad = '%s', "
                                             "target = '%s', "
                                             "target_pol = '%s', "
                                             "target_pol_deg = %lf, "
@@ -2622,8 +2270,6 @@ Int_t TCMySQLManager::ImportRuns(TCContainer* container)
                                             r->GetDescription(),
                                             r->GetRunNote(),
                                             r->GetSize(),
-                                            r->GetNScalerReads(),
-                                            r->GetBadScalerReads(),
                                             r->GetTarget(),
                                             r->GetTargetPol(),
                                             r->GetTargetPolDeg(),
@@ -2680,7 +2326,7 @@ Int_t TCMySQLManager::ImportCalibrations(TCContainer* container, const Char_t* n
 
         // add the set
         if (AddDataSet(c->GetCalibData(), calibration, c->GetDescription(), 
-                       c->GetFirstRun(), c->GetLastRun(), c->GetParameters(), c->GetNParameters(), kTRUE))
+                       c->GetFirstRun(), c->GetLastRun(), c->GetParameters(), c->GetNParameters()))
         {
             if (!fSilence) Info("ImportCalibrations", "Added calibration '%s' of '%s' to the database",
                                 calibration, ((TCCalibData*) fData->FindObject(c->GetCalibData()))->GetTitle());
@@ -2700,26 +2346,24 @@ Int_t TCMySQLManager::ImportCalibrations(TCContainer* container, const Char_t* n
 }
 
 //______________________________________________________________________________
-Bool_t TCMySQLManager::CloneCalibration(const Char_t* calibration, const Char_t* newCalibrationName,
+void TCMySQLManager::CloneCalibration(const Char_t* calibration, const Char_t* newCalibrationName,
                                       const Char_t* newDesc, Int_t new_first_run, Int_t new_last_run)
 {
     // Create a clone of the calibration 'calibration' using 'newCalibrationName' as
     // the new calibration name and 'newDesc' as the calibration description.
     // For each calibration data one set from 'new_first_run' to 'new_last_run' 
     // is created with the values of the last set of the original calibration.
-    // Return kFALSE if an error occurred, otherwise kTRUE.
-
+    
     // check if original calibration exists
     if (!ContainsCalibration(calibration))
     {
         if (!fSilence) Error("CloneCalibration", "Original calibration '%s' does not exist!", calibration);
-        return kFALSE;
+        return;
     }
 
     // loop over calibration data
     TIter next(fData);
     TCCalibData* d;
-    Bool_t error = kFALSE;
     while ((d = (TCCalibData*)next()))
     {
         // get number of original sets
@@ -2729,30 +2373,14 @@ Bool_t TCMySQLManager::CloneCalibration(const Char_t* calibration, const Char_t*
         Double_t par[d->GetSize()];
         if (ReadParameters(d->GetName(), calibration, nSets-1, par, d->GetSize()))
         {
-            // add new set
-            if (!AddDataSet(d->GetName(), newCalibrationName, newDesc, new_first_run, new_last_run, par, d->GetSize()))
-            {
+            if (!AddDataSet(d->GetName(), newCalibrationName, newDesc, 
+                            new_first_run, new_last_run, par, d->GetSize()))
                 if (!fSilence) Error("CloneCalibration", "Could not clone calibration data '%s'!", d->GetName());
-                error = kTRUE;
-            }
         }
         else
         {
             if (!fSilence) Error("CloneCalibration", "Could not read original data '%s'!", d->GetName());
-            error = kTRUE;
         }
-    }
-    
-    // check if an error occurred
-    if (error)
-    {
-        // remove partially cloned calibrations when an error occurred
-        RemoveAllCalibrations(newCalibrationName);
-        return kFALSE;
-    }
-    else
-    {
-        return kTRUE;
     }
 }
 
@@ -2800,7 +2428,7 @@ void TCMySQLManager::Export(const Char_t* filename, Int_t first_run, Int_t last_
     }
 
     // save container to ROOT file
-    container->Save(filename, fSilence);
+    container->SaveAs(filename, fSilence);
     
     // clean-up
     delete container;
@@ -2841,8 +2469,7 @@ TCContainer* TCMySQLManager::LoadContainer(const Char_t* filename)
     // check container format
     if (c->GetVersion() != TCConfig::kContainerFormatVersion)
     {
-        if (!fSilence) Error("LoadContainer", "Cannot load CaLib container format version %d - "
-                                              "use the corresponding CaLib version instead!", c->GetVersion());
+        if (!fSilence) Error("LoadContainer", "Cannot load CaLib container format version %d", c->GetVersion());
         return 0;
     }
     

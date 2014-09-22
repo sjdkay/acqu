@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibPIDPhi.h 768 2011-01-26 16:57:17Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -43,7 +45,7 @@ public:
     TCCalibPIDPhi();
     virtual ~TCCalibPIDPhi();
     
-    virtual void WriteValues();
+    virtual void Write();
 
     ClassDef(TCCalibPIDPhi, 0) // PID phi calibration
 };

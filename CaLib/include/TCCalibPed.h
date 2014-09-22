@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibPed.h 912 2011-05-18 22:09:17Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -23,6 +25,7 @@
 #include "TCCalib.h"
 #include "TCReadARCalib.h"
 #include "TCFileManager.h"
+#include "TCFitTools.h"
 
 
 class TCCalibPed : public TCCalib

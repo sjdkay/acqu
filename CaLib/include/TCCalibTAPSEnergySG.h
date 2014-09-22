@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalibTAPSEnergySG.h 895 2011-05-05 17:42:26Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -51,7 +53,7 @@ public:
     TCCalibTAPSEnergySG();
     virtual ~TCCalibTAPSEnergySG();
     
-    virtual void WriteValues();
+    virtual void Write();
     virtual void PrintValues();
 
     ClassDef(TCCalibTAPSEnergySG, 0) // TAPS SG energy calibration

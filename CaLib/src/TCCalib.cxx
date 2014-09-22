@@ -1,3 +1,5 @@
+// SVN Info: $Id: TCCalib.cxx 997 2011-09-11 18:59:16Z werthm $
+
 /*************************************************************************
  * Author: Dominik Werthmueller
  *************************************************************************/
@@ -161,8 +163,7 @@ void TCCalib::ProcessElement(Int_t elem, Bool_t ignorePrev)
         // calculate last element and update result canvas
         if (elem == fNelem) 
         {
-            if (!ignorePrev) Calculate(fCurrentElem);
-            else printf("Ignoring element %d\n", fCurrentElem);
+            Calculate(fCurrentElem);
             fCanvasResult->Update();
         }
 
@@ -171,11 +172,7 @@ void TCCalib::ProcessElement(Int_t elem, Bool_t ignorePrev)
     }
     
     // calculate previous element
-    if (elem != fCurrentElem)
-    {
-        if (!ignorePrev) Calculate(fCurrentElem);
-        else printf("Ignoring element %d\n", fCurrentElem);
-    }
+    if (elem != fCurrentElem && !ignorePrev) Calculate(fCurrentElem);
 
     // set current element
     fCurrentElem = elem;
@@ -274,7 +271,7 @@ void TCCalib::PrintValuesChanged()
 }
 
 //______________________________________________________________________________
-void TCCalib::WriteValues()
+void TCCalib::Write()
 {
     // Write the obtained calibration values to the database.
     
