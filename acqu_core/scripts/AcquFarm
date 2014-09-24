@@ -79,10 +79,14 @@ if [ $# -lt 3 ]; then
     if [ ! -s $FileList ]; then
 	ServerFile=`gawk '{if($1=="ServerSetup:")print $2}' $SetupFile`
 	if [ ! -z $ServerFile ]; then
-
+	    # mimic the AcquRoot behaviour of prepending ./data/ to 
+	    # relative files
+	    if [[ ! $ServerFile == */* ]]; then
+		ServerFile="data/${ServerFile}"
+	    fi
 	    # Check that Server file exists
 	    if [ -e $ServerFile ]; then
-
+		echo "Found ServerFile $ServerFile"
 		# Scan server file for experiment 'File-Directory' line
 		ConfigDir=`gawk '{if($1=="File-Directory:")print $2}' $ServerFile`
 
@@ -103,7 +107,8 @@ if [ $# -lt 3 ]; then
 
     # If 'FileList.dat' is still empty scan input directory
     if [ ! -s $FileList ]; then
-	ls -1 $InputDir/ | grep ".root\|.dat" > $FileList
+	echo "Scanning input directory..."
+	ls -1 $InputDir/ | grep ".root\|.dat" | grep -v ".xml$" > $FileList
     fi    
 fi
 
