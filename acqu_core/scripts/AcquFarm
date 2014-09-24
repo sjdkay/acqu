@@ -20,7 +20,7 @@ RemoteDir="a2cb@a2datastore1.online.a2.kph:/exports/RAID0_a2datastore1/rundata"
 OutputDir="/local/raid1/work/${USER}/analysis/${JobName}"
 
 # Who'll get the emails from the farm
-MailAddress="@kph.uni-mainz.de"
+MailAddress="$USER@kph.uni-mainz.de"
 
 ####################################################
 ###### End of section requiring editing ############
