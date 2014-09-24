@@ -114,7 +114,6 @@ do
 	#copy the files to the local raid if required by getting the info from the comments at top of the jobfile
 	#get the stuff after the keyword in each requiredline
 	LocalDir=`gawk -v f1="#InputDir: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
-	RemoteDir=`gawk -v f1="#RemoteDir: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
 	InputFile=`gawk -v f1="#InputFile: " '{if($0~f1){sub(f1,"");print $0}}' ${subfile}`
 
 	#if there are files to be copied (ie non zero list of files) 
@@ -122,15 +121,10 @@ do
 	    echo "Checking for file on local RAID: $InputFile"
 
 	    LocalFile=${LocalDir}"/"${InputFile}
-	    RemoteFile=${RemoteDir}"/"${InputFile}
 	    
 	    if [ ! -f $LocalFile ]; then
-		echo
-		echo "Copying data: scp $RemoteFile $LocalFile"
-		scp -q "$RemoteFile" "$LocalFile"
-		
-	       	#make it group writeable to allow removal by other a2kph
-		chmod g+w $LocalFile
+		echo "Not found as $LocalFile"
+		exit 1
 	    else
 		echo "Found $LocalFile"
 	    fi

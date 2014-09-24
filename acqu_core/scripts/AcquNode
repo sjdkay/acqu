@@ -6,7 +6,6 @@
 # ACQU_MAINDIR:       Location of the Acqu main directory
 # ACQU_SETUPFILE:     Top level AcquRoot setup file
 # ACQU_INPUTDIR:      Location of the Acqu data files on /local/raid
-# ACQU_REMOTEDIR:     Where to scp files from if not in ACQU_INPUTDIR
 # ACQU_OUTPUTDIR:     Where to put the output on /local/raid
 # ACQU_BASENAME:      Basename of this job
 # ACQU_NODEDIR:       Where to store temporary files
@@ -59,5 +58,3 @@ echo "rmdir ${ACQU_NODEDIR}"
 rmdir ${ACQU_NODEDIR}
 
 exit 0;
-
-

@@ -10,11 +10,7 @@ FileList=$3
 ####################################################
 
 # Location of experiment or MC data files on the farm
-InputDir="/local/raid0/A2/rundata/2014-05_Compton_Sigma2z"
-
-# Remote location of experiment or MC data files not already on farm
-# Data will be automatically scp'd from here to $InputDir
-RemoteDir="a2cb@a2datastore1.online.a2.kph:/exports/RAID0_a2datastore1/rundata" 
+InputDir="/local/raid1/A2/rundata/2014-07_EPT_Prod/"
 
 # Location of output root and log files
 OutputDir="/local/raid1/work/${USER}/analysis/${JobName}"
@@ -137,7 +133,7 @@ do
 	    FileDir=$ConfigDir
 	    # If input file doesn't exist in this directory...
 	    if [ ! -e $FileDir/$File ]; then
-		# reset to original input directory, and trust the files to be in the remote directory
+		# reset to original input directory
 		FileDir=$InputDir
 	    fi
 	fi
@@ -169,13 +165,11 @@ do
     echo "#PBS -o ${JobDir}/jobfiles"  >> $JobFile;
     echo "#"  >> $JobFile;
     echo "#InputDir: $FileDir" >> $JobFile;
-    echo "#RemoteDir: $RemoteDir" >> $JobFile;
     echo "#InputFile: $File" >> $JobFile;
     echo "#"  >> $JobFile;
     echo "export ACQU_MAINDIR=\"$MainDir\""  >> $JobFile;
     echo "export ACQU_SETUPFILE=\"$AcquSetup\""  >> $JobFile;
     echo "export ACQU_INPUTDIR=\"$FileDir\""  >> $JobFile;
-    echo "export ACQU_REMOTEDIR=\"$RemoteDir\""  >> $JobFile;
     echo "export ACQU_OUTPUTDIR=\"$OutputDir\""  >> $JobFile;
     echo "export ACQU_BASENAME=\"$BaseName\""  >> $JobFile;
     echo "export ACQU_NODEDIR=\"$NodeDir\""  >> $JobFile;
