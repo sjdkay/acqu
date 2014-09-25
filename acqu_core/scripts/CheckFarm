@@ -2,6 +2,15 @@
 # Give the args some sensible names
 JobName=$1
 
+if [ -z $JobName ]; then
+    echo "Please provide a job name as first argument"
+    exit 1
+fi
+
+if [ ! -d jobs/$JobName ]; then
+    echo "No folder jobs/$JobName found. Are you running in acqu_user directory?"
+    exit 1
+fi
 
 ####################################################
 ###### Beginning of section requiring editing ######
