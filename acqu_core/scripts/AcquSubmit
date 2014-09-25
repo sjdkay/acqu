@@ -18,7 +18,7 @@ print_usage()
     echo
     echo "Options:"
     echo "  -m <maxjobs>   Set the maximum no of user owned jobs on the farm (default = 500)"
-    echo "  -s <sleep>     Sleep time(s) between submitting jobs (default = 5s)"
+    echo "  -s <sleep>     Sleep time(s) between submitting jobs (default = 1s)"
     echo "  -r             Submit jobs in reverse order to their directory listing in <jobdir> "
 
     echo "Attempts to run qsub to submit <jobfile>, or all the *.sub files in <jobdir>"
@@ -32,7 +32,6 @@ print_usage()
     echo "submit another job."
     echo 
     echo "For each jobs to be submitted this script checks for the existence of the data files on the local farm RAID."
-    echo "If any are missing, it will copy them from the relevant place to the local farm RAID before submitting the job."
     echo 
     echo "Examples:"
     echo
