@@ -36,10 +36,10 @@ Use-CaLib-Veto:     1       1
 ### STEP ONE: "PID Phi Angle Calibration" and "Veto Correlation"
 
 # PID Phi calibration
-#CaLib-PID-Phi: 1
+CaLib-PID-Phi: 1
 
 # veto-crystal correlation
-#CaLib-Veto-Corr: 1
+CaLib-Veto-Corr: 1
 
 ### STEP TWO 
 
