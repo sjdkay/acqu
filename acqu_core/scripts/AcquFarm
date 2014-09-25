@@ -179,6 +179,7 @@ do
     echo "export ACQU_BASENAME=\"$BaseName\""  >> $JobFile;
     echo "export ACQU_NODEDIR=\"$NodeDir\""  >> $JobFile;
     echo "export ACQU_INPUTFILE=\"$File\""  >> $JobFile;
+    echo "export PATH=\$PATH:\$PBS_O_PATH"  >> $JobFile;    
     echo "#"  >> $JobFile;
     echo "#This is the executable that gets run on the node"  >> $JobFile;
     echo "AcquNode"  >> $JobFile;
