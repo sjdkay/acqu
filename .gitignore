@@ -37,7 +37,8 @@ CMakeLists.txt.user
 /CaLib/*.log
 /CaLib/*.root
 /CaLib/config/config.cfg
-
-
+# convenient symlink to the 
+# root files for calibration
+/CaLib/analysis
 
 
