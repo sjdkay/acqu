@@ -163,7 +163,7 @@ void TCCalibPed::Fit(Int_t elem)
     fFitHisto->SetFillColor(35);
     fCanvasFit->cd(2);
     //fFitHisto->GetXaxis()->SetRangeUser(fMean-10, fMean+10);
-    fFitHisto->GetXaxis()->SetRangeUser(70, 140);
+    fFitHisto->GetXaxis()->SetRangeUser(40, 140);
     fFitHisto->Draw("hist");
     
     // draw fitting function
