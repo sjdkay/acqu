@@ -48,10 +48,10 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     Mult(0),
                                                                     nTriggerPattern(0),
 																	TriggerPattern(0),
-                                                                    nHelBits(0),	
+                                                                    nHelBits(0),
                                                                     Helicity(0),
                                                                     HelInver(0),
-                                                                    HelADC(0),															
+                                                                    HelADC(0),
                                                                     nError(0),
                                                                     ErrModID(0),
                                                                     ErrModIndex(0),
@@ -106,7 +106,7 @@ void    TA2GoAT::LoadVariable()
 	TA2DataManager::LoadVariable("WC1E", 		WC1_E,		EDMultiX);
 
 	TA2DataManager::LoadVariable("ESum",		&ESum, 		EDSingleX);
- 
+
     return;
     
 }
