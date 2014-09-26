@@ -163,8 +163,8 @@ Finish:		    root/macros/FinishWorker.C	Finish()
 ##
 ########################################################################
 ##
-## TAPS PbWO4 - QDCs, QDCSs
-#Display: ADC 29000 29143
+## TAPS PbWO4 - QDCs, QDCSs, including Vetos
+#Display: ADC 29000 29191
 ##
 ## TAPS PbWO4 - TDCs
 #Display: MultiHit 29224 29295 1000 -10000 10000 0
