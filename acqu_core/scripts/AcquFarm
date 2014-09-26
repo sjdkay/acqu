@@ -148,13 +148,13 @@ do
     BaseName=`basename $File | sed 's/.root//' | sed 's/.dat//' | sed 's/.xz//'`
     JobFile="${JobDir}/jobfiles/$BaseName.sub"
     NodeDir="/scratch/${USER}/${BaseName}"
-
+    RunNumber=`echo $BaseName | sed -r 's/.*_([0-9]*)$/\1/g'`
     # Check for running compressed files
     CompFile=`echo $File | grep -c ".xz"`
 
     #now make the job file
     echo "#!/bin/sh" > $JobFile;
-    echo "#PBS -N Acqu_${USER}" >> $JobFile;
+    echo "#PBS -N Acqu_${RunNumber}" >> $JobFile;
     echo "#PBS -m abe" >> $JobFile;
     echo "#PBS -M $MailAddress"  >> $JobFile;
     echo "#PBS -V"  >> $JobFile;
