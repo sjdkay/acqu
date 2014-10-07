@@ -81,13 +81,15 @@ private:
     	//Hits
     	Int_t		nNaI_Hits;
     	Int_t*		NaI_Hits;
-    	Int_t		nPID_Hits;
+     	Int_t*		NaI_Cluster;
+   	Int_t		nPID_Hits;
     	Int_t*		PID_Hits;
     	Int_t		nWC_Hits;
     	Int_t*		WC_Hits;
     	Int_t		nBaF2_PbWO4_Hits;
     	Int_t*		BaF2_PbWO4_Hits;
-    	Int_t		nVeto_Hits;
+     	Int_t*		BaF2_PbWO4_Cluster;
+   	Int_t		nVeto_Hits;
     	Int_t*		Veto_Hits;
     
     	//Trigger 

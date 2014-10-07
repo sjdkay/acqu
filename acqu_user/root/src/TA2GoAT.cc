@@ -34,12 +34,14 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     edgeSetting(0),
                                                                     nNaI_Hits(0),
                                                                     NaI_Hits(0),
+                                                                    NaI_Cluster(0),
                                                                     nPID_Hits(0),
                                                                     PID_Hits(0),
                                                                     nWC_Hits(0),
 																	WC_Hits(0),
 																	nBaF2_PbWO4_Hits(0),
 																	BaF2_PbWO4_Hits(0),
+																	BaF2_PbWO4_Cluster(0),
                                                                     nVeto_Hits(0),
                                                                     Veto_Hits(0),
                                                                     ESum(0),
@@ -181,9 +183,11 @@ void    TA2GoAT::PostInit()
    	WC_Vertex_Z 	= new Double_t[TA2GoAT_MAX_PARTICLE];
     
    	NaI_Hits	= new Int_t[TA2GoAT_MAX_HITS];  
-   	PID_Hits	= new Int_t[TA2GoAT_MAX_HITS];
+    	NaI_Cluster	= new Int_t[TA2GoAT_MAX_HITS];  
+  	PID_Hits	= new Int_t[TA2GoAT_MAX_HITS];
    	WC_Hits		= new Int_t[TA2GoAT_MAX_HITS];
    	BaF2_PbWO4_Hits	= new Int_t[TA2GoAT_MAX_HITS];
+   	BaF2_PbWO4_Cluster	= new Int_t[TA2GoAT_MAX_HITS];  
    	Veto_Hits	= new Int_t[TA2GoAT_MAX_HITS];
     
    	TriggerPattern = new Int_t[32];
@@ -261,12 +265,14 @@ void    TA2GoAT::PostInit()
 	
 	treeDetectorHits->Branch("nNaI_Hits", &nNaI_Hits, "nNaI_Hits/I");
 	treeDetectorHits->Branch("NaI_Hits", NaI_Hits, "NaI_Hits[nNaI_Hits]/I");
+	treeDetectorHits->Branch("NaI_Cluster", NaI_Cluster, "NaI_Cluster[nNaI_Hits]/I");
 	treeDetectorHits->Branch("nPID_Hits", &nPID_Hits, "nPID_Hits/I");
 	treeDetectorHits->Branch("PID_Hits", PID_Hits, "PID_Hits[nPID_Hits]/I");
 	treeDetectorHits->Branch("nWC_Hits", &nWC_Hits, "nWC_Hits/I");
 	treeDetectorHits->Branch("WC_Hits", WC_Hits, "WC_Hits[nWC_Hits]/I");	
 	treeDetectorHits->Branch("nBaF2_PbWO4_Hits", &nBaF2_PbWO4_Hits, "nBaF2_PbWO4_Hits/I");
 	treeDetectorHits->Branch("BaF2_PbWO4_Hits", BaF2_PbWO4_Hits, "BaF2_PbWO4_Hits[nBaF2_PbWO4_Hits]/I");
+	treeDetectorHits->Branch("BaF2_PbWO4_Cluster", BaF2_PbWO4_Cluster, "BaF2_PbWO4_Cluster[nBaF2_PbWO4_Hits]/I");
 	treeDetectorHits->Branch("nVeto_Hits", &nVeto_Hits, "nVeto_Hits/I");
 	treeDetectorHits->Branch("Veto_Hits", Veto_Hits, "Veto_Hits[nVeto_Hits]/I");
 
@@ -437,12 +443,35 @@ void    TA2GoAT::Reconstruct()
 		nParticles += fTAPS->GetNParticle(); // update number of particles
 	}
 
+	UInt_t *clhits;
+	HitCluster_t *cl;
+	UInt_t *hits;
+	Int_t clindex[720];
+
 	// Get Detector Hits
 	if(fNaI)
 	{
+	        for(int i=0; i<720; i++)
+		{
+		        clindex[i] = -1;
+		}
+                clhits = fNaI->GetClustHit();
+		for(uint i=0; i<fNaI->GetNCluster(); i++)
+		{
+		        cl = fNaI->GetCluster(clhits[i]);
+			hits = cl->GetHits();
+			for(uint j=0; j<(cl->GetNhits()); j++)
+			{
+			        clindex[hits[j]] = i;
+			}
+		}
+			
 		nNaI_Hits = fNaI->GetNhits();
 		for(int i=0; i<nNaI_Hits; i++)   
-			{ NaI_Hits[i] = fNaI->GetHits(i); }
+		{
+                        NaI_Hits[i] = fNaI->GetHits(i);
+			NaI_Cluster[i] = clindex[NaI_Hits[i]];
+		}
 	}
 
 	if(fPID)
@@ -461,9 +490,27 @@ void    TA2GoAT::Reconstruct()
 
 	if(fBaF2PWO)
 	{
+	        for(int i=0; i<720; i++)
+		{
+		        clindex[i] = -1;
+		}
+                clhits = fBaF2PWO->GetClustHit();
+		for(uint i=0; i<fBaF2PWO->GetNCluster(); i++)
+		{
+		        cl = fBaF2PWO->GetCluster(clhits[i]);
+			hits = cl->GetHits();
+			for(uint j=0; j<(cl->GetNhits()); j++)
+			{
+			        clindex[hits[j]] = i;
+			}
+		}
+			
 		nBaF2_PbWO4_Hits = fBaF2PWO->GetNhits();
 		for(int i=0; i<nBaF2_PbWO4_Hits; i++)
-			{ BaF2_PbWO4_Hits[i] = fBaF2PWO->GetHits(i); }
+		{
+                        BaF2_PbWO4_Hits[i] = fBaF2PWO->GetHits(i);
+			BaF2_PbWO4_Cluster[i] = clindex[BaF2_PbWO4_Hits[i]];
+		}
 	}
 
 	if(fVeto)
