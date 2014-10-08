@@ -469,9 +469,9 @@ void TA2MyCaLib::PostInit()
     if (fCalib_Veto_Time)
     {
         fHCalib_Veto_Time = new TH2F("CaLib_Veto_Time", "CaLib_Veto_Time;Veto time [ns];Veto element", 
-				     1000, -1000, 1000, fNelemVeto, 0, fNelemVeto);
+				     1000, -100, 100, fNelemVeto, 0, fNelemVeto);
         fHCalib_Veto_Time_Ind = new TH2F("CaLib_Veto_Time_Ind", "CaLib_Veto_Time_Ind;Veto time [ns];Veto element", 
-                                     2000, -200, 200, fNelemVeto, 0, fNelemVeto);
+                                     4000, -1000, 1000, fNelemVeto, 0, fNelemVeto);
     }
 
     // prepare for tagger time calibration
