@@ -417,7 +417,7 @@ Bool_t CaLibReader_t::ApplyCBcalib(TA2Detector* det)
 }
 
 //______________________________________________________________________________
-Bool_t CaLibReader_t::ApplyTAPScalib(TA2MyTAPS_BaF2PWO* det)
+Bool_t CaLibReader_t::ApplyTAPScalib(TA2TAPS_BaF2* det)
 {
     // Read calibration from database using the detector pointer 'det'.
     // Return kTRUE on success and kFALSE if an error occured.
