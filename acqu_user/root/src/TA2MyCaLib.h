@@ -16,7 +16,7 @@
 
 #include "THnSparse.h"
 
-#include "TOA2RecMeson2g.h"
+#include "TOA2RecPi02g.h"
 #include "TOLoader.h"
 
 #include "TA2MyPhysics.h"
