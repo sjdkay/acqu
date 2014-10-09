@@ -23,8 +23,8 @@ Use-CaLib-TAGG:     1
 Use-CaLib-CB:       1       1       1           1
 # TAPS calib:       energy  time    quadr. energy   LED thr.  (0=off/1=on)
 Use-CaLib-TAPS:     1       1       1               0
-# PID calib:        phi     droop   energy  time  (0=off/1=on)
-Use-CaLib-PID:      1       0       0       1
+# PID calib:        phi     energy  time  (0=off/1=on)
+Use-CaLib-PID:      1       0       1
 # Veto calib:       energy  time  (0=off/1=on)
 Use-CaLib-Veto:     1       1
 

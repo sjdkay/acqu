@@ -178,18 +178,16 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
     case ESQL_CALIB_PID:
         {   
             Int_t phi;
-            Int_t droop;
             Int_t energy;
             Int_t time;
 
             // read CaLib PID parameters
-            if (sscanf(line, "%d%d%d%d", &phi, &droop, &energy, &time) == 4)
+            if (sscanf(line, "%d%d%d", &phi, &energy, &time) == 3)
             {
                 // check if CaLib reader exists
                 if (fCaLibReader)
                 {
                     fCaLibReader->SetPIDphi((Bool_t) phi);
-                    fCaLibReader->SetPIDdroop((Bool_t) droop);
                     fCaLibReader->SetPIDenergy((Bool_t) energy);
                     fCaLibReader->SetPIDtime((Bool_t) time);
                 }
