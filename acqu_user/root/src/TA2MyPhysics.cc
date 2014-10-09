@@ -240,7 +240,6 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     fPhotonResThetaTAPS = 0;
     fPhotonResPhiTAPS = 0;
     fPhotonResEnergyTAPS = 0;
-    fParticleRes = 0;
 
     // CaLib
     fCaLibReader = 0;
@@ -802,22 +801,22 @@ void TA2MyPhysics::SetConfig(Char_t* line, Int_t key)
             }
             break;
         }
-        case EMP_PARTICLE_RES:
-        {
-            Char_t fileName[256];
+//        case EMP_PARTICLE_RES:
+//        {
+//            Char_t fileName[256];
         
-            if (sscanf(line, "%s", fileName) != 1)
-                Error("SetConfig", "Bad syntax in particle resolution file definition!");
-            else 
-            {
-                // load resolutions
-                if (TOLoader::LoadObject(fileName, "DetRes", &fParticleRes, "", "q"))
-                    Info("SetConfig", "Loaded particle resolutions");
-                else 
-                    Error("SetConfig", "Could not load particle resolutions!");
-            }
-            break;
-        }
+//            if (sscanf(line, "%s", fileName) != 1)
+//                Error("SetConfig", "Bad syntax in particle resolution file definition!");
+//            else 
+//            {
+//                // load resolutions
+//                if (TOLoader::LoadObject(fileName, "DetRes", &fParticleRes, "", "q"))
+//                    Info("SetConfig", "Loaded particle resolutions");
+//                else 
+//                    Error("SetConfig", "Could not load particle resolutions!");
+//            }
+//            break;
+//        }
         case EMP_CB_TAPS_ENERGY_SCALE:
         {
             if (sscanf(line, "%lf%lf", &fCBEnergyScale, &fTAPSEnergyScale) != 2)

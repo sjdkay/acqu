@@ -375,9 +375,6 @@ protected:
     Int_t fL2Bit_M3;                                        // Level 2 M3+ trigger bit
     Int_t fL2Bit_M4;                                        // Level 2 M4+ trigger bit
     
-    // ----------------------------- Particle resolutions --------------------------- 
-    TOA2DetResolution* fParticleRes;                        // particle resolutions
- 
     // -------------------- Utility methods for analysis classes -------------------- 
 
     Bool_t IsBadScalerRead(Int_t scr);
