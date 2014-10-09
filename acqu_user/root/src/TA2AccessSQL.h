@@ -29,7 +29,6 @@
 
 enum {
     ESQL_USE_CALIB = 20200,
-    ESQL_CALIB_MISC,
     ESQL_CALIB_TAGG,
     ESQL_CALIB_CB,
     ESQL_CALIB_TAPS,
@@ -41,7 +40,6 @@ enum {
 static const Map_t AccessSQLConfigKeys[] = {
     // General keys
     {"Use-CaLib:"                    , ESQL_USE_CALIB},                      // key for CaLib activation
-    {"Use-CaLib-Misc:"               , ESQL_CALIB_MISC},                     // key for miscellaneous CaLib configuration
     {"Use-CaLib-TAGG:"               , ESQL_CALIB_TAGG},                     // key for CaLib tagger configuration
     {"Use-CaLib-CB:"                 , ESQL_CALIB_CB},                       // key for CaLib CB configuration
     {"Use-CaLib-TAPS:"               , ESQL_CALIB_TAPS},                     // key for CaLib TAPS configuration

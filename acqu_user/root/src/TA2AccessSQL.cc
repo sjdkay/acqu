@@ -100,27 +100,6 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
             else Error("SetConfig", "CaLib could not be configured and is hence disabled!");
             break;
         }
-    case ESQL_CALIB_MISC:
-        {   
-            Int_t target_pos;
-
-            // read CaLib misc parameters
-            if (sscanf(line, "%d", &target_pos) == 1)
-            {
-                // check if CaLib reader exists
-                if (fCaLibReader) 
-                {
-                    fCaLibReader->SetTargetPosition((Bool_t) target_pos);
-                }
-                else
-                {
-                    Error("SetConfig", "Misc calibration cannot be configured because CaLib was not configured!");
-                    break;
-                }
-            }
-            else Error("SetConfig", "CaLib misc calibration could not be configured!");
-            break;
-        }
     case ESQL_CALIB_TAGG:
         {   
             Int_t time;
@@ -381,9 +360,6 @@ void TA2AccessSQL::LoadDetectors(TA2DataManager* parent, Int_t depth)
 
 void TA2AccessSQL::ApplyCaLib()
 {
-	if (!fCaLibReader->ApplyTargetPositioncalib(&fTargetPosition))
-        Error("ApplyCaLib", "An error occured during target position calibration!");
-
     // calibrate TAGG
     if (fLadder)
     {
