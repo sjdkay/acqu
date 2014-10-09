@@ -73,8 +73,8 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     fNaILEDPattern    = -1;
     fNaILEDNhits      = 0;         
     fNaILEDHits       = 0;           
-    fCBPID_Index      = 0;
-    fCBPID_dE         = 0;
+//    fCBPID_Index      = 0;
+//    fCBPID_dE         = 0;
     fCBClusterHit     = 0;         
     fCBNCluster       = 0;          
     fCBCluster        = 0;  
@@ -1240,8 +1240,8 @@ void TA2MyPhysics::PostInit()
         fNaIEnergy      = fNaI->GetEnergy();
         fNaITime        = fNaI->GetTime();
 
-        fCBPID_Index    = fCB->GetPIDElementIndex();
-        fCBPID_dE       = fCB->GetPIDEnergyDepo();
+//        fCBPID_Index    = fCB->GetPIDElementIndex();
+//        fCBPID_dE       = fCB->GetPIDEnergyDepo();
         fCBClusterHit   = fNaI->GetClustHit();
         fCBCluster      = fNaI->GetCluster();
         

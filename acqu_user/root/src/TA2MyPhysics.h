@@ -269,8 +269,8 @@ protected:
     Int_t fNaILEDPattern;                                   // index of the NaI LED pattern in the CB bit pattern
     UInt_t fNaILEDNhits;                                    // number of LED hits in the NaI
     Int_t* fNaILEDHits;                                     // pointer to the NaI LED hits
-    Int_t* fCBPID_Index;                                    // pointer to the PID index of the CB cluster
-    Double_t* fCBPID_dE;                                    // pointer to the PID energy deposition of the CB cluster
+//    Int_t* fCBPID_Index;                                    // pointer to the PID index of the CB cluster
+//    Double_t* fCBPID_dE;                                    // pointer to the PID energy deposition of the CB cluster
     UInt_t* fCBClusterHit;                                  // pointer to the CB cluster hit indices
     UInt_t fCBNCluster;                                     // number of clusters in CB
     HitCluster_t** fCBCluster;                              // pointer to the list of CB clusters
