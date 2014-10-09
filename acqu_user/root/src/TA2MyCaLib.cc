@@ -33,9 +33,6 @@ TA2MyCaLib::TA2MyCaLib(const char* name, TA2Analysis* analysis)
     fNelemPID  = 0;
     fNelemVeto = 0;
     
-    // load model
-    TOLoader::LoadPhotoprodModel("MAID_pi0_proton_full", &fModel_Pi0_Proton);
-
     // target position
     fCalib_Target_Position = 0;
 
@@ -1928,22 +1925,22 @@ void TA2MyCaLib::ReconstructPhysics()
                 // skip useless background events (not belonging to the background windows)
                 if (subtr_weight == 0) continue;
                 
-                // change tagger weight for MC
-                if (fIsMC)
-                {   
-                    // calculate true center-of-mass energy (pi0 + proton)
-                    TLorentzVector p4CMTrue = *fPartMC[3]->Get4Vector() + *fPartMC[2]->Get4Vector();
-                    Double_t w_true_mc = p4CMTrue.M();
+//                // change tagger weight for MC
+//                if (fIsMC)
+//                {   
+//                    // calculate true center-of-mass energy (pi0 + proton)
+//                    TLorentzVector p4CMTrue = *fPartMC[3]->Get4Vector() + *fPartMC[2]->Get4Vector();
+//                    Double_t w_true_mc = p4CMTrue.M();
 
-                    // pi0 4-vector in true c.m. frame
-                    TLorentzVector p4Pi0CMTrue(*fPartMC[3]->Get4Vector());
-                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
-                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
+//                    // pi0 4-vector in true c.m. frame
+//                    TLorentzVector p4Pi0CMTrue(*fPartMC[3]->Get4Vector());
+//                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
+//                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
                     
-                    // change tagger weight for MC
-                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
-                    subtr_weight /= fTaggerPhotonEnergy[i];
-                }
+//                    // change tagger weight for MC
+//                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
+//                    subtr_weight /= fTaggerPhotonEnergy[i];
+//                }
  
                 // beam 4-vector
                 TLorentzVector p4Beam(0., 0., fTaggerPhotonEnergy[i], fTaggerPhotonEnergy[i]);
@@ -2124,22 +2121,22 @@ void TA2MyCaLib::ReconstructPhysics()
                 // fill missing mass
                 if (imOk) fHCalib_PID_Eff_MM->Fill(mm, tagg_element, subtr_weight);
                 
-                // change tagger weight for MC
-                if (fIsMC)
-                {   
-                    // calculate true center-of-mass energy (pi0 + proton)
-                    TLorentzVector p4CMTrue = *fPartMC[2]->Get4Vector() + *fPartMC[1]->Get4Vector();
-                    Double_t w_true_mc = p4CMTrue.M();
+//                // change tagger weight for MC
+//                if (fIsMC)
+//                {   
+//                    // calculate true center-of-mass energy (pi0 + proton)
+//                    TLorentzVector p4CMTrue = *fPartMC[2]->Get4Vector() + *fPartMC[1]->Get4Vector();
+//                    Double_t w_true_mc = p4CMTrue.M();
 
-                    // pi0 4-vector in true c.m. frame
-                    TLorentzVector p4Pi0CMTrue(*fPartMC[2]->Get4Vector());
-                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
-                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
+//                    // pi0 4-vector in true c.m. frame
+//                    TLorentzVector p4Pi0CMTrue(*fPartMC[2]->Get4Vector());
+//                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
+//                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
                     
-                    // change tagger weight for MC
-                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
-                    subtr_weight /= fTaggerPhotonEnergy[i];
-                }
+//                    // change tagger weight for MC
+//                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
+//                    subtr_weight /= fTaggerPhotonEnergy[i];
+//                }
           
                 // check PID coincidences
                 if (imOk && mmOk)
@@ -2841,20 +2838,20 @@ void TA2MyCaLib::ReconstructPhysics()
                 if (subtr_weight == 0) continue;
                 
                 // change tagger weight for MC
-                if (fIsMC)
-                {   
-                    // calculate true center-of-mass energy 
-                    TLorentzVector p4CMTrue = *fPartMC[2]->Get4Vector();
-                    Double_t w_true_mc = p4CMTrue.M();
+//                if (fIsMC)
+//                {   
+//                    // calculate true center-of-mass energy 
+//                    TLorentzVector p4CMTrue = *fPartMC[2]->Get4Vector();
+//                    Double_t w_true_mc = p4CMTrue.M();
 
-                    // pi0 4-vector in true c.m. frame
-                    TLorentzVector p4Pi0CMTrue(*fPartMC[3]->Get4Vector());
-                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
-                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
+//                    // pi0 4-vector in true c.m. frame
+//                    TLorentzVector p4Pi0CMTrue(*fPartMC[3]->Get4Vector());
+//                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
+//                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
                     
-                    // change tagger weight for MC
-                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
-                }
+//                    // change tagger weight for MC
+//                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
+//                }
  
                 // fill invariant mass
                 //if (mmOk) fHCalib_TAPS_IM_Neut_BG_Subtr->Fill(im, partTAPS->GetCentralElement(), subtr_weight);

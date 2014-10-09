@@ -107,7 +107,6 @@ private:
     Int_t fNelemTAPS;                                       // number of TAPS elements
     Int_t fNelemPID;                                        // number of PID elements
     Int_t fNelemVeto;                                       // number of Veto elements
-    TOPhotoprodModel* fModel_Pi0_Proton;                    // theoretical model for pi0 proton
 
     // ---------------------------------- target position ---------------------------------- 
     Int_t fCalib_Target_Position;                           // target position calibration toggle
