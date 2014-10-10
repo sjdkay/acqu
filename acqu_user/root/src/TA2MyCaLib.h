@@ -131,6 +131,7 @@ private:
     Int_t fCalib_CB_Time;                                   // CB time calibration toggle
     TH2* fHCalib_CB_Time;                                   // CB time vs element
     TH2* fHCalib_CB_Time_Neut;                              // CB time (from neutral hits) vs element
+    TH2* fHCalib_CB_Time_Ind;                               // CB time vs element, independent
     
     // ----------------------------------- CB rise time ------------------------------------ 
     Int_t fCalib_CB_RiseTime;                               // CB time calibration toggle
@@ -195,6 +196,7 @@ private:
     TH2* fHCalib_TAPS_Time;                                 // TAPS time vs element
     TH2* fHCalib_TAPS_Time_Neut;                            // TAPS time (from neutral hits) vs element
     TH2* fHCalib_TAPS_Time_Neut_IM_Cut;                     // TAPS time (from neutral hits) vs element with invariant mass cut
+    TH2* fHCalib_TAPS_Time_Ind;                             // TAPS time vs element, independent
     
     // ------------------------- TAPS quadratic energy correction -------------------------- 
     Int_t fCalib_TAPS_Quad;                                 // TAPS quadratic energy correction toggle
@@ -262,6 +264,7 @@ private:
     // ------------------------------------- PID time -------------------------------------- 
     Int_t fCalib_PID_Time;                                  // PID time calibration toggle
     TH2* fHCalib_PID_Time;                                  // PID time vs element
+    TH2* fHCalib_PID_Time_Ind;                              // PID time vs element, independent
     
     // ---------------------------------- PID efficiency ----------------------------------- 
     Int_t fCalib_PID_Eff;                                   // PID efficiency alibration toggle
@@ -293,6 +296,7 @@ private:
     // ------------------------------------ Veto time ------------------------------------ 
     Int_t fCalib_Veto_Time;                                 // Veto time calibration toggle
     TH2* fHCalib_Veto_Time;                                 // Veto time vs element
+    TH2* fHCalib_Veto_Time_Ind;                             // Veto time vs element, independent
     
     // --------------------------------- Veto  efficiency ----------------------------------- 
     Int_t fCalib_Veto_Eff;                                  // Veto efficiency alibration toggle
@@ -318,6 +322,7 @@ private:
     TH2* fHCalib_Tagger_Time;                               // tagger + TAPS time vs tagger element for all TAPS element
     TH2* fHCalib_Tagger_Time_Neut;                          // tagger + TAPS time vs tagger element for all TAPS element (neutral hits)
     TH2* fHCalib_Tagger_Time_Pi0;                           // tagger + TAPS time vs tagger element for all TAPS element (phi0 gammas)
+    TH2* fHCalib_Tagger_Time_Ind;                           // tagger time, independent
     
     // ------------------------ Proton light attenuation correction ------------------------ 
     Int_t fCalib_Proton_Lt_Att;                             // Proton light attenuation correction
