@@ -17,7 +17,7 @@
 #ifndef __TA2MyPhysics_h__
 #define __TA2MyPhysics_h__
 
-#include "TOSUtils.h"
+
 #include "TOLoader.h"
 #include "TOGlobals.h"
 #include "TOMCParticle.h"
@@ -32,28 +32,10 @@
 #include "TF1.h"
 #include "THnSparse.h"
 
-#include "TA2Physics.h"
-#include "TA2Tagger.h"
-#include "TA2CentralApparatus.h"
-#include "TA2CalArray.h"
-#include "TA2Taps.h"
-#include "TA2TAPS_BaF2.h"
-#include "TA2TAPS_Veto.h"
-#include "TA2LongScint.h"
-#include "TA2GenericApparatus.h"
-#include "TA2GenericDetector.h"
-#include "CaLibReader_t.h"
-#include "TA2CylMwpc.h"
-
+#include "TA2AccessSQL.h"
 
 enum {
-    EMP_USE_CALIB = 20000,
-    EMP_CALIB_TAGG,
-    EMP_CALIB_CB,
-    EMP_CALIB_TAPS,
-    EMP_CALIB_PID,
-    EMP_CALIB_VETO,
-    EMP_CALIB_BADSCR,
+    EMP_CALIB_BADSCR = 20000,
     EMP_RUN_NUMBER,
     EMP_BAD_TAGG_CH,
     EMP_BAD_CB_CLUSTERS,
@@ -100,12 +82,6 @@ static const Int_t gMyPhysics_MaxMCPart   =  30;
 
 static const Map_t myPhysicsConfigKeys[] = {
     // General keys
-    {"Use-CaLib:"                    , EMP_USE_CALIB},                      // key for CaLib activation
-    {"Use-CaLib-TAGG:"               , EMP_CALIB_TAGG},                     // key for CaLib tagger configuration
-    {"Use-CaLib-CB:"                 , EMP_CALIB_CB},                       // key for CaLib CB configuration
-    {"Use-CaLib-TAPS:"               , EMP_CALIB_TAPS},                     // key for CaLib TAPS configuration
-    {"Use-CaLib-PID:"                , EMP_CALIB_PID},                      // key for CaLib PID configuration
-    {"Use-CaLib-Veto:"               , EMP_CALIB_VETO},                     // key for CaLib Veto configuration
     {"Use-CaLib-BadScR:"             , EMP_CALIB_BADSCR},                   // key for CaLib bad scaler read configuration
     {"Run-Number:"                   , EMP_RUN_NUMBER},                     // key for run number overwriting
     {"Bad-Tagger-Channels:"          , EMP_BAD_TAGG_CH},                    // key for bad tagger channel read-in
@@ -145,7 +121,7 @@ static const Map_t myPhysicsConfigKeys[] = {
 };
 
 
-class TA2MyPhysics : public TA2Physics
+class TA2MyPhysics : public TA2AccessSQL
 {
 
 private:
@@ -238,14 +214,11 @@ private:
 protected:
     // ----------------------------------- General ----------------------------------- 
     TFile* fOutputFile;                                     // output file for direct tree writing
-    Int_t fAnalysisMode;                                    // analysis mode (raw, MC, ...)
-    Bool_t fIsMC;                                           // flag for MC analysis mode
     Double_t fMCVertX;                                      // MC vertex x-coordinate
     Double_t fMCVertY;                                      // MC vertex y-coordinate
     Double_t fMCVertZ;                                      // MC vertex z-coordinate
     TBranch* fMCBranchDirCos;                               // MC branch of direction cosines
     TBranch* fMCBranchVert;                                 // MC branch of vertices
-    Int_t fRunNumber;                                       // run number
     Long64_t fEventCounter;                                 // event counter
     Long64_t fEventOffset;                                  // event offset when analyzing multiple files
     Int_t fSaveEvent;                                       // if 1 : save current event in reduced AcquRoot ROOT file
@@ -253,16 +226,12 @@ protected:
     Bool_t fUseBadScalerReads;                              // key to activate bad scaler reads
 
     // ----------------------------------- Tagger ----------------------------------- 
-    TA2Tagger* fTagger;                                     // pointer to the Tagger
-    TA2Ladder* fLadder;                                     // pointer to the Ladder
     UInt_t fTaggerPhotonNhits;                              // number of photons in the tagger
     Int_t* fTaggerPhotonHits;                               // pointer to the Tagger photon hits
     Double_t* fTaggerPhotonEnergy;                          // pointer to the Tagger photon energy array
     Double_t* fTaggerPhotonTime;                            // pointer to the Tagger photon time array
 
     // ------------------------------------- CB ------------------------------------- 
-    TA2CentralApparatus* fCB;                                  // pointer to the Crystal Ball
-    TA2CalArray* fNaI;                               // pointer to the NaI elements
     UInt_t fNaINhits;                                       // number of NaI hits
     Int_t* fNaIHits;                                        // pointer to the NaI hits
     Double_t* fNaIEnergy;                                   // pointer to the NaI energy array
@@ -280,7 +249,6 @@ protected:
     Double_t fCBEnergyScale;                                // NaI energy scaling
 
     // ------------------------------------- PID ------------------------------------- 
-    TA2Detector* fPID;                                      // pointer to the PID
     UInt_t fPIDNhits;                                       // number of hits in the PID
     Int_t* fPIDHits;                                        // pointer to the PID hits
     Double_t* fPIDEnergy;                                   // pointer to the PID energy array
@@ -288,13 +256,10 @@ protected:
     TVector3** fPIDHitPos;                                  // pointer to the PID hit position list
 
     // ------------------------------------ MWPC ------------------------------------ 
-    TA2CylMwpc* fMWPC;                                      // multi-wire proportional chamber
     Int_t fMWPCNtracks;                                     // number of tracks in the MWPC
     const TA2MwpcTrack* fMWPCtracks;                        // list of tracks in the MWPC    
 
     // ------------------------------------ TAPS ------------------------------------ 
-    TA2Taps* fTAPS;                                       // pointer to TAPS
-    TA2TAPS_BaF2* fBaF2PWO;                            // pointer to the BaF2 (or the BaF2/PWO) array
     A2TAPSType_t fTAPSType;                                 // TAPS type
     UInt_t fBaF2PWONhits;                                   // number of BaF2/PWO hits
     Int_t* fBaF2PWOHits;                                    // pointer to the BaF2/PWO hits
@@ -319,7 +284,6 @@ protected:
     Double_t fTAPSEnergyScale;                              // BaF2PWO energy scaling
     
     // ------------------------------------ Veto ------------------------------------ 
-    TA2TAPS_Veto* fVeto;                                     // pointer to the TAPS Vetos
     UInt_t fVetoNhits;                                      // number of Veto hits
     Int_t* fVetoHits;                                       // pointer to the Veto hits
     Double_t* fVetoEnergy;                                  // pointer to the Veto energy array
@@ -339,15 +303,12 @@ protected:
     Int_t fEBeamBitADC;                                     // helicity bit ADC
 
     // ------------------------------------ TOF ------------------------------------- 
-    TA2LongScint* fTOF;                                     // pointer to the TOF wall
     UInt_t fTOFBarNhits;                                    // number of TOF bar hits
     Int_t* fTOFBarHits;                                     // pointer to the TOF bar hits
     Double_t* fTOFBarMeanEnergy;                            // pointer to the TOF bar mean energy
     Double_t* fTOFBarMeanTime;                              // pointer to the TOF bar mean time
   
     // ----------------------------- Pb glass detector ------------------------------ 
-    TA2GenericApparatus* fPbGlassApp;                       // pointer to the Pb glass detector apparatus
-    TA2GenericDetector* fPbGlass;                           // pointer to the Pb glass detector
     UInt_t fPbGlassNhits;                                   // number of hits in the Pb glass detector
     Double_t* fPbGlassTime;                                 // pointer to the Pb glass detector time
     

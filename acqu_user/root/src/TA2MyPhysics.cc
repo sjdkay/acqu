@@ -21,7 +21,7 @@ ClassImp(TA2MyPhysics)
 
 //______________________________________________________________________________
 TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis) 
-    : TA2Physics(name, analysis)
+    : TA2AccessSQL(name, analysis)
 {
     // Constructor.
     
@@ -30,12 +30,6 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     // command-line recognition for SetConfig()
     AddCmdList(myPhysicsConfigKeys);
     
-    // init members 
-    fAnalysisMode = gAR->GetProcessType();
-    
-    if (fAnalysisMode == EMCProcess) fIsMC = kTRUE;
-    else fIsMC = kFALSE;
-
     fOutputFile = 0;
 
     fMCVertX = 0;
@@ -47,23 +41,17 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
 
     fLastEvent = 0;
 
-    fRunNumber = fIsMC ? 0 : TOSUtils::ExtractRunNumber(gAR->GetFileName());
-    
     fEventCounter       = 0;
     fEventOffset        = 0;
     fSaveEvent          = 0;
     fNScalerReads       = 0;
     fUseBadScalerReads  = kFALSE;
 
-    fTagger             = 0;                 
-    fLadder             = 0;
     fTaggerPhotonNhits  = 0;                 
     fTaggerPhotonHits   = 0;                 
     fTaggerPhotonEnergy = 0;                 
     fTaggerPhotonTime   = 0;                 
 
-    fCB               = 0;  
-    fNaI              = 0;
     fNaINhits         = 0;
     fNaIHits          = 0;
     fNaIEnergy        = 0;
@@ -73,25 +61,20 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     fNaILEDPattern    = -1;
     fNaILEDNhits      = 0;         
     fNaILEDHits       = 0;           
-//    fCBPID_Index      = 0;
-//    fCBPID_dE         = 0;
     fCBClusterHit     = 0;         
     fCBNCluster       = 0;          
     fCBCluster        = 0;  
     fCBEnergyScale    = 1.;
 
-    fPID              = 0;         
     fPIDNhits         = 0;               
     fPIDHits          = 0;               
     fPIDHitPos        = 0;            
     fPIDEnergy        = 0;
     fPIDTime          = 0;
     
-    fMWPC             = 0;
     fMWPCNtracks      = 0;
     fMWPCtracks       = 0;
 
-    fTAPS             = 0;        
     fTAPSType         = kTAPS_2007;
     fBaF2PWO          = 0;   
     fBaF2PWONhits     = 0;            
@@ -116,13 +99,11 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     fTAPSCluster      = 0;  
     fTAPSEnergyScale  = 1.;
 
-    fVeto             = 0;    
     fVetoNhits        = 0;          
     fVetoHits         = 0;          
     fVetoEnergy       = 0;
     fVetoTime         = 0;
 
-    fPbWO4            = 0;
     fPbWO4Nhits       = 0;      
     fPbWO4Hits        = 0;
     fPbWO4Energy      = 0;
@@ -133,14 +114,11 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     fEBeamBitNeg      =  4;
     fEBeamBitADC      =  6;
 
-    fTOF              = 0;   
     fTOFBarNhits      = 0;          
     fTOFBarHits       = 0;          
     fTOFBarMeanEnergy = 0;      
     fTOFBarMeanTime   = 0;      
   
-    fPbGlassApp       = 0;
-    fPbGlass          = 0;  
     fPbGlassNhits     = 0;        
     fPbGlassTime      = 0;    
 
@@ -262,164 +240,6 @@ void TA2MyPhysics::SetConfig(Char_t* line, Int_t key)
 
     switch (key)
     {
-        case EMP_USE_CALIB:
-        {   
-            Char_t tmp[5][256];
-
-            // read CaLib parameters
-            if (sscanf(line, "%s%s%s%s%s", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4]) == 5) 
-            {
-                // create the CaLib reader
-                fCaLibReader = new CaLibReader_t(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], fRunNumber);
-                
-                // check database connection
-                if (fCaLibReader->IsConnected())
-                    Info("SetConfig", "Using calibration '%s' in the CaLib database '%s' on '%s@%s'"
-                                      , tmp[4], tmp[1], tmp[2], tmp[0]);
-                else
-                {
-                    delete fCaLibReader;
-                    fCaLibReader = 0;
-                    Error("SetConfig", "Could not connect to CaLib database server!");
-                    // block here to get the user's attention
-                    Error("SetConfig", "Blocking analysis due to CaLib error!");
-                    for (;;) { gSystem->Sleep(1000); }
-                }
-            }
-            else Error("SetConfig", "CaLib could not be configured and is hence disabled!");
-            break;
-        }
-        case EMP_CALIB_TAGG:
-        {   
-            Int_t time;
-            Int_t eff;
-
-            // read CaLib TAGG parameters
-            if (sscanf(line, "%d%d", &time, &eff) == 2)
-            {
-                // check if CaLib reader exists
-                if (fCaLibReader) 
-                {
-                    fCaLibReader->SetTAGGtime((Bool_t) time);
-                    fCaLibReader->SetTAGGeff((Bool_t) eff);
-                }
-                else
-                {
-                    Error("SetConfig", "TAGG cannot be configured because CaLib was not configured!");
-                    break;
-                }
-            }
-            else Error("SetConfig", "CaLib TAGG calibration could not be configured!");
-            break;
-        }
-        case EMP_CALIB_CB:
-        {   
-            Int_t energy;
-            Int_t time;
-            Int_t timewalk;
-            Int_t quadEnergy;
-            Int_t led;
-
-            // read CaLib CB parameters
-            if (sscanf(line, "%d%d%d%d%d", &energy, &time, &timewalk, &quadEnergy, &led) == 5)
-            {
-                // check if CaLib reader exists
-                if (fCaLibReader)
-                {
-                    fCaLibReader->SetCBenergy((Bool_t) energy);
-                    fCaLibReader->SetCBtime((Bool_t) time);
-                    fCaLibReader->SetCBwalk((Bool_t) timewalk);
-                    fCaLibReader->SetCBquadEnergy((Bool_t) quadEnergy);
-                    fCaLibReader->SetCBled((Bool_t) led);
-                }
-                else
-                {
-                    Error("SetConfig", "CB cannot be configured because CaLib was not configured!");
-                    break;
-                }
-            }
-            else Error("SetConfig", "CaLib CB calibration could not be configured!");
-            break;
-        }
-        case EMP_CALIB_TAPS:
-        {   
-            Int_t energy;  
-            Int_t time;  
-            Int_t quadEnergy;
-            Int_t led;
-            Int_t cfd;
-
-            // read CaLib TAPS parameters
-            if (sscanf(line, "%d%d%d%d%d", &energy, &time, &quadEnergy, &led, &cfd) == 5)
-            {
-                // check if CaLib reader exists
-                if (fCaLibReader)
-                {
-                    fCaLibReader->SetTAPSenergy((Bool_t) energy);
-                    fCaLibReader->SetTAPStime((Bool_t) time);
-                    fCaLibReader->SetTAPSquadEnergy((Bool_t) quadEnergy);
-                    fCaLibReader->SetTAPSled((Bool_t) led);
-                    fCaLibReader->SetTAPScfd((Bool_t) cfd);
-                }
-                else
-                {
-                    Error("SetConfig", "TAPS cannot be configured because CaLib was not configured!");
-                    break;
-                }
-            }
-            else Error("SetConfig", "CaLib TAPS calibration could not be configured!");
-            break;
-        }
-        case EMP_CALIB_PID:
-        {   
-            Int_t phi;
-            Int_t energy;
-            Int_t time;
-
-            // read CaLib PID parameters
-            if (sscanf(line, "%d%d%d", &phi, &energy, &time) == 3)
-            {
-                // check if CaLib reader exists
-                if (fCaLibReader)
-                {
-                    fCaLibReader->SetPIDphi((Bool_t) phi);
-                    fCaLibReader->SetPIDenergy((Bool_t) energy);
-                    fCaLibReader->SetPIDtime((Bool_t) time);
-                }
-                else
-                {
-                    Error("SetConfig", "PID cannot be configured because CaLib was not configured!");
-                    break;
-                }
-            }
-            else Error("SetConfig", "CaLib PID calibration could not be configured!");
-            break;
-        }
-        case EMP_CALIB_VETO:
-        {   
-            Int_t energy;
-            Int_t time;
-            Int_t led;
-
-            // read CaLib Veto parameters
-            if (sscanf(line, "%d%d%d", &energy, &time, &led) == 3)
-            {
-                // check if CaLib reader exists
-                if (fCaLibReader)
-                {
-                    fCaLibReader->SetVetoenergy((Bool_t) energy);
-                    fCaLibReader->SetVetotime((Bool_t) time);
-                    fCaLibReader->SetVetoled((Bool_t) led);
-                }
-                else
-                {
-                    Error("SetConfig", "Veto cannot be configured because CaLib was not configured!");
-                    break;
-                }
-            }
-            else Error("SetConfig", "CaLib Veto calibration could not be configured!");
-            break;
-        }
         case EMP_CALIB_BADSCR:
         {
             fUseBadScalerReads = kTRUE;
@@ -856,108 +676,10 @@ void TA2MyPhysics::SetConfig(Char_t* line, Int_t key)
         }
         default:
         {
-            // default main apparatus SetConfig()
-            TA2Physics::SetConfig(line, key);
+            // default SetConfig() of base class
+            TA2AccessSQL::SetConfig(line, key);
             break;
         }
-    }
-}
-
-//______________________________________________________________________________ 
-void TA2MyPhysics::LoadDetectors(TA2DataManager* parent, Int_t depth)
-{
-    // Load recursively all detector components.
-    
-    Bool_t added = kFALSE;
-
-    // get the children, leave if none found
-    TList* children = parent->GetChildren();
-    if (!children) return;
-    
-    // loop over children
-    TObjLink *lnk = children->FirstLink();
-    while (lnk)
-    {
-        TObject* obj = lnk->GetObject();
-     
-        // look for detectors
-        if (!strcmp(obj->ClassName(), "TA2Tagger"))
-        {
-            fTagger = (TA2Tagger*) obj;
-            added = kTRUE;
-        }
-        if (!strcmp(obj->ClassName(), "TA2Ladder"))
-        {
-            fLadder = (TA2Ladder*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2CentralApparatus"))
-        {
-            fCB = (TA2CentralApparatus*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2CalArray"))
-        {
-            fNaI = (TA2CalArray*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2PlasticPID"))
-        {
-            fPID = (TA2Detector*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2CylMwpc"))
-        {
-            fMWPC = (TA2CylMwpc*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2Taps"))
-        {
-            fTAPS = (TA2Taps*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2TAPS_BaF2"))
-        {
-            fBaF2PWO = (TA2TAPS_BaF2*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->ClassName(), "TA2TAPS_Veto"))
-        {
-            fVeto = (TA2TAPS_Veto*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->GetName(), "PbWO4"))
-        {
-            fPbWO4 = (TA2GenericDetector*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->GetName(), "TOF"))
-        {
-            fTOF = (TA2LongScint*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->GetName(), "PbGlassApp"))
-        {
-            fPbGlassApp = (TA2GenericApparatus*) obj;
-            added = kTRUE;
-        }
-        else if (!strcmp(obj->GetName(), "PbGlassDet"))
-        {
-            fPbGlass = (TA2GenericDetector*) obj;
-            added = kTRUE;
-        }
-
-        // print information if a detector was added
-        if (added)
-        {
-            for (Int_t i = 0; i < depth; i++) printf("  ");
-            printf( "   %s (%s)\n", obj->GetName(), obj->ClassName());
-            added = kFALSE;
-        }
-
-        // add children of child
-        LoadDetectors((TA2DataManager*) obj, depth + 1);
-        lnk = lnk->Next();
     }
 }
 
@@ -979,51 +701,6 @@ Int_t TA2MyPhysics::GetPatternIndex(const Char_t* patternName, TA2BitPattern* pa
     return -1;
 }
 
-//______________________________________________________________________________ 
-void TA2MyPhysics::ApplyCaLib()
-{
-    // Update the detector calibration parameters using CaLib.
-
-    // calibrate TAGG
-    if (fLadder)
-    {
-        if (!fCaLibReader->ApplyTAGGcalib(fLadder))
-            Error("ApplyCaLib", "An error occured during tagger calibration!");
-    }
-    else Error("ApplyCaLib", "Tagger not found - could not calibrate the tagger using CaLib!");
-
-    // calibrate CB
-    if (fNaI)
-    {
-        if (!fCaLibReader->ApplyCBcalib(fNaI))
-            Error("ApplyCaLib", "An error occured during CB calibration!");
-    }
-    else Error("ApplyCaLib", "CB not found - could not calibrate CB using CaLib!");
-
-    // calibrate TAPS
-    if (fBaF2PWO)
-    {
-        if (!fCaLibReader->ApplyTAPScalib(fBaF2PWO))
-            Error("ApplyCaLib", "An error occured during TAPS calibration!");
-    }
-    else Error("ApplyCaLib", "TAPS not found - could not calibrate TAPS using CaLib!");
-    
-    // calibrate PID
-    if (fPID)
-    {
-        if (!fCaLibReader->ApplyPIDcalib(fPID))
-            Error("ApplyCaLib", "An error occured during PID calibration!");
-    }
-    else Error("ApplyCaLib", "PID not found - could not calibrate PID using CaLib!");
-    
-    // calibrate Veto 
-    if (fVeto)
-    {
-        if (!fCaLibReader->ApplyVetocalib(fVeto))
-            Error("ApplyCaLib", "An error occured during Veto calibration!");
-    }
-    else Error("ApplyCaLib", "Veto not found - could not calibrate Veto using CaLib!");
-}
 
 //______________________________________________________________________________ 
 void TA2MyPhysics::PostInit()
@@ -1031,61 +708,13 @@ void TA2MyPhysics::PostInit()
     // Do some further initialisation after all setup parameters have been read in.
  
     // call PostInit() of parent class
-    TA2Physics::PostInit();
-
-    // Show some general information
-    printf("\n\n\n  ****** GENERAL INFORMATION ******\n\n");
-    
-    if (gAR->IsOnline()) 
-    {
-        printf("   ACQU data name      : %s\n", gAR->GetFileName());
-        printf("   Analysis type       : Online\n");
-    }
-    else
-    {
-        printf("   ROOT input file #1  : %s\n", gAR->GetTreeFileList(0));
-        printf("   Analysis type       : Offline\n");
-    }
-
-    if (fAnalysisMode == EMk1Process) printf("   Analysis input      : Raw data\n");
-    else if (fAnalysisMode == EMCProcess) printf("   Analysis input      : MC data\n");
-    else if (fAnalysisMode == EPhysicsProcess) printf("   Analysis input      : Physics\n");
-    else printf("   Analysis input      : Unknown\n");
-    printf("   Run number          : %d\n", fRunNumber);
-    printf("   Analysis class      : %s\n", gAR->GetAnalysisType());
-    printf("   Analysis setup      : %s\n", gAR->GetAnalysisSetup());
-    printf("   Physics class       : %s\n", gAR->GetAnalysis()->GetPhysics()->ClassName());
-    printf("   Physics name        : %s\n", gAR->GetAnalysis()->GetPhysics()->GetName());
-    printf("   Max ADC             : %d\n", gAR->GetMaxADC());
-    printf("   Max Scaler          : %d\n", gAR->GetMaxScaler());
-    printf("\n");
+    TA2AccessSQL::PostInit();
 
     // show information about the selected analysis class
     printf("\n\n\n  ****** PHYSICS ANALYSIS ******\n\n");
     printf("   Name       : %s\n", GetName());
     printf("   Class Name : %s\n", ClassName());
     printf("\n");
-
-    // load the detectors and their components
-    printf("\n\n\n  ****** DETECTOR LIST ******\n\n");
-    printf("   Loaded Detectors:\n\n");
-    LoadDetectors(fParent, 0);
-    printf("\n");
-    
-    // CaLib
-    if (fCaLibReader)
-    {
-        // try to apply the calibration
-        ApplyCaLib();
-        fCaLibReader->Deconnect();
-    
-        // block when an error occurred to get the user's attention
-        if (fCaLibReader->WasError()) 
-        {
-            Error("SetConfig", "Blocking analysis due to CaLib error!");
-            for (;;) { gSystem->Sleep(1000); }
-        }
-    }
  
     // calculate the mean CB NaI gain
     if (fNaI) fTrigCBMeanGain = CalculateMeanCBGain();
