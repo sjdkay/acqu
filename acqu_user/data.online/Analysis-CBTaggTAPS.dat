@@ -180,6 +180,17 @@ Display: Scaler 300 311
 Display: SumScaler 300 311
 Display: Scaler 1000 1095
 Display: SumScaler 1000 1095
+# PairSpec scalers for EPT only 
+# the tagger-specific TA2PairSpec detector class 
+# not really needed since scalers are in one single block
+# However, they are not ordered by energy here
+# see Detector-EPT.dat for scaler number ordering by energy
+Display: Scaler 3100 3163
+Display: SumScaler 3100 3163
+Display: Scaler 3164 3227
+Display: SumScaler 3164 3227
+Display: Scaler 3228 3292
+Display: SumScaler 3228 3292
 ##
 ########################################################################
 ## Display Rates
