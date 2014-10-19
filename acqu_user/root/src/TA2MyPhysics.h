@@ -290,7 +290,6 @@ protected:
     Double_t* fVetoTime;                                    // pointer to the Veto time array
     
     // ------------------------------------ PbWO4 ----------------------------------- 
-    TA2GenericDetector* fPbWO4;                             // pointer to the PbWO4 ring of TAPS
     UInt_t fPbWO4Nhits;                                     // number of PbWO4 hits
     Int_t* fPbWO4Hits;                                      // pointer to the PbWO4 hits array
     Double_t* fPbWO4Energy;                                 // pointer to the PbWO4 energy array
