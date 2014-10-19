@@ -69,16 +69,19 @@ Use-CaLib-Veto:     1       1       0
 
 # CB quadratic energy correction
 #              on/off  pi0_min  pi0_max  eta_min  eta_max
-#CaLib-CB-Quad: 1       100      150      480      575
+CaLib-CB-Quad: 1       100      150      480      620
 
 # tagger time calibration
 #CaLib-Tagger-Time: 1
 
 #### STEP FIVE
 
+# Ensure that you have enough statistics for the time walk correction
+
 # CB time walk calibration
+# For EPT, use prompt_min>prompt_max, which disables any kind of tagging information
 #              on/off  pi0_min  pi0_max  prompt_min  prompt_max  bg1_min  bg1_max  bg2_min  bg2_max  mm_min  mm_max
-CaLib-CB-Walk: 1       110      160      -5          5           -90     -20       20       80       -100    100
+CaLib-CB-Walk: 1       120      150      5           -5          50     -20        20       -50      -100    100
 
 # TAPS energy calibration
 CaLib-TAPS-Energy: 1
