@@ -34,9 +34,9 @@ Use-CaLib-Veto:     1       1       0
 ### STEP ONE: "PID Phi Angle Calibration" and "Veto Correlation"
 
 # PID Phi calibration
-#CaLib-PID-Phi: 1
+CaLib-PID-Phi: 1
 # veto-crystal correlation
-#CaLib-Veto-Corr: 1
+CaLib-Veto-Corr: 1
 
 ### STEP TWO 
 
@@ -49,15 +49,15 @@ Use-CaLib-Veto:     1       1       0
 # Have dummy TimeWalk: 0 0.000000000 0.0000000000 0.00000000 0.0000000 entries in your Detector-NaI.dat file
 
 # CB energy calibration
-#CaLib-CB-Energy: 1
+CaLib-CB-Energy: 1
 # CB time calibration
-#CaLib-CB-Time: 1
+CaLib-CB-Time: 1
 # TAPS time calibration
-#CaLib-TAPS-Time: 1
+CaLib-TAPS-Time: 1
 # PID time calibration
-#CaLib-PID-Time: 1
+CaLib-PID-Time: 1
 # Veto time
-#CaLib-Veto-Time: 1
+CaLib-Veto-Time: 1
 
 ### STEP FOUR
 
@@ -69,10 +69,10 @@ Use-CaLib-Veto:     1       1       0
 
 # CB quadratic energy correction
 #              on/off  pi0_min  pi0_max  eta_min  eta_max
-CaLib-CB-Quad: 1       100      150      480      620
+#CaLib-CB-Quad: 1       100      150      480      620
 
 # tagger time calibration
-#CaLib-Tagger-Time: 1
+CaLib-Tagger-Time: 1
 
 #### STEP FIVE
 
@@ -81,7 +81,7 @@ CaLib-CB-Quad: 1       100      150      480      620
 # CB time walk calibration
 # For EPT, use prompt_min>prompt_max, which disables any kind of tagging information
 #              on/off  pi0_min  pi0_max  prompt_min  prompt_max  bg1_min  bg1_max  bg2_min  bg2_max  mm_min  mm_max
-CaLib-CB-Walk: 1       120      150      5           -5          50     -20        20       -50      -100    100
+#CaLib-CB-Walk: 1       500      600      5           -5          50     -20        20       -50      -100    100
 
 # TAPS energy calibration
 CaLib-TAPS-Energy: 1
