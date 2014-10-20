@@ -80,7 +80,7 @@ fi
 init_values;
 
 #parse the command options and set variables accordingly
-while getopts "rm:" opt ; do 
+while getopts "m:s:r" opt ; do 
     set_option $opt  
 done
 shift $[$OPTIND-1]
