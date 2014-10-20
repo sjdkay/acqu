@@ -21,11 +21,14 @@ endif()
 
 # require a fairly recent ROOT version
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+if(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 6)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules26/")
+endif()
 find_package(ROOT "5.30" REQUIRED)
 
 # since all subprojects need ROOT, set that up here
 include_directories(${ROOT_INCLUDES})
-link_directories(${ROOT_LIBRARY_DIR})
+#link_directories(${ROOT_LIBRARY_DIR})
 
 # in these two variables, we collect over the subprojects
 # the include dirs and the libnames on which acqu_user
