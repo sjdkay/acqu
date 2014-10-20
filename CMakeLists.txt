@@ -28,7 +28,7 @@ find_package(ROOT "5.30" REQUIRED)
 
 # since all subprojects need ROOT, set that up here
 include_directories(${ROOT_INCLUDES})
-#link_directories(${ROOT_LIBRARY_DIR})
+link_directories(${ROOT_LIBRARY_DIR})
 
 # in these two variables, we collect over the subprojects
 # the include dirs and the libnames on which acqu_user

@@ -202,6 +202,7 @@ TAcquRoot::TAcquRoot( const char* name, Bool_t batch )
   fIsLocalDAQ = kFALSE;              // default no local DAQ
   fIsMk2Format = kFALSE;             // default not Mk2 format
   fIsPrintError = kFALSE;            // default no error printout
+  fUseDirectIO = kFALSE;            // default no error printout
 
   fNEpics = 0;                       //No of different epics "modules"
 
