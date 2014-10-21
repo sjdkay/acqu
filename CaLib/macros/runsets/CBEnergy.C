@@ -12,12 +12,12 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include "Config.h"
 
 TCanvas* gCFit;
 TH1* gHOverview;
 TH1* gH;
 TH2* gH2;
-TFile* gFile;
 TF1* gFitFunc;
 TLine* gLine;
 
@@ -39,7 +39,7 @@ void Fit(Int_t run, Bool_t fitEta)
     if (fitEta)
     {
         gFitFunc->SetRange(470, 630);
-        gFitFunc->SetParameters(gH->GetMaximum(), 547, 15, 1, 1, 1, 0.1);
+        gFitFunc->Set#Parameters(gH->GetMaximum(), 547, 15, 1, 1, 1, 0.1);
         gFitFunc->SetParLimits(0, 0, gH->GetMaximum());  
         gFitFunc->SetParLimits(1, 530, 580);  
         gFitFunc->SetParLimits(2, 8, 20);
@@ -109,23 +109,12 @@ void CBEnergy()
     const Char_t* data = "Data.CB.E1";
     const Char_t* hName = "CaLib_CB_IM_Neut";
     Double_t yMin = 110;
-    Double_t yMax = 160;
-
-    // configuration (December 2007)
-    const Char_t calibration[] = "LD2_Dec_07";
-    const Char_t* fLoc = "/Users/fulgur/Desktop/calib/Dec_07";
-
-    // configuration (February 2009)
-    //const Char_t calibration[] = "LD2_Feb_09";
-    //const Char_t* fLoc = "/Users/fulgur/Desktop/calib/Feb_09";
+    Double_t yMax = 160;   
     
-    // configuration (May 2009)
-    //const Char_t calibration[] = "LD2_May_09";
-    //const Char_t* fLoc = "/Users/fulgur/Desktop/calib/May_09";
-
+    
     // create histogram
-    gHOverview = new TH1F("Overview", "Overview", 40000, 0, 40000);
-    TCanvas* cOverview = new TCanvas();
+    gHOverview = new TH1F("CBEnergy", "CBEnergy", 40000, 0, 40000);
+    TCanvas* cOverview = new TCanvas("CBEnergy", "CBEnergy");
     gHOverview->GetYaxis()->SetRangeUser(yMin, yMax);
     gHOverview->Draw("E1");
     
@@ -163,17 +152,9 @@ void CBEnergy()
             if (i == 0 && j == 0) first_run = runs[j];
             if (i == nSets-1 && j == nRuns-1) last_run = runs[j];
 
-            // clean-up
-            if (gH) delete gH;
-            if (gH2) delete gH2;
-            if (gFile) delete gFile;
-            gH = 0;
-            gH2 = 0;
-            gFile = 0;
-
             // load ROOT file
-            sprintf(tmp, "%s/ARHistograms_CB_%d.root", fLoc, runs[j]);
-            gFile = new TFile(tmp);
+            sprintf(tmp, "%s/Hist_CBTaggTAPS_%d.root", fLoc, runs[j]);
+            TFile* gFile = new TFile(tmp);
 
             // check file
             if (!gFile) continue;
@@ -191,6 +172,8 @@ void CBEnergy()
             // fit the histogram
             Fit(runs[j], kFALSE);
             //Fit(runs[j], kTRUE);
+
+            gFile->Close();
             
             // update canvases and sleep
             if (watch)
@@ -224,7 +207,7 @@ void CBEnergy()
     // adjust axis
     gHOverview->GetXaxis()->SetRangeUser(first_run-10, last_run+10);
 
-    TFile* fout = new TFile("runset_overview.root", "recreate");
+    TFile* fout = new TFile("runset_overview.root", "update");
     cOverview->Write();
     delete fout;
 

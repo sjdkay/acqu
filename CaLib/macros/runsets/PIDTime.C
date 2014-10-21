@@ -12,12 +12,12 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include "Config.h"
 
 TCanvas* gCFit;
 TH1* gHOverview;
 TH1* gH;
 TH2* gH2;
-TFile* gFile;
 TF1* gFitFunc;
 TLine* gLine;
 
@@ -34,12 +34,14 @@ void Fit(Int_t run)
     sprintf(tmp, "fTime_%i", run);
     gFitFunc = new TF1(tmp, "gaus");
     gFitFunc->SetLineColor(2);
+    //gFitFunc->SetParameters(gH->GetMaximum(), 0, 3, 1, 1, 1, 0.1);
+        
     
     // estimate peak position
     Double_t fPi0Pos = gH->GetBinCenter(gH->GetMaximumBin());
 
     // configure fitting function
-    gFitFunc->SetRange(fPi0Pos - 1.5, fPi0Pos + 1.5);
+    gFitFunc->SetRange(fPi0Pos - 20, fPi0Pos + 20);
     gFitFunc->SetLineColor(2);
     gFitFunc->SetParameters(gH->GetMaximum(), 0, 5);
     Int_t fitres = gH->Fit(gFitFunc, "RB0Q");
@@ -47,25 +49,34 @@ void Fit(Int_t run)
     // get position
     fPi0Pos = gFitFunc->GetParameter(1);
 
+    
+    
     // check failed fits
     if (fitres) 
     {
-        printf("Run %d: fit failed\n", run);
+	    printf("Run %d: fit failed\n", run);
+	    // draw 
+	    
+
+	    //gSystem->Sleep(100000);
+    
+        
         return;
     }
 
+    gCFit->cd();
+    gH->GetXaxis()->SetRangeUser(-20, 20);
+    gH->Draw();
+    
+    gFitFunc->Draw("same");
+    gLine->Draw("same");
+    
+    
     // indicator line
     gLine->SetX1(fPi0Pos);
     gLine->SetX2(fPi0Pos);
     gLine->SetY1(0);
     gLine->SetY2(gH->GetMaximum());
-
-    // draw 
-    gCFit->cd();
-    gH->GetXaxis()->SetRangeUser(-20, 20);
-    gH->Draw();
-    gFitFunc->Draw("same");
-    gLine->Draw("same");
 
     // fill overview histogram
     gHOverview->SetBinContent(run+1, fPi0Pos);
@@ -83,23 +94,11 @@ void PIDTime()
     gSystem->Load("libCaLib.so");
     
     // general configuration
-    Bool_t watch = kFALSE;
+    Bool_t watch = kTRUE;
     const Char_t* data = "Data.PID.T0";
     const Char_t* hName = "CaLib_PID_Time";
     Double_t yMin = -20;
     Double_t yMax = 20;
-
-    // configuration (December 2007)
-    const Char_t calibration[] = "LD2_Dec_07";
-    const Char_t* fLoc = "/usr/puma_scratch0/werthm/A2/Dec_07/AR/out";
-
-    // configuration (February 2009)
-    //const Char_t calibration[] = "LD2_Feb_09";
-    //const Char_t* fLoc = "/usr/panther_scratch0/werthm/A2/Feb_09/AR/out/ADC";
-    
-    // configuration (May 2009)
-    //const Char_t calibration[] = "LD2_May_09";
-    //const Char_t* fLoc = "/usr/puma_scratch0/werthm/A2/May_09/AR/out";
 
     // create histogram
     gHOverview = new TH1F("Overview", "Overview", 40000, 0, 40000);
@@ -141,17 +140,9 @@ void PIDTime()
             if (i == 0 && j == 0) first_run = runs[j];
             if (i == nSets-1 && j == nRuns-1) last_run = runs[j];
 
-            // clean-up
-            if (gH) delete gH;
-            if (gH2) delete gH2;
-            if (gFile) delete gFile;
-            gH = 0;
-            gH2 = 0;
-            gFile = 0;
-
             // load ROOT file
-            sprintf(tmp, "%s/ARHistograms_CB_%d.root", fLoc, runs[j]);
-            gFile = new TFile(tmp);
+            sprintf(tmp, "%s/Hist_CBTaggTAPS_%d.root", fLoc, runs[j]);
+            TFile* gFile = new TFile(tmp);
 
             // check file
             if (!gFile) continue;
@@ -168,13 +159,15 @@ void PIDTime()
 
             // fit the histogram
             Fit(runs[j]);
+
+            gFile->Close();
             
             // update canvases and sleep
             if (watch)
             {
                 cOverview->Update();
                 gCFit->Update();
-                gSystem->Sleep(100);
+                //gSystem->Sleep(1000);
             }
      
             // count run
@@ -200,7 +193,7 @@ void PIDTime()
     // adjust axis
     gHOverview->GetXaxis()->SetRangeUser(first_run-10, last_run+10);
 
-    TFile* fout = new TFile("runset_overview.root", "recreate");
+    TFile* fout = new TFile("runset_overview.root", "update");
     cOverview->Write();
     delete fout;
 
