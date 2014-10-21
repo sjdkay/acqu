@@ -106,7 +106,7 @@ TA2Ladder::~TA2Ladder()
   if( fMeanEnergy ) delete[] fEnergy;
   if( fMeanEnergyOR ) delete[] fEnergyOR;
   if( fDiffTime ) delete[] fDiffTime;
-  if( fMeanTimeOR ) delete[] fDiffTimeOR;
+  if( fDiffTimeOR ) delete[] fDiffTimeOR;
   if( fTrigg ) delete[] fTrigg;
   if( fHitsAll ) delete[] fHitsAll;
   if( fScalerIndex ) delete[] fScalerIndex;
