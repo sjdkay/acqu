@@ -97,7 +97,7 @@ void    TA2GoAT::LoadVariable()
 	TA2DataManager::LoadVariable("time", 		time,		EDMultiX);
 
 	TA2DataManager::LoadVariable("nTagged", 	&nTagged,	EISingleX);
-	TA2DataManager::LoadVariable("photonbeam_E",photonbeam_E,EDMultiX);
+	TA2DataManager::LoadVariable("photonbeamE",     photonbeam_E,   EDMultiX);
 	TA2DataManager::LoadVariable("taggedCh", 	tagged_ch,	EIMultiX);
 	TA2DataManager::LoadVariable("taggedT", 	tagged_t,	EDMultiX);    
 
@@ -158,9 +158,6 @@ void    TA2GoAT::SetConfig(Char_t* line, Int_t key)
 
 void    TA2GoAT::PostInit()
 {
-	// Default SQL-physics initialisation
-    TA2AccessSQL::PostInit();
-
    	Ek		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	Theta		= new Double_t[TA2GoAT_MAX_PARTICLE];
    	Phi		= new Double_t[TA2GoAT_MAX_PARTICLE];
@@ -192,7 +189,7 @@ void    TA2GoAT::PostInit()
     
    	TriggerPattern = new Int_t[32];
 
-    ErrModID 	= new Int_t[TA2GoAT_MAX_ERROR];
+        ErrModID 	= new Int_t[TA2GoAT_MAX_ERROR];
    	ErrModIndex 	= new Int_t[TA2GoAT_MAX_ERROR];
    	ErrCode 	= new Int_t[TA2GoAT_MAX_ERROR];
 
@@ -294,6 +291,9 @@ void    TA2GoAT::PostInit()
 	gROOT->cd();
 	
 	eventNumber	= 0;	
+
+	// Default SQL-physics initialisation
+        TA2AccessSQL::PostInit();
 
 }
 
