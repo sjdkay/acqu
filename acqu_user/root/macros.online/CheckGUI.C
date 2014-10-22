@@ -100,6 +100,9 @@ void OnBtnSaveAllClicked() {
 
 	
 	Int_t i_save = fCbxItems->GetSelected();
+        // update CB spectra before saving if previously selected
+        if (i_save == 0)
+            CallMacro(i_save, "fCanvas");
 	for(Int_t i=0;i<items->GetEntriesFast(); i++) {
 		MacroEntry* item = (MacroEntry*)items->At(i);
 		fCbxItems->Select(i);
