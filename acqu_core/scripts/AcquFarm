@@ -117,6 +117,9 @@ AcquSetup="${JobDir}/AcquSetup.dat"
 echo "#AcquRoot setup file created automatically using AcquFarm with $SetupFile as basis." > $AcquSetup
 echo "#All unnecessary lines are stripped out"  >> $AcquSetup
 gawk '{if(($1!~"Directory:")&&($1!~"BatchDir:")&&($1!~"TreeFile:")&&($1!~"#"))print $0}' $SetupFile >> $AcquSetup
+# check if UseDirectIO: mode, this determines the number of needed CPUs 
+DirectIO=`grep 'UseDirectIO:' $SetupFile | grep -cv '^#'`
+
 
 # Loop over each line and create the job files
 # each line is like this: "CBTaggTAPS_500.dat CBTaggTAPS_501.dat ....."
@@ -159,7 +162,8 @@ do
     echo "#PBS -M $MailAddress"  >> $JobFile;
     echo "#PBS -V"  >> $JobFile;
     echo "#PBS -l walltime=${WALLTIME}" >> $JobFile;
-    if [ $CompFile -gt 0 ]
+    # if not DirectIO and we have compressed file, use 2 CPUs
+    if [ $DirectIO -eq 0 -a $CompFile -eq 1 ]
     then
 	echo "#PBS -l ncpus=2" >> $JobFile;
 	echo "#PBS -q batch" >> $JobFile;

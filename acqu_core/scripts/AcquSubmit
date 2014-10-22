@@ -48,8 +48,8 @@ print_usage()
 init_values()
 {
 #set the defaults
-    sleeptime=1;
-    default_maxq="500";
+    sleeptime=0;
+    default_maxq="3000";
     rev="";
     maxq="${default_maxq}";
     waittime="5m";
