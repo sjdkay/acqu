@@ -34,14 +34,13 @@ void Fit(Int_t run)
     sprintf(tmp, "fTime_%i", run);
     gFitFunc = new TF1(tmp, "gaus");
     gFitFunc->SetLineColor(2);
-    //gFitFunc->SetParameters(gH->GetMaximum(), 0, 3, 1, 1, 1, 0.1);
         
     
     // estimate peak position
     Double_t fPi0Pos = gH->GetBinCenter(gH->GetMaximumBin());
 
     // configure fitting function
-    gFitFunc->SetRange(fPi0Pos - 20, fPi0Pos + 20);
+    gFitFunc->SetRange(fPi0Pos - 8, fPi0Pos + 8);
     gFitFunc->SetLineColor(2);
     gFitFunc->SetParameters(gH->GetMaximum(), 0, 5);
     Int_t fitres = gH->Fit(gFitFunc, "RB0Q");
@@ -55,13 +54,8 @@ void Fit(Int_t run)
     if (fitres) 
     {
 	    printf("Run %d: fit failed\n", run);
-	    // draw 
 	    
-
-	    //gSystem->Sleep(100000);
-    
-        
-        return;
+	    return;
     }
 
     gCFit->cd();
@@ -70,7 +64,8 @@ void Fit(Int_t run)
     
     gFitFunc->Draw("same");
     gLine->Draw("same");
-    
+
+        
     
     // indicator line
     gLine->SetX1(fPi0Pos);
@@ -94,15 +89,15 @@ void PIDTime()
     gSystem->Load("libCaLib.so");
     
     // general configuration
-    Bool_t watch = kTRUE;
+    Bool_t watch = kFALSE;
     const Char_t* data = "Data.PID.T0";
     const Char_t* hName = "CaLib_PID_Time";
     Double_t yMin = -20;
     Double_t yMax = 20;
 
     // create histogram
-    gHOverview = new TH1F("Overview", "Overview", 40000, 0, 40000);
-    TCanvas* cOverview = new TCanvas();
+    gHOverview = new TH1F("PIDTime", "PIDTime", 40000, 0, 40000);
+    TCanvas* cOverview = new TCanvas("PIDTime", "PIDTime");
     gHOverview->GetYaxis()->SetRangeUser(yMin, yMax);
     gHOverview->Draw("E1");
     

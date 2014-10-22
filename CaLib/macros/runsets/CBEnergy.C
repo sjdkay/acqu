@@ -39,7 +39,7 @@ void Fit(Int_t run, Bool_t fitEta)
     if (fitEta)
     {
         gFitFunc->SetRange(470, 630);
-        gFitFunc->Set#Parameters(gH->GetMaximum(), 547, 15, 1, 1, 1, 0.1);
+        gFitFunc->SetParameters(gH->GetMaximum(), 547, 15, 1, 1, 1, 0.1);
         gFitFunc->SetParLimits(0, 0, gH->GetMaximum());  
         gFitFunc->SetParLimits(1, 530, 580);  
         gFitFunc->SetParLimits(2, 8, 20);
@@ -59,7 +59,7 @@ void Fit(Int_t run, Bool_t fitEta)
         if (!(fitres = gH->Fit(gFitFunc, "RB0Q"))) break;
   
     // get position
-    pos = gFitFunc->GetParameter(1);
+    Double_t pos = gFitFunc->GetParameter(1);
 
     // check failed fits
     if (fitres) 
@@ -152,6 +152,7 @@ void CBEnergy()
             if (i == 0 && j == 0) first_run = runs[j];
             if (i == nSets-1 && j == nRuns-1) last_run = runs[j];
 
+            
             // load ROOT file
             sprintf(tmp, "%s/Hist_CBTaggTAPS_%d.root", fLoc, runs[j]);
             TFile* gFile = new TFile(tmp);
@@ -183,7 +184,7 @@ void CBEnergy()
                 gSystem->Sleep(100);
                 //if (runs[j] > 13595) Char_t gg = getchar();
             }
-     
+            
             // count run
             nTotRuns++;
         }
