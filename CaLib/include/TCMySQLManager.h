@@ -65,7 +65,6 @@ private:
                       Int_t first_run, Int_t last_run, Double_t* par, Int_t length);
     Bool_t AddDataSet(const Char_t* data, const Char_t* calibration, const Char_t* desc,
                       Int_t first_run, Int_t last_run, Double_t par);
-    Bool_t RemoveDataSet(const Char_t* data, const Char_t* calibration, Int_t set);
     Bool_t SplitDataSet(const Char_t* data, const Char_t* calibration, Int_t set,
                         Int_t lastRunFirstSet);
     Bool_t MergeDataSets(const Char_t* data, const Char_t* calibration, 
@@ -152,6 +151,7 @@ public:
                 const Char_t* calibration);
     void Import(const Char_t* filename, Bool_t runs, Bool_t calibrations,
                 const Char_t* newCalibName = 0);
+    Bool_t RemoveDataSet(const Char_t* data, const Char_t* calibration, Int_t set);
 
     static TCMySQLManager* GetManager()
     {
