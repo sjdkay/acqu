@@ -1,4 +1,4 @@
-void ApplyCalib() {
+void ApplyCalibFromAR() {
 	// load CaLib
 	gSystem->Load("libCaLib.so");
  
