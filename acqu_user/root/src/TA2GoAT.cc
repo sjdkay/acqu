@@ -317,34 +317,42 @@ void    TA2GoAT::Reconstruct()
 		}
 	}
 
+	nTagged = 0;
 	if(fTagger && fLadder)
 	{
-        // Get the conversion of tagger channel to photon energy
-	Double_t electron_E = fTagger->GetBeamEnergy();
-        const Double_t* ChToE = fLadder->GetECalibration();		
-		
-		// Collect Tagger M0 Hits
-		nTagged	= fLadder->GetNhits();
-		for(int i=0; i<nTagged; i++)
+                // Get the conversion of tagger channel to photon energy
+	        Double_t electron_E = fTagger->GetBeamEnergy();
+                const Double_t* ChToE = fLadder->GetECalibration();
+	        Int_t fNmult = 1;
+	        if ( gAR->IsOnline() ) fNmult = fLADD->GetNMultihit();
+
+		if ( fNmult <= 1 )
 		{
-			tagged_ch[i]	= fLadder->GetHits(i);
-			tagged_t[i]		= (fLadder->GetTimeOR())[i];
-			photonbeam_E[i] = electron_E - ChToE[tagged_ch[i]];
+        		// Collect Tagger Hits without Multihits
+        		nTagged	= fLadder->GetNhits();
+        		for(int i=0; i<nTagged; i++)
+        		{
+        			tagged_ch[i]	= fLadder->GetHits(i);
+        			tagged_t[i]	= (fLadder->GetTimeOR())[i];
+        			photonbeam_E[i] = electron_E - ChToE[tagged_ch[i]];
+	        	}
 		}
-	
-		// Collect Tagger M+ Hits
-		for(UInt_t m=1; m<fLadder->GetNMultihit(); m++)
+		
+		else
 		{
-			for(UInt_t i=0; i<fLadder->GetNhitsM(m); i++)
-			{
-				tagged_ch[nTagged+i] 	= (fLadder->GetHitsM(m))[i];
-				tagged_t[nTagged+i]	 	= (fLadder->GetTimeORM(m))[i];
-				photonbeam_E[nTagged+i] = electron_E - ChToE[tagged_ch[nTagged+i]];
-			}
-			nTagged	+= fLadder->GetNhitsM(m);
+        		// Collect Tagger Hits with Multihits
+        		for(UInt_t m=0; m<fNmult; m++)
+        		{
+        			for(UInt_t i=0; i<fLadder->GetNhitsM(m); i++)
+        			{
+        				tagged_ch[nTagged+i] 	= (fLadder->GetHitsM(m))[i];
+        				tagged_t[nTagged+i]	= (fLadder->GetTimeORM(m))[i];
+        				photonbeam_E[nTagged+i] = electron_E - ChToE[tagged_ch[nTagged+i]];
+        			}
+        			nTagged	+= fLadder->GetNhitsM(m);
+	        	}
 		}
 	}
-	else nTagged = 0;
 	
 	// Gather particle information
 	nParticles = 0;
