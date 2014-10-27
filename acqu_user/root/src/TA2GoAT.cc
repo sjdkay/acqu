@@ -324,7 +324,7 @@ void    TA2GoAT::Reconstruct()
 	        Double_t electron_E = fTagger->GetBeamEnergy();
                 const Double_t* ChToE = fLadder->GetECalibration();
 	        Int_t fNmult = 1;
-	        if ( gAR->IsOnline() ) fNmult = fLADD->GetNMultihit();
+	        if ( gAR->IsOnline() ) fNmult = fLadder->GetNMultihit();
 
 		if ( fNmult <= 1 )
 		{
