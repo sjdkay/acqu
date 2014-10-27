@@ -350,6 +350,11 @@ void TA2AccessSQL::LoadDetectors(TA2DataManager* parent, Int_t depth)
       fPbGlass = (TA2GenericDetector*) obj;
       added = kTRUE;
     }
+    else if (!strcmp(obj->ClassName(), "TA2LinearPolEpics"))
+    {
+      fLinPol = (TA2LinearPolEpics*) obj;
+      added = kTRUE;
+    }
     
     // print information if a detector was added
     if (added)
