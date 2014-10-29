@@ -46,8 +46,8 @@ IRQ-Ctrl: vit0
 ## Event Synchronisation info provider module and event ID index
 Synch-Ctrl: vit0 400
 #
-Module: KPH_SMI		kph0		kphSMIs.dat c0f000	0	0
-Module: LRS_1821	smi0		smi1821_0.dat 
+#Module: KPH_SMI		kph0		kphSMIs.dat c0f000	0	0
+#Module: LRS_1821	smi0		smi1821_0.dat 
 #
 #	
 #Module: LRS_1885	lrs1885_0	lrs_1885.dat	9	b	800
@@ -58,17 +58,17 @@ Module: LRS_1821	smi0		smi1821_0.dat
 #
 ##Module: LRS_1875	lrs1875_0	lrs_1875a.d	3	b	600
 #
-Module: STR_200         strsca_0	str_200_clr.d     21	z	400
-Module: STR_200         strsca_1	str_200_clr.d     20	z	432
-Module: STR_200         strsca_2	str_200_clr.d     19	z	464
-Module: STR_200         strsca_3	str_200_clr.d     18	z	496
-Module: STR_200         strsca_4	str_200_clr.d     17	z	528
-Module: STR_200         strsca_5	str_200_clr.d     16	z	560
-Module: STR_200         strsca_6	str_200_clr.d     15	z	592
-Module: STR_200         strsca_7	str_200_clr.d     14	z	624
-Module: STR_200         strsca_8	str_200_clr.d     13	z	656
-Module: STR_200         strsca_9	str_200_clr.d     12	z	688
-Module: STR_200         strsca_10	str_200_clr.d     11	z	720
+#Module: STR_200         strsca_0	str_200_clr.d     21	z	400
+#Module: STR_200         strsca_1	str_200_clr.d     20	z	432
+#Module: STR_200         strsca_2	str_200_clr.d     19	z	464
+#Module: STR_200         strsca_3	str_200_clr.d     18	z	496
+#Module: STR_200         strsca_4	str_200_clr.d     17	z	528
+#Module: STR_200         strsca_5	str_200_clr.d     16	z	560
+#Module: STR_200         strsca_6	str_200_clr.d     15	z	592
+#Module: STR_200         strsca_7	str_200_clr.d     14	z	624
+#Module: STR_200         strsca_8	str_200_clr.d     13	z	656
+#Module: STR_200         strsca_9	str_200_clr.d     12	z	688
+#Module: STR_200         strsca_10	str_200_clr.d     11	z	720
 #
 Reset-Ctrl: kphi686_0
 ########### End of File #######################
