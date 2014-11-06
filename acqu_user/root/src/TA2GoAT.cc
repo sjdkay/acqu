@@ -193,6 +193,9 @@ void    TA2GoAT::PostInit()
    	ErrModIndex 	= new Int_t[TA2GoAT_MAX_ERROR];
    	ErrCode 	= new Int_t[TA2GoAT_MAX_ERROR];
 
+	// Default SQL-physics initialisation
+        TA2AccessSQL::PostInit();
+
    	printf("---------\n");
    	printf("Init Tree\n");
    	printf("---------\n");
@@ -239,17 +242,6 @@ void    TA2GoAT::PostInit()
 	treeTagger->Branch("tagged_ch", tagged_ch, "tagged_ch[nTagged]/I");
 	treeTagger->Branch("tagged_t", tagged_t, "tagged_t[nTagged]/D");
 
-	// Store Lin Pol if class is active
-	if(fLinPol)
-	{
-		treeLinPol = new TTree("treeLinPol", "treeLinPol");		
-		treeLinPol->Branch("plane", &plane, "plane/I");
-		treeLinPol->Branch("edge", &edge, "edge/D");
-		treeLinPol->Branch("edgeSetting", &edgeSetting, "edgeSetting/D");
-		treeLinPol->Branch("polTable", fLinPol->GetPolTable_TC(), "polTable[352]/D");
-		treeLinPol->Branch("enhTable", fLinPol->GetEnhTable_TC(), "enhTable[352]/D");
-	}
-
 	treeTrigger->Branch("ESum", &ESum, "ESum/D");
 	treeTrigger->Branch("Mult", &Mult, "Mult/I");
 	if(nHelBits > 1) treeTrigger->Branch("Helicity", &Helicity, "Helicity/O");
@@ -283,6 +275,17 @@ void    TA2GoAT::PostInit()
 	        Char_t str[256];
 		sprintf(str, "Scaler[%d]/i", GetMaxScaler());
 		treeScaler->Branch("Scaler", fScaler, str);
+
+		// Store Lin Pol if class is active
+		if(fLinPol)
+		{
+			treeLinPol = new TTree("treeLinPol", "treeLinPol");		
+			treeLinPol->Branch("plane", &plane, "plane/I");
+			treeLinPol->Branch("edge", &edge, "edge/D");
+			treeLinPol->Branch("edgeSetting", &edgeSetting, "edgeSetting/D");
+			treeLinPol->Branch("polTable", fLinPol->GetPolTable_TC(), "polTable[352]/D");
+			treeLinPol->Branch("enhTable", fLinPol->GetEnhTable_TC(), "enhTable[352]/D");
+		}
 	}
 
 	// Define Histograms which will be saved to root tree
@@ -290,10 +293,11 @@ void    TA2GoAT::PostInit()
 
 	gROOT->cd();
 	
-	eventNumber	= 0;	
+	eventNumber	= 0;
 
-	// Default SQL-physics initialisation
-        TA2AccessSQL::PostInit();
+   	printf("---------\n");
+   	printf("Running\n");
+   	printf("---------\n");	
 
 }
 
@@ -306,14 +310,14 @@ void    TA2GoAT::Reconstruct()
 	if((gAR->IsScalerRead()) && (gAR->GetProcessType() != EMCProcess))
 	{
 		eventID	= gAN->GetNDAQEvent();
-		treeScaler->Fill();		
+		if(treeScaler) treeScaler->Fill();		
 		
 		if(fLinPol)
 		{
 			plane 	= fLinPol->GetPolPlane();
 			edge 	= fLinPol->GetEdge();
 			edgeSetting = fLinPol->GetEdgeSetting();
-			treeLinPol->Fill();
+			if(treeLinPol) treeLinPol->Fill();
 		}
 	}
 
