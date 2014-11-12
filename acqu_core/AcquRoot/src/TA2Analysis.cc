@@ -146,7 +146,8 @@ TA2Analysis::TA2Analysis( const char* name )
       logfile = BuildName(gAR->GetBatchDir(),"Analysis.log");
   }
   else logfile = BuildName("Analysis.log");
-  SetLogFile(logfile);                  // output to log file
+  if (gAR->IsLogFile()) SetLogFile(logfile);                  // output to log file
+  else SetLogFile(NULL);
   delete[] logfile;
 
   fprintf(fLogStream," %s analysis linked to Acqu-to-Root interface\n\n",

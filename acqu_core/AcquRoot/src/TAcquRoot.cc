@@ -132,7 +132,7 @@ void* A2RunThread( void* arg )
 }
 
 //-----------------------------------------------------------------------------
-TAcquRoot::TAcquRoot( const char* name, Bool_t batch )
+TAcquRoot::TAcquRoot( const char* name, Bool_t batch, Bool_t logfiles )
   :TA2System( name, ConfigMap )
 {
   // Default contructor....don't allocate "new" memory here. Root will wipe
@@ -198,7 +198,12 @@ TAcquRoot::TAcquRoot( const char* name, Bool_t batch )
   fIsEpicsRead = EFalse;             // no epics read yet
   fIsFinished = EFalse;              // flag to show sort finished
   fIsBatch = batch;                  // save batch flag
-  if( !batch ) SetLogFile( "AcquRoot.log" );
+  fIsLogFile = logfiles;
+  if( !batch ) 
+  {
+    if (fIsLogFile) SetLogFile( "AcquRoot.log" );
+    else SetLogFile(NULL);
+  }
   fIsLocalDAQ = kFALSE;              // default no local DAQ
   fIsMk2Format = kFALSE;             // default not Mk2 format
   fIsPrintError = kFALSE;            // default no error printout
@@ -598,10 +603,11 @@ void TAcquRoot::SetConfig( char* line, int key )
     if( fBatchDir == NULL ){
       fBatchDir = BuildName( name );;
       logfile = BuildName( fBatchDir, "AcquRoot.log" );
-      SetLogFile( logfile );
-      delete logfile;
-      fprintf(fLogStream," Batch-mode log files stored in directory: %s\n\n",
-	      fBatchDir );
+      if (fIsLogFile) SetLogFile( logfile );
+      else SetLogFile(NULL);
+      delete[] logfile;
+      if (fIsLogFile) fprintf(fLogStream," Batch-mode log files stored in directory: %s\n\n",
+	                      fBatchDir );
     }
     break;
   case ERootSplitScaler:

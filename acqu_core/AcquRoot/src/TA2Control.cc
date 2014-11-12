@@ -71,6 +71,7 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   // Default offline running, using file ROOTsetup.dat for configuring
   // analysis session
   Bool_t online = ETrue;
+  Bool_t logfiles = kTRUE;
   fBatch = EFalse;
   char setfile[128];
   char datafile[256] = "";
@@ -83,6 +84,7 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
     if( strcmp("--offline", argv[i]) == 0 ) online = EFalse;
     else if( strcmp("--rootfile", argv[i]) == 0 ) online = EFalse;
     else if( strcmp("--batch", argv[i]) == 0 ) fBatch = ETrue;
+    else if( strcmp("--nolog", argv[i]) == 0 ) logfiles = kFALSE;
     else if( strcmp("--datafile", argv[i]) == 0 ) strcpy( datafile, argv[++i] );
     else if( strcmp("--directory", argv[i]) == 0 ) strcpy( directory, argv[++i] );
     else if( strcmp("--batchdir", argv[i]) == 0 ) strcpy( batchdir, argv[++i] );
@@ -92,7 +94,7 @@ TA2Control::TA2Control( const char* appClassName, int* argc, char** argv,
   if( !noLogo ) PrintLogo();
   SetPrompt("Acqu-Root:%d> ");
 
-  gAR = new TAcquRoot("A2Acqu", fBatch);         // Acqu - Root interface
+  gAR = new TAcquRoot("A2Acqu", fBatch, logfiles); // Acqu - Root interface
   if( online ) gAR->SetIsOnline();               // AcquRoot online procedures
 
   // Set output and batch log files directories before
