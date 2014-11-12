@@ -210,8 +210,8 @@ void    TA2GoAT::PostInit()
 	if(strlen(inputName) && fullName.BeginsWith(inputName)) fullName.Remove(0,strlen(inputName));
 	else fullName.Prepend("_");
 	fullName.Prepend(fileName);
-	if(!strcmp(outputFolder,"")) strcpy(outputFolder, gAR->GetTreeDir());
-	if(strcmp(outputFolder+strlen(outputFolder)-1,"/")) strcat(outputFolder, "/");
+	if(!strcmp(outputFolder,"") && (gAR->GetTreeDir())) strcpy(outputFolder, gAR->GetTreeDir());
+	if((strlen(outputFolder)>0) && strcmp(outputFolder+strlen(outputFolder)-1,"/")) strcat(outputFolder, "/");
 	fullName.Prepend(outputFolder);
    	printf("Root file saved to %s\n", fullName.Data());  
 
