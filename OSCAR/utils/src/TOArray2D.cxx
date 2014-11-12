@@ -1,5 +1,3 @@
-// SVN Info: $Id: TOArray2D.cxx 1621 2012-12-30 22:57:19Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, 2007-2009
  *************************************************************************/
@@ -61,7 +59,7 @@ TOArray2D::~TOArray2D()
 }
 
 //______________________________________________________________________________
-Bool_t TOArray2D::BoundsOk(const char* inLoc, Int_t inColumn, Int_t inRow) const
+Bool_t TOArray2D::BoundsOk(const Char_t* inLoc, Int_t inColumn, Int_t inRow) const
 {
     // Check if 'inColumn' and 'inRow' are within the bounds (return kTRUE) or not
     // (return kFALSE and print error message). Use 'inLoc' to pass the name of

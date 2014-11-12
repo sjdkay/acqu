@@ -1,7 +1,5 @@
-// SVN Info: $Id: TOLoader.cxx 1625 2013-01-07 14:50:45Z werthm $
-
 /*************************************************************************
- * Author: Dominik Werthmueller, 2009-2011
+ * Author: Dominik Werthmueller, 2009-2014
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,7 +39,7 @@ void TOLoader::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
         }
         
         if (!quiet)
-            Info("TOLoader::LoadTaggerCalibration", "Loaded tagger energy calibration for %d channels from '%s'", 
+            Info("TOLoader::LoadTaggerCalibration", "Loaded tagger energy calib. for %d channels from '%s'", 
                  nChannel, fileName);
     }
     else
@@ -193,7 +191,7 @@ void TOLoader::LoadFilesToChains(const Char_t* loc, TChain** chains, Int_t nCh)
     TList* list = dir.GetListOfFiles();
     if (!list)
     {
-        Error("LoadFilesToChains", "'%s' is not a directory!", loc);
+        Error("TOLoader::LoadFilesToChains", "'%s' is not a directory!", loc);
         return;
     }
 
@@ -214,7 +212,7 @@ void TOLoader::LoadFilesToChains(const Char_t* loc, TChain** chains, Int_t nCh)
             sprintf(tmp, "%s/%s", loc, f->GetName());
 
             // user information
-            Info("LoadFilesToChains", "[%d] Adding '%s' to chain %d", n, tmp, (n % nCh));
+            Info("TOLoader::LoadFilesToChains", "[%d] Adding '%s' to chain %d", n+1, tmp, (n % nCh));
             
             // add file to chains
             chains[n % nCh]->Add(tmp);

@@ -1,5 +1,3 @@
-// SVN Info: $Id: TOKinCut.h 1257 2012-07-26 15:33:13Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, 2010
  *************************************************************************/
@@ -42,8 +40,9 @@ protected:
 public:
     TOKinCut() : TObject(),
                  fType(kNoCut), fMin(0), fMax(0) { }
-    TOKinCut(OKinCut_t type, Double_t min, Double_t max) : TObject(),
-                                                           fType(type), fMin(min), fMax(max) { }
+    TOKinCut(OKinCut_t type, Double_t min, Double_t max) 
+        : TObject(),
+          fType(type), fMin(min), fMax(max) { }
     TOKinCut(const TOKinCut& orig);
     virtual ~TOKinCut() { }
     

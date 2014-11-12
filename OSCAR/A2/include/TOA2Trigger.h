@@ -1,5 +1,3 @@
-// SVN Info: $Id: TOA2Trigger.h 1257 2012-07-26 15:33:13Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, 2011
  *************************************************************************/
@@ -93,7 +91,7 @@ public:
     void Reset();
     virtual void Print(Option_t* option = "") const;
     
-    TOA2Trigger& operator=(TOA2Trigger& t);
+    TOA2Trigger& operator=(const TOA2Trigger& t);
 
     ClassDef(TOA2Trigger, 1)  // A2 trigger
 };

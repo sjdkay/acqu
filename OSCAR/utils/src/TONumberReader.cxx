@@ -1,5 +1,3 @@
-// SVN Info: $Id: TONumberReader.cxx 925 2011-05-29 03:25:14Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, 2007-2008
  *************************************************************************/
@@ -20,7 +18,7 @@ ClassImp(TONumberReader)
 
 
 //______________________________________________________________________________
-TONumberReader::TONumberReader(const char* inFileName, Int_t inColumns) 
+TONumberReader::TONumberReader(const Char_t* inFileName, Int_t inColumns) 
     : TOASCIIReader(inFileName)
 {
     // Construct a TONumberReader with the ASCII file name and the number
@@ -45,7 +43,7 @@ TONumberReader::~TONumberReader()
 }
 
 //______________________________________________________________________________
-void TONumberReader::ParseLine(const char* inLine)
+void TONumberReader::ParseLine(const Char_t* inLine)
 {
     // Read in the numbers of one line and add them to the data structure.
     
@@ -150,11 +148,11 @@ Int_t TONumberReader::CountLines()
     fFile->open(fFileName);
 
     // read line by line and call ParseLine()
-    char line[256];
+    Char_t line[1024];
     Int_t lines = 0;
     while (!fFile->eof())
     {
-        fFile->getline(line, 256);
+        fFile->getline(line, 1024);
         if ((TOSUtils::Trim(line))[0] == '\0' || TOSUtils::IsComment(line)) continue;
         lines++;
     }

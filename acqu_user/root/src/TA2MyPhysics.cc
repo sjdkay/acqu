@@ -171,15 +171,6 @@ TA2MyPhysics::TA2MyPhysics(const char* name, TA2Analysis* analysis)
     fOldScalerSum = new Double_t[gAR->GetMaxScaler()];
     for (Int_t i = 0; i < gAR->GetMaxScaler(); i++) fOldScalerSum[i] = 0.;
     
-    if (!fIsMC)
-    {
-        fTScEvent = new TTree("ScalerEvents", "A2 scaler events tree");
-        fScEventOld = new TOA2ScalerEvent();
-        fScEventNew = new TOA2ScalerEvent();
-        fTScEvent->Branch("ScalerEventsOld", "TOA2ScalerEvent", &fScEventOld, 2);
-        fTScEvent->Branch("ScalerEventsNew", "TOA2ScalerEvent", &fScEventNew, 2);
-    }
-    
     fNBadScalerReads = 0;
     fBadScalerReads = 0;
     fH_BadScR_SumScalers = 0;
@@ -1618,38 +1609,11 @@ void TA2MyPhysics::Reconstruct()
         // user information
         //printf("Scaler read @ event %lld\n", fEventCounter);
 
-        // set event number
-        fScEventOld->SetEvent(fEventCounter);
-        fScEventNew->SetEvent(fEventCounter);
-
         // update corrected clock scalers
         UpdateCorrectedScaler(0);
         UpdateCorrectedScaler(1);
         UpdateCorrectedScaler(144);
         UpdateCorrectedScaler(145);
-        
-        // set new scalers
-        fScEventNew->SetTaggInh((Double_t)fScaler[535]);
-        fScEventNew->SetTaggFree((Double_t)fScaler[534]);
-        fScEventNew->SetTotInh((Double_t)fScaler[528]);
-        fScEventNew->SetTotFree((Double_t)fScaler[529]);
-        
-        // save P2
-        fScEventOld->SetP2((Double_t)fScaler[151]);
-        fScEventNew->SetP2((Double_t)fScaler[151]);
-
-        // set Faraday
-        fScEventOld->SetFaraday((Double_t)fScaler[150]);
-        fScEventNew->SetFaraday((Double_t)fScaler[150]);
- 
-        // set tagger
-        fScEventOld->SetTagger((Double_t)fScaler[327]);
-        fScEventNew->SetTagger((Double_t)fScaler[327]);
-        
-        // save scaler events
-        fTScEvent->Fill();
-        fScEventOld->Clear();
-        fScEventNew->Clear();
     }
  
 
@@ -2256,7 +2220,6 @@ void TA2MyPhysics::UpdateCorrectedScaler(Int_t sc)
             else scaler_0 = fScaler[0];
             fH_Corrected_Scalers->SetBinContent(1, scaler_0);
             fH_Corrected_SumScalers->AddBinContent(1, scaler_0);
-            fScEventOld->SetTotFree(scaler_0);
         }
         // free running, overflow vulnerable 24-bit scaler (tagger)
         else if (sc == 144)
@@ -2266,14 +2229,11 @@ void TA2MyPhysics::UpdateCorrectedScaler(Int_t sc)
             else scaler_144 = fScaler[144];
             fH_Corrected_Scalers->SetBinContent(145, scaler_144);
             fH_Corrected_SumScalers->AddBinContent(145, scaler_144);
-            fScEventOld->SetTaggFree(scaler_144);
         }
         else 
         {
             fH_Corrected_Scalers->SetBinContent(sc+1, fScaler[sc]);
             fH_Corrected_SumScalers->AddBinContent(sc+1, fScaler[sc]);
-            if (sc == 1) fScEventOld->SetTotInh(fScaler[sc]);
-            if (sc == 145) fScEventOld->SetTaggInh(fScaler[sc]);
         }
 
         // update old sum scaler value

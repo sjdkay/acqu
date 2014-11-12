@@ -22,7 +22,6 @@
 #include "TOGlobals.h"
 #include "TOMCParticle.h"
 #include "TOA2RecParticle.h"
-#include "TOA2ScalerEvent.h"
 #include "TOA2Trigger.h"
 #include "TOKinCut.h"
 #include "TOA2PSA.h"
@@ -147,9 +146,6 @@ private:
 
     // ----------------------------------- Scalers ----------------------------------- 
     Double_t* fOldScalerSum;                                // used to avoid double sum scaler addition
-    TTree* fTScEvent;                                       // tree for scaler events
-    TOA2ScalerEvent* fScEventOld;                           // scaler event object for old scalers
-    TOA2ScalerEvent* fScEventNew;                           // scaler event object for new scalers
     
     // ------------------------------- Bad scaler reads ------------------------------ 
     Int_t fNBadScalerReads;                                 // number of bad scaler reads

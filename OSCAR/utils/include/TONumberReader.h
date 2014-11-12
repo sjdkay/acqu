@@ -1,5 +1,3 @@
-// SVN Info: $Id: TONumberReader.h 925 2011-05-29 03:25:14Z werthm $
-
 /*************************************************************************
  * Author: Dominik Werthmueller, 2007-2008
  *************************************************************************/
@@ -34,14 +32,14 @@ private:
     Int_t fNrow;                                   // Number of rows
     TOArray2D* fData;                              // 2-dim. array to store the numbers in
 
-    virtual void ParseLine(const char* inLine);
+    virtual void ParseLine(const Char_t* inLine);
 
 public:
     TONumberReader() : TOASCIIReader(), fNcol(0), fNrow(0), fData(0) { }
-    TONumberReader(const char* inFileName, Int_t inColumns); 
+    TONumberReader(const Char_t* inFileName, Int_t inColumns); 
     virtual ~TONumberReader();
     
-    inline TOArray2D* GetData() const { return fData; }
+    TOArray2D* GetData() const { return fData; }
     Int_t GetNcol() const { return fNcol; }
     Int_t GetNrow() const { return fNrow; }
     Double_t* GetColumn(Int_t c) const { return fData->GetColumn(c); }

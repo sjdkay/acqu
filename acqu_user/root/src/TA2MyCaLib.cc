@@ -1215,7 +1215,7 @@ void TA2MyCaLib::ReconstructPhysics()
             }
 
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_cb_risetime;
             TOA2DetParticle** decay_photons = pi0.GetDetectedProducts();
         
@@ -1256,7 +1256,7 @@ void TA2MyCaLib::ReconstructPhysics()
         if (fNNeutral == 2 && fCBNCluster == 2 && fNCharged == 0)
         {
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_cb_timewalk;
             TOA2DetParticle** decay_photons = pi0.GetDetectedProducts();
         
@@ -1579,7 +1579,7 @@ void TA2MyCaLib::ReconstructPhysics()
             else goto label_end_taps_energy_bg_subtr;
 
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_taps_energy_bg_subtr;
             
             // reconstruct random background subtraction particle in CB
@@ -1907,7 +1907,7 @@ void TA2MyCaLib::ReconstructPhysics()
                 fPartCharged[0]->GetTheta()*TMath::RadToDeg() < 27) goto label_end_pid_energy;
         
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_pid_energy;
             
             // check software trigger
@@ -2093,7 +2093,7 @@ void TA2MyCaLib::ReconstructPhysics()
         if (fNNeutral >= 2 && fCBNCluster >= 3)
         {
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_pid_eff;
             
             // only photons in the ball
@@ -2288,7 +2288,7 @@ void TA2MyCaLib::ReconstructPhysics()
         if (fNNeutral >= 2 && fTAPSNCluster >= 1)
         {
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_veto_eff;
             
             // only photons in the ball
@@ -2504,7 +2504,7 @@ void TA2MyCaLib::ReconstructPhysics()
         if (fNNeutral >= 2 && fNCharged == 1)
         {
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_proton_lt_att;
             
             // get the invariant mass
@@ -2796,7 +2796,7 @@ void TA2MyCaLib::ReconstructPhysics()
             }
 
             // reconstruct pi0
-            TOA2RecPi02g pi0(fNNeutral);
+            TOA2RecMeson2g pi0(fNNeutral, TOGlobals::kPi0Mass);
             if (!pi0.Reconstruct(fNNeutral, fPartNeutral)) goto label_end_pwo_check;
             
             // reconstruct random background subtraction particle in CB

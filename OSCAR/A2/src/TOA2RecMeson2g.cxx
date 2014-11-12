@@ -1,54 +1,49 @@
-// SVN Info: $Id: TOA2RecPi02g.cxx 1346 2012-09-12 14:33:28Z werthm $
-
 /*************************************************************************
- * Author: Dominik Werthmueller, Manuel Dieterle, 2008-2010
+ * Author: Dominik Werthmueller, 2008-2014
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TOA2RecPi02g                                                         //
+// TOA2RecMeson2g                                                       //
 //                                                                      //
-// Class for the reconstruction of pi0 mesons in the A2 setup using the //
-// 2 gamma decay.                                                       //
+// Class for the reconstruction of mesons in the A2 setup using a two   //
+// photon decay.                                                        //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "TOA2RecPi02g.h"
+#include "TOA2RecMeson2g.h"
 
-ClassImp(TOA2RecPi02g)
+ClassImp(TOA2RecMeson2g)
 
 
 //______________________________________________________________________________
-TOA2RecPi02g::TOA2RecPi02g(Int_t nParticle)
-    : TOA2RecParticle(nParticle)
+TOA2RecMeson2g::TOA2RecMeson2g(Int_t nPart, Double_t mass)
+    : TOA2RecParticle(2)
 {
-    // Constructor.
+    // Constructor ('nPart' is not used here).
 
     // init members
     fNeutronCand = 0;
+    fMass = mass;
 }
 
 //______________________________________________________________________________
-Bool_t TOA2RecPi02g::Reconstruct(Int_t nParticle, TOA2DetParticle** particleList)
+Bool_t TOA2RecMeson2g::Reconstruct(Int_t nPart, TOA2DetParticle** partList)
 {
     // Reconstruction method.
 
     // check the number of particles
-    if (!nParticle)
+    if (nPart < 2)
     {
-        fNDetectedProducts = 0;
-        fDetectedProducts = 0;
-        Error("Reconstruct", "Number of particles cannot be zero!");
+        Error("Reconstruct", "Number of particles has to be >= 2!");
         return kFALSE;
     }
     // copy the particles directly in case of 2 hits
-    else if (nParticle == 2)
+    else if (nPart == 2)
     {
-        fNDetectedProducts = 2;
-        fDetectedProducts = new TOA2DetParticle*[2];
-        fDetectedProducts[0] = new TOA2DetParticle(*particleList[0]);
-        fDetectedProducts[1] = new TOA2DetParticle(*particleList[1]);
+        fDetectedProducts[0] = new TOA2DetParticle(*partList[0]);
+        fDetectedProducts[1] = new TOA2DetParticle(*partList[1]);
         fDetectedProducts[0]->SetPDG_ID(kGamma);
         fDetectedProducts[1]->SetPDG_ID(kGamma);
         
@@ -59,23 +54,21 @@ Bool_t TOA2RecPi02g::Reconstruct(Int_t nParticle, TOA2DetParticle** particleList
     }
     else
     {
-        // find the best combination to form a pi0
+        // find the best combination to form a meson 
         Int_t id_1, id_2;
-        FindBestPi0(nParticle, particleList, &id_1, &id_2);
+        FindBestMeson(nPart, partList, &id_1, &id_2);
         
         // leave if no solution was selected
         if (fChiSquare == 1e30) return kFALSE;
  
         // create detected particle list
-        fNDetectedProducts = 2;
-        fDetectedProducts = new TOA2DetParticle*[2];
-        fDetectedProducts[0] = new TOA2DetParticle(*particleList[id_1]);
-        fDetectedProducts[1] = new TOA2DetParticle(*particleList[id_2]);
+        fDetectedProducts[0] = new TOA2DetParticle(*partList[id_1]);
+        fDetectedProducts[1] = new TOA2DetParticle(*partList[id_2]);
         fDetectedProducts[0]->SetPDG_ID(kGamma);
         fDetectedProducts[1]->SetPDG_ID(kGamma);
        
         // save neutron candidate in 3 particle case
-        if (nParticle == 3) fNeutronCand = new TOA2DetParticle(*particleList[3-id_1-id_2]);
+        if (nPart == 3) fNeutronCand = new TOA2DetParticle(*partList[3-id_1-id_2]);
 
         // calculate the 4-vector
         Calculate4Vector();
@@ -85,17 +78,16 @@ Bool_t TOA2RecPi02g::Reconstruct(Int_t nParticle, TOA2DetParticle** particleList
 }
 
 //______________________________________________________________________________
-void TOA2RecPi02g::FindBestPi0(Int_t n, TOA2DetParticle** list, Int_t* id_1, Int_t* id_2)
+void TOA2RecMeson2g::FindBestMeson(Int_t n, TOA2DetParticle** list, Int_t* id_1, Int_t* id_2)
 {
-    // Find the best pi0 by applying a chi square search for the best
-    // 2g combination in the particle list 'list' containing 'n' particles.
+    // Find the best meson of two photons using 'n' particles from the list 'list' .
     // The indices of the two particles belonging to the best combination
     // will be stored in id_1 and id_2, respectively.
     
     // check number of particles
     if (n > 20)
     {
-        Error("FindBestPi0", "Number of particles cannot exceed 20!");
+        Error("FindBestMeson", "Number of particles cannot exceed 20!");
         return;
     }
 
@@ -116,7 +108,7 @@ void TOA2RecPi02g::FindBestPi0(Int_t n, TOA2DetParticle** list, Int_t* id_1, Int
             Double_t im_err = im * list[i]->CalcChi2IMError(list[j]);
             
             // calculate chi square
-            Double_t chi = ((TOGlobals::kPi0Mass - im) / im_err) * ((TOGlobals::kPi0Mass - im) / im_err);
+            Double_t chi = ((fMass - im) / im_err) * ((fMass - im) / im_err);
             
             // chi square is smaller
             if (chi < bestChi)
@@ -130,5 +122,21 @@ void TOA2RecPi02g::FindBestPi0(Int_t n, TOA2DetParticle** list, Int_t* id_1, Int
 
     // save best chi square value
     fChiSquare = bestChi;
+}
+
+//______________________________________________________________________________
+void TOA2RecMeson2g::Reset()
+{
+    // Reset the content for a new reconstruction.
+    
+    // call parent method
+    TOA2RecParticle::Reset();
+    
+    // delete neutron candidate
+    if (fNeutronCand)
+    {
+        delete fNeutronCand;
+        fNeutronCand = 0;
+    }
 }
 

@@ -1,7 +1,5 @@
-// SVN Info: $Id: TOA2DetParticle.h 1345 2012-09-12 14:29:45Z werthm $
-
 /*************************************************************************
- * Author: Dominik Werthmueller, 2008
+ * Author: Dominik Werthmueller, 2008-2014
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,16 +25,16 @@ protected:
     UInt_t* fClusterHits;                       //[fClusterSize] Cluster hit elements 
     Double_t* fClusterHitEnergies;              //[fClusterSize] Cluster hit energies
     Double_t* fClusterHitTimes;                 //[fClusterSize] Cluster hit times
-    Double_t fErrorTheta;                       // error in theta angle
-    Double_t fErrorPhi;                         // error in phi angle
-    Double_t fErrorEnergy;                      // error in energy
+    Double_t fErrorTheta;                       // error in theta angle [rad]
+    Double_t fErrorPhi;                         // error in phi angle [rad]
+    Double_t fErrorEnergy;                      // error in energy [MeV]
 
 public:
     TOA2DetParticle() : TOA2BaseDetParticle(),
                         fClusterHits(0), fClusterHitEnergies(0), fClusterHitTimes(0),
                         fErrorTheta(0), fErrorPhi(0), fErrorEnergy(0) { }
-
     TOA2DetParticle(const TOA2DetParticle& orig);
+    TOA2DetParticle(const TOA2BaseDetParticle& orig);
     virtual ~TOA2DetParticle();
  
     Double_t CalcChi2IMError(TOA2DetParticle* p);
