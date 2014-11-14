@@ -52,6 +52,9 @@ set(CORE_LIBS)
 
 CompileCoreLib(AcquRoot)
 target_link_libraries(libAcquRoot ${LIBLZMA_LIBRARIES})
+if(A2DISPLAY_FOUND)
+  target_link_libraries(libAcquRoot ${A2DISPLAY_LIBRARIES})
+endif()
 CompileCoreLib(AcquDAQ "-O0") # AcquDAQ must not be optimized (hardware access gets scrambled)
 CompileCoreLib(AcquMC)
 

@@ -30,6 +30,13 @@ find_package(ROOT "5.30" REQUIRED)
 include_directories(${ROOT_INCLUDES})
 link_directories(${ROOT_LIBRARY_DIR})
 
+# a2display for optional fancy cluster display histograms
+find_package(a2display)
+if(A2DISPLAY_FOUND)
+  include_directories(${A2DISPLAY_INCLUDE_DIR})
+  add_definitions(-DWITH_A2DISPLAY)
+endif()
+
 # in these two variables, we collect over the subprojects
 # the include dirs and the libnames on which acqu_user
 # code can depend on...
