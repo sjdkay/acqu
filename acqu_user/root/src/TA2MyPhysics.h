@@ -25,6 +25,9 @@
 #include "TOA2Trigger.h"
 #include "TOKinCut.h"
 #include "TOA2PSA.h"
+#include "TONumberReader.h"
+#include "TOA2DetParticle.h"
+#include "TOArray2D.h"
 
 #include "TNtupleD.h"
 #include "TChain.h"
