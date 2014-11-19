@@ -15,13 +15,10 @@
 #ifndef OSCAR_TOSUtils
 #define OSCAR_TOSUtils
 
-#include <cstring>
-#include <cstdlib>
+#include "Rtypes.h"
 
-#include "TError.h"
-#include "TRandom3.h"
-#include "TThread.h"
-
+class TThread;
+class TRandom;
 
 namespace TOSUtils
 {

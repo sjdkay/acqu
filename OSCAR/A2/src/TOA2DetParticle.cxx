@@ -11,10 +11,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TVector3.h"
+#include "TMath.h"
+
 #include "TOA2DetParticle.h"
+#include "TOSUtils.h"
 
 ClassImp(TOA2DetParticle)
-
 
 //______________________________________________________________________________
 TOA2DetParticle::TOA2DetParticle(const TOA2DetParticle& orig)

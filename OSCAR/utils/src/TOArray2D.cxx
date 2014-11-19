@@ -11,10 +11,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TMath.h"
+
 #include "TOArray2D.h"
 
 ClassImp(TOArray2D)
-
 
 //______________________________________________________________________________
 TOArray2D::TOArray2D(Int_t inColumns, Int_t inRows, const Char_t* inName) 

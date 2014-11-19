@@ -11,14 +11,16 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TGraph.h"
+
 #include "TOA2PSA.h"
+#include "TOLoader.h"
+#include "TOA2BaseDetParticle.h"
 
 ClassImp(TOA2PSA)
 
-
 // init static class members
 const Int_t TOA2PSA::fgMaxSize = 438;
-
 
 //______________________________________________________________________________
 TOA2PSA::TOA2PSA(const Char_t* file, Double_t sigma, 

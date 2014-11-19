@@ -11,10 +11,16 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TClass.h"
+#include "TLorentzVector.h"
+#include "TH1.h"
+#include "TDatabasePDG.h"
+
 #include "TOA2RecParticle.h"
+#include "TOA2DetParticle.h"
+#include "TOGlobals.h"
 
 ClassImp(TOA2RecParticle)
-
 
 //______________________________________________________________________________
 TOA2RecParticle::TOA2RecParticle()

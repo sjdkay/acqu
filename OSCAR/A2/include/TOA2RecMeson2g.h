@@ -17,7 +17,6 @@
 
 #include "TOA2RecParticle.h"
 
-
 class TOA2RecMeson2g : public TOA2RecParticle
 {
 
@@ -31,7 +30,7 @@ public:
     TOA2RecMeson2g() : TOA2RecParticle(), 
                        fNeutronCand(0), fMass(0) { }
     TOA2RecMeson2g(Int_t nPart, Double_t mass);
-    virtual ~TOA2RecMeson2g() { if (fNeutronCand) delete fNeutronCand; }
+    virtual ~TOA2RecMeson2g();
     
     TOA2DetParticle* GetNeutronCandidate() const { return fNeutronCand; }
     virtual Bool_t Reconstruct(Int_t nPart, TOA2DetParticle** partList);

@@ -14,13 +14,13 @@
 #ifndef OSCAR_TOA2RecParticle
 #define OSCAR_TOA2RecParticle
 
-#include "TLorentzVector.h"
-#include "TClass.h"
-#include "TH1.h"
+#include "TObject.h"
 
-#include "TOGlobals.h"
-#include "TOA2DetParticle.h"
+#include "TOA2Detector.h"
 
+class TH1;
+class TLorentzVector;
+class TOA2DetParticle;
 
 class TOA2RecParticle : public TObject
 {

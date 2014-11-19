@@ -11,10 +11,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TLorentzVector.h"
+
 #include "TOKinCut.h"
+#include "TOA2BaseDetParticle.h"
 
 ClassImp(TOKinCut)
-
 
 //______________________________________________________________________________
 TOKinCut::TOKinCut(const TOKinCut& orig)

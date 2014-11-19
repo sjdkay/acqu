@@ -14,20 +14,18 @@
 #ifndef OSCAR_TOLoader
 #define OSCAR_TOLoader
 
-#include "TError.h"
-#include "TFile.h"
-#include "TH2.h"
-#include "TH3.h"
-#include "THnSparse.h"
-#include "TF1.h"
-#include "TGraphErrors.h"
-#include "TCutG.h"
-#include "TCanvas.h"
-#include "TChain.h"
-#include "TSystemDirectory.h"
+#include "Rtypes.h"
 
-#include "TONumberReader.h"
-
+class TChain;
+class TH1;
+class TH2;
+class TH3;
+class TF1;
+class TGraph;
+class TGraphErrors;
+class THnSparse;
+class TCanvas;
+class TCutG;
 
 namespace TOLoader
 {
@@ -104,7 +102,7 @@ namespace TOLoader
     Bool_t LoadObjects(const Char_t* fName, const Char_t* objName, TCanvas*** outObj,
                        Int_t startID, Int_t endID,
                        const Char_t* objDescr = "", const Char_t* opt = "");
-   
+
     // template methods
     template <class T>
     Bool_t LoadObjectGeneric(const Char_t* fName, const Char_t* objName, T** outObj,

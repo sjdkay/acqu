@@ -12,10 +12,17 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include <string>
+#include <sstream>
+#include <fstream>
+
+#include "TMath.h"
+
 #include "TONumberReader.h"
+#include "TOArray2D.h"
+#include "TOSUtils.h"
 
 ClassImp(TONumberReader)
-
 
 //______________________________________________________________________________
 TONumberReader::TONumberReader(const Char_t* inFileName, Int_t inColumns) 
@@ -51,8 +58,8 @@ void TONumberReader::ParseLine(const Char_t* inLine)
     Char_t* l = TOSUtils::Trim(inLine);
     if (l[0] == '\0' || TOSUtils::IsComment(inLine)) return;
     
-    string line(inLine);
-    istringstream iss(line);
+    std::string line(inLine);
+    std::istringstream iss(line);
     Double_t value;
     
     // read all columns
@@ -68,6 +75,14 @@ void TONumberReader::ParseLine(const Char_t* inLine)
 
     // increment row counter
     fNrow++;
+}
+
+//______________________________________________________________________________
+Double_t* TONumberReader::GetColumn(Int_t c) const
+{
+    // Return the array of the column 'c'.
+
+    return fData->GetColumn(c);
 }
 
 //______________________________________________________________________________

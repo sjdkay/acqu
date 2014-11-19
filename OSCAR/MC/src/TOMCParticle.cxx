@@ -11,10 +11,16 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TLorentzVector.h"
+#include "TRandom.h"
+#include "TGenPhaseSpace.h"
+#include "TF1.h"
+#include "TDatabasePDG.h"
+
 #include "TOMCParticle.h"
+#include "TOGlobals.h"
 
 ClassImp(TOMCParticle)
-
 
 //______________________________________________________________________________
 TOMCParticle::TOMCParticle(TParticlePDG* inPDG, Bool_t initDecay)
@@ -111,6 +117,54 @@ Int_t TOMCParticle::GetGeant3_ID() const
     // handle self-defined particles
     if (fPDG->PdgCode() == TOGlobals::kDeuteronID) return fPDG->TrackingCode();
     else return TOGlobals::GetPDG_DB()->ConvertPdgToGeant3(fPDG->PdgCode()); 
+}
+
+//______________________________________________________________________________
+Int_t TOMCParticle::GetPDG_ID() const
+{
+    // Return the PID ID of this particle.
+
+    return fPDG->PdgCode();
+}
+
+//______________________________________________________________________________
+const Char_t* TOMCParticle::GetName() const
+{
+    // Return the name of this particle.
+
+    return fPDG->GetName();
+}
+
+//______________________________________________________________________________
+Double_t TOMCParticle::GetPDGMassGeV() const
+{
+    // Return the PDG mass of this particle.
+
+    return fPDG->Mass();
+}
+ 
+//______________________________________________________________________________
+void TOMCParticle::SetP4(TLorentzVector* inP4)
+{
+    // Set the 4-vector of this particle to 'inP4'.
+
+    if (fP4) *fP4 = *inP4;
+}
+
+//______________________________________________________________________________
+void TOMCParticle::SetP4(Double_t inPx, Double_t inPy, Double_t inPz, Double_t inE)
+{
+    // Set the 4-vector of this particle to 'inE', 'inPx', 'inPy', 'inPz'.
+
+    if (fP4) fP4->SetPxPyPzE(inPx, inPy, inPz, inE);
+}
+
+//______________________________________________________________________________
+void TOMCParticle::SetVertex(Double_t x, Double_t y, Double_t z)
+{
+    // Set the vertex of this particle to 'x', 'y', 'z'.
+
+    fVertex->SetXYZ(x, y, z);
 }
 
 //______________________________________________________________________________

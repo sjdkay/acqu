@@ -16,8 +16,6 @@
 #define OSCAR_TOA2Detector
 
 #include "TObject.h"
-#include "TError.h"
-
 
 // define A2 detectors
 enum EA2Detector {
@@ -27,7 +25,6 @@ enum EA2Detector {
 };
 typedef EA2Detector A2Detector_t;
 
-
 // define TAPS types
 enum EA2TAPSType {
     kTAPS_2007,             // TAPS 2007 with 384 BaF2
@@ -35,7 +32,6 @@ enum EA2TAPSType {
     kTAPS_2009              // TAPS 2009 with 366 BaF2 + 72 PbWO4
 };
 typedef EA2TAPSType A2TAPSType_t;
-
 
 class TOA2Detector : public TObject
 {

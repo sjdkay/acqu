@@ -12,10 +12,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TLorentzVector.h"
+
 #include "TOA2RecMeson2g.h"
+#include "TOA2DetParticle.h"
 
 ClassImp(TOA2RecMeson2g)
-
 
 //______________________________________________________________________________
 TOA2RecMeson2g::TOA2RecMeson2g(Int_t nPart, Double_t mass)
@@ -26,6 +28,14 @@ TOA2RecMeson2g::TOA2RecMeson2g(Int_t nPart, Double_t mass)
     // init members
     fNeutronCand = 0;
     fMass = mass;
+}
+
+//______________________________________________________________________________
+TOA2RecMeson2g::~TOA2RecMeson2g()
+{
+    // Destructor.
+
+    if (fNeutronCand) delete fNeutronCand;
 }
 
 //______________________________________________________________________________

@@ -15,14 +15,9 @@
 #ifndef OSCAR_TONumberReader
 #define OSCAR_TONumberReader
 
-#include <sstream>
-
-#include "TMath.h"
-
 #include "TOASCIIReader.h"
-#include "TOArray2D.h"
-#include "TOSUtils.h"
 
+class TOArray2D;
 
 class TONumberReader : public TOASCIIReader
 {
@@ -42,7 +37,7 @@ public:
     TOArray2D* GetData() const { return fData; }
     Int_t GetNcol() const { return fNcol; }
     Int_t GetNrow() const { return fNrow; }
-    Double_t* GetColumn(Int_t c) const { return fData->GetColumn(c); }
+    Double_t* GetColumn(Int_t c) const;
     Double_t* GetSum(Int_t c1, Int_t c2, Double_t w1 = 1.0, Double_t w2 = 1.0) const;
     Double_t* GetSum(Int_t c1, TONumberReader* r, Int_t c2, Double_t w1 = 1.0, Double_t w2 = 1.0) const;
     Double_t GetColumnAverage(Int_t c);

@@ -14,15 +14,7 @@
 #ifndef OSCAR_TOASCIIReader
 #define OSCAR_TOASCIIReader
 
-#include <fstream>
-#include <cstring>
-
 #include "TObject.h"
-//#include "TError.h"
-
-
-using namespace std;
-
 
 class TOASCIIReader : public TObject
 {

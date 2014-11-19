@@ -11,10 +11,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include <fstream>
+
 #include "TOASCIIReader.h"
 
 ClassImp(TOASCIIReader)
-
 
 //______________________________________________________________________________
 TOASCIIReader::TOASCIIReader(const Char_t* inFileName)

@@ -14,11 +14,7 @@
 #ifndef OSCAR_TOA2Trigger
 #define OSCAR_TOA2Trigger
 
-#include "TClass.h"
 #include "TObject.h"
-
-#include "TOSUtils.h"
-
 
 // define L1 trigger bits
 enum EA2TrigBitL1 {
@@ -30,7 +26,6 @@ enum EA2TrigBitL1 {
 };
 typedef EA2TrigBitL1 A2TrigBitL1_t;
 
-
 // define L2 trigger bits
 enum EA2TrigBitL2 {
     kM1 = 0,
@@ -40,7 +35,6 @@ enum EA2TrigBitL2 {
 };
 typedef EA2TrigBitL2 A2TrigBitL2_t;
 
-
 // define beam helicity bits
 enum EA2BeamHelBit {
     kPos = 0,
@@ -48,7 +42,6 @@ enum EA2BeamHelBit {
     kUndef
 };
 typedef EA2BeamHelBit A2BeamHelBit_t;
-
 
 class TOA2Trigger : public TObject
 {

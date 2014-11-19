@@ -11,8 +11,22 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "TOLoader.h"
+#include "TCanvas.h"
+#include "TFile.h"
+#include "TH2.h"
+#include "TH3.h"
+#include "TF1.h"
+#include "THnSparse.h"
+#include "TGraph.h"
+#include "TGraphErrors.h"
+#include "TCutG.h"
+#include "TSystemDirectory.h"
+#include "TChain.h"
 
+#include "TOLoader.h"
+#include "TOSUtils.h"
+#include "TONumberReader.h"
+#include "TOArray2D.h"
 
 //______________________________________________________________________________
 void TOLoader::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,

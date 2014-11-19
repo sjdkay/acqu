@@ -15,8 +15,6 @@
 #define OSCAR_TOA2DetParticle
 
 #include "TOA2BaseDetParticle.h"
-#include "TOSUtils.h"
-
 
 class TOA2DetParticle : public TOA2BaseDetParticle
 {

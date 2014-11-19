@@ -14,10 +14,10 @@
 #ifndef OSCAR_TOKinCut
 #define OSCAR_TOKinCut
 
-#include "TLorentzVector.h"
+#include "TObject.h"
 
-#include "TOA2BaseDetParticle.h"
-
+class TLorentzVector;
+class TOA2BaseDetParticle;
 
 // define type of cut
 enum EOKinCut {
@@ -27,7 +27,6 @@ enum EOKinCut {
     kPhiCut,                // phi angle [deg]
 }; 
 typedef EOKinCut OKinCut_t;
-
 
 class TOKinCut : public TObject
 {

@@ -14,8 +14,9 @@
 #ifndef OSCAR_TOGlobals
 #define OSCAR_TOGlobals
 
-#include "TDatabasePDG.h"
+#include "Rtypes.h"
 
+class TDatabasePDG;
 
 namespace TOGlobals
 {
