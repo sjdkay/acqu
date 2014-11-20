@@ -616,7 +616,7 @@ void TA2MyCaLib::PostInit()
         fHCalib_CB_Time_Neut = new TH2F("CaLib_CB_Time_Neut", "CaLib_CB_Time_Neut;CB neutral cluster time [ns];CB element", 
                                         2000, -100, 100, fNelemCB, 0, fNelemCB);
         fHCalib_CB_Time_Ind = new TH2F("CaLib_CB_Time_Ind", "CaLib_CB_Time_Ind;CB neutral cluster time [ns];CB element", 
-                                                10000, -1000, 1000, fNelemCB, 0, fNelemCB);        
+                                       10000, -1000, 1000, fNelemCB, 0, fNelemCB);
     }
     
     // prepare for CB rise time calibration
@@ -709,7 +709,7 @@ void TA2MyCaLib::PostInit()
         fHCalib_TAPS_Time_Neut_IM_Cut = new TH2F("CaLib_TAPS_Time_Neut_IM_Cut", "CaLib_TAPS_Time_Neut_IM_Cut;TAPS neutral cluster time [ns];TAPS element", 
                                                  2000, -100, 100, fNelemTAPS, 0, fNelemTAPS);
         fHCalib_TAPS_Time_Ind = new TH2F("CaLib_TAPS_Time_Ind", "CaLib_TAPS_Time_Ind;TAPS time [ns];TAPS element", 
-                                                  10000, -1000.1, 1000.1, fNelemTAPS, 0, fNelemTAPS);
+                                         10000, -1000, 1000, fNelemTAPS, 0, fNelemTAPS);
     }
     
     // prepare for TAPS quadratic energy correction
@@ -837,7 +837,7 @@ void TA2MyCaLib::PostInit()
         fHCalib_PID_Time = new TH2F("CaLib_PID_Time", "CaLib_PID_Time;PID time [ns];PID element", 
 				    1000, -100, 100, fNelemPID, 0, fNelemPID);
         fHCalib_PID_Time_Ind = new TH2F("CaLib_PID_Time_Ind", "CaLib_PID_Time_Ind;PID time [ns];PID element", 
-                                           1700, -200.1, 200.1, fNelemPID, 0, fNelemPID);
+                                        1700, -200, 200, fNelemPID, 0, fNelemPID);
     }
     
     // prepare for PID efficiency calibration
@@ -880,7 +880,7 @@ void TA2MyCaLib::PostInit()
         fHCalib_Veto_Time = new TH2F("CaLib_Veto_Time", "CaLib_Veto_Time;Veto time [ns];Veto element", 
 				     1000, -100, 100, fNelemVeto, 0, fNelemVeto);
         fHCalib_Veto_Time_Ind = new TH2F("CaLib_Veto_Time_Ind", "CaLib_Veto_Time_Ind;Veto time [ns];Veto element", 
-                                     4000, -1000.1, 1000.1, fNelemVeto, 0, fNelemVeto);        
+                                         4000, -1000, 1000, fNelemVeto, 0, fNelemVeto);
     }
     
     // prepare for Veto efficiency calibration
@@ -907,7 +907,7 @@ void TA2MyCaLib::PostInit()
         fHCalib_Tagger_Time_Pi0 = new TH2F("CaLib_Tagger_Time_Pi0", "CaLib_Tagger_Time_Pi0;Tagger-TAPS time [ns];Tagger element", 
                                            8000, -1000, 1000, fNelemTAGG, 0, fNelemTAGG);
         fHCalib_Tagger_Time_Ind  = new TH2F("CaLib_Tagger_Time_Ind", "CaLib_Tagger_Time_Ind;Tagger time [ns];Tagger element",
-                                            2200, -500.1, 500.1, fNelemTAGG, 0, fNelemTAGG);        
+                                            2200, -500, 500, fNelemTAGG, 0, fNelemTAGG);
     }
 
     // prepare for proton light attenuation correction
@@ -1954,22 +1954,6 @@ void TA2MyCaLib::ReconstructPhysics()
                 // skip useless background events (not belonging to the background windows)
                 if (subtr_weight == 0) continue;
                 
-//                // change tagger weight for MC
-//                if (fIsMC)
-//                {   
-//                    // calculate true center-of-mass energy (pi0 + proton)
-//                    TLorentzVector p4CMTrue = *fPartMC[3]->Get4Vector() + *fPartMC[2]->Get4Vector();
-//                    Double_t w_true_mc = p4CMTrue.M();
-
-//                    // pi0 4-vector in true c.m. frame
-//                    TLorentzVector p4Pi0CMTrue(*fPartMC[3]->Get4Vector());
-//                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
-//                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
-                    
-//                    // change tagger weight for MC
-//                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
-//                    subtr_weight /= fTaggerPhotonEnergy[i];
-//                }
  
                 // beam 4-vector
                 TLorentzVector p4Beam(0., 0., fTaggerPhotonEnergy[i], fTaggerPhotonEnergy[i]);
@@ -2152,22 +2136,6 @@ void TA2MyCaLib::ReconstructPhysics()
                 // fill missing mass
                 if (imOk) fHCalib_PID_Eff_MM->Fill(mm, tagg_element, subtr_weight);
                 
-//                // change tagger weight for MC
-//                if (fIsMC)
-//                {   
-//                    // calculate true center-of-mass energy (pi0 + proton)
-//                    TLorentzVector p4CMTrue = *fPartMC[2]->Get4Vector() + *fPartMC[1]->Get4Vector();
-//                    Double_t w_true_mc = p4CMTrue.M();
-
-//                    // pi0 4-vector in true c.m. frame
-//                    TLorentzVector p4Pi0CMTrue(*fPartMC[2]->Get4Vector());
-//                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
-//                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
-                    
-//                    // change tagger weight for MC
-//                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
-//                    subtr_weight /= fTaggerPhotonEnergy[i];
-//                }
           
                 // check PID coincidences
                 if (imOk && mmOk)
@@ -2872,21 +2840,6 @@ void TA2MyCaLib::ReconstructPhysics()
                 // skip useless background events (not belonging to the background windows)
                 if (subtr_weight == 0) continue;
                 
-                // change tagger weight for MC
-//                if (fIsMC)
-//                {   
-//                    // calculate true center-of-mass energy 
-//                    TLorentzVector p4CMTrue = *fPartMC[2]->Get4Vector();
-//                    Double_t w_true_mc = p4CMTrue.M();
-
-//                    // pi0 4-vector in true c.m. frame
-//                    TLorentzVector p4Pi0CMTrue(*fPartMC[3]->Get4Vector());
-//                    p4Pi0CMTrue.Boost(-p4CMTrue.BoostVector());
-//                    Double_t cosThetaCMTrue_MC = p4Pi0CMTrue.CosTheta();
-                    
-//                    // change tagger weight for MC
-//                    fModel_Pi0_Proton->GetDCS()->Extract(w_true_mc, cosThetaCMTrue_MC, &subtr_weight);
-//                }
  
                 // fill invariant mass
                 //if (mmOk) fHCalib_TAPS_IM_Neut_BG_Subtr->Fill(im, partTAPS->GetCentralElement(), subtr_weight);
