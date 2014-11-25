@@ -435,6 +435,12 @@ void TA2MyCaLib::SetConfig(Char_t* line, Int_t key)
             }
             break;
         case ECALIB_BADSCR:
+            // disable bad scaler read skipping for the calibration
+            if (fUseBadScalerReads)
+            {
+                fUseBadScalerReads = kFALSE;
+                Info("SetConfig", "Bad scaler reads were automatically disabled.");
+            }
             // Enable bad scaler read
             if (sscanf(line, "%d", &fCalib_BadScR) != 1) error = kTRUE;
             if (fCalib_BadScR) fNCalib++;
@@ -956,6 +962,10 @@ void TA2MyCaLib::PostInit()
         fHCalib_BadScR_NaIHits     = new TH2F("CaLib_BadScR_NaIHits",     "CaLib_BadScR_NaIHits;Scaler reads;NaI hits",     
                                               maxReads, 0, maxReads, fNaI->GetNelement(),     0, fNaI->GetNelement());
         fHCalib_BadScR_BaF2PWOHits = new TH2F("CaLib_BadScR_BaF2PWOHits", "CaLib_BadScR_BaF2PWOHits;Scaler reads;BaF2PWO hits", 
+                                              maxReads, 0, maxReads, fBaF2PWO->GetNelement(), 0, fBaF2PWO->GetNelement());
+        fHCalib_BadScR_BaF2Hits    = new TH2F("CaLib_BadScR_BaF2Hits", "CaLib_BadScR_BaF2Hits;Scaler reads;BaF2 hits", 
+                                              maxReads, 0, maxReads, fBaF2PWO->GetNelement(), 0, fBaF2PWO->GetNelement());
+        fHCalib_BadScR_PWOHits     = new TH2F("CaLib_BadScR_PWOHits", "CaLib_BadScR_PWOHits;Scaler reads;PWO hits", 
                                               maxReads, 0, maxReads, fBaF2PWO->GetNelement(), 0, fBaF2PWO->GetNelement());
         fHCalib_BadScR_PIDHits     = new TH2F("CaLib_BadScR_PIDHits",     "CaLib_BadScR_PIDHits;Scaler reads;PID hits",
                                               maxReads, 0, maxReads, fPID->GetNelement(),     0, fPID->GetNelement());
@@ -2630,7 +2640,7 @@ void TA2MyCaLib::ReconstructPhysics()
         if (gAR->IsScalerRead())
         {
             for (Int_t i = 0; i < gAR->GetMaxScaler(); i++)
-                fHCalib_BadScR_Scalers->SetBinContent(fNScalerReads, i+1, (Double_t) fScaler[i]);
+                fHCalib_BadScR_Scalers->SetBinContent(fScalerReadCounter, i+1, (Double_t) fScaler[i]);
         }
 
         // fill NaI hits
@@ -2642,10 +2652,10 @@ void TA2MyCaLib::ReconstructPhysics()
 
             // loop over hits
             for (UInt_t i = 0; i < nhits; i++)
-                fHCalib_BadScR_NaIHits->Fill(fNScalerReads, hits[i]);
+                fHCalib_BadScR_NaIHits->Fill(fScalerReadCounter, hits[i]);
         }
 
-        // fill BaF2PWO hits
+        // fill BaF2PWO/BaF2/PWO hits
         if (fBaF2PWO)
         {
             // get number of hits
@@ -2654,7 +2664,11 @@ void TA2MyCaLib::ReconstructPhysics()
 
             // loop over hits
             for (UInt_t i = 0; i < nhits; i++)
-                fHCalib_BadScR_BaF2PWOHits->Fill(fNScalerReads, hits[i]);
+            {
+                fHCalib_BadScR_BaF2PWOHits->Fill(fScalerReadCounter, hits[i]);
+                if (TOA2Detector::IsTAPSPWO(hits[i], fTAPSType)) fHCalib_BadScR_PWOHits->Fill(fScalerReadCounter, hits[i]);
+                fHCalib_BadScR_BaF2Hits->Fill(fScalerReadCounter, hits[i]);
+            }
         }
 
         // fill PID hits
@@ -2666,7 +2680,7 @@ void TA2MyCaLib::ReconstructPhysics()
 
             // loop over CB ADC hits
             for (UInt_t i = 0; i < nhits; i++)
-                fHCalib_BadScR_PIDHits->Fill(fNScalerReads, hits[i]);
+                fHCalib_BadScR_PIDHits->Fill(fScalerReadCounter, hits[i]);
         }
 
         // fill Veto hits
@@ -2678,7 +2692,7 @@ void TA2MyCaLib::ReconstructPhysics()
 
             // loop over CB ADC hits
             for (UInt_t i = 0; i < nhits; i++)
-                fHCalib_BadScR_VetoHits->Fill(fNScalerReads, hits[i]);
+                fHCalib_BadScR_VetoHits->Fill(fScalerReadCounter, hits[i]);
         }
 
         // fill Ladder hits
@@ -2690,7 +2704,7 @@ void TA2MyCaLib::ReconstructPhysics()
 
             // loop over CB ADC hits
             for (UInt_t i = 0; i < nhits; i++)
-                fHCalib_BadScR_LadderHits->Fill(fNScalerReads, hits[i]);
+                fHCalib_BadScR_LadderHits->Fill(fScalerReadCounter, hits[i]);
         }
         
     }
