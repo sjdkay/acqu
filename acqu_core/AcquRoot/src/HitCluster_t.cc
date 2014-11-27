@@ -50,7 +50,7 @@ HitCluster_t::HitCluster_t( Char_t* line, UInt_t index, Int_t sizefactor,
   // Consistency check...1st hit must be the index
   if( (n != (fNNearNeighbour + 1)) || (index != *hit) ){
     printf(" Error in nearest neighbour input at line:\n %s\n", line );
-    return;
+    exit(1);
   }
   n -= 2;                         // # neighbours around central element
   fNNeighbour = n;
