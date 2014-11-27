@@ -43,7 +43,6 @@ static const Map_t kTAPSClustDetKeys[] = {
   {NULL,          -1}
 };
 
-ClassImp(TA2TAPS_BaF2)
 
 //---------------------------------------------------------------------------
 
@@ -421,3 +420,5 @@ inline void TA2TAPS_BaF2::ReadDecoded()
 }
 
 //-----------------------------------------------------------------------------
+
+ClassImp(TA2TAPS_BaF2)

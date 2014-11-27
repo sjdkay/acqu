@@ -198,3 +198,4 @@ void HitCluster_t::MoreNeighbours( TA2ClusterDetector* cl ){
   }while( n );               // iterate while new cluster members found
   return;
 }
+

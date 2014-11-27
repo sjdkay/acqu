@@ -44,7 +44,6 @@ static const Map_t kCalArrayKeys[] =
   {NULL,            -1}
 };
 
-ClassImp(TA2CalArray)
 
 //---------------------------------------------------------------------------
 TA2CalArray::TA2CalArray(const char* name, TA2System* apparatus)
@@ -238,3 +237,5 @@ void TA2CalArray::SaveDecoded()
 }
 
 //---------------------------------------------------------------------------
+
+ClassImp(TA2CalArray)

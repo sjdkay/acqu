@@ -63,7 +63,6 @@ static Map_t kValidTapsDetectors[] = {
   {NULL,                -1}
 };
 
-ClassImp(TA2Taps)
 
 //-----------------------------------------------------------------------------
 
@@ -854,4 +853,4 @@ error:
 }
 
 //-----------------------Thank you for reading ---------------------------
-
+ClassImp(TA2Taps)

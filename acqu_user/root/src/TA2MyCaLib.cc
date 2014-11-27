@@ -13,7 +13,6 @@
 
 #include "TA2MyCaLib.h"
 
-ClassImp(TA2MyCaLib)
 
 
 //______________________________________________________________________________
@@ -3029,3 +3028,4 @@ Int_t TA2MyCaLib::GetPIDElementForPhi(Double_t phi)
     return id;
 }
 
+ClassImp(TA2MyCaLib)

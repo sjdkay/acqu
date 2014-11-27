@@ -29,7 +29,6 @@
 
 #include "TA2DataManager.h"
 
-ClassImp(TA2DataManager)
 
 //-----------------------------------------------------------------------------
 TA2DataManager::TA2DataManager( const Char_t* name, const Map_t* comlist )
@@ -725,3 +724,5 @@ void TA2DataManager::CloseEvent()
   fTree = NULL;
   fTreeFile = NULL;
 }
+
+ClassImp(TA2DataManager)

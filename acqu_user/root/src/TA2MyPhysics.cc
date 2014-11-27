@@ -16,7 +16,6 @@
 
 #include "TA2MyPhysics.h"
 
-ClassImp(TA2MyPhysics)
 
 
 //______________________________________________________________________________
@@ -2776,3 +2775,4 @@ void TA2MyPhysics::TerminateAnalysis()
     fflush(NULL);
 }
 
+ClassImp(TA2MyPhysics)
