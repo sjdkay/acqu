@@ -1087,9 +1087,14 @@ Bool_t TAcquRoot::DataLoopDirectIOWorkerXZ(const string& filename, const UInt_t 
       strm->next_in = inbuf;
       
       if(!file.read((char*)inbuf, fRecLen)) {
-        PrintError("","File read error.", 
-                   EErrNonFatal); 
-        return false;
+        // since we're reading compressed data 
+	// with some arbitrary fRecLen, it might be
+	// that we reached the end of file
+	if(!file.eof()) {
+	  PrintError("","File read error.", 
+		     EErrNonFatal); 
+	  return false;
+	}
       }
       strm->avail_in = file.gcount();
     
