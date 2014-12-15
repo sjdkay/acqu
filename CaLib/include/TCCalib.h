@@ -62,9 +62,7 @@ protected:
     TTimer* fTimer;             // slow-motion timer
     Bool_t fTimerRunning;       // timer running state
 
-    // Used in relative calculations of descendant classes,
-    // to make convergence slower but more reliable
-    Double_t fConvergenceFactor;
+    Double_t fConvergenceFactor; // used in gain/offset calculation
 
     virtual void Init() = 0;
     virtual void Fit(Int_t elem) = 0;
