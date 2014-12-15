@@ -606,10 +606,10 @@ void TA2MyCaLib::PostInit()
 				              "CaLib_CB_Quad_IM;2#gamma invariant mass [MeV];CB element",
 					      1000, 0, 1000, fNelemCB, 0, fNelemCB);
         fHCalib_CB_Quad_Pi0_Mean_E = new TH2F("CaLib_CB_Quad_Pi0_Mean_E", 
-				              "CaLib_CB_Quad_Pi0_Mean_E;Mean photon energy of #pi^{0} [MeV];CB element", 
+				              "CaLib_CB_Quad_Pi0_Mean_E;Photon energy of #pi^{0} [MeV];CB element", 
 					      1000, 0, 1000, fNelemCB, 0, fNelemCB);
         fHCalib_CB_Quad_Eta_Mean_E = new TH2F("CaLib_CB_Quad_Eta_Mean_E", 
-					      "CaLib_CB_Quad_Eta_Mean_E;Mean photon energy of #eta [MeV];CB element", 
+					      "CaLib_CB_Quad_Eta_Mean_E;Photon energy of #eta [MeV];CB element", 
                                               1000, 0, 1000, fNelemCB, 0, fNelemCB);
     }
     
@@ -1151,9 +1151,6 @@ void TA2MyCaLib::ReconstructPhysics()
                 // calculate the invariant mass
                 Double_t im = (p4Gamma[0] + p4Gamma[1]).M();
                 
-                // calculate the mean photon energy
-                Double_t meanE = 0.5 * (p4Gamma[0].E() + p4Gamma[1].E());
-
                 // fill the invariant mass
                 fHCalib_CB_Quad_IM->Fill(im, center[0]);
                 fHCalib_CB_Quad_IM->Fill(im, center[1]);
@@ -1161,15 +1158,15 @@ void TA2MyCaLib::ReconstructPhysics()
                 // fill the pi0 mean energy
                 if (im > fCalib_CB_Quad_Pi0_Min && im < fCalib_CB_Quad_Pi0_Max)
                 {
-                    fHCalib_CB_Quad_Pi0_Mean_E->Fill(meanE, center[0]);
-                    fHCalib_CB_Quad_Pi0_Mean_E->Fill(meanE, center[1]);
+                    fHCalib_CB_Quad_Pi0_Mean_E->Fill(p4Gamma[0].E(), center[0]);
+                    fHCalib_CB_Quad_Pi0_Mean_E->Fill(p4Gamma[1].E(), center[1]);
                 }
 
                 // fill the eta mean energy
                 if (im > fCalib_CB_Quad_Eta_Min && im < fCalib_CB_Quad_Eta_Max)
                 {
-                    fHCalib_CB_Quad_Eta_Mean_E->Fill(meanE, center[0]);
-                    fHCalib_CB_Quad_Eta_Mean_E->Fill(meanE, center[1]);
+                    fHCalib_CB_Quad_Eta_Mean_E->Fill(p4Gamma[0].E(), center[0]);
+                    fHCalib_CB_Quad_Eta_Mean_E->Fill(p4Gamma[1].E(), center[1]);
                 }
             }
         }
