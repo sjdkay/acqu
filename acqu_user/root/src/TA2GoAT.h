@@ -74,18 +74,18 @@ private:
     	Double_t	edgeSetting;
              
     	//Hits
-    	Int_t		nNaI_Hits;
-    	Int_t*		NaI_Hits;
-     	Int_t*		NaI_Cluster;
-        Int_t		nPID_Hits;
-    	Int_t*		PID_Hits;
-    	Int_t		nWC_Hits;
-    	Int_t*		WC_Hits;
-    	Int_t		nBaF2_PbWO4_Hits;
-    	Int_t*		BaF2_PbWO4_Hits;
-     	Int_t*		BaF2_PbWO4_Cluster;
-        Int_t		nVeto_Hits;
-    	Int_t*		Veto_Hits;
+        Int_t		nNaIHits;
+        Int_t*		NaIHits;
+        Int_t*		NaICluster;
+        Int_t		nPIDHits;
+        Int_t*		PIDHits;
+        Int_t		nMWPCHits;
+        Int_t*		MWPCHits;
+        Int_t		nBaF2PbWO4Hits;
+        Int_t*		BaF2PbWO4Hits;
+        Int_t*		BaF2PbWO4Cluster;
+        Int_t		nVetoHits;
+        Int_t*		VetoHits;
     
     	//Trigger 
         Double_t 	energySum;	// or Detector Energies

@@ -28,18 +28,18 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     plane(0),
                                                                     edge(0),
                                                                     edgeSetting(0),
-                                                                    nNaI_Hits(0),
-                                                                    NaI_Hits(0),
-                                                                    NaI_Cluster(0),
-                                                                    nPID_Hits(0),
-                                                                    PID_Hits(0),
-                                                                    nWC_Hits(0),
-																	WC_Hits(0),
-																	nBaF2_PbWO4_Hits(0),
-																	BaF2_PbWO4_Hits(0),
-																	BaF2_PbWO4_Cluster(0),
-                                                                    nVeto_Hits(0),
-                                                                    Veto_Hits(0),
+                                                                    nNaIHits(0),
+                                                                    NaIHits(0),
+                                                                    NaICluster(0),
+                                                                    nPIDHits(0),
+                                                                    PIDHits(0),
+                                                                    nMWPCHits(0),
+                                                                    MWPCHits(0),
+                                                                    nBaF2PbWO4Hits(0),
+                                                                    BaF2PbWO4Hits(0),
+                                                                    BaF2PbWO4Cluster(0),
+                                                                    nVetoHits(0),
+                                                                    VetoHits(0),
                                                                     energySum(0),
                                                                     multiplicity(0),
                                                                     nTriggerPattern(0),
@@ -171,13 +171,13 @@ void    TA2GoAT::PostInit()
     MWPC0Energy      = new Double_t[TA2GoAT_MAX_PARTICLE];
     MWPC1Energy      = new Double_t[TA2GoAT_MAX_PARTICLE];
         
-   	NaI_Hits	= new Int_t[TA2GoAT_MAX_HITS];  
-    NaI_Cluster	= new Int_t[TA2GoAT_MAX_HITS];
-  	PID_Hits	= new Int_t[TA2GoAT_MAX_HITS];
-   	WC_Hits		= new Int_t[TA2GoAT_MAX_HITS];
-   	BaF2_PbWO4_Hits	= new Int_t[TA2GoAT_MAX_HITS];
-   	BaF2_PbWO4_Cluster	= new Int_t[TA2GoAT_MAX_HITS];  
-   	Veto_Hits	= new Int_t[TA2GoAT_MAX_HITS];
+    NaIHits	         = new Int_t[TA2GoAT_MAX_HITS];
+    NaICluster       = new Int_t[TA2GoAT_MAX_HITS];
+    PIDHits	         = new Int_t[TA2GoAT_MAX_HITS];
+    MWPCHits		 = new Int_t[TA2GoAT_MAX_HITS];
+    BaF2PbWO4Hits	 = new Int_t[TA2GoAT_MAX_HITS];
+    BaF2PbWO4Cluster = new Int_t[TA2GoAT_MAX_HITS];
+    VetoHits         = new Int_t[TA2GoAT_MAX_HITS];
     
     triggerPattern   = new Int_t[32];
 
@@ -241,18 +241,18 @@ void    TA2GoAT::PostInit()
 	treeTrigger->Branch("nTriggerPattern", &nTriggerPattern, "nTriggerPattern/I");
     treeTrigger->Branch("triggerPattern", triggerPattern, "triggerPattern[nTriggerPattern]/I");
 	
-	treeDetectorHits->Branch("nNaI_Hits", &nNaI_Hits, "nNaI_Hits/I");
-	treeDetectorHits->Branch("NaI_Hits", NaI_Hits, "NaI_Hits[nNaI_Hits]/I");
-	treeDetectorHits->Branch("NaI_Cluster", NaI_Cluster, "NaI_Cluster[nNaI_Hits]/I");
-	treeDetectorHits->Branch("nPID_Hits", &nPID_Hits, "nPID_Hits/I");
-	treeDetectorHits->Branch("PID_Hits", PID_Hits, "PID_Hits[nPID_Hits]/I");
-	treeDetectorHits->Branch("nWC_Hits", &nWC_Hits, "nWC_Hits/I");
-	treeDetectorHits->Branch("WC_Hits", WC_Hits, "WC_Hits[nWC_Hits]/I");	
-	treeDetectorHits->Branch("nBaF2_PbWO4_Hits", &nBaF2_PbWO4_Hits, "nBaF2_PbWO4_Hits/I");
-	treeDetectorHits->Branch("BaF2_PbWO4_Hits", BaF2_PbWO4_Hits, "BaF2_PbWO4_Hits[nBaF2_PbWO4_Hits]/I");
-	treeDetectorHits->Branch("BaF2_PbWO4_Cluster", BaF2_PbWO4_Cluster, "BaF2_PbWO4_Cluster[nBaF2_PbWO4_Hits]/I");
-	treeDetectorHits->Branch("nVeto_Hits", &nVeto_Hits, "nVeto_Hits/I");
-	treeDetectorHits->Branch("Veto_Hits", Veto_Hits, "Veto_Hits[nVeto_Hits]/I");
+    treeDetectorHits->Branch("nNaIHits", &nNaIHits, "nNaIHits/I");
+    treeDetectorHits->Branch("NaIHits", NaIHits, "NaIHits[nNaIHits]/I");
+    treeDetectorHits->Branch("NaICluster", NaICluster, "NaICluster[nNaIHits]/I");
+    treeDetectorHits->Branch("nPIDHits", &nPIDHits, "nPIDHits/I");
+    treeDetectorHits->Branch("PIDHits", PIDHits, "PIDHits[nPIDHits]/I");
+    treeDetectorHits->Branch("nMWPCHits", &nMWPCHits, "nMWPCHits/I");
+    treeDetectorHits->Branch("MWPCHits", MWPCHits, "MWPCHits[nMWPCHits]/I");
+    treeDetectorHits->Branch("nBaF2PbWO4Hits", &nBaF2PbWO4Hits, "nBaF2PbWO4Hits/I");
+    treeDetectorHits->Branch("BaF2PbWO4Hits", BaF2PbWO4Hits, "BaF2PbWO4Hits[nBaF2PbWO4Hits]/I");
+    treeDetectorHits->Branch("BaF2PbWO4Cluster", BaF2PbWO4Cluster, "BaF2PbWO4Cluster[nBaF2PbWO4Hits]/I");
+    treeDetectorHits->Branch("nVetoHits", &nVetoHits, "nVetoHits/I");
+    treeDetectorHits->Branch("VetoHits", VetoHits, "VetoHits[nVetoHits]/I");
 
 	// Store Scalers for non-MC process
 	if (gAR->GetProcessType() != EMCProcess) 
@@ -440,7 +440,7 @@ void    TA2GoAT::Reconstruct()
 	// Get Detector Hits
 	if(fNaI)
 	{
-	        for(int i=0; i<720; i++)
+        for(int i=0; i<720; i++)
 		{
 		        clindex[i] = -1;
 		}
@@ -455,26 +455,26 @@ void    TA2GoAT::Reconstruct()
 			}
 		}
 			
-		nNaI_Hits = fNaI->GetNhits();
-		for(int i=0; i<nNaI_Hits; i++)   
+        nNaIHits = fNaI->GetNhits();
+        for(int i=0; i<nNaIHits; i++)
 		{
-                        NaI_Hits[i] = fNaI->GetHits(i);
-			NaI_Cluster[i] = clindex[NaI_Hits[i]];
+            NaIHits[i] = fNaI->GetHits(i);
+            NaICluster[i] = clindex[NaIHits[i]];
 		}
 	}
 
 	if(fPID)
 	{
-		nPID_Hits = fPID->GetNhits();
-		for(int i=0; i<nPID_Hits; i++)   
-			{ PID_Hits[i] = fPID->GetHits(i); }
+        nPIDHits = fPID->GetNhits();
+        for(int i=0; i<nPIDHits; i++)
+        { PIDHits[i] = fPID->GetHits(i); }
 	}
 
 	if(fMWPC)
 	{
-		nWC_Hits = fMWPC->GetNhits();
-		for(int i=0; i<nWC_Hits; i++)    
-			{ WC_Hits[i] = fMWPC->GetHits(i); }
+        nMWPCHits = fMWPC->GetNhits();
+        for(int i=0; i<nMWPCHits; i++)
+        { MWPCHits[i] = fMWPC->GetHits(i); }
 	}
 
 	if(fBaF2PWO)
@@ -494,19 +494,19 @@ void    TA2GoAT::Reconstruct()
 			}
 		}
 			
-		nBaF2_PbWO4_Hits = fBaF2PWO->GetNhits();
-		for(int i=0; i<nBaF2_PbWO4_Hits; i++)
+        nBaF2PbWO4Hits = fBaF2PWO->GetNhits();
+        for(int i=0; i<nBaF2PbWO4Hits; i++)
 		{
-                        BaF2_PbWO4_Hits[i] = fBaF2PWO->GetHits(i);
-			BaF2_PbWO4_Cluster[i] = clindex[BaF2_PbWO4_Hits[i]];
+            BaF2PbWO4Hits[i] = fBaF2PWO->GetHits(i);
+            BaF2PbWO4Cluster[i] = clindex[BaF2PbWO4Hits[i]];
 		}
 	}
 
 	if(fVeto)
 	{
-		nVeto_Hits = fVeto->GetNhits();
-		for(int i=0; i<nVeto_Hits; i++) 
-			{ Veto_Hits[i] = fVeto->GetHits(i);}
+        nVetoHits = fVeto->GetNhits();
+        for(int i=0; i<nVetoHits; i++)
+            { VetoHits[i] = fVeto->GetHits(i);}
 	}
 	
 	// Get Trigger information
