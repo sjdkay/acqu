@@ -3,7 +3,7 @@
 
 TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, Analysis),
                                                                     file(0),
-                                                                    treeRawParticles(0),
+                                                                    treeRawParticle(0),
                                                                     treeTagger(0),
                                                                     treeLinPol(0),
                                                                     treeTrigger(0),
@@ -65,8 +65,8 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
 
 TA2GoAT::~TA2GoAT()
 {
-    if(treeRawParticles)
-        delete treeRawParticles;
+    if(treeRawParticle)
+        delete treeRawParticle;
 	if(treeTagger)
 		delete treeTagger;
 	if(treeLinPol)
@@ -208,23 +208,23 @@ void    TA2GoAT::PostInit()
    	printf("Root file saved to %s\n", fullName.Data());  
 
     file		     = new TFile(fullName.Data(),"RECREATE");
-    treeRawParticles = new TTree("rawParticles", "rawParticles");
+    treeRawParticle = new TTree("rawParticle", "rawParticle");
     treeTagger       = new TTree("tagger",       "tagger");
     treeTrigger	     = new TTree("trigger",      "trigger");
     treeDetectorHits = new TTree("detectorHits", "detectorHits");
 	
-    treeRawParticles->Branch("nParticles", &nParticles, "nParticles/I");
-    treeRawParticles->Branch("clusterEnergy", clusterEnergy, "clusterEnergy[nParticles]/D");
-    treeRawParticles->Branch("theta", theta, "theta[nParticles]/D");
-    treeRawParticles->Branch("phi", phi, "phi[nParticles]/D");
-    treeRawParticles->Branch("time", time, "time[nParticles]/D");
-    treeRawParticles->Branch("clusterSize", clusterSize, "clusterSize[nParticles]/b");
-    treeRawParticles->Branch("centralCrystal", centralCrystal, "centralCrystal[nParticles]/I");
-    treeRawParticles->Branch("centralVeto", centralVeto, "centralVeto[nParticles]/I");
-    treeRawParticles->Branch("apparatus", apparatus, "apparatus[nParticles]/b");
-    treeRawParticles->Branch("vetoEnergy", vetoEnergy, "vetoEnergy[nParticles]/D");
-    treeRawParticles->Branch("MWPC0Energy", MWPC0Energy, "MWPC0Energy[nParticles]/D");
-    treeRawParticles->Branch("MWPC1Energy", MWPC1Energy, "MWPC1Energy[nParticles]/D");
+    treeRawParticle->Branch("nParticles", &nParticles, "nParticles/I");
+    treeRawParticle->Branch("clusterEnergy", clusterEnergy, "clusterEnergy[nParticles]/D");
+    treeRawParticle->Branch("theta", theta, "theta[nParticles]/D");
+    treeRawParticle->Branch("phi", phi, "phi[nParticles]/D");
+    treeRawParticle->Branch("time", time, "time[nParticles]/D");
+    treeRawParticle->Branch("clusterSize", clusterSize, "clusterSize[nParticles]/b");
+    treeRawParticle->Branch("centralCrystal", centralCrystal, "centralCrystal[nParticles]/I");
+    treeRawParticle->Branch("centralVeto", centralVeto, "centralVeto[nParticles]/I");
+    treeRawParticle->Branch("apparatus", apparatus, "apparatus[nParticles]/b");
+    treeRawParticle->Branch("vetoEnergy", vetoEnergy, "vetoEnergy[nParticles]/D");
+    treeRawParticle->Branch("MWPC0Energy", MWPC0Energy, "MWPC0Energy[nParticles]/D");
+    treeRawParticle->Branch("MWPC1Energy", MWPC1Energy, "MWPC1Energy[nParticles]/D");
 	
 	treeTagger->Branch("nTagged", &nTagged,"nTagged/I");
     treeTagger->Branch("taggedEnergy", taggedEnergy, "taggedEnergy[nTagged]/D");
@@ -575,7 +575,7 @@ void    TA2GoAT::Reconstruct()
     taggedTime[nTagged] 	  = EBufferEnd;
 	
 	//Fill Trees
-    if(treeRawParticles) 	treeRawParticles->Fill();
+    if(treeRawParticle) 	treeRawParticle->Fill();
 	if(treeTagger)			treeTagger->Fill();
 	if(treeTrigger)  		treeTrigger->Fill();
 	if(treeDetectorHits)	treeDetectorHits->Fill();
@@ -858,10 +858,10 @@ void    TA2GoAT::Finish()
 	
 	file->cd();
 	
-    if(treeRawParticles)
+    if(treeRawParticle)
 	{
-        treeRawParticles->Write();	// Write
-        delete treeRawParticles; 	// Close and delete in memory
+        treeRawParticle->Write();	// Write
+        delete treeRawParticle; 	// Close and delete in memory
 	}
 	if(treeTagger) 
 	{
