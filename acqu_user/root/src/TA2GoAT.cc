@@ -257,7 +257,7 @@ void    TA2GoAT::PostInit()
 	// Store Scalers for non-MC process
 	if (gAR->GetProcessType() != EMCProcess) 
 	{
-		treeScaler = new TTree("treeScaler", "treeScaler");	
+		treeScaler = new TTree("scaler", "scaler");	
 		treeScaler->Branch("eventNumber", &eventNumber, "eventNumber/I");
 		treeScaler->Branch("eventID", &eventID, "eventID/I");
 		printf("GetMaxScaler: %d\n", GetMaxScaler());
@@ -268,7 +268,7 @@ void    TA2GoAT::PostInit()
 		// Store Lin Pol if class is active
 		if(fLinPol)
 		{
-			treeLinPol = new TTree("treeLinPol", "treeLinPol");		
+			treeLinPol = new TTree("linPol", "linPol");		
 			treeLinPol->Branch("plane", &plane, "plane/I");
 			treeLinPol->Branch("edge", &edge, "edge/D");
 			treeLinPol->Branch("edgeSetting", &edgeSetting, "edgeSetting/D");
