@@ -599,7 +599,7 @@ void	TA2GoAT::DefineHistograms()
 	Check_TAPSdE_E		= new TH2F("Check_TAPSdE_E", "dE_E (all TAPS clusters compared to Veto hits)", 	400, 0, 400, 100, 0, 10);
 	Check_TAPSPhiCorr 	= new TH2F("Check_TAPSPhiCorr","TAPS-Veto phi correlation (all TAPS clusters compared to Veto hits)", 438,  0,  438, 180, -180, 180);
 
-	Check_TAPSdE_E_1Veto	= new TH2F("Check_TAPSdE_E_1PID", "dE_E (all TAPS clusters compared to single Veto hits)", 	400, 0, 400, 100, 0, 10);
+	Check_TAPSdE_E_1Veto	= new TH2F("Check_TAPSdE_E_1Veto", "dE_E (all TAPS clusters compared to single Veto hits)", 	400, 0, 400, 100, 0, 10);
 	Check_TAPSPhiCorr_1Veto = new TH2F("Check_TAPSPhiCorr_1Veto","TAPS-Veto phi correlation (all TAPS clusters compared to single Veto hits)", 438,  0,  438, 180, -180, 180);
 
 	Check_CBHits 		= new TH2F("Check_CBHits", 		"CB Hits by event number", 		10000,  0,  10000000, 720, 0, 720);	
