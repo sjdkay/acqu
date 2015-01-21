@@ -50,12 +50,12 @@ private:
         Double_t* 	theta;
         Double_t*	phi;
     	Double_t*	time;
-    	UChar_t*    clusterSize;
+        Int_t*      clusterSize;
         Int_t*		centralCrystal;
 		Int_t*		centralVeto;
 
     	//Apparatus
-        UChar_t*	apparatus;
+        Int_t*	    apparatus;
 
     	//Charged detector energies
         Double_t*	vetoEnergy;
