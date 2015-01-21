@@ -6,11 +6,11 @@
 #include "TTree.h"
 #include "TA2AccessSQL.h"
 
-#define TA2GoAT_MAX_TAGGER	1024
-#define TA2GoAT_MAX_PARTICLE	128
-#define TA2GoAT_MAX_HITS	860  
-#define TA2GoAT_MAX_ERROR	300
-#define TA2GoAT_NULL 1e6
+#define TA2GoAT_MAX_TAGGER	 4096
+#define TA2GoAT_MAX_PARTICLE 128
+#define TA2GoAT_MAX_HITS	 860
+#define TA2GoAT_MAX_ERROR	 256
+#define TA2GoAT_NULL         1e6
 
 enum {
     EG_OUTPUT_FOLDER = 30250,
