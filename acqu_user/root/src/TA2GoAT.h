@@ -85,9 +85,9 @@ private:
         Int_t*		PIDHits;
         Int_t		nMWPCHits;
         Int_t*		MWPCHits;
-        Int_t		nBaF2PbWO4Hits;
-        Int_t*		BaF2PbWO4Hits;
-        Int_t*		BaF2PbWO4Cluster;
+        Int_t		nBaF2Hits;
+        Int_t*		BaF2Hits;
+        Int_t*		BaF2Cluster;
         Int_t		nVetoHits;
         Int_t*		VetoHits;
     

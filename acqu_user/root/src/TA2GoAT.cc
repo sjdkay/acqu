@@ -37,9 +37,9 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     PIDHits(0),
                                                                     nMWPCHits(0),
                                                                     MWPCHits(0),
-                                                                    nBaF2PbWO4Hits(0),
-                                                                    BaF2PbWO4Hits(0),
-                                                                    BaF2PbWO4Cluster(0),
+                                                                    nBaF2Hits(0),
+                                                                    BaF2Hits(0),
+                                                                    BaF2Cluster(0),
                                                                     nVetoHits(0),
                                                                     VetoHits(0),
                                                                     energySum(0),
@@ -182,8 +182,8 @@ void    TA2GoAT::PostInit()
     NaICluster       = new Int_t[TA2GoAT_MAX_HITS];
     PIDHits	         = new Int_t[TA2GoAT_MAX_HITS];
     MWPCHits		 = new Int_t[TA2GoAT_MAX_HITS];
-    BaF2PbWO4Hits	 = new Int_t[TA2GoAT_MAX_HITS];
-    BaF2PbWO4Cluster = new Int_t[TA2GoAT_MAX_HITS];
+    BaF2Hits	 = new Int_t[TA2GoAT_MAX_HITS];
+    BaF2Cluster = new Int_t[TA2GoAT_MAX_HITS];
     VetoHits         = new Int_t[TA2GoAT_MAX_HITS];
     
     triggerPattern   = new Int_t[32];
@@ -260,9 +260,9 @@ void    TA2GoAT::PostInit()
     treeDetectorHits->Branch("PIDHits", PIDHits, "PIDHits[nPIDHits]/I");
     treeDetectorHits->Branch("nMWPCHits", &nMWPCHits, "nMWPCHits/I");
     treeDetectorHits->Branch("MWPCHits", MWPCHits, "MWPCHits[nMWPCHits]/I");
-    treeDetectorHits->Branch("nBaF2PbWO4Hits", &nBaF2PbWO4Hits, "nBaF2PbWO4Hits/I");
-    treeDetectorHits->Branch("BaF2PbWO4Hits", BaF2PbWO4Hits, "BaF2PbWO4Hits[nBaF2PbWO4Hits]/I");
-    treeDetectorHits->Branch("BaF2PbWO4Cluster", BaF2PbWO4Cluster, "BaF2PbWO4Cluster[nBaF2PbWO4Hits]/I");
+    treeDetectorHits->Branch("nBaF2Hits", &nBaF2Hits, "nBaF2Hits/I");
+    treeDetectorHits->Branch("BaF2Hits", BaF2Hits, "BaF2Hits[nBaF2Hits]/I");
+    treeDetectorHits->Branch("BaF2Cluster", BaF2Cluster, "BaF2Cluster[nBaF2Hits]/I");
     treeDetectorHits->Branch("nVetoHits", &nVetoHits, "nVetoHits/I");
     treeDetectorHits->Branch("VetoHits", VetoHits, "VetoHits[nVetoHits]/I");
 
@@ -526,11 +526,11 @@ void    TA2GoAT::Reconstruct()
 			}
 		}
 			
-        nBaF2PbWO4Hits = fBaF2PWO->GetNhits();
-        for(Int_t i=0; i<nBaF2PbWO4Hits; i++)
+        nBaF2Hits = fBaF2PWO->GetNhits();
+        for(Int_t i=0; i<nBaF2Hits; i++)
 		{
-            BaF2PbWO4Hits[i] = fBaF2PWO->GetHits(i);
-            BaF2PbWO4Cluster[i] = clindex[BaF2PbWO4Hits[i]];
+            BaF2Hits[i] = fBaF2PWO->GetHits(i);
+            BaF2Cluster[i] = clindex[BaF2Hits[i]];
 		}
 	}
 
