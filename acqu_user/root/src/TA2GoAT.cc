@@ -9,6 +9,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     treeTrigger(0),
                                                                     treeDetectorHits(0),
                                                                     treeScaler(0),
+                                                                    treeParameters(0),
                                                                     nParticles(0),
                                                                     clusterEnergy(0),
                                                                     theta(0),
@@ -25,6 +26,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     taggedEnergy(0),
                                                                     taggedChannel(0),
                                                                     taggedTime(0),
+                                                                    saveTaggedEnergy(0),
                                                                     plane(0),
                                                                     edge(0),
                                                                     edgeSetting(0),
@@ -77,6 +79,8 @@ TA2GoAT::~TA2GoAT()
 		delete treeDetectorHits;
 	if(treeScaler)
 		delete treeScaler;
+    if(treeParameters)
+        delete treeParameters;
     if(file)
 		delete file;
 }
@@ -146,8 +150,11 @@ void    TA2GoAT::SetConfig(Char_t* line, Int_t key)
 			}
 			printf("\n");
     	    	}
-	return;
-    	default:
+        return;
+        case EG_TAGGED_ENERGY:
+            sscanf(line, "%i", &saveTaggedEnergy);
+        return;
+        default:
         	TA2AccessSQL::SetConfig(line, key);
     	}
 }
@@ -212,7 +219,8 @@ void    TA2GoAT::PostInit()
     treeTagger       = new TTree("tagger",       "tagger");
     treeTrigger	     = new TTree("trigger",      "trigger");
     treeDetectorHits = new TTree("detectorHits", "detectorHits");
-	
+    treeParameters   = new TTree("parameters",   "parameters");
+
     treeTracks->Branch("nTracks", &nParticles, "nTracks/I");
     treeTracks->Branch("clusterEnergy", clusterEnergy, "clusterEnergy[nTracks]/D");
     treeTracks->Branch("theta", theta, "theta[nTracks]/D");
@@ -227,9 +235,13 @@ void    TA2GoAT::PostInit()
     treeTracks->Branch("MWPC1Energy", MWPC1Energy, "MWPC1Energy[nTracks]/D");
 	
 	treeTagger->Branch("nTagged", &nTagged,"nTagged/I");
-    treeTagger->Branch("taggedEnergy", taggedEnergy, "taggedEnergy[nTagged]/D");
     treeTagger->Branch("taggedChannel", taggedChannel, "taggedChannel[nTagged]/I");
     treeTagger->Branch("taggedTime", taggedTime, "taggedTime[nTagged]/D");
+    if(saveTaggedEnergy)
+    {
+        treeTagger->Branch("taggedEnergy", taggedEnergy, "taggedEnergy[nTagged]/D");
+        printf("User requested tagged photon energies be exported to the tagger tree\n");
+    }
 
     treeTrigger->Branch("energySum", &energySum, "energySum/D");
     treeTrigger->Branch("multiplicity", &multiplicity, "multiplicity/I");
@@ -277,7 +289,27 @@ void    TA2GoAT::PostInit()
 		}
 	}
 
-	// Define Histograms which will be saved to root tree
+    Int_t nTagger = fLadder->GetNelem();
+    const Double_t* ChToE = fLadder->GetECalibration();
+    Double_t BeamE = fTagger->GetBeamEnergy();
+
+    Double_t* TaggerElectronEnergy = new Double_t[nTagger];
+    Double_t* TaggerPhotonEnergy = new Double_t[nTagger];
+    for(Int_t i=0; i<fLadder->GetNelem(); i++)
+    {
+        TaggerElectronEnergy[i] = ChToE[i];
+        TaggerPhotonEnergy[i] = BeamE - ChToE[i];
+    }
+    Double_t *TaggerEnergyWidth;
+    if(fLadder->IsOverlap()) TaggerEnergyWidth = fLadder->GetEOverlap();
+
+    treeParameters->Branch("nTagger", &nTagger, "nTagger/I");
+    treeParameters->Branch("TaggerElectronEnergy", TaggerElectronEnergy, "TaggerElectronEnergy[nTagger]/D");
+    treeParameters->Branch("TaggerPhotonEnergy", TaggerPhotonEnergy, "TaggerPhotonEnergy[nTagger]/D");
+    if(fLadder->IsOverlap()) treeParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
+    treeParameters->Fill();
+
+    // Define Histograms which will be saved to root tree
 	DefineHistograms();
 
 	gROOT->cd();
@@ -887,7 +919,12 @@ void    TA2GoAT::Finish()
 	{
 		treeScaler->Write();	// Write	
 		delete treeScaler; 	// Close and delete in memory
-    	}
+    }
+    if(treeParameters)
+    {
+        treeParameters->Write();	// Write
+        delete treeParameters; 	// Close and delete in memory
+    }
 
 	WriteHistograms();
 	

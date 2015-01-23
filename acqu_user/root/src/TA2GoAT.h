@@ -17,6 +17,7 @@ enum {
     EG_INPUT_NAME,
     EG_FILE_NAME,
     EG_BEAM_HELICITY,
+    EG_TAGGED_ENERGY,
 };
 
 static const Map_t RootTreeConfigKeys[] = {
@@ -24,7 +25,8 @@ static const Map_t RootTreeConfigKeys[] = {
     {"RootTree-Output-Folder:"       	, EG_OUTPUT_FOLDER},
     {"RootTree-Input-Name:"           	, EG_INPUT_NAME},
     {"RootTree-File-Name:"           	, EG_FILE_NAME},
-    {"Beam-Helicity:"           	, EG_BEAM_HELICITY},
+    {"Beam-Helicity:"               	, EG_BEAM_HELICITY},
+    {"Save-Tagged-Energy:"          	, EG_TAGGED_ENERGY},
     // Termination
     {NULL       	 		, -1           }
 };
@@ -39,6 +41,7 @@ private:
 		TTree* 		treeTrigger;		// Trigger information (filled each event)
 		TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
 		TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
+        TTree*      treeParameters;     // Calibration parameters (filled once)
 
     	char        outputFolder[256];
     	char        inputName[64];
@@ -67,6 +70,7 @@ private:
         Double_t*	taggedEnergy;
         Int_t*		taggedChannel;
         Double_t*	taggedTime;
+        Int_t       saveTaggedEnergy;
     	
     	//LinPol
     	Int_t 		plane;
