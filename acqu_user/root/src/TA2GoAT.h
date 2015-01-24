@@ -40,7 +40,7 @@ private:
         TTree*		treeLinPol;         // Tagger information (filled each event)
         TTree* 		treeTrigger;		// Trigger information (filled each event)
         TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
-        TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
+        TTree*		treeScalers; 		// Scaler read information (filled each scaler read)
         TTree*      treeSetupParameters;// Calibration parameters (filled once)
 
     	char        outputFolder[256];

@@ -8,7 +8,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     treeLinPol(0),
                                                                     treeTrigger(0),
                                                                     treeDetectorHits(0),
-                                                                    treeScaler(0),
+                                                                    treeScalers(0),
                                                                     treeSetupParameters(0),
                                                                     nParticles(0),
                                                                     clusterEnergy(0),
@@ -77,8 +77,8 @@ TA2GoAT::~TA2GoAT()
 		delete treeTrigger;
 	if(treeDetectorHits)
 		delete treeDetectorHits;
-	if(treeScaler)
-		delete treeScaler;
+    if(treeScalers)
+        delete treeScalers;
     if(treeSetupParameters)
         delete treeSetupParameters;
     if(file)
@@ -269,13 +269,13 @@ void    TA2GoAT::PostInit()
 	// Store Scalers for non-MC process
 	if (gAR->GetProcessType() != EMCProcess) 
 	{
-		treeScaler = new TTree("scaler", "scaler");	
-		treeScaler->Branch("eventNumber", &eventNumber, "eventNumber/I");
-		treeScaler->Branch("eventID", &eventID, "eventID/I");
+        treeScalers = new TTree("scalers", "scalers");
+        treeScalers->Branch("eventNumber", &eventNumber, "eventNumber/I");
+        treeScalers->Branch("eventID", &eventID, "eventID/I");
 		printf("GetMaxScaler: %d\n", GetMaxScaler());
 	        Char_t str[256];
         sprintf(str, "scalers[%d]/i", GetMaxScaler());
-        treeScaler->Branch("scalers", fScaler, str);
+        treeScalers->Branch("scalers", fScaler, str);
 
 		// Store Lin Pol if class is active
 		if(fLinPol)
@@ -496,7 +496,7 @@ void    TA2GoAT::Reconstruct()
 	if((gAR->IsScalerRead()) && (gAR->GetProcessType() != EMCProcess))
 	{
 		eventID	= gAN->GetNDAQEvent();
-		if(treeScaler) treeScaler->Fill();		
+        if(treeScalers) treeScalers->Fill();
 		
 		if(fLinPol)
 		{
@@ -1080,10 +1080,10 @@ void    TA2GoAT::Finish()
 		treeDetectorHits->Write();// Write	
 		delete treeDetectorHits;  // Close and delete in memory
 	}		
-	if(treeScaler)
+    if(treeScalers)
 	{
-		treeScaler->Write();	// Write	
-		delete treeScaler; 	// Close and delete in memory
+        treeScalers->Write();	// Write
+        delete treeScalers; 	// Close and delete in memory
     }
     if(treeSetupParameters)
     {
