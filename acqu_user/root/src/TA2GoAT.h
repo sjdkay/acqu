@@ -37,11 +37,11 @@ private:
 		TFile*		file;				// outFile
         TTree*		treeTracks;	        // Raw particle information (filled each event)
 		TTree*		treeTagger;			// Tagger information (filled each event)
-		TTree*		treeLinPol;			// Tagger information (filled each event)		
-		TTree* 		treeTrigger;		// Trigger information (filled each event)
-		TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
-		TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
-        TTree*      treeParameters;     // Calibration parameters (filled once)
+        TTree*		treeLinPol;         // Tagger information (filled each event)
+        TTree* 		treeTrigger;		// Trigger information (filled each event)
+        TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
+        TTree*		treeScaler; 		// Scaler read information (filled each scaler read)
+        TTree*      treeSetupParameters;// Calibration parameters (filled once)
 
     	char        outputFolder[256];
     	char        inputName[64];

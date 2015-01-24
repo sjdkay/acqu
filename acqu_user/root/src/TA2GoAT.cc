@@ -9,7 +9,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     treeTrigger(0),
                                                                     treeDetectorHits(0),
                                                                     treeScaler(0),
-                                                                    treeParameters(0),
+                                                                    treeSetupParameters(0),
                                                                     nParticles(0),
                                                                     clusterEnergy(0),
                                                                     theta(0),
@@ -79,8 +79,8 @@ TA2GoAT::~TA2GoAT()
 		delete treeDetectorHits;
 	if(treeScaler)
 		delete treeScaler;
-    if(treeParameters)
-        delete treeParameters;
+    if(treeSetupParameters)
+        delete treeSetupParameters;
     if(file)
 		delete file;
 }
@@ -214,12 +214,12 @@ void    TA2GoAT::PostInit()
 	fullName.Prepend(outputFolder);
    	printf("Root file saved to %s\n", fullName.Data());  
 
-    file		     = new TFile(fullName.Data(),"RECREATE");
-    treeTracks       = new TTree("tracks",       "tracks");
-    treeTagger       = new TTree("tagger",       "tagger");
-    treeTrigger	     = new TTree("trigger",      "trigger");
-    treeDetectorHits = new TTree("detectorHits", "detectorHits");
-    treeParameters   = new TTree("parameters",   "parameters");
+    file		        = new TFile(fullName.Data(),     "RECREATE");
+    treeTracks          = new TTree("tracks",            "tracks");
+    treeTagger          = new TTree("tagger",            "tagger");
+    treeTrigger	        = new TTree("trigger",           "trigger");
+    treeDetectorHits    = new TTree("detectorHits",      "detectorHits");
+    treeSetupParameters = new TTree("setupParameters",   "setupParameters");
 
     treeTracks->Branch("nTracks", &nParticles, "nTracks/I");
     treeTracks->Branch("clusterEnergy", clusterEnergy, "clusterEnergy[nTracks]/D");
@@ -312,14 +312,14 @@ void    TA2GoAT::PostInit()
     Double_t *TaggerEnergyWidth;
     if(fLadder->IsOverlap()) TaggerEnergyWidth = fLadder->GetEOverlap();
 
-    treeParameters->Branch("nTagger", &nTagger, "nTagger/I");
-    treeParameters->Branch("TaggerGlobalOffset", &TaggerGlobalOffset, "TaggerGlobalOffset/D");
-    treeParameters->Branch("TaggerTDCLoThr", TaggerTDCLoThr, "TaggerTDCLoThr[nTagger]/D");
-    treeParameters->Branch("TaggerTDCHiThr", TaggerTDCHiThr, "TaggerTDCHiThr[nTagger]/D");
-    treeParameters->Branch("TaggerTDCOffset", TaggerTDCOffset, "TaggerTDCOffset[nTagger]/D");
-    treeParameters->Branch("TaggerElectronEnergy", TaggerElectronEnergy, "TaggerElectronEnergy[nTagger]/D");
-    treeParameters->Branch("TaggerPhotonEnergy", TaggerPhotonEnergy, "TaggerPhotonEnergy[nTagger]/D");
-    if(fLadder->IsOverlap()) treeParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
+    treeSetupParameters->Branch("nTagger", &nTagger, "nTagger/I");
+    treeSetupParameters->Branch("TaggerGlobalOffset", &TaggerGlobalOffset, "TaggerGlobalOffset/D");
+    treeSetupParameters->Branch("TaggerTDCLoThr", TaggerTDCLoThr, "TaggerTDCLoThr[nTagger]/D");
+    treeSetupParameters->Branch("TaggerTDCHiThr", TaggerTDCHiThr, "TaggerTDCHiThr[nTagger]/D");
+    treeSetupParameters->Branch("TaggerTDCOffset", TaggerTDCOffset, "TaggerTDCOffset[nTagger]/D");
+    treeSetupParameters->Branch("TaggerElectronEnergy", TaggerElectronEnergy, "TaggerElectronEnergy[nTagger]/D");
+    treeSetupParameters->Branch("TaggerPhotonEnergy", TaggerPhotonEnergy, "TaggerPhotonEnergy[nTagger]/D");
+    if(fLadder->IsOverlap()) treeSetupParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
 
     // Adding NaI information to parameters tree
 
@@ -345,17 +345,17 @@ void    TA2GoAT::PostInit()
         NaITDCOffset[i] = fNaI->GetElement(i)->GetT0();
     }
 
-    treeParameters->Branch("nNaI", &nNaI, "nNaI/I");
-    treeParameters->Branch("NaIGlobalOffset", &NaIGlobalOffset, "NaIGlobalOffset/D");
-    treeParameters->Branch("NaIGlobalScale", &NaIGlobalScale, "NaIGlobalScale/D");
-    treeParameters->Branch("NaIMaxClusters", &NaIMaxClusters, "NaIMaxClusters/I");
-    treeParameters->Branch("NaIClusterThr", &NaIClusterThr, "NaIClusterThr/D");
-    treeParameters->Branch("NaIADCLoThr", NaIADCLoThr, "NaIADCLoThr[nNaI]/D");
-    treeParameters->Branch("NaIADCHiThr", NaIADCHiThr, "NaIADCHiThr[nNaI]/D");
-    treeParameters->Branch("NaIADCGain", NaIADCGain, "NaIADCGain[nNaI]/D");
-    treeParameters->Branch("NaITDCLoThr", NaITDCLoThr, "NaITDCLoThr[nNaI]/D");
-    treeParameters->Branch("NaITDCHiThr", NaITDCHiThr, "NaITDCHiThr[nNaI]/D");
-    treeParameters->Branch("NaITDCOffset", NaITDCOffset, "NaITDCOffset[nNaI]/D");
+    treeSetupParameters->Branch("nNaI", &nNaI, "nNaI/I");
+    treeSetupParameters->Branch("NaIGlobalOffset", &NaIGlobalOffset, "NaIGlobalOffset/D");
+    treeSetupParameters->Branch("NaIGlobalScale", &NaIGlobalScale, "NaIGlobalScale/D");
+    treeSetupParameters->Branch("NaIMaxClusters", &NaIMaxClusters, "NaIMaxClusters/I");
+    treeSetupParameters->Branch("NaIClusterThr", &NaIClusterThr, "NaIClusterThr/D");
+    treeSetupParameters->Branch("NaIADCLoThr", NaIADCLoThr, "NaIADCLoThr[nNaI]/D");
+    treeSetupParameters->Branch("NaIADCHiThr", NaIADCHiThr, "NaIADCHiThr[nNaI]/D");
+    treeSetupParameters->Branch("NaIADCGain", NaIADCGain, "NaIADCGain[nNaI]/D");
+    treeSetupParameters->Branch("NaITDCLoThr", NaITDCLoThr, "NaITDCLoThr[nNaI]/D");
+    treeSetupParameters->Branch("NaITDCHiThr", NaITDCHiThr, "NaITDCHiThr[nNaI]/D");
+    treeSetupParameters->Branch("NaITDCOffset", NaITDCOffset, "NaITDCOffset[nNaI]/D");
 
     // Adding PID information to parameters tree
 
@@ -382,16 +382,16 @@ void    TA2GoAT::PostInit()
         PIDPhi[i] = fPID->GetPosition(i)->Z();
     }
 
-    treeParameters->Branch("nPID", &nPID, "nPID/I");
-    treeParameters->Branch("PIDGlobalOffset", &PIDGlobalOffset, "PIDGlobalOffset/D");
-    treeParameters->Branch("PIDADCLoThr", PIDADCLoThr, "PIDADCLoThr[nPID]/D");
-    treeParameters->Branch("PIDADCHiThr", PIDADCHiThr, "PIDADCHiThr[nPID]/D");
-    treeParameters->Branch("PIDADCPedestal", PIDADCPedestal, "PIDADCPedestal[nPID]/D");
-    treeParameters->Branch("PIDADCGain", PIDADCGain, "PIDADCGain[nPID]/D");
-    treeParameters->Branch("PIDTDCLoThr", PIDTDCLoThr, "PIDTDCLoThr[nPID]/D");
-    treeParameters->Branch("PIDTDCHiThr", PIDTDCHiThr, "PIDTDCHiThr[nPID]/D");
-    treeParameters->Branch("PIDTDCOffset", PIDTDCOffset, "PIDTDCOffset[nPID]/D");
-    treeParameters->Branch("PIDPhi", PIDPhi, "PIDPhi[nPID]/D");
+    treeSetupParameters->Branch("nPID", &nPID, "nPID/I");
+    treeSetupParameters->Branch("PIDGlobalOffset", &PIDGlobalOffset, "PIDGlobalOffset/D");
+    treeSetupParameters->Branch("PIDADCLoThr", PIDADCLoThr, "PIDADCLoThr[nPID]/D");
+    treeSetupParameters->Branch("PIDADCHiThr", PIDADCHiThr, "PIDADCHiThr[nPID]/D");
+    treeSetupParameters->Branch("PIDADCPedestal", PIDADCPedestal, "PIDADCPedestal[nPID]/D");
+    treeSetupParameters->Branch("PIDADCGain", PIDADCGain, "PIDADCGain[nPID]/D");
+    treeSetupParameters->Branch("PIDTDCLoThr", PIDTDCLoThr, "PIDTDCLoThr[nPID]/D");
+    treeSetupParameters->Branch("PIDTDCHiThr", PIDTDCHiThr, "PIDTDCHiThr[nPID]/D");
+    treeSetupParameters->Branch("PIDTDCOffset", PIDTDCOffset, "PIDTDCOffset[nPID]/D");
+    treeSetupParameters->Branch("PIDPhi", PIDPhi, "PIDPhi[nPID]/D");
 
     // Adding BaF2 information to parameters tree
 
@@ -422,20 +422,20 @@ void    TA2GoAT::PostInit()
         BaF2TDCGain[i] = fBaF2PWO->GetElement(i)->GetT1();
     }
 
-    treeParameters->Branch("nBaF2", &nBaF2, "nBaF2/I");
-    treeParameters->Branch("BaF2GlobalOffset", &BaF2GlobalOffset, "BaF2GlobalOffset/D");
-    treeParameters->Branch("BaF2GlobalScale", &BaF2GlobalScale, "BaF2GlobalScale/D");
-    treeParameters->Branch("BaF2Distance", &BaF2Distance, "BaF2Distance/D");
-    treeParameters->Branch("BaF2MaxClusters", &BaF2MaxClusters, "BaF2MaxClusters/I");
-    treeParameters->Branch("BaF2ClusterThr", &BaF2ClusterThr, "BaF2ClusterThr/D");
-    treeParameters->Branch("BaF2ADCLoThr", BaF2ADCLoThr, "BaF2ADCLoThr[nBaF2]/D");
-    treeParameters->Branch("BaF2ADCHiThr", BaF2ADCHiThr, "BaF2ADCHiThr[nBaF2]/D");
-    treeParameters->Branch("BaF2ADCPedestal", BaF2ADCPedestal, "BaF2ADCPedestal[nBaF2]/D");
-    treeParameters->Branch("BaF2ADCGain", BaF2ADCGain, "BaF2ADCGain[nBaF2]/D");
-    treeParameters->Branch("BaF2TDCLoThr", BaF2TDCLoThr, "BaF2TDCLoThr[nBaF2]/D");
-    treeParameters->Branch("BaF2TDCHiThr", BaF2TDCHiThr, "BaF2TDCHiThr[nBaF2]/D");
-    treeParameters->Branch("BaF2TDCOffset", BaF2TDCOffset, "BaF2TDCOffset[nBaF2]/D");
-    treeParameters->Branch("BaF2TDCGain", BaF2TDCGain, "BaF2TDCGain[nBaF2]/D");
+    treeSetupParameters->Branch("nBaF2", &nBaF2, "nBaF2/I");
+    treeSetupParameters->Branch("BaF2GlobalOffset", &BaF2GlobalOffset, "BaF2GlobalOffset/D");
+    treeSetupParameters->Branch("BaF2GlobalScale", &BaF2GlobalScale, "BaF2GlobalScale/D");
+    treeSetupParameters->Branch("BaF2Distance", &BaF2Distance, "BaF2Distance/D");
+    treeSetupParameters->Branch("BaF2MaxClusters", &BaF2MaxClusters, "BaF2MaxClusters/I");
+    treeSetupParameters->Branch("BaF2ClusterThr", &BaF2ClusterThr, "BaF2ClusterThr/D");
+    treeSetupParameters->Branch("BaF2ADCLoThr", BaF2ADCLoThr, "BaF2ADCLoThr[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2ADCHiThr", BaF2ADCHiThr, "BaF2ADCHiThr[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2ADCPedestal", BaF2ADCPedestal, "BaF2ADCPedestal[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2ADCGain", BaF2ADCGain, "BaF2ADCGain[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2TDCLoThr", BaF2TDCLoThr, "BaF2TDCLoThr[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2TDCHiThr", BaF2TDCHiThr, "BaF2TDCHiThr[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2TDCOffset", BaF2TDCOffset, "BaF2TDCOffset[nBaF2]/D");
+    treeSetupParameters->Branch("BaF2TDCGain", BaF2TDCGain, "BaF2TDCGain[nBaF2]/D");
 
     // Adding Veto information to parameters tree
 
@@ -461,18 +461,18 @@ void    TA2GoAT::PostInit()
         VetoTDCOffset[i] = fVeto->GetElement(i)->GetT0();
     }
 
-    treeParameters->Branch("nVeto", &nVeto, "nVeto/I");
-    treeParameters->Branch("VetoGlobalOffset", &VetoGlobalOffset, "VetoGlobalOffset/D");
-    treeParameters->Branch("VetoDistance", &VetoDistance, "VetoDistance/D");
-    treeParameters->Branch("VetoADCLoThr", VetoADCLoThr, "VetoADCLoThr[nVeto]/D");
-    treeParameters->Branch("VetoADCHiThr", VetoADCHiThr, "VetoADCHiThr[nVeto]/D");
-    treeParameters->Branch("VetoADCPedestal", VetoADCPedestal, "VetoADCPedestal[nVeto]/D");
-    treeParameters->Branch("VetoADCGain", VetoADCGain, "VetoADCGain[nVeto]/D");
-    treeParameters->Branch("VetoTDCLoThr", VetoTDCLoThr, "VetoTDCLoThr[nVeto]/D");
-    treeParameters->Branch("VetoTDCHiThr", VetoTDCHiThr, "VetoTDCHiThr[nVeto]/D");
-    treeParameters->Branch("VetoTDCOffset", VetoTDCOffset, "VetoTDCOffset[nVeto]/D");
+    treeSetupParameters->Branch("nVeto", &nVeto, "nVeto/I");
+    treeSetupParameters->Branch("VetoGlobalOffset", &VetoGlobalOffset, "VetoGlobalOffset/D");
+    treeSetupParameters->Branch("VetoDistance", &VetoDistance, "VetoDistance/D");
+    treeSetupParameters->Branch("VetoADCLoThr", VetoADCLoThr, "VetoADCLoThr[nVeto]/D");
+    treeSetupParameters->Branch("VetoADCHiThr", VetoADCHiThr, "VetoADCHiThr[nVeto]/D");
+    treeSetupParameters->Branch("VetoADCPedestal", VetoADCPedestal, "VetoADCPedestal[nVeto]/D");
+    treeSetupParameters->Branch("VetoADCGain", VetoADCGain, "VetoADCGain[nVeto]/D");
+    treeSetupParameters->Branch("VetoTDCLoThr", VetoTDCLoThr, "VetoTDCLoThr[nVeto]/D");
+    treeSetupParameters->Branch("VetoTDCHiThr", VetoTDCHiThr, "VetoTDCHiThr[nVeto]/D");
+    treeSetupParameters->Branch("VetoTDCOffset", VetoTDCOffset, "VetoTDCOffset[nVeto]/D");
 
-    treeParameters->Fill();
+    treeSetupParameters->Fill();
 
     // Define Histograms which will be saved to root tree
 	DefineHistograms();
@@ -1085,10 +1085,10 @@ void    TA2GoAT::Finish()
 		treeScaler->Write();	// Write	
 		delete treeScaler; 	// Close and delete in memory
     }
-    if(treeParameters)
+    if(treeSetupParameters)
     {
-        treeParameters->Write();	// Write
-        delete treeParameters; 	// Close and delete in memory
+        treeSetupParameters->Write();	// Write
+        delete treeSetupParameters; 	// Close and delete in memory
     }
 
 	WriteHistograms();
