@@ -291,18 +291,30 @@ void    TA2GoAT::PostInit()
 
     // Adding Tagger information to parameters tree
 
-    if(fTagger && fLadder)
-    {
-        Int_t nTagger = fLadder->GetNelem();
-        Double_t TaggerGlobalOffset = fLadder->GetTimeOffset();
-        const Double_t* ChToE = fLadder->GetECalibration();
-        Double_t BeamE = fTagger->GetBeamEnergy();
+    Int_t nTagger;
+    Double_t TaggerGlobalOffset;
+    const Double_t* ChToE;
+    Double_t BeamE;
 
-        Double_t* TaggerTDCLoThr = new Double_t[nTagger];
-        Double_t* TaggerTDCHiThr = new Double_t[nTagger];
-        Double_t* TaggerTDCOffset = new Double_t[nTagger];
-        Double_t* TaggerElectronEnergy = new Double_t[nTagger];
-        Double_t* TaggerPhotonEnergy = new Double_t[nTagger];
+    Double_t* TaggerTDCLoThr;
+    Double_t* TaggerTDCHiThr;
+    Double_t* TaggerTDCOffset;
+    Double_t* TaggerElectronEnergy;
+    Double_t* TaggerPhotonEnergy;
+    Double_t *TaggerEnergyWidth;
+
+    if(fTagger)
+    {
+        nTagger = fLadder->GetNelem();
+        TaggerGlobalOffset = fLadder->GetTimeOffset();
+        ChToE = fLadder->GetECalibration();
+        BeamE = fTagger->GetBeamEnergy();
+
+        TaggerTDCLoThr = new Double_t[nTagger];
+        TaggerTDCHiThr = new Double_t[nTagger];
+        TaggerTDCOffset = new Double_t[nTagger];
+        TaggerElectronEnergy = new Double_t[nTagger];
+        TaggerPhotonEnergy = new Double_t[nTagger];
 
         for(Int_t i=0; i<fLadder->GetNelem(); i++)
         {
@@ -312,7 +324,6 @@ void    TA2GoAT::PostInit()
             TaggerElectronEnergy[i] = ChToE[i];
             TaggerPhotonEnergy[i] = BeamE - ChToE[i];
         }
-        Double_t *TaggerEnergyWidth;
         if(fLadder->IsOverlap()) TaggerEnergyWidth = fLadder->GetEOverlap();
 
         treeSetupParameters->Branch("nTagger", &nTagger, "nTagger/I");
@@ -327,20 +338,33 @@ void    TA2GoAT::PostInit()
 
     // Adding NaI information to parameters tree
 
+    Int_t nNaI;
+    Double_t NaIGlobalOffset;
+    Double_t NaIGlobalScale;
+    Int_t NaIMaxClusters;
+    Double_t NaIClusterThr;
+
+    Double_t* NaIADCLoThr;
+    Double_t* NaIADCHiThr;
+    Double_t* NaIADCGain;
+    Double_t* NaITDCLoThr;
+    Double_t* NaITDCHiThr;
+    Double_t* NaITDCOffset;
+
     if(fNaI)
     {
-        Int_t nNaI = fNaI->GetNelem();
-        Double_t NaIGlobalOffset = fNaI->GetTimeOffset();
-        Double_t NaIGlobalScale = fNaI->GetEnergyScale();
-        Int_t NaIMaxClusters = (Int_t)fNaI->GetMaxCluster();
-        Double_t NaIClusterThr = fNaI->GetClusterThreshold();
+        nNaI = fNaI->GetNelem();
+        NaIGlobalOffset = fNaI->GetTimeOffset();
+        NaIGlobalScale = fNaI->GetEnergyScale();
+        NaIMaxClusters = (Int_t)fNaI->GetMaxCluster();
+        NaIClusterThr = fNaI->GetClusterThreshold();
 
-        Double_t* NaIADCLoThr = new Double_t[nNaI];
-        Double_t* NaIADCHiThr = new Double_t[nNaI];
-        Double_t* NaIADCGain = new Double_t[nNaI];
-        Double_t* NaITDCLoThr = new Double_t[nNaI];
-        Double_t* NaITDCHiThr = new Double_t[nNaI];
-        Double_t* NaITDCOffset = new Double_t[nNaI];
+        NaIADCLoThr = new Double_t[nNaI];
+        NaIADCHiThr = new Double_t[nNaI];
+        NaIADCGain = new Double_t[nNaI];
+        NaITDCLoThr = new Double_t[nNaI];
+        NaITDCHiThr = new Double_t[nNaI];
+        NaITDCOffset = new Double_t[nNaI];
 
         for(Int_t i=0; i<fNaI->GetNelem(); i++)
         {
@@ -367,19 +391,31 @@ void    TA2GoAT::PostInit()
 
     // Adding PID information to parameters tree
 
+    Int_t nPID;
+    Double_t PIDGlobalOffset;
+
+    Double_t* PIDADCLoThr;
+    Double_t* PIDADCHiThr;
+    Double_t* PIDADCPedestal;
+    Double_t* PIDADCGain;
+    Double_t* PIDTDCLoThr;
+    Double_t* PIDTDCHiThr;
+    Double_t* PIDTDCOffset;
+    Double_t* PIDPhi;
+
     if(fPID)
     {
-        Int_t nPID = fPID->GetNelem();
-        Double_t PIDGlobalOffset = fPID->GetTimeOffset();
+        nPID = fPID->GetNelem();
+        PIDGlobalOffset = fPID->GetTimeOffset();
 
-        Double_t* PIDADCLoThr = new Double_t[nPID];
-        Double_t* PIDADCHiThr = new Double_t[nPID];
-        Double_t* PIDADCPedestal = new Double_t[nPID];
-        Double_t* PIDADCGain = new Double_t[nPID];
-        Double_t* PIDTDCLoThr = new Double_t[nPID];
-        Double_t* PIDTDCHiThr = new Double_t[nPID];
-        Double_t* PIDTDCOffset = new Double_t[nPID];
-        Double_t* PIDPhi = new Double_t[nPID];
+        PIDADCLoThr = new Double_t[nPID];
+        PIDADCHiThr = new Double_t[nPID];
+        PIDADCPedestal = new Double_t[nPID];
+        PIDADCGain = new Double_t[nPID];
+        PIDTDCLoThr = new Double_t[nPID];
+        PIDTDCHiThr = new Double_t[nPID];
+        PIDTDCOffset = new Double_t[nPID];
+        PIDPhi = new Double_t[nPID];
 
         for(Int_t i=0; i<fPID->GetNelem(); i++)
         {
@@ -407,23 +443,39 @@ void    TA2GoAT::PostInit()
 
     // Adding BaF2 information to parameters tree
 
+    Int_t nBaF2;
+    Double_t BaF2GlobalOffset;
+    Double_t BaF2GlobalScale;
+    Double_t BaF2Distance;
+    Int_t BaF2MaxClusters;
+    Double_t BaF2ClusterThr;
+
+    Double_t* BaF2ADCLoThr;
+    Double_t* BaF2ADCHiThr;
+    Double_t* BaF2ADCPedestal;
+    Double_t* BaF2ADCGain;
+    Double_t* BaF2TDCLoThr;
+    Double_t* BaF2TDCHiThr;
+    Double_t* BaF2TDCOffset;
+    Double_t* BaF2TDCGain;
+
     if(fBaF2PWO)
     {
-        Int_t nBaF2 = fBaF2PWO->GetNelem();
-        Double_t BaF2GlobalOffset = fBaF2PWO->GetTimeOffset();
-        Double_t BaF2GlobalScale = fBaF2PWO->GetEnergyScale();
-        Double_t BaF2Distance = fBaF2PWO->GetPosition(0)->Z();
-        Int_t BaF2MaxClusters = (Int_t)fBaF2PWO->GetMaxCluster();
-        Double_t BaF2ClusterThr = fBaF2PWO->GetClusterThreshold();
+        nBaF2 = fBaF2PWO->GetNelem();
+        BaF2GlobalOffset = fBaF2PWO->GetTimeOffset();
+        BaF2GlobalScale = fBaF2PWO->GetEnergyScale();
+        BaF2Distance = fBaF2PWO->GetPosition(0)->Z();
+        BaF2MaxClusters = (Int_t)fBaF2PWO->GetMaxCluster();
+        BaF2ClusterThr = fBaF2PWO->GetClusterThreshold();
 
-        Double_t* BaF2ADCLoThr = new Double_t[nBaF2];
-        Double_t* BaF2ADCHiThr = new Double_t[nBaF2];
-        Double_t* BaF2ADCPedestal = new Double_t[nBaF2];
-        Double_t* BaF2ADCGain = new Double_t[nBaF2];
-        Double_t* BaF2TDCLoThr = new Double_t[nBaF2];
-        Double_t* BaF2TDCHiThr = new Double_t[nBaF2];
-        Double_t* BaF2TDCOffset = new Double_t[nBaF2];
-        Double_t* BaF2TDCGain = new Double_t[nBaF2];
+        BaF2ADCLoThr = new Double_t[nBaF2];
+        BaF2ADCHiThr = new Double_t[nBaF2];
+        BaF2ADCPedestal = new Double_t[nBaF2];
+        BaF2ADCGain = new Double_t[nBaF2];
+        BaF2TDCLoThr = new Double_t[nBaF2];
+        BaF2TDCHiThr = new Double_t[nBaF2];
+        BaF2TDCOffset = new Double_t[nBaF2];
+        BaF2TDCGain = new Double_t[nBaF2];
 
         for(Int_t i=0; i<fBaF2PWO->GetNelem(); i++)
         {
@@ -455,19 +507,31 @@ void    TA2GoAT::PostInit()
 
     // Adding Veto information to parameters tree
 
+    Int_t nVeto;
+    Double_t VetoGlobalOffset;
+    Double_t VetoDistance;
+
+    Double_t* VetoADCLoThr;
+    Double_t* VetoADCHiThr;
+    Double_t* VetoADCPedestal;
+    Double_t* VetoADCGain;
+    Double_t* VetoTDCLoThr;
+    Double_t* VetoTDCHiThr;
+    Double_t* VetoTDCOffset;
+
     if(fVeto)
     {
-        Int_t nVeto = fVeto->GetNelem();
-        Double_t VetoGlobalOffset = fVeto->GetTimeOffset();
-        Double_t VetoDistance = fVeto->GetPosition(0)->Z();
+        nVeto = fVeto->GetNelem();
+        VetoGlobalOffset = fVeto->GetTimeOffset();
+        VetoDistance = fVeto->GetPosition(0)->Z();
 
-        Double_t* VetoADCLoThr = new Double_t[nVeto];
-        Double_t* VetoADCHiThr = new Double_t[nVeto];
-        Double_t* VetoADCPedestal = new Double_t[nVeto];
-        Double_t* VetoADCGain = new Double_t[nVeto];
-        Double_t* VetoTDCLoThr = new Double_t[nVeto];
-        Double_t* VetoTDCHiThr = new Double_t[nVeto];
-        Double_t* VetoTDCOffset = new Double_t[nVeto];
+        VetoADCLoThr = new Double_t[nVeto];
+        VetoADCHiThr = new Double_t[nVeto];
+        VetoADCPedestal = new Double_t[nVeto];
+        VetoADCGain = new Double_t[nVeto];
+        VetoTDCLoThr = new Double_t[nVeto];
+        VetoTDCHiThr = new Double_t[nVeto];
+        VetoTDCOffset = new Double_t[nVeto];
 
         for(Int_t i=0; i<fVeto->GetNelem(); i++)
         {
