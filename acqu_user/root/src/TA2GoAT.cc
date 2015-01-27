@@ -291,186 +291,206 @@ void    TA2GoAT::PostInit()
 
     // Adding Tagger information to parameters tree
 
-    Int_t nTagger = fLadder->GetNelem();
-    Double_t TaggerGlobalOffset = fLadder->GetTimeOffset();
-    const Double_t* ChToE = fLadder->GetECalibration();
-    Double_t BeamE = fTagger->GetBeamEnergy();
-
-    Double_t* TaggerTDCLoThr = new Double_t[nTagger];
-    Double_t* TaggerTDCHiThr = new Double_t[nTagger];
-    Double_t* TaggerTDCOffset = new Double_t[nTagger];
-    Double_t* TaggerElectronEnergy = new Double_t[nTagger];
-    Double_t* TaggerPhotonEnergy = new Double_t[nTagger];
-    for(Int_t i=0; i<fLadder->GetNelem(); i++)
+    if(fTagger && fLadder)
     {
-        TaggerTDCLoThr[i] = fLadder->GetElement(i)->GetTimeLowThr();
-        TaggerTDCHiThr[i] = fLadder->GetElement(i)->GetTimeHighThr();
-        TaggerTDCOffset[i] = fLadder->GetElement(i)->GetT0();
-        TaggerElectronEnergy[i] = ChToE[i];
-        TaggerPhotonEnergy[i] = BeamE - ChToE[i];
-    }
-    Double_t *TaggerEnergyWidth;
-    if(fLadder->IsOverlap()) TaggerEnergyWidth = fLadder->GetEOverlap();
+        Int_t nTagger = fLadder->GetNelem();
+        Double_t TaggerGlobalOffset = fLadder->GetTimeOffset();
+        const Double_t* ChToE = fLadder->GetECalibration();
+        Double_t BeamE = fTagger->GetBeamEnergy();
 
-    treeSetupParameters->Branch("nTagger", &nTagger, "nTagger/I");
-    treeSetupParameters->Branch("TaggerGlobalOffset", &TaggerGlobalOffset, "TaggerGlobalOffset/D");
-    treeSetupParameters->Branch("TaggerTDCLoThr", TaggerTDCLoThr, "TaggerTDCLoThr[nTagger]/D");
-    treeSetupParameters->Branch("TaggerTDCHiThr", TaggerTDCHiThr, "TaggerTDCHiThr[nTagger]/D");
-    treeSetupParameters->Branch("TaggerTDCOffset", TaggerTDCOffset, "TaggerTDCOffset[nTagger]/D");
-    treeSetupParameters->Branch("TaggerElectronEnergy", TaggerElectronEnergy, "TaggerElectronEnergy[nTagger]/D");
-    treeSetupParameters->Branch("TaggerPhotonEnergy", TaggerPhotonEnergy, "TaggerPhotonEnergy[nTagger]/D");
-    if(fLadder->IsOverlap()) treeSetupParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
+        Double_t* TaggerTDCLoThr = new Double_t[nTagger];
+        Double_t* TaggerTDCHiThr = new Double_t[nTagger];
+        Double_t* TaggerTDCOffset = new Double_t[nTagger];
+        Double_t* TaggerElectronEnergy = new Double_t[nTagger];
+        Double_t* TaggerPhotonEnergy = new Double_t[nTagger];
+
+        for(Int_t i=0; i<fLadder->GetNelem(); i++)
+        {
+            TaggerTDCLoThr[i] = fLadder->GetElement(i)->GetTimeLowThr();
+            TaggerTDCHiThr[i] = fLadder->GetElement(i)->GetTimeHighThr();
+            TaggerTDCOffset[i] = fLadder->GetElement(i)->GetT0();
+            TaggerElectronEnergy[i] = ChToE[i];
+            TaggerPhotonEnergy[i] = BeamE - ChToE[i];
+        }
+        Double_t *TaggerEnergyWidth;
+        if(fLadder->IsOverlap()) TaggerEnergyWidth = fLadder->GetEOverlap();
+
+        treeSetupParameters->Branch("nTagger", &nTagger, "nTagger/I");
+        treeSetupParameters->Branch("TaggerGlobalOffset", &TaggerGlobalOffset, "TaggerGlobalOffset/D");
+        treeSetupParameters->Branch("TaggerTDCLoThr", TaggerTDCLoThr, "TaggerTDCLoThr[nTagger]/D");
+        treeSetupParameters->Branch("TaggerTDCHiThr", TaggerTDCHiThr, "TaggerTDCHiThr[nTagger]/D");
+        treeSetupParameters->Branch("TaggerTDCOffset", TaggerTDCOffset, "TaggerTDCOffset[nTagger]/D");
+        treeSetupParameters->Branch("TaggerElectronEnergy", TaggerElectronEnergy, "TaggerElectronEnergy[nTagger]/D");
+        treeSetupParameters->Branch("TaggerPhotonEnergy", TaggerPhotonEnergy, "TaggerPhotonEnergy[nTagger]/D");
+        if(fLadder->IsOverlap()) treeSetupParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
+    }
 
     // Adding NaI information to parameters tree
 
-    Int_t nNaI = fNaI->GetNelem();
-    Double_t NaIGlobalOffset = fNaI->GetTimeOffset();
-    Double_t NaIGlobalScale = fNaI->GetEnergyScale();
-    Int_t NaIMaxClusters = (Int_t)fNaI->GetMaxCluster();
-    Double_t NaIClusterThr = fNaI->GetClusterThreshold();
-
-    Double_t* NaIADCLoThr = new Double_t[nNaI];
-    Double_t* NaIADCHiThr = new Double_t[nNaI];
-    Double_t* NaIADCGain = new Double_t[nNaI];
-    Double_t* NaITDCLoThr = new Double_t[nNaI];
-    Double_t* NaITDCHiThr = new Double_t[nNaI];
-    Double_t* NaITDCOffset = new Double_t[nNaI];
-    for(Int_t i=0; i<fNaI->GetNelem(); i++)
+    if(fNaI)
     {
-        NaIADCLoThr[i] = fNaI->GetElement(i)->GetEnergyLowThr();
-        NaIADCHiThr[i] = fNaI->GetElement(i)->GetEnergyHighThr();
-        NaIADCGain[i] = fNaI->GetElement(i)->GetA1();
-        NaITDCLoThr[i] = fNaI->GetElement(i)->GetTimeLowThr();
-        NaITDCHiThr[i] = fNaI->GetElement(i)->GetTimeHighThr();
-        NaITDCOffset[i] = fNaI->GetElement(i)->GetT0();
-    }
+        Int_t nNaI = fNaI->GetNelem();
+        Double_t NaIGlobalOffset = fNaI->GetTimeOffset();
+        Double_t NaIGlobalScale = fNaI->GetEnergyScale();
+        Int_t NaIMaxClusters = (Int_t)fNaI->GetMaxCluster();
+        Double_t NaIClusterThr = fNaI->GetClusterThreshold();
 
-    treeSetupParameters->Branch("nNaI", &nNaI, "nNaI/I");
-    treeSetupParameters->Branch("NaIGlobalOffset", &NaIGlobalOffset, "NaIGlobalOffset/D");
-    treeSetupParameters->Branch("NaIGlobalScale", &NaIGlobalScale, "NaIGlobalScale/D");
-    treeSetupParameters->Branch("NaIMaxClusters", &NaIMaxClusters, "NaIMaxClusters/I");
-    treeSetupParameters->Branch("NaIClusterThr", &NaIClusterThr, "NaIClusterThr/D");
-    treeSetupParameters->Branch("NaIADCLoThr", NaIADCLoThr, "NaIADCLoThr[nNaI]/D");
-    treeSetupParameters->Branch("NaIADCHiThr", NaIADCHiThr, "NaIADCHiThr[nNaI]/D");
-    treeSetupParameters->Branch("NaIADCGain", NaIADCGain, "NaIADCGain[nNaI]/D");
-    treeSetupParameters->Branch("NaITDCLoThr", NaITDCLoThr, "NaITDCLoThr[nNaI]/D");
-    treeSetupParameters->Branch("NaITDCHiThr", NaITDCHiThr, "NaITDCHiThr[nNaI]/D");
-    treeSetupParameters->Branch("NaITDCOffset", NaITDCOffset, "NaITDCOffset[nNaI]/D");
+        Double_t* NaIADCLoThr = new Double_t[nNaI];
+        Double_t* NaIADCHiThr = new Double_t[nNaI];
+        Double_t* NaIADCGain = new Double_t[nNaI];
+        Double_t* NaITDCLoThr = new Double_t[nNaI];
+        Double_t* NaITDCHiThr = new Double_t[nNaI];
+        Double_t* NaITDCOffset = new Double_t[nNaI];
+
+        for(Int_t i=0; i<fNaI->GetNelem(); i++)
+        {
+            NaIADCLoThr[i] = fNaI->GetElement(i)->GetEnergyLowThr();
+            NaIADCHiThr[i] = fNaI->GetElement(i)->GetEnergyHighThr();
+            NaIADCGain[i] = fNaI->GetElement(i)->GetA1();
+            NaITDCLoThr[i] = fNaI->GetElement(i)->GetTimeLowThr();
+            NaITDCHiThr[i] = fNaI->GetElement(i)->GetTimeHighThr();
+            NaITDCOffset[i] = fNaI->GetElement(i)->GetT0();
+        }
+
+        treeSetupParameters->Branch("nNaI", &nNaI, "nNaI/I");
+        treeSetupParameters->Branch("NaIGlobalOffset", &NaIGlobalOffset, "NaIGlobalOffset/D");
+        treeSetupParameters->Branch("NaIGlobalScale", &NaIGlobalScale, "NaIGlobalScale/D");
+        treeSetupParameters->Branch("NaIMaxClusters", &NaIMaxClusters, "NaIMaxClusters/I");
+        treeSetupParameters->Branch("NaIClusterThr", &NaIClusterThr, "NaIClusterThr/D");
+        treeSetupParameters->Branch("NaIADCLoThr", NaIADCLoThr, "NaIADCLoThr[nNaI]/D");
+        treeSetupParameters->Branch("NaIADCHiThr", NaIADCHiThr, "NaIADCHiThr[nNaI]/D");
+        treeSetupParameters->Branch("NaIADCGain", NaIADCGain, "NaIADCGain[nNaI]/D");
+        treeSetupParameters->Branch("NaITDCLoThr", NaITDCLoThr, "NaITDCLoThr[nNaI]/D");
+        treeSetupParameters->Branch("NaITDCHiThr", NaITDCHiThr, "NaITDCHiThr[nNaI]/D");
+        treeSetupParameters->Branch("NaITDCOffset", NaITDCOffset, "NaITDCOffset[nNaI]/D");
+    }
 
     // Adding PID information to parameters tree
 
-    Int_t nPID = fPID->GetNelem();
-    Double_t PIDGlobalOffset = fPID->GetTimeOffset();
-
-    Double_t* PIDADCLoThr = new Double_t[nPID];
-    Double_t* PIDADCHiThr = new Double_t[nPID];
-    Double_t* PIDADCPedestal = new Double_t[nPID];
-    Double_t* PIDADCGain = new Double_t[nPID];
-    Double_t* PIDTDCLoThr = new Double_t[nPID];
-    Double_t* PIDTDCHiThr = new Double_t[nPID];
-    Double_t* PIDTDCOffset = new Double_t[nPID];
-    Double_t* PIDPhi = new Double_t[nPID];
-    for(Int_t i=0; i<fPID->GetNelem(); i++)
+    if(fPID)
     {
-        PIDADCLoThr[i] = fPID->GetElement(i)->GetEnergyLowThr();
-        PIDADCHiThr[i] = fPID->GetElement(i)->GetEnergyHighThr();
-        PIDADCPedestal[i] = fPID->GetElement(i)->GetA0();
-        PIDADCGain[i] = fPID->GetElement(i)->GetA1();
-        PIDTDCLoThr[i] = fPID->GetElement(i)->GetTimeLowThr();
-        PIDTDCHiThr[i] = fPID->GetElement(i)->GetTimeHighThr();
-        PIDTDCOffset[i] = fPID->GetElement(i)->GetT0();
-        PIDPhi[i] = fPID->GetPosition(i)->Z();
-    }
+        Int_t nPID = fPID->GetNelem();
+        Double_t PIDGlobalOffset = fPID->GetTimeOffset();
 
-    treeSetupParameters->Branch("nPID", &nPID, "nPID/I");
-    treeSetupParameters->Branch("PIDGlobalOffset", &PIDGlobalOffset, "PIDGlobalOffset/D");
-    treeSetupParameters->Branch("PIDADCLoThr", PIDADCLoThr, "PIDADCLoThr[nPID]/D");
-    treeSetupParameters->Branch("PIDADCHiThr", PIDADCHiThr, "PIDADCHiThr[nPID]/D");
-    treeSetupParameters->Branch("PIDADCPedestal", PIDADCPedestal, "PIDADCPedestal[nPID]/D");
-    treeSetupParameters->Branch("PIDADCGain", PIDADCGain, "PIDADCGain[nPID]/D");
-    treeSetupParameters->Branch("PIDTDCLoThr", PIDTDCLoThr, "PIDTDCLoThr[nPID]/D");
-    treeSetupParameters->Branch("PIDTDCHiThr", PIDTDCHiThr, "PIDTDCHiThr[nPID]/D");
-    treeSetupParameters->Branch("PIDTDCOffset", PIDTDCOffset, "PIDTDCOffset[nPID]/D");
-    treeSetupParameters->Branch("PIDPhi", PIDPhi, "PIDPhi[nPID]/D");
+        Double_t* PIDADCLoThr = new Double_t[nPID];
+        Double_t* PIDADCHiThr = new Double_t[nPID];
+        Double_t* PIDADCPedestal = new Double_t[nPID];
+        Double_t* PIDADCGain = new Double_t[nPID];
+        Double_t* PIDTDCLoThr = new Double_t[nPID];
+        Double_t* PIDTDCHiThr = new Double_t[nPID];
+        Double_t* PIDTDCOffset = new Double_t[nPID];
+        Double_t* PIDPhi = new Double_t[nPID];
+
+        for(Int_t i=0; i<fPID->GetNelem(); i++)
+        {
+            PIDADCLoThr[i] = fPID->GetElement(i)->GetEnergyLowThr();
+            PIDADCHiThr[i] = fPID->GetElement(i)->GetEnergyHighThr();
+            PIDADCPedestal[i] = fPID->GetElement(i)->GetA0();
+            PIDADCGain[i] = fPID->GetElement(i)->GetA1();
+            PIDTDCLoThr[i] = fPID->GetElement(i)->GetTimeLowThr();
+            PIDTDCHiThr[i] = fPID->GetElement(i)->GetTimeHighThr();
+            PIDTDCOffset[i] = fPID->GetElement(i)->GetT0();
+            PIDPhi[i] = fPID->GetPosition(i)->Z();
+        }
+
+        treeSetupParameters->Branch("nPID", &nPID, "nPID/I");
+        treeSetupParameters->Branch("PIDGlobalOffset", &PIDGlobalOffset, "PIDGlobalOffset/D");
+        treeSetupParameters->Branch("PIDADCLoThr", PIDADCLoThr, "PIDADCLoThr[nPID]/D");
+        treeSetupParameters->Branch("PIDADCHiThr", PIDADCHiThr, "PIDADCHiThr[nPID]/D");
+        treeSetupParameters->Branch("PIDADCPedestal", PIDADCPedestal, "PIDADCPedestal[nPID]/D");
+        treeSetupParameters->Branch("PIDADCGain", PIDADCGain, "PIDADCGain[nPID]/D");
+        treeSetupParameters->Branch("PIDTDCLoThr", PIDTDCLoThr, "PIDTDCLoThr[nPID]/D");
+        treeSetupParameters->Branch("PIDTDCHiThr", PIDTDCHiThr, "PIDTDCHiThr[nPID]/D");
+        treeSetupParameters->Branch("PIDTDCOffset", PIDTDCOffset, "PIDTDCOffset[nPID]/D");
+        treeSetupParameters->Branch("PIDPhi", PIDPhi, "PIDPhi[nPID]/D");
+    }
 
     // Adding BaF2 information to parameters tree
 
-    Int_t nBaF2 = fBaF2PWO->GetNelem();
-    Double_t BaF2GlobalOffset = fBaF2PWO->GetTimeOffset();
-    Double_t BaF2GlobalScale = fBaF2PWO->GetEnergyScale();
-    Double_t BaF2Distance = fBaF2PWO->GetPosition(0)->Z();
-    Int_t BaF2MaxClusters = (Int_t)fBaF2PWO->GetMaxCluster();
-    Double_t BaF2ClusterThr = fBaF2PWO->GetClusterThreshold();
-
-    Double_t* BaF2ADCLoThr = new Double_t[nBaF2];
-    Double_t* BaF2ADCHiThr = new Double_t[nBaF2];
-    Double_t* BaF2ADCPedestal = new Double_t[nBaF2];
-    Double_t* BaF2ADCGain = new Double_t[nBaF2];
-    Double_t* BaF2TDCLoThr = new Double_t[nBaF2];
-    Double_t* BaF2TDCHiThr = new Double_t[nBaF2];
-    Double_t* BaF2TDCOffset = new Double_t[nBaF2];
-    Double_t* BaF2TDCGain = new Double_t[nBaF2];
-    for(Int_t i=0; i<fBaF2PWO->GetNelem(); i++)
+    if(fBaF2PWO)
     {
-        BaF2ADCLoThr[i] = fBaF2PWO->GetElement(i)->GetEnergyLowThr();
-        BaF2ADCHiThr[i] = fBaF2PWO->GetElement(i)->GetEnergyHighThr();
-        BaF2ADCPedestal[i] = fBaF2PWO->GetElement(i)->GetA0();
-        BaF2ADCGain[i] = fBaF2PWO->GetElement(i)->GetA1();
-        BaF2TDCLoThr[i] = fBaF2PWO->GetElement(i)->GetTimeLowThr();
-        BaF2TDCHiThr[i] = fBaF2PWO->GetElement(i)->GetTimeHighThr();
-        BaF2TDCOffset[i] = fBaF2PWO->GetElement(i)->GetT0();
-        BaF2TDCGain[i] = fBaF2PWO->GetElement(i)->GetT1();
-    }
+        Int_t nBaF2 = fBaF2PWO->GetNelem();
+        Double_t BaF2GlobalOffset = fBaF2PWO->GetTimeOffset();
+        Double_t BaF2GlobalScale = fBaF2PWO->GetEnergyScale();
+        Double_t BaF2Distance = fBaF2PWO->GetPosition(0)->Z();
+        Int_t BaF2MaxClusters = (Int_t)fBaF2PWO->GetMaxCluster();
+        Double_t BaF2ClusterThr = fBaF2PWO->GetClusterThreshold();
 
-    treeSetupParameters->Branch("nBaF2", &nBaF2, "nBaF2/I");
-    treeSetupParameters->Branch("BaF2GlobalOffset", &BaF2GlobalOffset, "BaF2GlobalOffset/D");
-    treeSetupParameters->Branch("BaF2GlobalScale", &BaF2GlobalScale, "BaF2GlobalScale/D");
-    treeSetupParameters->Branch("BaF2Distance", &BaF2Distance, "BaF2Distance/D");
-    treeSetupParameters->Branch("BaF2MaxClusters", &BaF2MaxClusters, "BaF2MaxClusters/I");
-    treeSetupParameters->Branch("BaF2ClusterThr", &BaF2ClusterThr, "BaF2ClusterThr/D");
-    treeSetupParameters->Branch("BaF2ADCLoThr", BaF2ADCLoThr, "BaF2ADCLoThr[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2ADCHiThr", BaF2ADCHiThr, "BaF2ADCHiThr[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2ADCPedestal", BaF2ADCPedestal, "BaF2ADCPedestal[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2ADCGain", BaF2ADCGain, "BaF2ADCGain[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2TDCLoThr", BaF2TDCLoThr, "BaF2TDCLoThr[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2TDCHiThr", BaF2TDCHiThr, "BaF2TDCHiThr[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2TDCOffset", BaF2TDCOffset, "BaF2TDCOffset[nBaF2]/D");
-    treeSetupParameters->Branch("BaF2TDCGain", BaF2TDCGain, "BaF2TDCGain[nBaF2]/D");
+        Double_t* BaF2ADCLoThr = new Double_t[nBaF2];
+        Double_t* BaF2ADCHiThr = new Double_t[nBaF2];
+        Double_t* BaF2ADCPedestal = new Double_t[nBaF2];
+        Double_t* BaF2ADCGain = new Double_t[nBaF2];
+        Double_t* BaF2TDCLoThr = new Double_t[nBaF2];
+        Double_t* BaF2TDCHiThr = new Double_t[nBaF2];
+        Double_t* BaF2TDCOffset = new Double_t[nBaF2];
+        Double_t* BaF2TDCGain = new Double_t[nBaF2];
+
+        for(Int_t i=0; i<fBaF2PWO->GetNelem(); i++)
+        {
+            BaF2ADCLoThr[i] = fBaF2PWO->GetElement(i)->GetEnergyLowThr();
+            BaF2ADCHiThr[i] = fBaF2PWO->GetElement(i)->GetEnergyHighThr();
+            BaF2ADCPedestal[i] = fBaF2PWO->GetElement(i)->GetA0();
+            BaF2ADCGain[i] = fBaF2PWO->GetElement(i)->GetA1();
+            BaF2TDCLoThr[i] = fBaF2PWO->GetElement(i)->GetTimeLowThr();
+            BaF2TDCHiThr[i] = fBaF2PWO->GetElement(i)->GetTimeHighThr();
+            BaF2TDCOffset[i] = fBaF2PWO->GetElement(i)->GetT0();
+            BaF2TDCGain[i] = fBaF2PWO->GetElement(i)->GetT1();
+        }
+
+        treeSetupParameters->Branch("nBaF2", &nBaF2, "nBaF2/I");
+        treeSetupParameters->Branch("BaF2GlobalOffset", &BaF2GlobalOffset, "BaF2GlobalOffset/D");
+        treeSetupParameters->Branch("BaF2GlobalScale", &BaF2GlobalScale, "BaF2GlobalScale/D");
+        treeSetupParameters->Branch("BaF2Distance", &BaF2Distance, "BaF2Distance/D");
+        treeSetupParameters->Branch("BaF2MaxClusters", &BaF2MaxClusters, "BaF2MaxClusters/I");
+        treeSetupParameters->Branch("BaF2ClusterThr", &BaF2ClusterThr, "BaF2ClusterThr/D");
+        treeSetupParameters->Branch("BaF2ADCLoThr", BaF2ADCLoThr, "BaF2ADCLoThr[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2ADCHiThr", BaF2ADCHiThr, "BaF2ADCHiThr[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2ADCPedestal", BaF2ADCPedestal, "BaF2ADCPedestal[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2ADCGain", BaF2ADCGain, "BaF2ADCGain[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2TDCLoThr", BaF2TDCLoThr, "BaF2TDCLoThr[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2TDCHiThr", BaF2TDCHiThr, "BaF2TDCHiThr[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2TDCOffset", BaF2TDCOffset, "BaF2TDCOffset[nBaF2]/D");
+        treeSetupParameters->Branch("BaF2TDCGain", BaF2TDCGain, "BaF2TDCGain[nBaF2]/D");
+    }
 
     // Adding Veto information to parameters tree
 
-    Int_t nVeto = fVeto->GetNelem();
-    Double_t VetoGlobalOffset = fVeto->GetTimeOffset();
-    Double_t VetoDistance = fVeto->GetPosition(0)->Z();
-
-    Double_t* VetoADCLoThr = new Double_t[nVeto];
-    Double_t* VetoADCHiThr = new Double_t[nVeto];
-    Double_t* VetoADCPedestal = new Double_t[nVeto];
-    Double_t* VetoADCGain = new Double_t[nVeto];
-    Double_t* VetoTDCLoThr = new Double_t[nVeto];
-    Double_t* VetoTDCHiThr = new Double_t[nVeto];
-    Double_t* VetoTDCOffset = new Double_t[nVeto];
-    for(Int_t i=0; i<fVeto->GetNelem(); i++)
+    if(fVeto)
     {
-        VetoADCLoThr[i] = fVeto->GetElement(i)->GetEnergyLowThr();
-        VetoADCHiThr[i] = fVeto->GetElement(i)->GetEnergyHighThr();
-        VetoADCPedestal[i] = fVeto->GetElement(i)->GetA0();
-        VetoADCGain[i] = fVeto->GetElement(i)->GetA1();
-        VetoTDCLoThr[i] = fVeto->GetElement(i)->GetTimeLowThr();
-        VetoTDCHiThr[i] = fVeto->GetElement(i)->GetTimeHighThr();
-        VetoTDCOffset[i] = fVeto->GetElement(i)->GetT0();
-    }
+        Int_t nVeto = fVeto->GetNelem();
+        Double_t VetoGlobalOffset = fVeto->GetTimeOffset();
+        Double_t VetoDistance = fVeto->GetPosition(0)->Z();
 
-    treeSetupParameters->Branch("nVeto", &nVeto, "nVeto/I");
-    treeSetupParameters->Branch("VetoGlobalOffset", &VetoGlobalOffset, "VetoGlobalOffset/D");
-    treeSetupParameters->Branch("VetoDistance", &VetoDistance, "VetoDistance/D");
-    treeSetupParameters->Branch("VetoADCLoThr", VetoADCLoThr, "VetoADCLoThr[nVeto]/D");
-    treeSetupParameters->Branch("VetoADCHiThr", VetoADCHiThr, "VetoADCHiThr[nVeto]/D");
-    treeSetupParameters->Branch("VetoADCPedestal", VetoADCPedestal, "VetoADCPedestal[nVeto]/D");
-    treeSetupParameters->Branch("VetoADCGain", VetoADCGain, "VetoADCGain[nVeto]/D");
-    treeSetupParameters->Branch("VetoTDCLoThr", VetoTDCLoThr, "VetoTDCLoThr[nVeto]/D");
-    treeSetupParameters->Branch("VetoTDCHiThr", VetoTDCHiThr, "VetoTDCHiThr[nVeto]/D");
-    treeSetupParameters->Branch("VetoTDCOffset", VetoTDCOffset, "VetoTDCOffset[nVeto]/D");
+        Double_t* VetoADCLoThr = new Double_t[nVeto];
+        Double_t* VetoADCHiThr = new Double_t[nVeto];
+        Double_t* VetoADCPedestal = new Double_t[nVeto];
+        Double_t* VetoADCGain = new Double_t[nVeto];
+        Double_t* VetoTDCLoThr = new Double_t[nVeto];
+        Double_t* VetoTDCHiThr = new Double_t[nVeto];
+        Double_t* VetoTDCOffset = new Double_t[nVeto];
+
+        for(Int_t i=0; i<fVeto->GetNelem(); i++)
+        {
+            VetoADCLoThr[i] = fVeto->GetElement(i)->GetEnergyLowThr();
+            VetoADCHiThr[i] = fVeto->GetElement(i)->GetEnergyHighThr();
+            VetoADCPedestal[i] = fVeto->GetElement(i)->GetA0();
+            VetoADCGain[i] = fVeto->GetElement(i)->GetA1();
+            VetoTDCLoThr[i] = fVeto->GetElement(i)->GetTimeLowThr();
+            VetoTDCHiThr[i] = fVeto->GetElement(i)->GetTimeHighThr();
+            VetoTDCOffset[i] = fVeto->GetElement(i)->GetT0();
+        }
+
+        treeSetupParameters->Branch("nVeto", &nVeto, "nVeto/I");
+        treeSetupParameters->Branch("VetoGlobalOffset", &VetoGlobalOffset, "VetoGlobalOffset/D");
+        treeSetupParameters->Branch("VetoDistance", &VetoDistance, "VetoDistance/D");
+        treeSetupParameters->Branch("VetoADCLoThr", VetoADCLoThr, "VetoADCLoThr[nVeto]/D");
+        treeSetupParameters->Branch("VetoADCHiThr", VetoADCHiThr, "VetoADCHiThr[nVeto]/D");
+        treeSetupParameters->Branch("VetoADCPedestal", VetoADCPedestal, "VetoADCPedestal[nVeto]/D");
+        treeSetupParameters->Branch("VetoADCGain", VetoADCGain, "VetoADCGain[nVeto]/D");
+        treeSetupParameters->Branch("VetoTDCLoThr", VetoTDCLoThr, "VetoTDCLoThr[nVeto]/D");
+        treeSetupParameters->Branch("VetoTDCHiThr", VetoTDCHiThr, "VetoTDCHiThr[nVeto]/D");
+        treeSetupParameters->Branch("VetoTDCOffset", VetoTDCOffset, "VetoTDCOffset[nVeto]/D");
+    }
 
     treeSetupParameters->Fill();
 
