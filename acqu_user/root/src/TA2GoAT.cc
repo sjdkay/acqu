@@ -316,7 +316,7 @@ void    TA2GoAT::PostInit()
         TaggerElectronEnergy = new Double_t[nTagger];
         TaggerPhotonEnergy = new Double_t[nTagger];
 
-        for(Int_t i=0; i<fLadder->GetNelem(); i++)
+        for(UInt_t i=0; i<fLadder->GetNelem(); i++)
         {
             TaggerTDCLoThr[i] = fLadder->GetElement(i)->GetTimeLowThr();
             TaggerTDCHiThr[i] = fLadder->GetElement(i)->GetTimeHighThr();
@@ -366,7 +366,7 @@ void    TA2GoAT::PostInit()
         NaITDCHiThr = new Double_t[nNaI];
         NaITDCOffset = new Double_t[nNaI];
 
-        for(Int_t i=0; i<fNaI->GetNelem(); i++)
+        for(UInt_t i=0; i<fNaI->GetNelem(); i++)
         {
             NaIADCLoThr[i] = fNaI->GetElement(i)->GetEnergyLowThr();
             NaIADCHiThr[i] = fNaI->GetElement(i)->GetEnergyHighThr();
@@ -417,7 +417,7 @@ void    TA2GoAT::PostInit()
         PIDTDCOffset = new Double_t[nPID];
         PIDPhi = new Double_t[nPID];
 
-        for(Int_t i=0; i<fPID->GetNelem(); i++)
+        for(UInt_t i=0; i<fPID->GetNelem(); i++)
         {
             PIDADCLoThr[i] = fPID->GetElement(i)->GetEnergyLowThr();
             PIDADCHiThr[i] = fPID->GetElement(i)->GetEnergyHighThr();
@@ -477,7 +477,7 @@ void    TA2GoAT::PostInit()
         BaF2TDCOffset = new Double_t[nBaF2];
         BaF2TDCGain = new Double_t[nBaF2];
 
-        for(Int_t i=0; i<fBaF2PWO->GetNelem(); i++)
+        for(UInt_t i=0; i<fBaF2PWO->GetNelem(); i++)
         {
             BaF2ADCLoThr[i] = fBaF2PWO->GetElement(i)->GetEnergyLowThr();
             BaF2ADCHiThr[i] = fBaF2PWO->GetElement(i)->GetEnergyHighThr();
@@ -533,7 +533,7 @@ void    TA2GoAT::PostInit()
         VetoTDCHiThr = new Double_t[nVeto];
         VetoTDCOffset = new Double_t[nVeto];
 
-        for(Int_t i=0; i<fVeto->GetNelem(); i++)
+        for(UInt_t i=0; i<fVeto->GetNelem(); i++)
         {
             VetoADCLoThr[i] = fVeto->GetElement(i)->GetEnergyLowThr();
             VetoADCHiThr[i] = fVeto->GetElement(i)->GetEnergyHighThr();
