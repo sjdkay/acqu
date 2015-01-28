@@ -55,7 +55,9 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     errorModuleIndex(0),
                                                                     errorCode(0),
                                                                     eventNumber(0),
-                                                                    eventID(0)														
+                                                                    eventID(0),
+                                                                    moellerRead(0),
+                                                                    moellerPairs(0)
 {
     	strcpy(outputFolder,"");
     	strcpy(inputName,"");
@@ -79,6 +81,8 @@ TA2GoAT::~TA2GoAT()
 		delete treeDetectorHits;
     if(treeScalers)
         delete treeScalers;
+    if(treeMoeller)
+        delete treeMoeller;
     if(treeSetupParameters)
         delete treeSetupParameters;
     if(file)
@@ -287,7 +291,39 @@ void    TA2GoAT::PostInit()
             treeLinPol->Branch("polarizationTable", fLinPol->GetPolTable_TC(), "polarizationTable[352]/D");
             treeLinPol->Branch("enhancementTable", fLinPol->GetEnhTable_TC(), "enhancementTable[352]/D");
 		}
-	}
+
+        if(fMoeller)
+        {
+            treeMoeller = new TTree("moeller", "moeller");
+            treeMoeller->Branch("eventNumber", &eventNumber, "eventNumber/I");
+            moellerRead = false;
+            moellerPairs = new UInt_t*[fMoeller->GetNPairs()];
+            Char_t moellerName[256];
+            Char_t moellerType[256];
+            for(UShort_t i=0; i<(fMoeller->GetNVuproms()); i++)
+            {
+                for(UShort_t j=0; j<(fMoeller->GetNLeftChannels()); j++)
+                {
+                    for(UShort_t k=0; k<(fMoeller->GetNPairsPerCh()); k++)
+                    {
+                        for(UShort_t hel=0;hel<2;hel++)
+                        {
+                            UShort_t idx = (i*2*(fMoeller->GetNLeftChannels())*(fMoeller->GetNPairsPerCh()));
+                            idx += (j*2*(fMoeller->GetNPairsPerCh()));
+                            idx += (k*2);
+                            idx += hel;
+                            sprintf(moellerName, "pair_V%d_L%d_R%d_H%d", i, j, k, hel);
+                            sprintf(moellerType, "pair_V%d_L%d_R%d_H%d[256]/i", i, j, k, hel);
+                            moellerPairs[idx] = new UInt_t[fMoeller->GetNBins()];
+                            treeMoeller->Branch(moellerName, moellerPairs[idx], moellerType);
+
+                            for(Int_t bin=0; bin<fMoeller->GetNBins(); bin++) moellerPairs[idx][bin] = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // Adding Tagger information to parameters tree
 
@@ -589,7 +625,33 @@ void    TA2GoAT::Reconstruct()
 			edgeSetting = fLinPol->GetEdgeSetting();
 			if(treeLinPol) treeLinPol->Fill();
 		}
+
+        if(fMoeller)
+        {
+            if(fMoeller->IsReadoutStarted())
+            {
+                moellerRead = true;
+                //printf("Moeller read started - Event %d\n",eventNumber);
+            }
+        }
 	}
+
+    if(fMoeller)
+    {
+        if(moellerRead && !fMoeller->IsReadoutStarted())
+        {
+            for(Int_t i=0; i<fMoeller->GetNPairs(); i++)
+            {
+                for(Int_t j=0; j<fMoeller->GetNBins(); j++)
+                {
+                    moellerPairs[i][j] = fMoeller->GetTDCValue(i,j);
+                }
+            }
+            treeMoeller->Fill();
+            moellerRead = false;
+            //printf("Moeller read finish  - Event %d\n",eventNumber);
+        }
+    }
 
 	nTagged = 0;
 	if(fTagger && fLadder)
@@ -1187,6 +1249,11 @@ void    TA2GoAT::Finish()
 	{
         treeScalers->Write();	// Write
         delete treeScalers; 	// Close and delete in memory
+    }
+    if(treeMoeller)
+    {
+        treeMoeller->Write();	// Write
+        delete treeMoeller; 	// Close and delete in memory
     }
     if(treeSetupParameters)
     {

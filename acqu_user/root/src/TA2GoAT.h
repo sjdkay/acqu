@@ -41,6 +41,7 @@ private:
         TTree* 		treeTrigger;		// Trigger information (filled each event)
         TTree* 		treeDetectorHits;	// Detector system hit patterns (filled each event)
         TTree*		treeScalers; 		// Scaler read information (filled each scaler read)
+        TTree*      treeMoeller;        // Moeller information (filled each moeller read)
         TTree*      treeSetupParameters;// Calibration parameters (filled once)
 
     	char        outputFolder[256];
@@ -114,6 +115,10 @@ private:
     	//Scalers
     	Int_t		eventNumber;
     	Int_t		eventID;    
+
+        //Moeller
+        Bool_t      moellerRead;
+        UInt_t**    moellerPairs;
 
 		// Display histograms
 		TH2*		Check_CBdE_E;
