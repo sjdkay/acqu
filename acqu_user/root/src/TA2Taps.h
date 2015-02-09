@@ -366,7 +366,7 @@ inline void TA2Taps::SetParticleInfo(UInt_t NrParticle)
 {
   particles[NrParticle].Reset();
   particles[NrParticle].SetP4(fP4[NrParticle]);
-  if(fBaF2->GetElement(id_clBaF2[NrParticle])->GetT1() > 0)
+  if(fBaF2->GetElement(id_clBaF2[NrParticle])->GetT1() > 0 || gAR->GetProcessType() == EMCProcess)
   {
       particles[NrParticle].SetTime(-(fBaF2->GetTime(id_clBaF2[NrParticle])) + fTapsTimeshift);
   }
@@ -390,7 +390,7 @@ inline void TA2Taps::SetParticleInfo(UInt_t NrParticle)
       //particles[NrParticle].SetIsCharged(fIsVCharged[NrParticle]);
       particles[NrParticle].SetDetector(EDetVeto);
       particles[NrParticle].SetVetoIndex(fVetoIndex );
-      if(fVeto->GetElement(fVetoIndex)->GetT1() > 0)
+      if(fVeto->GetElement(fVetoIndex)->GetT1() > 0 || gAR->GetProcessType() == EMCProcess)
       {
           particles[NrParticle].SetVetoTime(-fVeto_Time);
       }
