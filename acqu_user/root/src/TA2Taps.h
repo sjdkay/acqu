@@ -368,11 +368,11 @@ inline void TA2Taps::SetParticleInfo(UInt_t NrParticle)
   particles[NrParticle].SetP4(fP4[NrParticle]);
   if(fBaF2->GetElement(id_clBaF2[NrParticle])->GetT1() > 0)
   {
-      particles[NrParticle].SetTime((fBaF2->GetTime(id_clBaF2[NrParticle])) + fTapsTimeshift);
+      particles[NrParticle].SetTime(-(fBaF2->GetTime(id_clBaF2[NrParticle])) + fTapsTimeshift);
   }
   else
   {
-      particles[NrParticle].SetTime(-(fBaF2->GetTime(id_clBaF2[NrParticle])) + fTapsTimeshift);
+      particles[NrParticle].SetTime((fBaF2->GetTime(id_clBaF2[NrParticle])) + fTapsTimeshift);
   }
   particles[NrParticle].SetParticleIDA(fPDG_ID[NrParticle]);
   particles[NrParticle].SetCentralIndex(id_clBaF2[NrParticle]);
@@ -392,11 +392,11 @@ inline void TA2Taps::SetParticleInfo(UInt_t NrParticle)
       particles[NrParticle].SetVetoIndex(fVetoIndex );
       if(fVeto->GetElement(fVetoIndex)->GetT1() > 0)
       {
-          particles[NrParticle].SetVetoTime(fVeto_Time);
+          particles[NrParticle].SetVetoTime(-fVeto_Time);
       }
       else
       {
-          particles[NrParticle].SetVetoTime(-fVeto_Time);
+          particles[NrParticle].SetVetoTime(fVeto_Time);
       }
   }
   particles[NrParticle].SetPSAShort(fBaF2->GetSGEnergy(id_clBaF2[NrParticle]));
