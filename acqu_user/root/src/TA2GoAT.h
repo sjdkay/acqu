@@ -57,8 +57,8 @@ private:
         Int_t*		centralCrystal;
 		Int_t*		centralVeto;
 
-    	//Apparatus
-        Int_t*	    apparatus;
+        //Detectors
+        Int_t*	    detectors;
 
     	//Charged detector energies
         Double_t*	vetoEnergy;

@@ -18,7 +18,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     clusterSize(0),
                                                                     centralCrystal(0),
                                                                     centralVeto(0),
-                                                                    apparatus(0),
+                                                                    detectors(0),
                                                                     vetoEnergy(0),
                                                                     MWPC0Energy(0),
                                                                     MWPC1Energy(0),
@@ -168,22 +168,22 @@ void    TA2GoAT::PostInit()
     clusterSize      = new Int_t[TA2GoAT_MAX_PARTICLE];
     centralCrystal   = new Int_t[TA2GoAT_MAX_PARTICLE];
     centralVeto      = new Int_t[TA2GoAT_MAX_PARTICLE];
-	
-    taggedEnergy     = new Double_t[TA2GoAT_MAX_TAGGER];
-    taggedChannel    = new Int_t[TA2GoAT_MAX_TAGGER];
-    taggedTime       = new Double_t[TA2GoAT_MAX_TAGGER];
-    
-    apparatus        = new Int_t[TA2GoAT_MAX_PARTICLE];
+
+    detectors        = new Int_t[TA2GoAT_MAX_PARTICLE];
     vetoEnergy       = new Double_t[TA2GoAT_MAX_PARTICLE];
     MWPC0Energy      = new Double_t[TA2GoAT_MAX_PARTICLE];
     MWPC1Energy      = new Double_t[TA2GoAT_MAX_PARTICLE];
-        
+
+    taggedChannel    = new Int_t[TA2GoAT_MAX_TAGGER];
+    taggedTime       = new Double_t[TA2GoAT_MAX_TAGGER];
+    taggedEnergy     = new Double_t[TA2GoAT_MAX_TAGGER];
+
     NaIHits	         = new Int_t[TA2GoAT_MAX_HITS];
     NaICluster       = new Int_t[TA2GoAT_MAX_HITS];
     PIDHits	         = new Int_t[TA2GoAT_MAX_HITS];
     MWPCHits		 = new Int_t[TA2GoAT_MAX_HITS];
-    BaF2Hits	 = new Int_t[TA2GoAT_MAX_HITS];
-    BaF2Cluster = new Int_t[TA2GoAT_MAX_HITS];
+    BaF2Hits	     = new Int_t[TA2GoAT_MAX_HITS];
+    BaF2Cluster      = new Int_t[TA2GoAT_MAX_HITS];
     VetoHits         = new Int_t[TA2GoAT_MAX_HITS];
     
     triggerPattern   = new Int_t[32];
@@ -229,7 +229,7 @@ void    TA2GoAT::PostInit()
     treeTracks->Branch("clusterSize", clusterSize, "clusterSize[nTracks]/I");
     treeTracks->Branch("centralCrystal", centralCrystal, "centralCrystal[nTracks]/I");
     treeTracks->Branch("centralVeto", centralVeto, "centralVeto[nTracks]/I");
-    treeTracks->Branch("apparatus", apparatus, "apparatus[nTracks]/I");
+    treeTracks->Branch("detectors", detectors, "detectors[nTracks]/I");
     treeTracks->Branch("vetoEnergy", vetoEnergy, "vetoEnergy[nTracks]/D");
     treeTracks->Branch("MWPC0Energy", MWPC0Energy, "MWPC0Energy[nTracks]/D");
     treeTracks->Branch("MWPC1Energy", MWPC1Energy, "MWPC1Energy[nTracks]/D");
@@ -664,7 +664,7 @@ void    TA2GoAT::Reconstruct()
 			else centralVeto[i]	= part.GetVetoIndex();		
 			
 			// Store other values which don't have this "no-value" option
-            apparatus[i]	= (Int_t)EAppCB;
+            detectors[i]	= part.GetDetectors();
             theta[i]		= part.GetThetaDg();
             phi[i]			= part.GetPhiDg();
             clusterSize[i]  = part.GetClusterSize();
@@ -703,7 +703,7 @@ void    TA2GoAT::Reconstruct()
             MWPC1Energy[nParticles+i] = 0.0;
 			
 			// Store other values which don't have this "no-value" option
-            apparatus[nParticles+i]		= (Int_t)EAppTAPS;
+            detectors[nParticles+i]		= part.GetDetectors();
             theta[nParticles+i]			= part.GetThetaDg();
             phi[nParticles+i]			= part.GetPhiDg();
 			time[nParticles+i]			= part.GetTime();	
@@ -844,17 +844,36 @@ void    TA2GoAT::Reconstruct()
 		}
 	}
 
+
 	//Apply EndBuffer
     clusterEnergy[nParticles] = EBufferEnd;
     theta[nParticles]         = EBufferEnd;
     phi[nParticles]           = EBufferEnd;
     time[nParticles]          = EBufferEnd;
+    clusterSize[nParticles]   = EBufferEnd;
+    centralCrystal[nParticles]= EBufferEnd;
+    centralVeto[nParticles]   = EBufferEnd;
+    detectors[nParticles] 	  = EBufferEnd;
+    vetoEnergy[nParticles] 	  = EBufferEnd;
     MWPC0Energy[nParticles]   = EBufferEnd;
     MWPC1Energy[nParticles]   = EBufferEnd;
-    vetoEnergy[nParticles] 	  = EBufferEnd;
+
     taggedChannel[nTagged] 	  = EBufferEnd;
     taggedTime[nTagged] 	  = EBufferEnd;
-	
+    taggedEnergy[nTagged] 	  = EBufferEnd;
+
+    NaIHits[nNaIHits] 	      = EBufferEnd;
+    NaICluster[nNaIHits] 	  = EBufferEnd;
+    PIDHits[nPIDHits] 	      = EBufferEnd;
+    MWPCHits[nMWPCHits] 	  = EBufferEnd;
+    BaF2Hits[nBaF2Hits] 	  = EBufferEnd;
+    BaF2Cluster[nBaF2Hits] 	  = EBufferEnd;
+    VetoHits[nVetoHits] 	  = EBufferEnd;
+
+    errorModuleID[nErrors] 	  = EBufferEnd;
+    errorModuleIndex[nErrors] = EBufferEnd;
+    errorCode[nErrors] 	      = EBufferEnd;
+
 	//Fill Trees
     if(treeTracks) 	treeTracks->Fill();
 	if(treeTagger)			treeTagger->Fill();
