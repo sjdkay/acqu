@@ -9,6 +9,7 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     treeTrigger(0),
                                                                     treeDetectorHits(0),
                                                                     treeScalers(0),
+                                                                    treeMoeller(0),
                                                                     treeSetupParameters(0),
                                                                     nParticles(0),
                                                                     clusterEnergy(0),
@@ -317,7 +318,7 @@ void    TA2GoAT::PostInit()
                             moellerPairs[idx] = new UInt_t[fMoeller->GetNBins()];
                             treeMoeller->Branch(moellerName, moellerPairs[idx], moellerType);
 
-                            for(Int_t bin=0; bin<fMoeller->GetNBins(); bin++) moellerPairs[idx][bin] = 0;
+                            for(UInt_t bin=0; bin<fMoeller->GetNBins(); bin++) moellerPairs[idx][bin] = 0;
                         }
                     }
                 }
@@ -642,7 +643,7 @@ void    TA2GoAT::Reconstruct()
         {
             for(Int_t i=0; i<fMoeller->GetNPairs(); i++)
             {
-                for(Int_t j=0; j<fMoeller->GetNBins(); j++)
+                for(UInt_t j=0; j<fMoeller->GetNBins(); j++)
                 {
                     moellerPairs[i][j] = fMoeller->GetTDCValue(i,j);
                 }
