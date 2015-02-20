@@ -666,12 +666,11 @@ void    TA2GoAT::Reconstruct()
 		if ( fNmult <= 1 )
 		{
         		// Collect Tagger Hits without Multihits
-        		nTagged	= fLadder->GetNhits();
+                nTagged	= fLadder->GetNhitsAll();
                 for(Int_t i=0; i<nTagged; i++)
         		{
-                    taggedChannel[i]	= (fLadder->GetHitsAll())[i];
-                    if (gAR->GetProcessType() != EMCProcess) taggedTime[i] = fLadder->GetTime(taggedChannel[i]);
-                    else taggedTime[i] = 0;
+                    taggedChannel[i] = (fLadder->GetHitsAll())[i];
+                    taggedTime[i] = (fLadder->GetTimeORAll())[i];
                     taggedEnergy[i] = electron_E - ChToE[taggedChannel[i]];
 	        	}
 		}

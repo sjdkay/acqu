@@ -71,11 +71,11 @@ TA2Ladder::TA2Ladder( const char* name, TA2System* apparatus )
   fTrigg = fDoubles = fHitsAll = fWindows = NULL;
   fHitsRand = fHitsPrompt = fMuHits = NULL;
   fECalibration = fEelec = fEelecOR = fMeanEelecOR = fEOverlap = 
-    fRandMin = fRandMax = NULL;
+    fRandMin = fRandMax = fTimeORAll = NULL;
   fMeanTime = fMeanTimeOR = fMeanEnergy = fMeanEnergyOR = 
     fDiffTime = fDiffTimeOR = NULL;
   fTimingRes = fPromptRand = fPromptMin = fPromptMax = 0.0; 
-  fNDoubles = fNThits = fNtrigger = fNtrig = 0;
+  fNDoubles = fNThits = fNtrigger = fNtrig = fNhitsAll = 0;
   fNRandWindows = fNhitsPrompt = fNhitsRand  = fFence = 0;
   fIsOverlap = fIsTimeWindows = fIsFence = fIsMicro = EFalse;
   AddCmdList( kLaddKeys );                  // for SetConfig()
@@ -101,6 +101,7 @@ TA2Ladder::~TA2Ladder()
   if( fMeanEelecOR ) delete[] fMeanEelecOR;
   if( fHitsRand ) delete[] fHitsRand;
   if( fHitsPrompt ) delete[] fHitsPrompt;
+  if( fTimeORAll ) delete[] fTimeORAll;
   if( fMeanTime ) delete[] fMeanTime;
   if( fMeanTimeOR ) delete[] fMeanTimeOR;
   if( fMeanEnergy ) delete[] fEnergy;
@@ -314,6 +315,7 @@ void TA2Ladder::PostInit()
   if( !fNtrig ) fNtrig = 1;            	// at least 1 "trigger" loop
   fTrigg = new UInt_t[fNelem];
   fHitsAll = new UInt_t[fNelem];
+  if( fIsTime ) fTimeORAll = new Double_t[fNelem];
   fWindows = new UInt_t[fNelem];
   if(fIsTimeWindows){ 	                // windows defined? prompt/rand ratio
     Double_t randTotal=0.0;
@@ -344,7 +346,7 @@ void TA2Ladder::Decode( )
   // Adapted from TA2KensLadder::Decode() to extend TA2Detector functionality
   // Add Multihit TDC decoding
 
-  fNADChits = fNTDChits = fNhits = 0;
+  fNADChits = fNTDChits = fNhits = fNhitsAll = 0;
   if( fHitsM ){
     for( UInt_t m=0; m<fNMultihit; m++ ) fNhitsM[m] = 0;
   }
@@ -397,7 +399,8 @@ void TA2Ladder::Decode( )
       if( fIsTime ){
 	fTime[j] -= trigtime;
 	fTimeOR[fNhits] = fTime[j];
-	if( fTimeM ){
+    fTimeORAll[fNhits] = fTime[j];
+    if( fTimeM ){
 	  for( Int_t m=0; m<elem->GetNhit(); m++ ){
 	    fHitsM[m][fNhitsM[m]] = j;
 	    fTimeM[m][j] -= trigtime; 
@@ -417,8 +420,9 @@ void TA2Ladder::Decode( )
     if( fIsEnergy ) fRawEnergyHits[fNADChits] = EBufferEnd;
   }
 
-  fHitsAll[fNhits] = EBufferEnd;  
   fTrigg[fNhits] = EBufferEnd;
+
+  fNhitsAll = fNhits;
 
   // Decode double hits
   DecodeDoubles();
@@ -430,8 +434,10 @@ void TA2Ladder::Decode( )
   if( fIsFence ) fFence = Fence();
   
   fHits[fNhits] = EBufferEnd;
-  if(fIsTime){ 
+  fHitsAll[fNhitsAll] = EBufferEnd;
+  if(fIsTime){
     fTimeOR[fNhits] = (Double_t)EBufferEnd;
+    fTimeORAll[fNhitsAll] = (Double_t)EBufferEnd;
     for(UInt_t m=0; m<fNMultihit; m++){
       fHitsM[m][fNhitsM[m]] = EBufferEnd;
       fTimeORM[m][fNhitsM[m]] = EBufferEnd;
@@ -512,18 +518,22 @@ void TA2Ladder::ReadDecoded( )
   // the end-point tagger, which have gaps between detectors
   if( (Ee >= centLo) && (Ee < centHi) ){
       fHits[fNhits] = fHitsAll[fNhits] = iHit;
-      fEelecOR[fNhits] = fECalibration[iHit];
-      fTimeOR[fNhits] = 0.0;
+      if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit];
+      if(fIsTime) fTimeOR[fNhits] = 0.0;
+      if(fIsTime) fTimeORAll[fNhits] = 0.0;
       fNhits++;
 
       // Fill next channel too for double hit
       if( Ee >= nextLo ){
           fHits[fNhits] = fHitsAll[fNhits] = iHit + 1;
-          fEelecOR[fNhits] = fECalibration[iHit+1];
-          fTimeOR[fNhits] = 0.0;
+          if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit+1];
+          if(fIsTime) fTimeOR[fNhits] = 0.0;
+          if(fIsTime) fTimeORAll[fNhits] = 0.0;
           fNhits++;
       }
   }
+
+  fNhitsAll = fNhits;
 
   DecodeDoubles();
 
@@ -531,9 +541,10 @@ void TA2Ladder::ReadDecoded( )
 
   // Ensure some arrays properly terminated
   fHits[fNhits] = EBufferEnd;
-  fHitsAll[fNhits] = EBufferEnd;
-  fEelecOR[fNhits] = EBufferEnd;
-  fTimeOR[fNhits] = EBufferEnd;
+  fHitsAll[fNhitsAll] = EBufferEnd;
+  if(fIsECalib) fEelecOR[fNhits] = EBufferEnd;
+  if(fIsTime) fTimeOR[fNhits] = EBufferEnd;
+  if(fIsTime) fTimeORAll[fNhitsAll] = EBufferEnd;
   return;
 }
 
