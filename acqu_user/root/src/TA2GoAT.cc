@@ -719,18 +719,20 @@ void    TA2GoAT::Reconstruct()
 			
             if(TMath::Abs(part.GetEnergyMwpc1()) >= TA2GoAT_NULL) MWPC1Energy[i] = 0.0;
             else MWPC1Energy[i] = part.GetEnergyMwpc1();
-						
+
+            if(part.GetClusterSize() == ENullHit) clusterSize[i] = 0;
+            else clusterSize[i] = part.GetClusterSize();
+
             if(part.GetCentralIndex() == ENullHit) centralCrystal[i] = -1;
             else centralCrystal[i] = part.GetCentralIndex();
 						
 			if(part.GetVetoIndex() == ENullHit) centralVeto[i] = -1;
 			else centralVeto[i]	= part.GetVetoIndex();		
-			
+
 			// Store other values which don't have this "no-value" option
             detectors[i]	= part.GetDetectors();
             theta[i]		= part.GetThetaDg();
             phi[i]			= part.GetPhiDg();
-            clusterSize[i]  = part.GetClusterSize();
 
 		}
 	}
@@ -754,13 +756,16 @@ void    TA2GoAT::Reconstruct()
 			
             if(TMath::Abs(part.GetVetoEnergy()) >= TA2GoAT_NULL) vetoEnergy[nParticles+i] = 0.0;
             else vetoEnergy[nParticles+i]	= part.GetVetoEnergy();
-		
+
+            if(part.GetClusterSize() == ENullHit) clusterSize[nParticles+i] = 0;
+            else clusterSize[nParticles+i] = part.GetClusterSize();
+
             if(part.GetCentralIndex() == ENullHit) centralCrystal[nParticles+i] = -1;
             else centralCrystal[nParticles+i]	= part.GetCentralIndex();
 			
 			if(part.GetVetoIndex() == ENullHit) centralVeto[nParticles+i] = -1;
 			else centralVeto[nParticles+i]	= part.GetVetoIndex();		
-			
+
 			// Set WC values to NULL
             MWPC0Energy[nParticles+i] = 0.0;
             MWPC1Energy[nParticles+i] = 0.0;
@@ -770,7 +775,6 @@ void    TA2GoAT::Reconstruct()
             theta[nParticles+i]			= part.GetThetaDg();
             phi[nParticles+i]			= part.GetPhiDg();
 			time[nParticles+i]			= part.GetTime();	
-            clusterSize[nParticles+i]  	= part.GetClusterSize();
 
 		}
 		nParticles += fTAPS->GetNParticle(); // update number of particles
