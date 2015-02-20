@@ -361,7 +361,7 @@ void    TA2GoAT::PostInit()
             TaggerElectronEnergy[i] = ChToE[i];
             TaggerPhotonEnergy[i] = BeamE - ChToE[i];
         }
-        if(fLadder->IsOverlap()) TaggerEnergyWidth = fLadder->GetEOverlap();
+        TaggerEnergyWidth = fLadder->GetEWidth();
 
         treeSetupParameters->Branch("nTagger", &nTagger, "nTagger/I");
         treeSetupParameters->Branch("TaggerGlobalOffset", &TaggerGlobalOffset, "TaggerGlobalOffset/D");
@@ -370,7 +370,7 @@ void    TA2GoAT::PostInit()
         treeSetupParameters->Branch("TaggerTDCOffset", TaggerTDCOffset, "TaggerTDCOffset[nTagger]/D");
         treeSetupParameters->Branch("TaggerElectronEnergy", TaggerElectronEnergy, "TaggerElectronEnergy[nTagger]/D");
         treeSetupParameters->Branch("TaggerPhotonEnergy", TaggerPhotonEnergy, "TaggerPhotonEnergy[nTagger]/D");
-        if(fLadder->IsOverlap()) treeSetupParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
+        treeSetupParameters->Branch("TaggerEnergyWidth", TaggerEnergyWidth, "TaggerEnergyWidth[nTagger]/D");
     }
 
     // Adding NaI information to parameters tree
@@ -669,8 +669,9 @@ void    TA2GoAT::Reconstruct()
         		nTagged	= fLadder->GetNhits();
                 for(Int_t i=0; i<nTagged; i++)
         		{
-                    taggedChannel[i]	= fLadder->GetHits(i);
-                    taggedTime[i]	= (fLadder->GetTimeOR())[i];
+                    taggedChannel[i]	= (fLadder->GetHitsAll())[i];
+                    if (gAR->GetProcessType() != EMCProcess) taggedTime[i] = fLadder->GetTime(taggedChannel[i]);
+                    else taggedTime[i] = 0;
                     taggedEnergy[i] = electron_E - ChToE[taggedChannel[i]];
 	        	}
 		}
