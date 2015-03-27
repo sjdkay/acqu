@@ -76,6 +76,8 @@ void TA2System:: BaseInit( const Map_t* maplist, const Char_t* file )
   //
   fIsInit = kFALSE;
   fIsError = kFALSE;
+  fNPrintMsg = 0;
+  fMaxPrintMsg = 1000;
   fCmdList[0] = maplist;
   fCmdList[1] = NULL;
   if( !file ){                  // no configuration file
@@ -142,37 +144,51 @@ void TA2System::AddCmdList(const Map_t* maplist )
 
 //-----------------------------------------------------------------------------
 void TA2System::PrintError( const Char_t* line, const Char_t* operation,
-			    Int_t errorlevel )
+			    Int_t errorlevel, Bool_t cntSuppr )
 {
   // Print diagnostic if setup error detected
   // and set error flag
   //
-  if( operation )
-    fprintf(fLogStream,
-	    "Error in operation %s of class %s at command line:\n%s",
-	     operation, this->ClassName(), line );
-  else
-    fprintf(fLogStream, "Error in setup of class %s at command line:\n%s",
-	     this->ClassName(), line );
-  fIsError = kTRUE;
-  fflush(fLogStream);
-  if( errorlevel == EErrFatal ){
-    fprintf(fLogStream, " FATAL ERROR...exiting AcquRoot\n" );
-    printf("AcquRoot FATAL ERROR...please examine .log files or syslog\n");
-    exit( -1 );
+  if (!cntSuppr || (cntSuppr && fNPrintMsg < fMaxPrintMsg)){
+    if( operation )
+      fprintf(fLogStream,
+              "Error in operation %s of class %s at command line:\n%s",
+               operation, this->ClassName(), line );
+    else
+      fprintf(fLogStream, "Error in setup of class %s at command line:\n%s",
+               this->ClassName(), line );
+    fIsError = kTRUE;
+    fflush(fLogStream);
+    if( errorlevel == EErrFatal ){
+      fprintf(fLogStream, " FATAL ERROR...exiting AcquRoot\n" );
+      printf("AcquRoot FATAL ERROR...please examine .log files or syslog\n");
+      exit( -1 );
+    }
   }
+  if (cntSuppr && fNPrintMsg == fMaxPrintMsg){
+    fprintf(fLogStream, "Reached limit on printed messages (%d) in class %s\n"
+                        " Some frequently occuring messages will be suppressed from now on.\n",
+                        fMaxPrintMsg, this->ClassName());
+  }
+  if (cntSuppr) fNPrintMsg++;
 }
 
 //-----------------------------------------------------------------------------
-void TA2System::PrintMessage( const Char_t* mess )
+void TA2System::PrintMessage( const Char_t* mess, Bool_t cntSuppr )
 {
   // General diagnostics
   //
-  fprintf( fLogStream,"%s: %s ", this->ClassName(), mess);
-  fflush(fLogStream);
+  if (!cntSuppr || (cntSuppr && fNPrintMsg < fMaxPrintMsg)){
+    fprintf( fLogStream,"%s: %s ", this->ClassName(), mess);
+    fflush(fLogStream);
+  }
+  if (cntSuppr && fNPrintMsg == fMaxPrintMsg){
+    fprintf(fLogStream, "Reached limit on printed errors (%d) in class %s\n"
+                        " Some frequently occuring messages will be suppressed from now on.\n",
+                        fMaxPrintMsg, this->ClassName());
+  }
+  if (cntSuppr) fNPrintMsg++;
 }
-
-
 
 //-----------------------------------------------------------------------------
 void TA2System::FileConfig( Char_t* filename )
