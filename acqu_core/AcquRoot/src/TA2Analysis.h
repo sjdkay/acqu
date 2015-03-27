@@ -122,6 +122,7 @@ inline void TA2Analysis::RawDecode( )
   // 26/10/04 fNEvent (total event counter) written to buffer if online
   //          fNEvent read from buffer if offline
 
+  Char_t tmp[256];
   UInt_t* event = (UInt_t*)(fEvent[EARHitBr]);  // start of event buffer
   fNhits = *event++;                            // no. channels read in event
   fNDAQEvent = *event++;                        // DAQ event # in data
@@ -140,14 +141,16 @@ inline void TA2Analysis::RawDecode( )
 
   for( int j=0; j<fNhits; ){
     if( d->id > fMaxADC ){
-      fprintf(fLogStream, " Error found undefined ADC %d in DAQ event %d\n",
+      sprintf(tmp, " Error found undefined ADC %d in DAQ event %d\n",
 	      d->id, fNDAQEvent);
+      PrintMessage(tmp, kTRUE);
       return;
     }
     switch( fADCdefined[d->id] ){
     case 0:                             // something wrong if this happens
-      fprintf(fLogStream, " Error found undefined ADC %d in DAQ event %d\n",
+      sprintf(tmp, " Error found undefined ADC %d in DAQ event %d\n",
 	      d->id, fNDAQEvent);
+      PrintMessage(tmp, kTRUE);
       d++;j++;
       break ;                           // cannot process
     case EFlashADC:                     // save the multiple flash data
