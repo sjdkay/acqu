@@ -524,12 +524,14 @@ void TA2Ladder::ReadDecoded( )
       fNhits++;
 
       // Fill next channel too for double hit
-      if( Ee >= nextLo ){
-          fHits[fNhits] = fHitsAll[fNhits] = iHit + 1;
-          if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit+1];
-          if(fIsTime) fTimeOR[fNhits] = 0.0;
-          if(fIsTime) fTimeORAll[fNhits] = 0.0;
-          fNhits++;
+      if( fIsOverlap ){
+          if( Ee >= nextLo ){
+              fHits[fNhits] = fHitsAll[fNhits] = iHit + 1;
+              if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit+1];
+              if(fIsTime) fTimeOR[fNhits] = 0.0;
+              if(fIsTime) fTimeORAll[fNhits] = 0.0;
+              fNhits++;
+          }
       }
   }
 
