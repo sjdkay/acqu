@@ -220,6 +220,7 @@ inline void TA2Ladder::DecodeDoubles( )
 	if(fIsECalib)
 	  fEelecOR[ngood] = fMeanEelecOR[fNDoubles] = fEOverlap[j];
 	fNDoubles++;
+        ngood++;
       }
       // >2 adjacent hits....clear hit and energy/time element
       else{
