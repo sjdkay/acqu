@@ -48,6 +48,7 @@
 #include "SG3sumADC_t.h"               // 3-sum SG output handler
 #include "TA2Physics.h"                // Physics analysis
 #include <vector>
+#include <sstream>
 
 class TA2Apparatus;
 class TA2Detector;
@@ -122,7 +123,6 @@ inline void TA2Analysis::RawDecode( )
   // 26/10/04 fNEvent (total event counter) written to buffer if online
   //          fNEvent read from buffer if offline
 
-  Char_t tmp[256];
   UInt_t* event = (UInt_t*)(fEvent[EARHitBr]);  // start of event buffer
   fNhits = *event++;                            // no. channels read in event
   fNDAQEvent = *event++;                        // DAQ event # in data
@@ -141,18 +141,22 @@ inline void TA2Analysis::RawDecode( )
 
   for( int j=0; j<fNhits; ){
     if( d->id > fMaxADC ){
-      sprintf(tmp, " Error found undefined ADC %d in DAQ event %d\n",
-	      d->id, fNDAQEvent);
-      PrintMessage(tmp, kTRUE);
+      std::stringstream ss;
+      ss << " Error found undefined ADC " << d->id << " in DAQ event "
+         << fNDAQEvent << "\n";
+      PrintMessage(ss.str().c_str(), kTRUE);
       return;
     }
     switch( fADCdefined[d->id] ){
     case 0:                             // something wrong if this happens
-      sprintf(tmp, " Error found undefined ADC %d in DAQ event %d\n",
-	      d->id, fNDAQEvent);
-      PrintMessage(tmp, kTRUE);
+    {
+      std::stringstream ss;
+      ss << " Error found undefined ADC " << d->id << " in DAQ event "
+         << fNDAQEvent << "\n";
+      PrintMessage(ss.str().c_str(), kTRUE);
       d++;j++;
       break ;                           // cannot process
+    }
     case EFlashADC:                     // save the multiple flash data
       f = fFlash[d->id];
       f->Fill( d );

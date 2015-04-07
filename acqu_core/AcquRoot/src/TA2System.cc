@@ -27,6 +27,7 @@
 
 #include "TA2System.h"
 #include "ARFile_t.h"
+#include <sstream>
 
 
 //-----------------------------------------------------------------------------
@@ -150,14 +151,15 @@ void TA2System::PrintError( const Char_t* line, const Char_t* operation,
   // and set error flag
   //
   if (!cntSuppr || (cntSuppr && fNPrintMsg < fMaxPrintMsg)){
+    std::stringstream ss;
     if( operation )
-      fprintf(fLogStream,
-              "Error in operation %s of class %s at command line:\n%s",
-               operation, this->ClassName(), line );
+      ss << " Error in operation " << operation << " of class "
+         << this->ClassName() << " at command line:\n" << line;
     else
-      fprintf(fLogStream, "Error in setup of class %s at command line:\n%s",
-               this->ClassName(), line );
+      ss << " Error in setup of class "
+         << this->ClassName() << " at command line:\n" << line;
     fIsError = kTRUE;
+    fprintf(fLogStream, ss.str().c_str());
     fflush(fLogStream);
     if( errorlevel == EErrFatal ){
       fprintf(fLogStream, " FATAL ERROR...exiting AcquRoot\n" );
@@ -166,9 +168,11 @@ void TA2System::PrintError( const Char_t* line, const Char_t* operation,
     }
   }
   if (cntSuppr && fNPrintMsg == fMaxPrintMsg){
-    fprintf(fLogStream, "Reached limit on printed messages (%d) in class %s\n"
-                        " Some frequently occuring messages will be suppressed from now on.\n",
-                        fMaxPrintMsg, this->ClassName());
+    std::stringstream ss;
+    ss << " Reached limit on printed messages (" << fMaxPrintMsg << ") in class "
+       << this->ClassName() << "\n"
+       << " Some frequently occuring messages will be suppressed from now on.\n";
+    fprintf(fLogStream, ss.str().c_str());
   }
   if (cntSuppr) fNPrintMsg++;
 }
@@ -179,13 +183,17 @@ void TA2System::PrintMessage( const Char_t* mess, Bool_t cntSuppr )
   // General diagnostics
   //
   if (!cntSuppr || (cntSuppr && fNPrintMsg < fMaxPrintMsg)){
-    fprintf( fLogStream,"%s: %s ", this->ClassName(), mess);
+    std::stringstream ss;
+    ss << " " << this->ClassName() << ": " << mess;
+    fprintf( fLogStream, ss.str().c_str());
     fflush(fLogStream);
   }
   if (cntSuppr && fNPrintMsg == fMaxPrintMsg){
-    fprintf(fLogStream, "Reached limit on printed errors (%d) in class %s\n"
-                        " Some frequently occuring messages will be suppressed from now on.\n",
-                        fMaxPrintMsg, this->ClassName());
+    std::stringstream ss;
+    ss << " Reached limit on printed errors (" << fMaxPrintMsg << ") in class "
+       << this->ClassName() << "\n"
+       << " Some frequently occuring messages will be suppressed from now on.\n";
+    fprintf(fLogStream, ss.str().c_str());
   }
   if (cntSuppr) fNPrintMsg++;
 }
