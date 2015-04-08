@@ -517,38 +517,19 @@ void TA2Ladder::ReadDecoded( )
   // it's necessary for cases outside of the range of the tagger, or for detectors like
   // the end-point tagger, which have gaps between detectors
   if( (Ee >= centLo) && (Ee < centHi) ){
-
-      // fill first channel
       fHits[fNhits] = fHitsAll[fNhits] = iHit;
       if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit];
       if(fIsTime) fTimeOR[fNhits] = 0.0;
       if(fIsTime) fTimeORAll[fNhits] = 0.0;
       fNhits++;
 
-      // check if energy fall into next channel too
+      // Fill next channel too for double hit
       if( Ee >= nextLo ){
-
-          // check if overlaps should be used
-          if( fIsOverlap ){
-              // Fill next channel too for double hit
-              fHits[fNhits] = fHitsAll[fNhits] = iHit + 1;
-              if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit+1];
-              if(fIsTime) fTimeOR[fNhits] = 0.0;
-              if(fIsTime) fTimeORAll[fNhits] = 0.0;
-              fNhits++;
-          }
-          else
-          {
-              // take randomly one of the two channels
-              if (fRandom->Rndm() > 0.5)
-              {
-                  // overwrite already filled channel
-                  fHits[0] = fHitsAll[0] = iHit + 1;
-                  if(fIsECalib) fEelecOR[0] = fECalibration[iHit+1];
-                  if(fIsTime) fTimeOR[0] = 0.0;
-                  if(fIsTime) fTimeORAll[0] = 0.0;
-              }
-          }
+          fHits[fNhits] = fHitsAll[fNhits] = iHit + 1;
+          if(fIsECalib) fEelecOR[fNhits] = fECalibration[iHit+1];
+          if(fIsTime) fTimeOR[fNhits] = 0.0;
+          if(fIsTime) fTimeORAll[fNhits] = 0.0;
+          fNhits++;
       }
   }
 
