@@ -27,6 +27,9 @@ TCCalibEnergy::TCCalibEnergy(const Char_t* name, const Char_t* title, const Char
     // init members
     fPi0Pos = 0;
     fLine = 0;
+#ifdef WITH_A2DISPLAY
+    fDetectorView = 0;
+#endif
 
 }
 
@@ -171,7 +174,27 @@ void TCCalibEnergy::Fit(Int_t elem)
         // draw indicator line
         fLine->Draw();
     }
-    
+
+    double xmin,xmax;
+    fFitFunc->GetRange(xmin,xmax);
+    double maximum = fFitFunc->GetMaximumX();
+    bool fitok=false;
+    if(maximum < xmax && maximum > xmin) {
+        puts("Fit OK!\n");
+        fitok=true;
+    } else {
+        puts("No Maximum found in fit!");
+    }
+
+#ifdef WITH_A2DISPLAY
+    if(fDetectorView) {
+        fDetectorView->SetElement(elem, fitok ? 1:0);
+        fExtraCanvas->cd();
+        fDetectorView->Draw("col");
+        fExtraCanvas->Update();
+    }
+#endif
+
     // update canvas
     fCanvasFit->Update();
 
@@ -181,6 +204,7 @@ void TCCalibEnergy::Fit(Int_t elem)
         fCanvasResult->cd();
         fOverviewHisto->Draw("E1");
         fCanvasResult->Update();
+
     }   
 }
 

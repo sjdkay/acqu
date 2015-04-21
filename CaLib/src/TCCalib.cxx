@@ -56,6 +56,7 @@ void TCCalib::Start(const Char_t* calibration, Int_t nSet, Int_t* set)
 
     fCanvasFit = 0;
     fCanvasResult = 0;
+    fExtraCanvas = 0;
     
     fAvr = 0;
     fAvrDiff = 0;
@@ -117,6 +118,8 @@ void TCCalib::Start(const Char_t* calibration, Int_t nSet, Int_t* set)
 
     // draw the result canvas
     fCanvasResult = new TCanvas("Result", "Result", gClient->GetDisplayWidth() - 900, 0, 900, 400);
+
+    fExtraCanvas = new TCanvas("extra_canvas","Extra");
     
     // init sub-class
     Init();

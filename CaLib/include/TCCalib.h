@@ -58,6 +58,7 @@ protected:
     
     TCanvas* fCanvasFit;        // canvas containing the fits
     TCanvas* fCanvasResult;     // canvas containing the results
+    TCanvas* fExtraCanvas;
     
     TTimer* fTimer;             // slow-motion timer
     Bool_t fTimerRunning;       // timer running state
