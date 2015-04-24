@@ -26,6 +26,12 @@
 #include "TCReadARCalib.h"
 #include "TCFileManager.h"
 
+#ifdef WITH_A2DISPLAY
+#include "a2display.h"
+#include "TH2CB.h"
+#include "TH2TAPS.h"
+#endif
+
 
 class TCCalibPed : public TCCalib
 {
@@ -41,7 +47,10 @@ private:
     virtual void Calculate(Int_t elem);
 
     void ReadADC();
-
+protected:
+#ifdef WITH_A2DISPLAY
+        TH2Crystals* fDetectorView;
+#endif
 public:
     TCCalibPed() : TCCalib(), fADC(0), fFileManager(0), fMean(0), fLine(0) { }
     TCCalibPed(const Char_t* name, const Char_t* title, const Char_t* data,
@@ -59,7 +68,11 @@ public:
     TCCalibTAPSPedLG() 
         : TCCalibPed("TAPS.Ped.LG", "TAPS LG pedestal calibration",
                      "Data.TAPS.LG.E0",
-                     TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) { }
+                     TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) {
+#ifdef WITH_A2DISPLAY
+        fDetectorView = new TH2TAPS("calib_taps", "TAPS");
+#endif
+    }
     virtual ~TCCalibTAPSPedLG() { }
     
     ClassDef(TCCalibTAPSPedLG, 0) // TAPS LG pedestal calibration class
@@ -73,7 +86,11 @@ public:
     TCCalibTAPSPedSG() 
         : TCCalibPed("TAPS.Ped.SG", "TAPS SG pedestal calibration",
                      "Data.TAPS.SG.E0",
-                     TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) { }
+                     TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) {
+#ifdef WITH_A2DISPLAY
+        fDetectorView = new TH2TAPS("calib_taps", "TAPS");
+#endif
+    }
     virtual ~TCCalibTAPSPedSG() { }
     
     ClassDef(TCCalibTAPSPedSG, 0) // TAPS SG pedestal calibration class
@@ -87,7 +104,11 @@ public:
     TCCalibTAPSPedVeto() 
         : TCCalibPed("TAPS.Ped.Veto", "Veto pedestal calibration",
                      "Data.Veto.E0",
-                     TCReadConfig::GetReader()->GetConfigInt("Veto.Elements")) { }
+                     TCReadConfig::GetReader()->GetConfigInt("Veto.Elements")) {
+#ifdef WITH_A2DISPLAY
+        fDetectorView = new TH2TAPS("calib_taps", "TAPS");
+#endif
+    }
     virtual ~TCCalibTAPSPedVeto() { }
     
     ClassDef(TCCalibTAPSPedVeto, 0) // Veto pedestal calibration class

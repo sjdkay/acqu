@@ -29,6 +29,9 @@ TCCalibPed::TCCalibPed(const Char_t* name, const Char_t* title, const Char_t* da
     fFileManager = 0;
     fMean = 0;
     fLine = 0;
+#ifdef WITH_A2DISPLAY
+    fDetectorView = 0;
+#endif
 }
 
 //______________________________________________________________________________
@@ -181,6 +184,17 @@ void TCCalibPed::Fit(Int_t elem)
         fOverviewHisto->Draw("E1");
         fCanvasResult->Update();
     }   
+
+#ifdef WITH_A2DISPLAY
+    if(fDetectorView) {
+        fDetectorView->Reset("");
+        fDetectorView->SetElement(elem, 1);
+        fDetectorView->SetTitle(Form("TAPS Element %d",elem));
+        fExtraCanvas->cd();
+        fDetectorView->Draw("col");
+        fExtraCanvas->Update();
+    }
+#endif
 }
 
 //______________________________________________________________________________
