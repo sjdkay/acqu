@@ -15,6 +15,7 @@ cd ${ACQU_MAINDIR}
 
 # Make any required directories
 mkdir -p ${ACQU_NODEDIR}
+mkdir -p ${ACQU_OUTPUTDIR}
 
 # Create log file for this process
 LogFile="${ACQU_OUTPUTDIR}/log/${ACQU_BASENAME}_AcquNode.log"
