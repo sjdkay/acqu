@@ -97,6 +97,7 @@ private:
         Int_t		nNaIHits;
         Int_t*		NaIHits;
         Int_t*		NaICluster;
+        Double_t*   NaIEnergy;
         Int_t		nPIDHits;
         Int_t*		PIDHits;
         Int_t		nMWPCHits;
@@ -104,6 +105,7 @@ private:
         Int_t		nBaF2Hits;
         Int_t*		BaF2Hits;
         Int_t*		BaF2Cluster;
+        Double_t*   BaF2Energy;
         Int_t		nVetoHits;
         Int_t*		VetoHits;
     
