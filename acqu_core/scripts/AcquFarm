@@ -172,7 +172,16 @@ do
 	cat > "${JobFile}" << EOF 
 #!/bin/sh
 #PBS -N Acqu_${RunNumber}
-#PBS -m abe
+
+## Send eMail if job aborts
+#PBS -m a
+
+## Send eMail when job starts
+##PBS -m b
+
+## Send eMail if job ends
+##PBS -m e
+
 #PBS -M ${MailAddress}
 #PBS -V
 #PBS -l walltime=${WALLTIME}
