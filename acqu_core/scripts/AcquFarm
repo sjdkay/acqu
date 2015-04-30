@@ -32,7 +32,7 @@ exe=`basename $0`
 #the maximum time the job will be allowed HH:MM:SS
 #This is the max allowed on the batch_x86 queue.
 #Set high in case 
-WALLTIME=1:00:00
+WALLTIME=2:00:00
 
 print_usage(){
     echo
