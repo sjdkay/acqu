@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.6)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/subdir-header.cmake)
 message(STATUS "Configuring acqu_core...")
 
+INCLUDE_DIRECTORIES(../Tools/a2display/inc)
+
 # LZMA for reading xz files directly
 # Note that ROOT provides $ROOTSYS/lib/liblzma.a in his own lib
 # directory. So you need to rebuild ROOT after
@@ -60,9 +62,9 @@ CompileCoreLib(AcquRoot)
 if(LIBLZMA_FOUND)
   target_link_libraries(libAcquRoot ${LIBLZMA_LIBRARIES})
 endif()
-if(A2DISPLAY_FOUND)
-  target_link_libraries(libAcquRoot ${A2DISPLAY_LIBRARIES})
-endif()
+
+target_link_libraries(libAcquRoot a2display)
+
 CompileCoreLib(AcquDAQ "-O0") # AcquDAQ must not be optimized (hardware access gets scrambled)
 CompileCoreLib(AcquMC)
 

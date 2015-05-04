@@ -16,9 +16,9 @@
 #include "HitClusterTAPS_t.h"
 #include <string>
 
-#ifdef WITH_A2DISPLAY
+
 #include <TH2TAPS.h>
-#endif
+
 
 // constants for command-line maps below
 enum {
@@ -70,14 +70,14 @@ TA2TAPS_BaF2::TA2TAPS_BaF2(const char* name, TA2System* apparatus)
   fLGEnergy = NULL;
   fMaxSGElements = 0;
 
-#ifdef WITH_A2DISPLAY
+
   // defined in base class TA2ClusterDetector
   std::string s_name(GetName());
   std::string s_single = s_name + "_ClustersSingle";
   fDispClusterHitsSingle = new TH2TAPS(s_single, s_single);
   std::string s_energy = s_name + "_ClustersEnergy";
   fDispClusterHitsEnergy = new TH2TAPS(s_energy, s_energy);  
-#endif
+
 
   // Do not allocate any "new" memory here...Root will wipe
   // Set private variables to zero/false/undefined state

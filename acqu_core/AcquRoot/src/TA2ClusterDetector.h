@@ -30,9 +30,9 @@
 #include "TA2Detector.h"
 #include "HitCluster_t.h"       // hit cluster determination
 
-#ifdef WITH_A2DISPLAY
+
 #include "a2display.h"
-#endif
+
 
 // constants for command-line maps
 enum {
@@ -73,12 +73,12 @@ class TA2ClusterDetector : public TA2Detector {
   Int_t* fIJSplit;                      // for sorting cluster opening angles
   Int_t fMaxSplitPerm;                  // for sorting cluster opening angles
   Bool_t fIsIterate;                    // cluster member find iteration ON/OFF
-#ifdef WITH_A2DISPLAY
+
   Bool_t fDispClusterEnable;
   TH2Crystals* fDispClusterHitsSingle;
   TH2Crystals* fDispClusterHitsEnergy;  
   void DisplayClusters();
-#endif
+
  public:
   TA2ClusterDetector( const char*, TA2System* );// Normal use
   virtual ~TA2ClusterDetector();
@@ -145,9 +145,9 @@ inline void TA2ClusterDetector::Decode( )
 
   DecodeBasic();
   DecodeCluster();
-#ifdef WITH_A2DISPLAY
+
   DisplayClusters();
-#endif
+
 }
 
 //---------------------------------------------------------------------------
@@ -158,9 +158,9 @@ inline void TA2ClusterDetector::DecodeSaved( )
 
   ReadDecoded();
   DecodeCluster();
-#ifdef WITH_A2DISPLAY
+
   DisplayClusters();
-#endif
+
 }
 
 //---------------------------------------------------------------------------

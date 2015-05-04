@@ -66,12 +66,12 @@ TA2ClusterDetector::TA2ClusterDetector( const char* name,
   fMaxSplitPerm = 0;
   fIsIterate = kFALSE;
 
-#ifdef WITH_A2DISPLAY
+
   fDispClusterEnable = kFALSE; // config stuff missing...
   // will be set by child class
   fDispClusterHitsSingle = NULL;
   fDispClusterHitsEnergy = NULL;
-#endif
+
   fIsPos = ETrue;          // override standard detector, must have position
 }
 
@@ -300,7 +300,7 @@ void TA2ClusterDetector::ParseDisplay( char* line )
   return;
 }
 
-#ifdef WITH_A2DISPLAY
+
 //-----------------------------------------------------------------------------
 void TA2ClusterDetector::DisplayClusters() {
   if(!fDispClusterEnable)
@@ -334,6 +334,6 @@ void TA2ClusterDetector::DisplayClusters() {
   fDispClusterHitsSingle->SetTitle(ss.str().c_str());
   //usleep(5e5);
 }
-#endif
+
 
 ClassImp(TA2ClusterDetector)

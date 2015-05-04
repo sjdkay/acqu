@@ -12,7 +12,7 @@ include_directories("include")
 set(MOD "CaLib")
 ROOT_PREPARE_LIB("src" "include" "include" "src/G__${MOD}.cxx" SRCS EXESRCS)
 add_library("lib${MOD}" SHARED ${SRCS})
-target_link_libraries("lib${MOD}" ${ROOT_LIBRARIES} ${CURSES_LIBRARIES} ${ZLIB_LIBRARIES} Spectrum)
+target_link_libraries("lib${MOD}" ${ROOT_LIBRARIES} ${CURSES_LIBRARIES} ${ZLIB_LIBRARIES} Spectrum a2display)
 set_target_properties("lib${MOD}" PROPERTIES OUTPUT_NAME ${MOD})
 
 # and we create the calib_manager
