@@ -6,7 +6,7 @@ find_package(ZLIB REQUIRED)
 find_package(Curses REQUIRED)
 
 include_directories("include")
-
+include_directories("../Tools/a2display")
 
 
 set(MOD "CaLib")

@@ -26,7 +26,7 @@
 #include "TCReadARCalib.h"
 #include "TCFileManager.h"
 
-#ifdef WITH_A2DISPLAY
+#ifndef __CINT__
 #include "a2display.h"
 #include "TH2CB.h"
 #include "TH2TAPS.h"
@@ -48,9 +48,9 @@ private:
 
     void ReadADC();
 protected:
-#ifdef WITH_A2DISPLAY
+
         TH2Crystals* fDetectorView;
-#endif
+
 public:
     TCCalibPed() : TCCalib(), fADC(0), fFileManager(0), fMean(0), fLine(0) { }
     TCCalibPed(const Char_t* name, const Char_t* title, const Char_t* data,
@@ -69,9 +69,9 @@ public:
         : TCCalibPed("TAPS.Ped.LG", "TAPS LG pedestal calibration",
                      "Data.TAPS.LG.E0",
                      TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) {
-#ifdef WITH_A2DISPLAY
+
         fDetectorView = new TH2TAPS("calib_taps", "TAPS");
-#endif
+
     }
     virtual ~TCCalibTAPSPedLG() { }
     
@@ -87,9 +87,9 @@ public:
         : TCCalibPed("TAPS.Ped.SG", "TAPS SG pedestal calibration",
                      "Data.TAPS.SG.E0",
                      TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) {
-#ifdef WITH_A2DISPLAY
+
         fDetectorView = new TH2TAPS("calib_taps", "TAPS");
-#endif
+
     }
     virtual ~TCCalibTAPSPedSG() { }
     
@@ -105,9 +105,9 @@ public:
         : TCCalibPed("TAPS.Ped.Veto", "Veto pedestal calibration",
                      "Data.Veto.E0",
                      TCReadConfig::GetReader()->GetConfigInt("Veto.Elements")) {
-#ifdef WITH_A2DISPLAY
+
         fDetectorView = new TH2TAPS("calib_taps", "TAPS");
-#endif
+
     }
     virtual ~TCCalibTAPSPedVeto() { }
     

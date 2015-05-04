@@ -29,9 +29,8 @@ TCCalibPed::TCCalibPed(const Char_t* name, const Char_t* title, const Char_t* da
     fFileManager = 0;
     fMean = 0;
     fLine = 0;
-#ifdef WITH_A2DISPLAY
     fDetectorView = 0;
-#endif
+
 }
 
 //______________________________________________________________________________
@@ -185,7 +184,7 @@ void TCCalibPed::Fit(Int_t elem)
         fCanvasResult->Update();
     }   
 
-#ifdef WITH_A2DISPLAY
+
     if(fDetectorView) {
         fDetectorView->Reset("");
         fDetectorView->SetElement(elem, 1);
@@ -194,7 +193,7 @@ void TCCalibPed::Fit(Int_t elem)
         fDetectorView->Draw("col");
         fExtraCanvas->Update();
     }
-#endif
+
 }
 
 //______________________________________________________________________________
