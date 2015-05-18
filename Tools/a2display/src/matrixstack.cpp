@@ -97,9 +97,9 @@ matrixstack::Vector matrixstack::Transform(const matrixstack::Vector &v)
 
 std::ostream& operator<<( std::ostream& stream, const matrixstack::Matrix& martix ) {
 
-    for( UInt_t n=0; n<martix.GetNrows(); ++n ) {
+    for( Int_t n=0; n<martix.GetNrows(); ++n ) {
 
-        for( UInt_t m=0; m<martix.GetNcols(); ++m ) {
+        for( Int_t m=0; m<martix.GetNcols(); ++m ) {
             stream << martix(n,m) << " ";
         }
         stream << "\n";
@@ -108,10 +108,11 @@ std::ostream& operator<<( std::ostream& stream, const matrixstack::Matrix& marti
 }
 
 std::ostream& operator<<( std::ostream& stream, const matrixstack::Vector& vector ) {
-    for( UInt_t m=0; m<vector.GetNrows(); ++m ) {
+    for( Int_t m=0; m<vector.GetNrows(); ++m ) {
         stream << vector(m) << " ";
     }
     stream << "\n";
+    return stream;
 }
 
 

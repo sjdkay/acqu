@@ -8,7 +8,7 @@
  * @brief Base class for A2 Calorimeter display calsses.
  */
 class TH2Crystals: public TH2Poly {
-ClassDef(TH2Crystals,1);
+ClassDef(TH2Crystals,1)
 
 protected:
     typedef matrixstack::Vector vec;
@@ -81,7 +81,7 @@ public:
      *        Usually this is the number of bins in the TH2Poly, but not always.
      * @return number of elements
      */
-    virtual UInt_t GetNumberOfElements() const;
+    virtual Int_t GetNumberOfElements() const;
 
     /**
      * @brief Reset Elements (clear everything)

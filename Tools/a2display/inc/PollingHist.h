@@ -20,7 +20,7 @@ using namespace std;
 
 template<class HistType>
 class PollingHistogram: public HistType {
-    ClassDef(PollingHistogram<HistType>,1);
+    ClassDef(PollingHistogram<HistType>,1)
 
 protected:
     std::string pollname;
@@ -47,8 +47,9 @@ protected:
 public:
     PollingHistogram( const std::string& toPoll, const std::string& name="", const std::string& title=""):
         HistType(name,title),
-        update_timer(NULL),
-        pollname(toPoll), message_displayed(false)
+        pollname(toPoll),
+        message_displayed(false),
+        update_timer(NULL)
     { messages = new TList();
         messages->IsOwner();
         update_timer = new TTimer();
@@ -87,8 +88,9 @@ public:
     } //*MENU*
 
 
-    virtual Bool_t HandleTimer(TTimer* timer) {
+    virtual Bool_t HandleTimer(TTimer*) {
         UpdateFromHist();
+        return kTRUE;
     }
 
     virtual void EnableAutoUpdate( const Long_t msec=3000 ) {

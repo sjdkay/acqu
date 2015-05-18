@@ -35,7 +35,7 @@ class TH2CB: public TH2Crystals {
 protected:
 
     virtual void Build();
-    void MakeLevel(TH2DrawTool& c, const UInt_t n, std::set<Int_t>::const_iterator& nexthole, UInt_t& vbins);
+    void MakeLevel(TH2DrawTool& c, const UInt_t n, std::set<Int_t>::const_iterator& nexthole, Int_t& vbins);
 
     static const TH2DrawTool::point_list shape;    // shape of a crystal
     static const std::set<Int_t> bins_in_holes;     // vbin numbers in holes
@@ -166,7 +166,7 @@ public:
      *        Crystal Ball also counts crystal positions that are in the hole regions, so there are element indices that do not have a crystal.
      * @return Number of elements (720)
      */
-    UInt_t GetNumberOfElements() const { return 720; }
+    Int_t GetNumberOfElements() const { return 720; }
 
 
 

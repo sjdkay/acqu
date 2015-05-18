@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
 
     std::vector<double> v(720);
 
-    for(int i=0;i<v.size();++i) {
+    for(size_t i=0;i<v.size();++i) {
         v.at(i)=i;
     }
 

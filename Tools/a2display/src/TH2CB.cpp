@@ -19,7 +19,7 @@ void TH2CB::Build()
 
 
     std::set<Int_t>::const_iterator nexthole = bins_in_holes.begin();
-    UInt_t vbins=0;
+    Int_t vbins=0;
 
     tool.PushMatrix();
     for(int i=0;i<4;++i) {
@@ -88,7 +88,7 @@ void TH2CB::Build()
 
 }
 
-void TH2CB::MakeLevel(TH2DrawTool &c, const UInt_t n, set<Int_t>::const_iterator &nexthole, UInt_t& vbins)
+void TH2CB::MakeLevel(TH2DrawTool &c, const UInt_t n, set<Int_t>::const_iterator &nexthole, Int_t& vbins)
 {
 
     const vec& a(shape.at(1));
@@ -257,7 +257,7 @@ void TH2CB::SetElement(const UInt_t element, Double_t value)
 
 void TH2CB::SetElements(const std::vector<Double_t> &pattern)
 {
-    if(pattern.size()==GetNumberOfElements()) {
+    if(pattern.size()==(size_t)GetNumberOfElements()) {
 
         for(int i=0; i<GetNumberOfElements(); ++i ) {
 

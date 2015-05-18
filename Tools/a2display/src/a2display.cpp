@@ -79,7 +79,7 @@ void TH2Crystals::FillBinNumbers() {
 
 void TH2Crystals::FillElementNumbers()
 {
-    for( UInt_t i=0; i < GetNumberOfElements(); ++i) {
+    for( Int_t i=0; i < GetNumberOfElements(); ++i) {
         SetElement(i,i);
     }
 }
@@ -87,9 +87,9 @@ void TH2Crystals::FillElementNumbers()
 void TH2Crystals::SetElements(const std::vector<Double_t> &pattern)
 {
 
-    if(pattern.size()==GetNumberOfElements()) {
+    if(pattern.size()==(size_t)GetNumberOfElements()) {
 
-        for(int i=0; i<pattern.size(); ++i ) {
+        for(size_t i=0; i<pattern.size(); ++i ) {
 
             SetElement(i,pattern.at(i));
 
@@ -122,9 +122,9 @@ void TH2Crystals::FillElement(const UInt_t element, const Double_t w)
 
 void TH2Crystals::FillElements(const std::vector<Double_t> &pattern)
 {
-    if(pattern.size()==GetNumberOfElements()) {
+    if(pattern.size()==(size_t)GetNumberOfElements()) {
 
-        for(int element=0; element<pattern.size(); ++element ) {
+        for(size_t element=0; element<pattern.size(); ++element ) {
 
             FillElement(element, pattern.at(element));
 
@@ -152,7 +152,7 @@ void TH2Crystals::FillElements(const TH1 &h)
 
 }
 
-UInt_t TH2Crystals::GetNumberOfElements() const
+Int_t TH2Crystals::GetNumberOfElements() const
 {
     return GetNumberOfBins();
 }
