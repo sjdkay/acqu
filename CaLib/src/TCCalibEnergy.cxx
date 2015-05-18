@@ -27,10 +27,7 @@ TCCalibEnergy::TCCalibEnergy(const Char_t* name, const Char_t* title, const Char
     // init members
     fPi0Pos = 0;
     fLine = 0;
-#ifdef WITH_A2DISPLAY
     fDetectorView = 0;
-#endif
-
 }
 
 //______________________________________________________________________________
@@ -186,14 +183,12 @@ void TCCalibEnergy::Fit(Int_t elem)
         puts("No Maximum found in fit!");
     }
 
-#ifdef WITH_A2DISPLAY
     if(fDetectorView) {
         fDetectorView->SetElement(elem, fitok ? 1:0);
         fExtraCanvas->cd();
         fDetectorView->Draw("col");
         fExtraCanvas->Update();
     }
-#endif
 
     // update canvas
     fCanvasFit->Update();

@@ -23,11 +23,9 @@
 #include "TCCalib.h"
 #include "TCFileManager.h"
 
-#ifdef WITH_A2DISPLAY
 #include "a2display.h"
 #include "TH2CB.h"
 #include "TH2TAPS.h"
-#endif
 
 
 class TCCalibEnergy : public TCCalib
@@ -41,9 +39,7 @@ private:
     virtual void Fit(Int_t elem);
     virtual void Calculate(Int_t elem);
 protected:
-#ifdef WITH_A2DISPLAY
         TH2Crystals* fDetectorView;
-#endif
 public:
     TCCalibEnergy() : TCCalib(), fPi0Pos(0), fLine(0) { }
     TCCalibEnergy(const Char_t* name, const Char_t* title, const Char_t* data,
@@ -62,9 +58,7 @@ public:
         : TCCalibEnergy("CB.Energy", "CB energy calibration", 
                         "Data.CB.E1", 
                         TCConfig::kMaxCB) {
-#ifdef WITH_A2DISPLAY
         fDetectorView = new TH2CB("calib_cb", "CB");
-#endif
     }
     virtual ~TCCalibCBEnergy() { }
 
@@ -80,9 +74,7 @@ public:
         : TCCalibEnergy("TAPS.Energy.LG", "TAPS LG energy calibration", 
                         "Data.TAPS.LG.E1",
                         TCReadConfig::GetReader()->GetConfigInt("TAPS.Elements")) {
-#ifdef WITH_A2DISPLAY
         fDetectorView = new TH2TAPS("calib_taps", "TAPS");
-#endif
     }
 
     virtual ~TCCalibTAPSEnergyLG() { }
