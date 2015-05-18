@@ -28,7 +28,6 @@ find_package(ROOT "5.30" REQUIRED)
 include_directories(${ROOT_INCLUDES})
 link_directories(${ROOT_LIBRARY_DIR})
 
-add_subdirectory(Tools)
 
 # in these two variables, we collect over the subprojects
 # the include dirs and the libnames on which acqu_user
@@ -47,23 +46,34 @@ macro(SET_ACQU_USER_VARS LIBS)
 endmacro()
 
 add_subdirectory(acqu_core)
-if(NOT ACQU_DAQ)
-  if(DEFINED ENV{OSCAR})
-    message("-- Found external OSCAR in " $ENV{OSCAR})
-    include_directories($ENV{OSCAR}/include)
-    link_directories($ENV{OSCAR}/lib)
-    set(ACQU_USER_LIBS ${ACQU_USER_LIBS} OSCAR)
-  else()
-    add_subdirectory(OSCAR)
-  endif()
-  if(DEFINED ENV{CALIB})
-    message("-- Found external CaLib in " $ENV{CALIB})
-  else()
-    add_subdirectory(CaLib)
-  endif()
-  add_subdirectory(Worker)
-  add_subdirectory(acqu_user)
+
+# ACQU_DAQ=On usually on VME machines for DAQ
+if(ACQU_DAQ)
+  return()
 endif()
+
+# helper libraries
+add_subdirectory(Tools)
+  
+# check for external OSCAR
+if(DEFINED ENV{OSCAR})
+  message("-- Found external OSCAR in " $ENV{OSCAR})
+  include_directories($ENV{OSCAR}/include)
+  link_directories($ENV{OSCAR}/lib)
+  set(ACQU_USER_LIBS ${ACQU_USER_LIBS} OSCAR)
+else()
+  add_subdirectory(OSCAR)
+endif()
+
+# check for external CaLib
+if(DEFINED ENV{CALIB})
+  message("-- Found external CaLib in " $ENV{CALIB})
+else()
+  add_subdirectory(CaLib)
+endif()
+
+# finally, the main user part
+add_subdirectory(acqu_user)
 
 # doxygen stuff
 include(cmake/doxygen.cmake)
