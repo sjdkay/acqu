@@ -1,8 +1,12 @@
+
+# a2display is needed in Core,
+# because AcquDAQ can't be properly disentangled
+# from AcquRoot analysis part grrrr
+add_subdirectory(a2display)
 if(ACQU_DAQ)
   return()
 endif()
 
-add_subdirectory(a2display)
 add_subdirectory(Worker)
 # check for external OSCAR
 if(DEFINED ENV{OSCAR})
