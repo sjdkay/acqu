@@ -26,11 +26,9 @@
 #include "TCReadARCalib.h"
 #include "TCFileManager.h"
 
-#ifndef __CINT__
 #include "a2display.h"
 #include "TH2CB.h"
 #include "TH2TAPS.h"
-#endif
 
 
 class TCCalibPed : public TCCalib

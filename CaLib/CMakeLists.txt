@@ -6,7 +6,7 @@ find_package(ZLIB REQUIRED)
 find_package(Curses REQUIRED)
 
 include_directories("include")
-include_directories("../Tools/a2display")
+include_directories("${CMAKE_SOURCE_DIR}/Tools/a2display/inc")
 
 
 set(MOD "CaLib")
