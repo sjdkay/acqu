@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/subdir-header.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/subdir-header.cmake)
 message(STATUS "Configuring OSCAR...")
 
 # use all "src" subfolders as include directories

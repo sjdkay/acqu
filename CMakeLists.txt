@@ -45,24 +45,14 @@ macro(SET_ACQU_USER_VARS LIBS)
   set(ACQU_USER_LIBS ${ACQU_USER_LIBS} PARENT_SCOPE)
 endmacro()
 
+# helper libraries
+add_subdirectory(Tools)
+
 add_subdirectory(acqu_core)
 
 # ACQU_DAQ=On usually on VME machines for DAQ
 if(ACQU_DAQ)
   return()
-endif()
-
-# helper libraries
-add_subdirectory(Tools)
-  
-# check for external OSCAR
-if(DEFINED ENV{OSCAR})
-  message("-- Found external OSCAR in " $ENV{OSCAR})
-  include_directories($ENV{OSCAR}/include)
-  link_directories($ENV{OSCAR}/lib)
-  set(ACQU_USER_LIBS ${ACQU_USER_LIBS} OSCAR)
-else()
-  add_subdirectory(OSCAR)
 endif()
 
 # check for external CaLib
