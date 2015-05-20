@@ -986,8 +986,10 @@ void TA2MyCaLib::PostInit()
                                             8000, -1000, 1000, fNelemTAGG, 0, fNelemTAGG);
         fHCalib_Tagger_Time_Pi0 = new TH2F("CaLib_Tagger_Time_Pi0", "CaLib_Tagger_Time_Pi0;Tagger-TAPS time [ns];Tagger element", 
                                            8000, -1000, 1000, fNelemTAGG, 0, fNelemTAGG);
+//        fHCalib_Tagger_Time_Ind  = new TH2F("CaLib_Tagger_Time_Ind", "CaLib_Tagger_Time_Ind;Tagger time [ns];Tagger element",
+//                                            2200, -500, 500, fNelemTAGG, 0, fNelemTAGG);
         fHCalib_Tagger_Time_Ind  = new TH2F("CaLib_Tagger_Time_Ind", "CaLib_Tagger_Time_Ind;Tagger time [ns];Tagger element",
-                                            2200, -500, 500, fNelemTAGG, 0, fNelemTAGG);
+                                            20000, -500, 500, fNelemTAGG, 0, fNelemTAGG);
     }
 
     // prepare for proton light attenuation correction
