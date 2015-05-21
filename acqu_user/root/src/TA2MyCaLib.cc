@@ -760,6 +760,10 @@ void TA2MyCaLib::PostInit()
     {
         fHCalib_TAPS_IM_Neut     = new TH2F("CaLib_TAPS_IM_Neut", "CaLib_TAPS_IM_Neut;2#gamma invariant mass [MeV];TAPS element", 
                                             500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
+        fHCalib_TOF_TAPS         = new TH3F("TOF_TAPS", "TOF_TAPS;TAPS element;Tagger Element",
+                                            2000, -10, 10, fNelemTAPS, 0, fNelemTAPS, fNelemTAGG, 0, fNelemTAGG);
+        fHCalib_TOF_TAPS_Neut         = new TH3F("fHCalib_TOF_TAPS_Neut", "fHCalib_TOF_TAPS_Neut; TAPS Element;Tagger element",
+                                            2000, -10, 10, fNelemTAPS, 0, fNelemTAPS, fNelemTAGG, 0, fNelemTAGG);
         fHCalib_TAPS_IM_Neut_1CB_1TAPS = new TH2F("CaLib_TAPS_IM_Neut_1CB_1TAPS", "CaLib_TAPS_IM_Neut_1CB_1TAPS;2#gamma invariant mass [MeV];TAPS element", 
                                                   500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
         fHCalib_TAPS_IM_TAPS      = new TH2F("CaLib_TAPS_IM_TAPS", "CaLib_TAPS_IM_TAPS;2#gamma invariant mass [MeV];TAPS element", 
@@ -1649,6 +1653,13 @@ void TA2MyCaLib::ReconstructPhysics()
         // loop over TAPS clusters
         for (UInt_t i = 0; i < fTAPSNCluster; i++)
         {
+//            for (UInt_t t = 0; t < fTaggerPhotonNhits; t++)
+//            {
+//                fHCalib_TOF_TAPS->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
+//                if (fPartTAPS[i]->GetVetoEnergy() == 0)
+//                    fHCalib_TOF_TAPS_Neut->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
+//            }
+
             if( !TAPSTimeCutOK(fPartTAPS[i]) && isInnerTAPSArea(fPartTAPS[i]))
                 continue;
 

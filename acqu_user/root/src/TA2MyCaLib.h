@@ -191,6 +191,8 @@ private:
     TH2* fHCalib_TAPS_LED2_M2;                              // highest energy per TAPS sector for every detector
      
     // ------------------------------------ TAPS energy ------------------------------------ 
+    TH3* fHCalib_TOF_TAPS;
+    TH3* fHCalib_TOF_TAPS_Neut;
     Int_t fCalib_TAPS_Energy;                               // TAPS energy calibration toggle
     TH2* fHCalib_TAPS_IM_Neut;                              // CB-TAPS invariant mass (from neutral hits) vs element
     TH2* fHCalib_TAPS_IM_Neut_1CB_1TAPS;                    // CB-TAPS invariant mass (from exactly 2 neutral hits) vs element
