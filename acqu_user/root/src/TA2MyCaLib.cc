@@ -1653,12 +1653,12 @@ void TA2MyCaLib::ReconstructPhysics()
         // loop over TAPS clusters
         for (UInt_t i = 0; i < fTAPSNCluster; i++)
         {
-//            for (UInt_t t = 0; t < fTaggerPhotonNhits; t++)
-//            {
-//                fHCalib_TOF_TAPS->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
-//                if (fPartTAPS[i]->GetVetoEnergy() == 0)
-//                    fHCalib_TOF_TAPS_Neut->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
-//            }
+            for (UInt_t t = 0; t < fTaggerPhotonNhits; t++)
+            {
+                fHCalib_TOF_TAPS->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
+                if (fPartTAPS[i]->GetVetoEnergy() == 0)
+                    fHCalib_TOF_TAPS_Neut->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
+            }
 
             if( !TAPSTimeCutOK(fPartTAPS[i]) && isInnerTAPSArea(fPartTAPS[i]))
                 continue;
