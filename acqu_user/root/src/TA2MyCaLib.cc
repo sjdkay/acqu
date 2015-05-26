@@ -770,6 +770,7 @@ void TA2MyCaLib::PostInit()
                                              500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
         fHCalib_TAPS_IM_Neut_TAPS = new TH2F("CaLib_TAPS_IM_Neut_TAPS", "CaLib_TAPS_IM_Neut_TAPS;2#gamma invariant mass [MeV];TAPS element", 
                                              500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
+        fHCalib_TAPS_IM_Neut_TAPS_mult = new TH3F("fHCalib_TAPS_IM_Neut_TAPS_mult", "IMgg vs TAPS det el vs nr CB + TAPS (in time)", 200, 0, 1000, fNelemTAPS, 0, fNelemTAPS, 10, 0, 10 );
     }
     
     // prepare for TAPS energy calibration (BG subtr.)
@@ -1655,9 +1656,9 @@ void TA2MyCaLib::ReconstructPhysics()
         {
             for (UInt_t t = 0; t < fTaggerPhotonNhits; t++)
             {
-                fHCalib_TOF_TAPS->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
+                fHCalib_TOF_TAPS->Fill(fPartTAPS[i]->GetTime() - fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
                 if (fPartTAPS[i]->GetVetoEnergy() == 0)
-                    fHCalib_TOF_TAPS_Neut->Fill(fPartTAPS[i]->GetTime()+fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
+                    fHCalib_TOF_TAPS_Neut->Fill(fPartTAPS[i]->GetTime() + fTaggerPhotonTime[t], fPartTAPS[i]->GetCentralElement(), fTaggerPhotonHits[t]);
             }
 
             if( !TAPSTimeCutOK(fPartTAPS[i]) && isInnerTAPSArea(fPartTAPS[i]))
@@ -1716,6 +1717,39 @@ void TA2MyCaLib::ReconstructPhysics()
             }
         }
     }
+
+    UInt_t nneutrTAPS =  0;
+    for (UInt_t iTAPS = 0; iTAPS < fTAPSNCluster; iTAPS++)
+    {
+        if( TAPSTimeCutOK(fPartTAPS[iTAPS]) )
+            nneutrTAPS++;
+    }
+
+
+    UInt_t nNeutr = nneutrTAPS + fCBNCluster;
+    if(nneutrTAPS > 0)
+    {
+        for(UInt_t iTAPS = 0; iTAPS < fTAPSNCluster; iTAPS++ )
+        {
+            if( !TAPSTimeCutOK(fPartTAPS[iTAPS]) )
+                continue;
+            if(fPartTAPS[iTAPS]->GetVetoEnergy() == 0)
+            {
+                TLorentzVector p4Gamma_1;
+                fPartTAPS[iTAPS]->Calculate4Vector(&p4Gamma_1, 0);
+                for(UInt_t jCB = 0; jCB < fCBNCluster; jCB++)
+                {
+                    TLorentzVector p4Gamma_2;
+                    fPartCB[jCB]->Calculate4Vector(&p4Gamma_2, 0);
+                    // calculate invariant mass of hit combination
+                    Double_t im = (p4Gamma_1 + p4Gamma_2).M();
+
+                    fHCalib_TAPS_IM_Neut_TAPS_mult->Fill( im , fPartTAPS[iTAPS]->GetCentralElement(), nNeutr );
+                }
+            }
+        }
+    }
+
     
     
     // ----------------------------- TAPS energy (BG subtr.) ------------------------------ 

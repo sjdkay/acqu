@@ -198,6 +198,7 @@ private:
     TH2* fHCalib_TAPS_IM_Neut_1CB_1TAPS;                    // CB-TAPS invariant mass (from exactly 2 neutral hits) vs element
     TH2* fHCalib_TAPS_IM_TAPS;                              // TAPS-TAPS invariant mass vs element
     TH2* fHCalib_TAPS_IM_Neut_TAPS;                         // TAPS-TAPS invariant mass (from neutral hits) vs element
+    TH3* fHCalib_TAPS_IM_Neut_TAPS_mult;                    // TAPS invariant mass vs element vs nr of multiplicities
     
     // ------------------------------ TAPS energy (BG subtr.) ------------------------------ 
     Int_t fCalib_TAPS_Energy_BG_Subtr;                      // TAPS energy calibration (BG subtr.) toggle
