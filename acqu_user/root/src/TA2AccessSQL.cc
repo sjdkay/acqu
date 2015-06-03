@@ -61,6 +61,11 @@ void TA2AccessSQL::SetConfig(Char_t* line, Int_t key)
   {
   case ESQL_USE_CALIB:
   {   
+    if(fIsMC) {
+      Error("SetConfig", "Ignoring Calib statements due to MC run");
+      return;
+    }
+      
     Char_t tmp[5][256];
     
     // read CaLib parameters
