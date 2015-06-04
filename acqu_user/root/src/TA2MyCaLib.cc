@@ -760,9 +760,9 @@ void TA2MyCaLib::PostInit()
     {
         fHCalib_TAPS_IM_Neut     = new TH2F("CaLib_TAPS_IM_Neut", "CaLib_TAPS_IM_Neut;2#gamma invariant mass [MeV];TAPS element", 
                                             500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
-        fHCalib_TOF_TAPS         = new TH3F("TOF_TAPS", "TOF_TAPS;TAPS element;Tagger Element",
+        fHCalib_TOF_TAPS         = new TH3F("CaLib_TOF_TAPS", "CaLib_TOF_TAPS;TAPS element;Tagger Element",
                                             2000, -10, 10, fNelemTAPS, 0, fNelemTAPS, fNelemTAGG, 0, fNelemTAGG);
-        fHCalib_TOF_TAPS_Neut         = new TH3F("fHCalib_TOF_TAPS_Neut", "fHCalib_TOF_TAPS_Neut; TAPS Element;Tagger element",
+        fHCalib_TOF_TAPS_Neut         = new TH3F("CaLib_TOF_TAPS_Neut", "CaLib_TOF_TAPS_Neut; TAPS Element;Tagger element",
                                             2000, -10, 10, fNelemTAPS, 0, fNelemTAPS, fNelemTAGG, 0, fNelemTAGG);
         fHCalib_TAPS_IM_Neut_1CB_1TAPS = new TH2F("CaLib_TAPS_IM_Neut_1CB_1TAPS", "CaLib_TAPS_IM_Neut_1CB_1TAPS;2#gamma invariant mass [MeV];TAPS element", 
                                                   500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
@@ -770,7 +770,7 @@ void TA2MyCaLib::PostInit()
                                              500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
         fHCalib_TAPS_IM_Neut_TAPS = new TH2F("CaLib_TAPS_IM_Neut_TAPS", "CaLib_TAPS_IM_Neut_TAPS;2#gamma invariant mass [MeV];TAPS element", 
                                              500, 0, 1000, fNelemTAPS, 0, fNelemTAPS);
-        fHCalib_TAPS_IM_Neut_TAPS_mult = new TH3F("fHCalib_TAPS_IM_Neut_TAPS_mult", "IMgg vs TAPS det el vs nr CB + TAPS (in time)", 500, 0, 1000, fNelemTAPS, 0, fNelemTAPS, 10, 0, 10 );
+        fHCalib_TAPS_IM_Neut_TAPS_mult = new TH3F("CaLib_TAPS_IM_Neut_TAPS_mult", "IMgg vs TAPS det el vs nr CB + TAPS (in time)", 500, 0, 1000, fNelemTAPS, 0, fNelemTAPS, 10, 0, 10);
     }
     
     // prepare for TAPS energy calibration (BG subtr.)
