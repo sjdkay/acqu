@@ -1,6 +1,9 @@
 # this is a hard requirement...will be sorted out later
 #set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
 
+# make more warnings appear
+add_definitions(-D_FORTIFY_SOURCE=2)
+
 # every subdirectory has its own bin/lib path
 # this should be changed to one "global" directory...
 if(NOT DEFINED EXECUTABLE_OUTPUT_PATH)
@@ -14,6 +17,8 @@ endif()
 # really no optimization in debug mode
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall")
+else()
+  message(FATAL_ERROR "Non-gcc compiler not supported")
 endif()
 
 # set default build type if unspecified so far

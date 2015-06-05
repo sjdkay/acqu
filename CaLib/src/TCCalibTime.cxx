@@ -329,7 +329,7 @@ void TCCalibCBTime::Fit(Int_t elem)
     fFitHisto = (TH1D*) h2->ProjectionX(tmp, elem+1, elem+1, "e");
 
     // init variables
-    Double_t factor = 2.5;
+    //Double_t factor = 2.5;
     Double_t range = 3.8;
 
     // draw histogram

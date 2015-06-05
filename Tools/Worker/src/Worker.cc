@@ -88,7 +88,7 @@ Int_t Negotiate(Int_t pid, Int_t nThreads)
   //Search for running Worker instances and count corresponding threads
   char line[1024];
   FILE *cmd = popen("pidof Worker", "r");
-  fgets(line, 1024, cmd);
+  if(fgets(line, 1024, cmd));
   //pid_t pid = strtoul(line, NULL, 10);
   char *pid_ptr;
   //split pids of current Worker instances 
@@ -110,7 +110,7 @@ Int_t Negotiate(Int_t pid, Int_t nThreads)
     flag = fopen(Buffer, "r");
     if(flag)
     {
-      fscanf(flag, "%d", &t);
+      if(fscanf(flag, "%d", &t));
       fclose(flag);
       instances += t;
     }

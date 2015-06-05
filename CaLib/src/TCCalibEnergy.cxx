@@ -170,8 +170,8 @@ void TCCalibEnergy::Fit(Int_t elem)
             fFitBackGround->Draw("same");
 
             //
-            double peak_integral = fFitPeak->Integral(fFitPeak->GetXmin(), fFitPeak->GetXmax(), nullptr);
-            double bg_integral   = fFitBackGround->Integral(fFitBackGround->GetXmin(), fFitBackGround->GetXmax(), nullptr);
+            //double peak_integral = fFitPeak->Integral(fFitPeak->GetXmin(), fFitPeak->GetXmax(), nullptr);
+            //double bg_integral   = fFitBackGround->Integral(fFitBackGround->GetXmin(), fFitBackGround->GetXmax(), nullptr);
             //double peak_ratio    = peak_integral / bg_integral;
         }
     
