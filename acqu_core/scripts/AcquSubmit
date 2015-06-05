@@ -41,7 +41,7 @@ sub main {
   die "AcquRoot not found in PATH=$ENV{PATH}" unless defined $ACQUROOT_BIN;
   warn "Warning: Current working directory '$cwd' does not end with 'acqu_user'" unless $cwd =~ /acqu_user$/;
 
-  # check for DirectIO flag
+  # check for top-level config files
   my $ROOTsetup = 'data/ROOTsetup.dat';
   my $haveROOTsetup = -f $ROOTsetup ? 1 : 0;
   my $ROOTsetupMC = 'data/ROOTsetupMC.dat';
@@ -54,7 +54,7 @@ sub main {
 
 
   # data files might use DirectIO mode
-  if($haveROOTsetup) {
+  if ($haveROOTsetup) {
     open(my $cfg_fh, "<$ROOTsetup") or die "Can't open $ROOTsetup: $!";
     while (<$cfg_fh>) {
       next if /^#/;
@@ -82,10 +82,10 @@ sub main {
       next;
     }
     my $ismc = $inputfile =~ /\.root$/ ? 1 : 0;
-    if($ismc && !$haveROOTsetupMC) {
+    if ($ismc && !$haveROOTsetupMC) {
       die "Error: Cannot analyze MC .root file '$inputfile' without file '$ROOTsetupMC'.";
     }
-    if(!$ismc && !$haveROOTsetup) {
+    if (!$ismc && !$haveROOTsetup) {
       die "Error: Cannot analyze rundata file '$inputfile' without file '$ROOTsetup'.";
     }
 
@@ -102,9 +102,10 @@ sub main {
     }
     $inputfile = abs_path($inputfile);
     push(@files, [$inputfile, $runnumber]);
-    #print "Input: $inputfile\n";
   }
   close $inputfiles_fh;
+
+  die "No files to be submitted, abort." if @files==0;
 
   # clean/create outputdir
   if ($clean) {
