@@ -107,7 +107,8 @@ sub main {
   }
   close $inputfiles_fh;
 
-  die "No files to be submitted, abort." if @files==0;
+  my $total = scalar @files;
+  die "No files to be submitted, abort." if $total==0;
 
   # clean/create outputdir
   if ($clean) {
@@ -128,9 +129,9 @@ sub main {
   for my $f (@files) {
     submit_file($f->[0], $f->[1]);
     $submitted++;
+    printf("%-40s\r",sprintf("%04d/%04d = %03.0f %% submitted",$submitted,$total,100*$submitted/$total));
   }
-
-  print "Submitted $submitted jobs.\n";
+  printf("%-40s\n", "Submitted $submitted jobs.");
 }
 
 sub extract_runnumber {
