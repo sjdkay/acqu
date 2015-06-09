@@ -27,6 +27,7 @@
 #define NICE_EVENT 106
 
 #include "TA2ClusterDetector.h"
+#include "TMarker.h"
 
 // Command-line key words which determine what to read in
 static const Map_t kClustDetKeys[] = {
@@ -317,6 +318,7 @@ void TA2ClusterDetector::DisplayClusters() {
     return;
   }
   // clear histograms
+  fDispClusterHitsEnergy->GetListOfFunctions()->Clear();
   for(UInt_t i=0;i<fNelement;i++) {
     fDispClusterHitsAll->SetElement(i,0);    
     fDispClusterHitsEnergy->SetElement(i,0);     
@@ -334,6 +336,8 @@ void TA2ClusterDetector::DisplayClusters() {
     UInt_t* hits = cl->GetHits();
     Double_t* energies = cl->GetEnergies();
     UInt_t nHits = cl->GetNhits();
+    TVector3* pos = cl->GetMeanPosition();
+    fDispClusterHitsEnergy->GetListOfFunctions()->Add(new TMarker(pos->X(), pos->Y(), 8));
     for(UInt_t j=0;j<nHits;j++) {
       Double_t val = fDispClusterHitsAll->GetElement(hits[j]);
       val += 1<<i;
