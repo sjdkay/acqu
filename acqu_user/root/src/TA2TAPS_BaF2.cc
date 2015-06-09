@@ -173,7 +173,9 @@ void TA2TAPS_BaF2::SetConfig(Char_t* line, Int_t key)
       PrintError(line,"<Too many detector elements input>");
       break;
     }
-    fSGEnergy[fNSG] = new HitD2A_t( line, fNSG, this );
+    // last kTRUE signals to ignore the given positions
+    // workaround for this pretty ugly design feature...
+    fSGEnergy[fNSG] = new HitD2A_t( line, fNSG, this, kTRUE );
     fNSG++;
     break;
    case EClustDetMaxTAPSCluster:
