@@ -69,6 +69,10 @@ void TH2TAPS::DrawShape(TH2DrawTool& c, bool isBaF2) {
 void TH2TAPS::Build() {    
     TH2DrawTool c(this);
 
+    // invert the x-axis, to match the default coordinate system
+    // this corresponds then to a "view to target" (not "from target")
+    c.Scale(-1,1);
+
     // index s runs from sector 0..5
     // index r runs from ring 0..10 for each sector
     // index i runs from elements 0..r-1 for each ring
