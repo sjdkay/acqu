@@ -1716,40 +1716,39 @@ void TA2MyCaLib::ReconstructPhysics()
                 }
             }
         }
-    }
 
-    UInt_t nneutrTAPS =  0;
-    for (UInt_t iTAPS = 0; iTAPS < fTAPSNCluster; iTAPS++)
-    {
-        if( TAPSTimeCutOK(fPartTAPS[iTAPS]) )
-            nneutrTAPS++;
-    }
-
-
-    UInt_t nNeutr = nneutrTAPS + fCBNCluster;
-    if(nneutrTAPS > 0)
-    {
-        for(UInt_t iTAPS = 0; iTAPS < fTAPSNCluster; iTAPS++ )
+        UInt_t nneutrTAPS =  0;
+        for (UInt_t iTAPS = 0; iTAPS < fTAPSNCluster; iTAPS++)
         {
-            if( !TAPSTimeCutOK(fPartTAPS[iTAPS]) )
-                continue;
-            if(fPartTAPS[iTAPS]->GetVetoEnergy() < 1.0)
+            if( TAPSTimeCutOK(fPartTAPS[iTAPS]) )
+                nneutrTAPS++;
+        }
+        
+        
+        UInt_t nNeutr = nneutrTAPS + fCBNCluster;
+        if(nneutrTAPS > 0)
+        {
+            for(UInt_t iTAPS = 0; iTAPS < fTAPSNCluster; iTAPS++ )
             {
-                TLorentzVector p4Gamma_1;
-                fPartTAPS[iTAPS]->Calculate4Vector(&p4Gamma_1, 0);
-                for(UInt_t jCB = 0; jCB < fCBNCluster; jCB++)
+                if( !TAPSTimeCutOK(fPartTAPS[iTAPS]) )
+                    continue;
+                if(fPartTAPS[iTAPS]->GetVetoEnergy() < 1.0)
                 {
-                    TLorentzVector p4Gamma_2;
-                    fPartCB[jCB]->Calculate4Vector(&p4Gamma_2, 0);
-                    // calculate invariant mass of hit combination
-                    Double_t im = (p4Gamma_1 + p4Gamma_2).M();
-
-                    fHCalib_TAPS_IM_Neut_TAPS_mult->Fill( im , fPartTAPS[iTAPS]->GetCentralElement(), nNeutr );
+                    TLorentzVector p4Gamma_1;
+                    fPartTAPS[iTAPS]->Calculate4Vector(&p4Gamma_1, 0);
+                    for(UInt_t jCB = 0; jCB < fCBNCluster; jCB++)
+                    {
+                        TLorentzVector p4Gamma_2;
+                        fPartCB[jCB]->Calculate4Vector(&p4Gamma_2, 0);
+                        // calculate invariant mass of hit combination
+                        Double_t im = (p4Gamma_1 + p4Gamma_2).M();
+        
+                        fHCalib_TAPS_IM_Neut_TAPS_mult->Fill( im , fPartTAPS[iTAPS]->GetCentralElement(), nNeutr );
+                    }
                 }
             }
         }
     }
-
     
     
     // ----------------------------- TAPS energy (BG subtr.) ------------------------------ 
