@@ -1,0 +1,937 @@
+##-----------------------------------------------------------------------
+##--Author	JRM Annand   29th Apr 2003
+##--Update	JRM Annand...
+##--Description
+##                *** Acqu++ <-> Root ***
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data 
+##
+## Parameter File: CBphysics.dat (specified in ROOTanalysis.dat)
+## or equivalent
+## Setup analysis of the Crystal Ball apparatus
+## This one sets up an analysis of the Crystal_Ball NaI(Tl) array
+## and the inner Particle ID Detector
+##
+##
+## Defining histograms i.e. display lines - if you use the option "-1"
+## this plots all entries in multi data buffer.  If you use the option "0"
+## this plots all entries starting from entry zero.  Option "3" plots
+## all entries starting from entry 3 etc.
+##
+##-----------------------------------------------------------------------
+#
+#BitPattern: Trigger.Pat
+## Target stuff
+#	x,y,z		Mass(MeV)
+#Target:	0. 0. 0.	938.271
+#Target:	0. 0. 0.	11177.772
+#Target:	0. 0. 0.	14899.167	  
+#Target:	0. 0. 0.	37224.390 	  
+Target:	0. 0. 0.44 	193728.98
+#Target:	0. 0. 0. 	193728.98
+#
+#
+#
+Permutations: 1
+#
+#
+## Particle data group database,	max # particles
+ParticleID:				16
+#
+#
+## Limits for meson -> N photons invariant-mass identification
+##		pi0_min (MeV)	pi0_max (MeV)
+#Mass-Limits:	130.		139.
+Mass-Limits: 	117.		150.
+#Mass-Limits: 	0.		1000.
+#
+#
+#Prompt-Region:   67.  79.
+#Random-Region1:  30.  48.
+#Random-Region2:  110. 128.
+Prompt-Region:   65.  85.
+Random-Region1:  20.  55.
+Random-Region2:  90. 155.
+#Prompt-Region:   70.  79.
+#Random-Region1:  27.  52.
+#Random-Region2:  107. 132.
+#
+#
+## Energy Cuts - first define number of energy cuts, then
+## each energy cut in turn.  No of energy cuts must match
+## no of Energy-Cut: lines.
+## 
+No-EnergyCuts:  24
+#
+# 		Emin	Emax
+#
+Energy-Cut:	135.	140.
+Energy-Cut:	140.	145.
+Energy-Cut:	145.	150.
+Energy-Cut:	150.	160.
+Energy-Cut: 	160.	170.
+Energy-Cut:	170.	180.
+Energy-Cut:	180.	190.
+Energy-Cut:	190.	200.
+Energy-Cut:	200.	220.
+Energy-Cut:	220.	240.
+Energy-Cut:	240.	260.
+Energy-Cut:	260.	280.
+Energy-Cut:	280.	300.
+Energy-Cut:	300.	320.
+Energy-Cut:	320.	340.
+Energy-Cut:	340.	360.
+Energy-Cut:	360.	380.
+Energy-Cut:	380.	400.
+Energy-Cut:	400.	420.
+Energy-Cut:	420.	440.
+Energy-Cut:	440.	460.
+Energy-Cut:	460.	480.
+Energy-Cut:	480.	500.
+Energy-Cut:	740.	780.
+#
+#
+Theta-Cut:  30.
+#
+#
+#
+# Do some post-initialisation.
+# Should usually be done before display is setup
+Initialise:
+#
+#
+#
+# Cut specification
+# NB 2D cuts, ie a general polygon on the X-Y plane not yet implemented
+# Simple rectangle cuts may be made by an AND of X and Y conditions
+# To enable cuts on the total invariant mass spectrum uncomment the Data-Cut
+# lines below
+#         1/2D Name     Link   Scope          Low/High Limits
+#Data-Cut: 1D   MtotC	OR     compound-hist
+#Data-Cut: 1D   Mtot	OR     element        100 200
+#Data-Cut: 1D   Mtot	OR     element        400 600
+#Data-Cut: 1D   npi0Cut    OR    compound-hist 
+#Data-Cut: 1D   npi0       OR    element       1  1
+
+#
+##
+##BitPattern: Trigger.Pat
+## Histograms of apparatus-level variables
+## histogram name should be preceeded by 1D or 2D (for dimension of spectrum)
+##           Name        chan/low/high   min/max condition(opt)
+###############################
+# My coherent pi0 stuff
+###############################
+
+#Display: 1D TestS1 35 0 35 
+#Display: 1D TestM1 400 0 40
+#Display: 1D TestM2 400 0 400
+#Display: 2D TestM2 400 0 400 -1 TestM1 40 0 40 -1
+# if want to plot a scaler value versus an array i.e. a data member
+# that has only one entry per event versus one that has several, need
+# to define scaler value second in Display: 2D setup as below.
+#Display: 2D TestM2 400 0 400 -1 TestS1 35 0 35 -1
+
+# prompt
+#
+Display: 2D TimeTagg 200 0. 200. -1 ETagg 800 0. 800. -1 
+Display: 1D npi0 10 0 10
+Display: 1D photon_tdiff  100 -100 100
+#Display: 1D TimeTagg 	200 0. 200.
+#Display: 1D ETagg	800 0. 800.
+
+#Display: 1D MCThetaGamma	180 0. 180.
+#Display: 1D MCPhiGamma		360 -360. 360.
+#Display: 2D ETaggp	400 0. 800.  -1  thetag1 180 0. 180. -1
+#Display: 2D ETaggr	400 0. 800.  -1  thetag1 180 0. 180. -1
+#Display: 2D ETaggp	400 0. 800.  -1  phig1 360 -180. 180. -1
+#Display: 2D ETaggr	400 0. 800.  -1  phig1 360 -180. 180. -1
+
+Display: 2D MCThetaPi0	180 0. 180. -1 DiffThetaPi0 180 -90. 90. -1
+Display: 2D MCThetaPi0	1800 0.05 180.05 -1 Tthetapi 1800 0.05 180.05 -1
+Display: 2D MCmomtrans	3500 0. 3.5 -1 Diffmomtrans 600 -1.5 1.5 -1
+Display: 2D MCmomtrans	3500 0. 3.5 -1 momtrans 3500 0. 3.5 -1
+
+
+#Display: 1D CBPhotonTheta 350 0. 350.
+Display: 1D PiMissEnEgLab0     800 -400 400
+Display: 1D PiMissEnEgLab1     800 -400 400
+Display: 1D PiMissEnEgLab2     800 -400 400
+Display: 1D PiMissEnEgLab3     800 -400 400
+Display: 1D PiMissEnEgLab4     800 -400 400
+Display: 1D PiMissEnEgLab5     800 -400 400
+Display: 1D PiMissEnEgLab6     800 -400 400
+Display: 1D PiMissEnEgLab7     800 -400 400
+Display: 1D PiMissEnEgLab8     800 -400 400
+Display: 1D PiMissEnEgLab9     800 -400 400
+Display: 1D PiMissEnEgLab10     800 -400 400
+Display: 1D PiMissEnEgLab11     800 -400 400
+Display: 1D PiMissEnEgLab12     800 -400 400
+Display: 1D PiMissEnEgLab13     800 -400 400
+Display: 1D PiMissEnEgLab14     800 -400 400
+Display: 1D PiMissEnEgLab15     800 -400 400
+Display: 1D PiMissEnEgLab16     800 -400 400
+Display: 1D PiMissEnEgLab17     800 -400 400
+Display: 1D PiMissEnEgLab18     800 -400 400
+Display: 1D PiMissEnrEgLab0     800 -400 400
+Display: 1D PiMissEnrEgLab1     800 -400 400
+Display: 1D PiMissEnrEgLab2     800 -400 400
+Display: 1D PiMissEnrEgLab3     800 -400 400
+Display: 1D PiMissEnrEgLab4     800 -400 400
+Display: 1D PiMissEnrEgLab5     800 -400 400
+Display: 1D PiMissEnrEgLab6     800 -400 400
+Display: 1D PiMissEnrEgLab7     800 -400 400
+Display: 1D PiMissEnrEgLab8     800 -400 400
+Display: 1D PiMissEnrEgLab9     800 -400 400
+Display: 1D PiMissEnrEgLab10     800 -400 400
+Display: 1D PiMissEnrEgLab11     800 -400 400
+Display: 1D PiMissEnrEgLab12     800 -400 400
+Display: 1D PiMissEnrEgLab13     800 -400 400
+Display: 1D PiMissEnrEgLab14     800 -400 400
+Display: 1D PiMissEnrEgLab15     800 -400 400
+Display: 1D PiMissEnrEgLab16     800 -400 400
+Display: 1D PiMissEnrEgLab17     800 -400 400
+Display: 1D PiMissEnrEgLab18     800 -400 400
+#
+Display: 1D PmissMesEg0   800 0 800
+Display: 1D PmissMesEg1   250 0 250
+Display: 1D PmissMesEg2   250 0 250
+Display: 1D PmissMesEg3   250 0 250
+Display: 1D PmissMesEg4   250 0 250
+Display: 1D PmissMesEg5   250 0 250
+Display: 1D PmissMesEg6   250 0 250
+Display: 1D PmissMesEg7   250 0 250
+Display: 1D PmissMesEg8   250 0 250
+Display: 1D PmissMesEg9   250 0 250
+Display: 1D PmissMesEg10   250 0 250
+Display: 1D PmissMesEg11   250 0 250
+Display: 1D PmissMesEg12   250 0 250
+Display: 1D PmissMesEg13   250 0 250
+Display: 1D PmissMesEg14   250 0 250
+Display: 1D PmissMesEg15   250 0 250
+Display: 1D PmissMesEg16   250 0 250
+Display: 1D PmissMesEg17   250 0 250
+Display: 1D PmissMesEg18   250 0 250
+Display: 1D PmissMesEg19   800 0 800
+Display: 1D PmissMesEg20   800 0 800   
+Display: 1D PmissMesEg21   800 0 800   
+Display: 1D PmissMesEg22   800 0 800   
+Display: 1D PmissMesEg23   800 0 800   
+Display: 1D PmissMesEg24   800 0 800   
+Display: 1D PmissMesrEg0   800 0 800   
+Display: 1D PmissMesrEg1   250 0 250
+Display: 1D PmissMesrEg2   250 0 250
+Display: 1D PmissMesrEg3   250 0 250
+Display: 1D PmissMesrEg4   250 0 250
+Display: 1D PmissMesrEg5   250 0 250
+Display: 1D PmissMesrEg6   250 0 250
+Display: 1D PmissMesrEg7   250 0 250
+Display: 1D PmissMesrEg8   250 0 250
+Display: 1D PmissMesrEg9   250 0 250
+Display: 1D PmissMesrEg10   250 0 250
+Display: 1D PmissMesrEg11   250 0 250
+Display: 1D PmissMesrEg12   250 0 250
+Display: 1D PmissMesrEg13   250 0 250
+Display: 1D PmissMesrEg14   250 0 250
+Display: 1D PmissMesrEg15   250 0 250
+Display: 1D PmissMesrEg16   250 0 250
+Display: 1D PmissMesrEg17   250 0 250
+Display: 1D PmissMesrEg18   250 0 250
+#Display: 1D PmissMesrEg19   800 0 800
+#Display: 1D PmissMesrEg20   800 0 800   
+#Display: 1D PmissMesrEg21   800 0 800   
+#Display: 1D PmissMesrEg22   800 0 800   
+#Display: 1D PmissMesrEg23   800 0 800   
+#Display: 1D PmissMesrEg24   800 0 800   
+Display: 1D PiMissEnEg0     800 -400 400
+Display: 1D PiMissEnEg1     800 -400 400
+Display: 1D PiMissEnEg2     800 -400 400
+Display: 1D PiMissEnEg3     800 -400 400
+Display: 1D PiMissEnEg4     800 -400 400
+Display: 1D PiMissEnEg5     800 -400 400
+Display: 1D PiMissEnEg6     800 -400 400
+Display: 1D PiMissEnEg7     800 -400 400
+Display: 1D PiMissEnEg8     800 -400 400
+Display: 1D PiMissEnEg9     800 -400 400
+Display: 1D PiMissEnEg10     800 -400 400
+Display: 1D PiMissEnEg11     800 -400 400
+Display: 1D PiMissEnEg12     800 -400 400
+Display: 1D PiMissEnEg13     800 -400 400
+Display: 1D PiMissEnEg14     800 -400 400
+Display: 1D PiMissEnEg15     800 -400 400
+Display: 1D PiMissEnEg16     800 -400 400
+Display: 1D PiMissEnEg17     800 -400 400
+Display: 1D PiMissEnEg18     800 -400 400
+Display: 1D PiMissEnrEg0     800 -400 400
+Display: 1D PiMissEnrEg1     800 -400 400
+Display: 1D PiMissEnrEg2     800 -400 400
+Display: 1D PiMissEnrEg3     800 -400 400
+Display: 1D PiMissEnrEg4     800 -400 400
+Display: 1D PiMissEnrEg5     800 -400 400
+Display: 1D PiMissEnrEg6     800 -400 400
+Display: 1D PiMissEnrEg7     800 -400 400
+Display: 1D PiMissEnrEg8     800 -400 400
+Display: 1D PiMissEnrEg9     800 -400 400
+Display: 1D PiMissEnrEg10     800 -400 400
+Display: 1D PiMissEnrEg11     800 -400 400
+Display: 1D PiMissEnrEg12     800 -400 400
+Display: 1D PiMissEnrEg13     800 -400 400
+Display: 1D PiMissEnrEg14     800 -400 400
+Display: 1D PiMissEnrEg15     800 -400 400
+Display: 1D PiMissEnrEg16     800 -400 400
+Display: 1D PiMissEnrEg17     800 -400 400
+Display: 1D PiMissEnrEg18     800 -400 400
+Display: 1D ThetaPiEg0    180 0 180
+Display: 1D ThetaPiEg1    180 0 180
+Display: 1D ThetaPiEg2    180 0 180
+Display: 1D ThetaPiEg3    180 0 180
+Display: 1D ThetaPiEg4    180 0 180
+Display: 1D ThetaPiEg5    180 0 180
+Display: 1D ThetaPiEg6    180 0 180
+Display: 1D ThetaPiEg7    180 0 180
+Display: 1D ThetaPiEg8    180 0 180
+Display: 1D ThetaPiEg9    180 0 180
+Display: 1D ThetaPiEg10    180 0 180
+Display: 1D ThetaPiEg11    180 0 180
+Display: 1D ThetaPiEg12    180 0 180
+Display: 1D ThetaPiEg13    180 0 180
+Display: 1D ThetaPiEg14    180 0 180
+Display: 1D ThetaPiEg15    180 0 180
+Display: 1D ThetaPiEg16    180 0 180
+Display: 1D ThetaPiEg17    180 0 180
+Display: 1D ThetaPiEg18    180 0 180
+Display: 1D ThetaPirEg0    180 0 180
+Display: 1D ThetaPirEg1    180 0 180
+Display: 1D ThetaPirEg2    180 0 180
+Display: 1D ThetaPirEg3    180 0 180
+Display: 1D ThetaPirEg4    180 0 180
+Display: 1D ThetaPirEg5    180 0 180
+Display: 1D ThetaPirEg6    180 0 180
+Display: 1D ThetaPirEg7    180 0 180
+Display: 1D ThetaPirEg8    180 0 180
+Display: 1D ThetaPirEg9    180 0 180
+Display: 1D ThetaPirEg10    180 0 180
+Display: 1D ThetaPirEg11    180 0 180
+Display: 1D ThetaPirEg12    180 0 180
+Display: 1D ThetaPirEg13    180 0 180
+Display: 1D ThetaPirEg14    180 0 180
+Display: 1D ThetaPirEg15    180 0 180
+Display: 1D ThetaPirEg16    180 0 180
+Display: 1D ThetaPirEg17    180 0 180
+Display: 1D ThetaPirEg18    180 0 180
+##
+#
+Display: 1D ThDiffPiEg0    40 0 40
+Display: 1D ThDiffPiEg1    40 0 40
+Display: 1D ThDiffPiEg2    40 0 40
+Display: 1D ThDiffPiEg3    40 0 40
+Display: 1D ThDiffPiEg4    40 0 40
+Display: 1D ThDiffPiEg5    40 0 40
+Display: 1D ThDiffPiEg6    40 0 40
+Display: 1D ThDiffPiEg7    40 0 40
+Display: 1D ThDiffPiEg8    40 0 40
+Display: 1D ThDiffPiEg9    40 0 40
+Display: 1D ThDiffPiEg10    40 0 40
+Display: 1D ThDiffPiEg11    40 0 40
+Display: 1D ThDiffPiEg12    40 0 40
+Display: 1D ThDiffPiEg13    40 0 40
+Display: 1D ThDiffPiEg14    40 0 40
+Display: 1D ThDiffPiEg15    40 0 40
+Display: 1D ThDiffPiEg16    40 0 40
+Display: 1D ThDiffPiEg17    40 0 40
+Display: 1D ThDiffPiEg18    40 0 40
+Display: 1D ThDiffPirEg0    40 0 40
+Display: 1D ThDiffPirEg1    40 0 40
+Display: 1D ThDiffPirEg2    40 0 40
+Display: 1D ThDiffPirEg3    40 0 40
+Display: 1D ThDiffPirEg4    40 0 40
+Display: 1D ThDiffPirEg5    40 0 40
+Display: 1D ThDiffPirEg6    40 0 40
+Display: 1D ThDiffPirEg7    40 0 40
+Display: 1D ThDiffPirEg8    40 0 40
+Display: 1D ThDiffPirEg9    40 0 40
+Display: 1D ThDiffPirEg10    40 0 40
+Display: 1D ThDiffPirEg11    40 0 40
+Display: 1D ThDiffPirEg12    40 0 40
+Display: 1D ThDiffPirEg13    40 0 40
+Display: 1D ThDiffPirEg14    40 0 40
+Display: 1D ThDiffPirEg15    40 0 40
+Display: 1D ThDiffPirEg16    40 0 40
+Display: 1D ThDiffPirEg17    40 0 40
+Display: 1D ThDiffPirEg18    40 0 40
+#
+Display: 1D PhiDiffPiEg0    180 -90 90
+Display: 1D PhiDiffPiEg1    180 -90 90
+Display: 1D PhiDiffPiEg2    180 -90 90
+Display: 1D PhiDiffPiEg3    180 -90 90
+Display: 1D PhiDiffPiEg4    180 -90 90
+Display: 1D PhiDiffPiEg5    180 -90 90
+Display: 1D PhiDiffPiEg6    180 -90 90
+Display: 1D PhiDiffPiEg7    180 -90 90
+Display: 1D PhiDiffPiEg8    180 -90 90
+Display: 1D PhiDiffPiEg9    180 -90 90
+Display: 1D PhiDiffPiEg10    180 -90 90
+Display: 1D PhiDiffPiEg11    180 -90 90
+Display: 1D PhiDiffPiEg12    180 -90 90
+Display: 1D PhiDiffPiEg13    180 -90 90
+Display: 1D PhiDiffPiEg14    180 -90 90
+Display: 1D PhiDiffPiEg15    180 -90 90
+Display: 1D PhiDiffPiEg16    180 -90 90
+Display: 1D PhiDiffPiEg17    180 -90 90
+Display: 1D PhiDiffPiEg18    180 -90 90
+Display: 1D PhiDiffPirEg0    180 -90 90
+Display: 1D PhiDiffPirEg1    180 -90 90
+Display: 1D PhiDiffPirEg2    180 -90 90
+Display: 1D PhiDiffPirEg3    180 -90 90
+Display: 1D PhiDiffPirEg4    180 -90 90
+Display: 1D PhiDiffPirEg5    180 -90 90
+Display: 1D PhiDiffPirEg6    180 -90 90
+Display: 1D PhiDiffPirEg7    180 -90 90
+Display: 1D PhiDiffPirEg8    180 -90 90
+Display: 1D PhiDiffPirEg9    180 -90 90
+Display: 1D PhiDiffPirEg10    180 -90 90
+Display: 1D PhiDiffPirEg11    180 -90 90
+Display: 1D PhiDiffPirEg12    180 -90 90
+Display: 1D PhiDiffPirEg13    180 -90 90
+Display: 1D PhiDiffPirEg14    180 -90 90
+Display: 1D PhiDiffPirEg15    180 -90 90
+Display: 1D PhiDiffPirEg16    180 -90 90
+Display: 1D PhiDiffPirEg17    180 -90 90
+Display: 1D PhiDiffPirEg18    180 -90 90
+# Decay Gamma Stuff
+
+#Display: 1D DEg0    250 0  25 
+#Display: 1D DEg1    250 0  25 
+#Display: 1D DEg2    250 0  25  
+#Display: 1D DEg3    250 0  25  
+#Display: 1D DEg4    250 0  25  
+#Display: 1D DEg5    250 0  25  
+#Display: 1D DEg6    250 0  25  
+#Display: 1D DEg7    250 0  25  
+#Display: 1D DEg8    250 0  25  
+#Display: 1D DEg9    250 0  25  
+#Display: 1D DEg10    250 0  25 
+#Display: 1D DEg11    250 0  25 
+#Display: 1D DEg12    250 0  25  
+#Display: 1D DEg13    250 0  25  
+#Display: 1D DEg14    250 0  25  
+#Display: 1D DEg15    250 0  25  
+#Display: 1D DEg16    250 0  25  
+#Display: 1D DEg17    250 0  25  
+#Display: 1D DEg18    250 0  25  
+
+#Display: 1D DEgr0    250 0   25
+#Display: 1D DEgr1    250 0   25
+#Display: 1D DEgr2    250 0   25 
+#Display: 1D DEgr3    250 0   25 
+#Display: 1D DEgr4    250 0   25 
+#Display: 1D DEgr5    250 0   25 
+#Display: 1D DEgr6    250 0   25 
+#Display: 1D DEgr7    250 0   25 
+#Display: 1D DEgr8    250 0   25 
+#Display: 1D DEgr9    250 0   25   
+#Display: 1D DEgr10    250 0   25
+#Display: 1D DEgr11    250 0   25
+#Display: 1D DEgr12    250 0   25 
+#Display: 1D DEgr13    250 0   25 
+#Display: 1D DEgr14    250 0   25 
+#Display: 1D DEgr15    250 0   25 
+#Display: 1D DEgr16    250 0   25 
+#Display: 1D DEgr17    250 0   25 
+#Display: 1D DEgr18    250 0   25 
+##
+##		 r
+
+################################
+#Decay Gamma stuff
+#
+#
+#         X-Name  X-ch/low/high/id  Y-Name   Y-ch/low/high/id  Condition(opt)
+#Display: 2D Mtot    100 0 800 -1   NphotMinv   100 0 800 1
+#Display: 2D Mtot    100 0 800 -l   NphotMinv   100 0 800 2
+#Display: 2D Mtot    100 0 800 -1   Nhit	        16 0  16 0
+#Display: 2D CB_NaI_TimeOR 100 0 200 -1	TAPS_BaF2_TimeOR 100 0 200 -1
+#Display: 2D CB_NaI_EnergyOR 100 0 200 -1 TAPS_BaF2_EnergyOR 100 0 200 -1
+#Display: 2D Trigg 21 -1 20 0 ncb 15 -1 14 0
+#Display: 2D Pi0PhotE  300 0 300 0  NCryspi0Phot  13 0 13 0 
+#Display: 2D Pi0PhotTheta  180 0 180 0  Pi0PhotPhi  360 -180 180 0 
+#Display: 2D Pi0Phot1Theta  180 0 180 0  Pi0Phot2Theta  180 0 180 0 
+#Display: 2D Egamma 75 100 850 0 ncbm2 15 -1 14 0
+#Display: 2D Egamma 75 100 850 0 ncbm3 15 -1 14 0
+#Display: 2D Egamma 75 100 850 0 Xpi0T 60 0 300 0
+#Display: 2D Egammar 75 100 850 0 Xpi0Tr 60 0 300 0
+#Display: 2D PionPhot1E 400 0 400 0 PionPhot2E 400 0 400 0 
+#Display: 2D PionPhot1Er 400 0 400 0 PionPhot2Er 400 0 400 0  
+#Display: 2D Pi0E 400 0 400 0 Pi0Oangle 180 0 180 0
+#Display: 2D DEg 250 0 25 -1 Egamma 300 0 300 -1
+#Display: 2D DEgr 250 0 25 -1 Egammar 300 0 300 -1
+#Display: 2D DEgR 250 0 25 -1 Egamma 300 0 300 -1
+#Display: 2D DEgrR 250 0 25 -1 Egamma 300 0 300 -1
+#Display: 2D DgTimeDiff 300 -200 100 -1 TimeTagg 512 0 200 -1
+#
+# Invariant mass pi0 vs Pion Missing Energy
+#
+#Display: 2D PmissMesEg0 300 0 300 -1  PiMissEnEg0     200 -100 100 -1
+#Display: 2D PmissMesEg1 300 0 300 -1  PiMissEnEg1     200 -100 100 -1
+#Display: 2D PmissMesEg2 300 0 300 -1  PiMissEnEg2     200 -100 100 -1
+#Display: 2D PmissMesEg3 300 0 300 -1  PiMissEnEg3     200 -100 100 -1
+#Display: 2D PmissMesEg4 300 0 300 -1  PiMissEnEg4     200 -100 100 -1
+#Display: 2D PmissMesEg5 300 0 300 -1  PiMissEnEg5     200 -100 100 -1
+#Display: 2D PmissMesEg6 300 0 300 -1  PiMissEnEg6     200 -100 100 -1
+#Display: 2D PmissMesEg7 300 0 300 -1  PiMissEnEg7     200 -100 100 -1
+#Display: 2D PmissMesEg8 300 0 300 -1  PiMissEnEg8     200 -100 100 -1
+#Display: 2D PmissMesEg9 300 0 300 -1  PiMissEnEg9     200 -100 100 -1
+#Display: 2D PmissMesEg10 300 0 300 -1  PiMissEnEg10     200 -100 100 -1
+#Display: 2D PmissMesEg11 300 0 300 -1  PiMissEnEg11     200 -100 100 -1
+#Display: 2D PmissMesEg12 300 0 300 -1  PiMissEnEg12     200 -100 100 -1
+#Display: 2D PmissMesEg13 300 0 300 -1  PiMissEnEg13     200 -100 100 -1
+#Display: 2D PmissMesEg14 300 0 300 -1  PiMissEnEg14     200 -100 100 -1
+#Display: 2D PmissMesEg15 300 0 300 -1  PiMissEnEg15     200 -100 100 -1
+#Display: 2D PmissMesEg16 300 0 300 -1  PiMissEnEg16     200 -100 100 -1
+#Display: 2D PmissMesEg17 300 0 300 -1  PiMissEnEg17     200 -100 100 -1
+#Display: 2D PmissMesEg18 300 0 300 -1  PiMissEnEg18     200 -100 100 -1
+#Display: 2D PmissMesrEg0 300 0 300 -1  PiMissEnrEg0     200 -100 100 -1
+#Display: 2D PmissMesrEg1 300 0 300 -1  PiMissEnrEg1     200 -100 100 -1
+#Display: 2D PmissMesrEg2 300 0 300 -1  PiMissEnrEg2     200 -100 100 -1
+#Display: 2D PmissMesrEg3 300 0 300 -1  PiMissEnrEg3     200 -100 100 -1
+#Display: 2D PmissMesrEg4 300 0 300 -1  PiMissEnrEg4     200 -100 100 -1
+#Display: 2D PmissMesrEg5 300 0 300 -1  PiMissEnrEg5     200 -100 100 -1
+#Display: 2D PmissMesrEg6 300 0 300 -1  PiMissEnrEg6     200 -100 100 -1
+#Display: 2D PmissMesrEg7 300 0 300 -1  PiMissEnrEg7     200 -100 100 -1
+#Display: 2D PmissMesrEg8 300 0 300 -1  PiMissEnrEg8     200 -100 100 -1
+#Display: 2D PmissMesrEg9 300 0 300 -1  PiMissEnrEg9     200 -100 100 -1
+#Display: 2D PmissMesrEg10 300 0 300 -1  PiMissEnrEg10     200 -100 100 -1
+#Display: 2D PmissMesrEg11 300 0 300 -1  PiMissEnrEg11     200 -100 100 -1
+#Display: 2D PmissMesrEg12 300 0 300 -1  PiMissEnrEg12     200 -100 100 -1
+#Display: 2D PmissMesrEg13 300 0 300 -1  PiMissEnrEg13     200 -100 100 -1
+#Display: 2D PmissMesrEg14 300 0 300 -1  PiMissEnrEg14     200 -100 100 -1
+#Display: 2D PmissMesrEg15 300 0 300 -1  PiMissEnrEg15     200 -100 100 -1
+#Display: 2D PmissMesrEg16 300 0 300 -1  PiMissEnrEg16     200 -100 100 -1
+#Display: 2D PmissMesrEg17 300 0 300 -1  PiMissEnrEg17     200 -100 100 -1
+#Display: 2D PmissMesrEg18 300 0 300 -1  PiMissEnrEg18     200 -100 100 -1
+#
+# Pion theta vs pion missing energy
+#
+#Display: 2D ThetaPiEg1 180 0 180 -1  PiMissEnEg1     400 -200 200 -1
+#Display: 2D ThetaPiEg2 180 0 180 -1  PiMissEnEg2     400 -200 200 -1
+#Display: 2D ThetaPiEg3 180 0 180 -1  PiMissEnEg3     400 -200 200 -1
+#Display: 2D ThetaPiEg4 180 0 180 -1  PiMissEnEg4     400 -200 200 -1
+#Display: 2D ThetaPiEg5 180 0 180 -1  PiMissEnEg5     400 -200 200 -1
+#Display: 2D ThetaPiEg6 180 0 180 -1  PiMissEnEg6     400 -200 200 -1
+#Display: 2D ThetaPiEg7 180 0 180 -1  PiMissEnEg7     400 -200 200 -1
+#Display: 2D ThetaPiEg8 180 0 180 -1  PiMissEnEg8     400 -200 200 -1
+#Display: 2D ThetaPiEg9 180 0 180 -1  PiMissEnEg9     400 -200 200 -1
+#Display: 2D ThetaPiEg10 180 0 180 -1  PiMissEnEg10     400 -200 200 -1
+#Display: 2D ThetaPiEg11 180 0 180 -1  PiMissEnEg11     400 -200 200 -1
+#Display: 2D ThetaPiEg12 180 0 180 -1  PiMissEnEg12     400 -200 200 -1
+#Display: 2D ThetaPiEg13 180 0 180 -1  PiMissEnEg13     400 -200 200 -1
+#Display: 2D ThetaPiEg14 180 0 180 -1  PiMissEnEg14     400 -200 200 -1
+#Display: 2D ThetaPiEg15 180 0 180 -1  PiMissEnEg15     400 -200 200 -1
+#Display: 2D ThetaPiEg16 180 0 180 -1  PiMissEnEg16     400 -200 200 -1
+#Display: 2D ThetaPiEg17 180 0 180 -1  PiMissEnEg17     400 -200 200 -1
+#Display: 2D ThetaPiEg18 180 0 180 -1  PiMissEnEg18     400 -200 200 -1
+
+#Display: 2D ThetaPirEg1 180 0 180 -1  PiMissEnrEg1     400 -200 200 -1
+#Display: 2D ThetaPirEg2 180 0 180 -1  PiMissEnrEg2     400 -200 200 -1
+#Display: 2D ThetaPirEg3 180 0 180 -1  PiMissEnrEg3     400 -200 200 -1
+#Display: 2D ThetaPirEg4 180 0 180 -1  PiMissEnrEg4     400 -200 200 -1
+#Display: 2D ThetaPirEg5 180 0 180 -1  PiMissEnrEg5     400 -200 200 -1
+#Display: 2D ThetaPirEg6 180 0 180 -1  PiMissEnrEg6     400 -200 200 -1
+#Display: 2D ThetaPirEg7 180 0 180 -1  PiMissEnrEg7     400 -200 200 -1
+#Display: 2D ThetaPirEg8 180 0 180 -1  PiMissEnrEg8     400 -200 200 -1
+#Display: 2D ThetaPirEg9 180 0 180 -1  PiMissEnrEg9     400 -200 200 -1
+#Display: 2D ThetaPirEg10 180 0 180 -1  PiMissEnrEg10     400 -200 200 -1
+#Display: 2D ThetaPirEg11 180 0 180 -1  PiMissEnrEg11     400 -200 200 -1
+#Display: 2D ThetaPirEg12 180 0 180 -1  PiMissEnrEg12     400 -200 200 -1
+#Display: 2D ThetaPirEg13 180 0 180 -1  PiMissEnrEg13     400 -200 200 -1
+#Display: 2D ThetaPirEg14 180 0 180 -1  PiMissEnrEg14     400 -200 200 -1
+#Display: 2D ThetaPirEg15 180 0 180 -1  PiMissEnrEg15     400 -200 200 -1
+#Display: 2D ThetaPirEg16 180 0 180 -1  PiMissEnrEg16     400 -200 200 -1
+#Display: 2D ThetaPirEg17 180 0 180 -1  PiMissEnrEg17     400 -200 200 -1
+#Display: 2D ThetaPirEg18 180 0 180 -1  PiMissEnrEg18     400 -200 200 -1
+##
+# Pion theta vs pion missing energy
+#
+Display: 2D ThDiffPiEg1 40 -1 1 -1  PiMissEnEg1     400 -200 200 -1
+Display: 2D ThDiffPiEg2 40 -1 1 -1  PiMissEnEg2     400 -200 200 -1
+Display: 2D ThDiffPiEg3 40 -1 1 -1  PiMissEnEg3     400 -200 200 -1
+Display: 2D ThDiffPiEg4 40 -1 1 -1  PiMissEnEg4     400 -200 200 -1
+Display: 2D ThDiffPiEg5 40 -1 1 -1  PiMissEnEg5     400 -200 200 -1
+Display: 2D ThDiffPiEg6 40 -1 1 -1  PiMissEnEg6     400 -200 200 -1
+Display: 2D ThDiffPiEg7 40 -1 1 -1  PiMissEnEg7     400 -200 200 -1
+Display: 2D ThDiffPiEg8 40 -1 1 -1  PiMissEnEg8     400 -200 200 -1
+Display: 2D ThDiffPiEg9 40 -1 1 -1  PiMissEnEg9     400 -200 200 -1
+Display: 2D ThDiffPiEg10  40 -1 1 -1  PiMissEnEg10     400 -200 200 -1
+Display: 2D ThDiffPiEg11 40 -1 1 -1  PiMissEnEg11     400 -200 200 -1
+Display: 2D ThDiffPiEg12 40 -1 1 -1  PiMissEnEg12     400 -200 200 -1
+Display: 2D ThDiffPiEg13 40 -1 1 -1  PiMissEnEg13     400 -200 200 -1
+Display: 2D ThDiffPiEg14 40 -1 1 -1  PiMissEnEg14     400 -200 200 -1
+Display: 2D ThDiffPiEg15 40 -1 1 -1  PiMissEnEg15     400 -200 200 -1
+Display: 2D ThDiffPiEg16 40 -1 1 -1  PiMissEnEg16     400 -200 200 -1
+Display: 2D ThDiffPiEg17 40 -1 1 -1  PiMissEnEg17     400 -200 200 -1
+Display: 2D ThDiffPiEg18 40 -1 1 -1  PiMissEnEg18     400 -200 200 -1
+Display: 2D ThDiffPirEg1 40 -1 1 -1  PiMissEnrEg1     400 -200 200 -1
+Display: 2D ThDiffPirEg2 40 -1 1 -1  PiMissEnrEg2     400 -200 200 -1
+Display: 2D ThDiffPirEg3 40 -1 1 -1  PiMissEnrEg3     400 -200 200 -1
+Display: 2D ThDiffPirEg4 40 -1 1 -1  PiMissEnrEg4     400 -200 200 -1
+Display: 2D ThDiffPirEg5 40 -1 1 -1  PiMissEnrEg5     400 -200 200 -1
+Display: 2D ThDiffPirEg6 40 -1 1 -1  PiMissEnrEg6     400 -200 200 -1
+Display: 2D ThDiffPirEg7 40 -1 1 -1  PiMissEnrEg7     400 -200 200 -1
+Display: 2D ThDiffPirEg8 40 -1 1 -1  PiMissEnrEg8     400 -200 200 -1
+Display: 2D ThDiffPirEg9 40 -1 1 -1  PiMissEnrEg9     400 -200 200 -1
+Display: 2D ThDiffPirEg10 40 -1 1 -1  PiMissEnrEg10     400 -200 200 -1
+Display: 2D ThDiffPirEg11 40 -1 1 -1  PiMissEnrEg11     400 -200 200 -1
+Display: 2D ThDiffPirEg12 40 -1 1 -1  PiMissEnrEg12     400 -200 200 -1
+Display: 2D ThDiffPirEg13 40 -1 1 -1  PiMissEnrEg13     400 -200 200 -1
+Display: 2D ThDiffPirEg14 40 -1 1 -1  PiMissEnrEg14     400 -200 200 -1
+Display: 2D ThDiffPirEg15 40 -1 1 -1  PiMissEnrEg15     400 -200 200 -1
+Display: 2D ThDiffPirEg16 40 -1 1 -1  PiMissEnrEg16     400 -200 200 -1
+Display: 2D ThDiffPirEg17 40 -1 1 -1  PiMissEnrEg17     400 -200 200 -1
+Display: 2D ThDiffPirEg18 40 -1 1 -1  PiMissEnrEg18     400 -200 200 -1
+#
+#
+Display: 2D PhiDiffPiEg1 90 -90 90 -1  PiMissEnEg1     400 -200 200 -1
+Display: 2D PhiDiffPiEg2 90 -90 90 -1  PiMissEnEg2     400 -200 200 -1
+Display: 2D PhiDiffPiEg3 90 -90 90 -1  PiMissEnEg3     400 -200 200 -1
+Display: 2D PhiDiffPiEg4 90 -90 90 -1  PiMissEnEg4     400 -200 200 -1
+Display: 2D PhiDiffPiEg5 90 -90 90 -1  PiMissEnEg5     400 -200 200 -1
+Display: 2D PhiDiffPiEg6 90 -90 90 -1  PiMissEnEg6     400 -200 200 -1
+Display: 2D PhiDiffPiEg7 90 -90 90 -1  PiMissEnEg7     400 -200 200 -1
+Display: 2D PhiDiffPiEg8 90 -90 90 -1  PiMissEnEg8     400 -200 200 -1
+Display: 2D PhiDiffPiEg9 90 -90 90 -1  PiMissEnEg9     400 -200 200 -1
+Display: 2D PhiDiffPiEg10 90 -90 90 -1  PiMissEnEg10     400 -200 200 -1
+Display: 2D PhiDiffPiEg11 90 -90 90 -1  PiMissEnEg11     400 -200 200 -1
+Display: 2D PhiDiffPiEg12 90 -90 90 -1  PiMissEnEg12     400 -200 200 -1
+Display: 2D PhiDiffPiEg13 90 -90 90 -1  PiMissEnEg13     400 -200 200 -1
+Display: 2D PhiDiffPiEg14 90 -90 90 -1  PiMissEnEg14     400 -200 200 -1
+Display: 2D PhiDiffPiEg15 90 -90 90 -1  PiMissEnEg15     400 -200 200 -1
+Display: 2D PhiDiffPiEg16 90 -90 90 -1  PiMissEnEg16     400 -200 200 -1
+Display: 2D PhiDiffPiEg17 90 -90 90 -1  PiMissEnEg17     400 -200 200 -1
+Display: 2D PhiDiffPiEg18 90 -90 90 -1  PiMissEnEg18     400 -200 200 -1
+Display: 2D PhiDiffPirEg1 90 -90 90 -1  PiMissEnrEg1     400 -200 200 -1
+Display: 2D PhiDiffPirEg2 90 -90 90 -1  PiMissEnrEg2     400 -200 200 -1
+Display: 2D PhiDiffPirEg3 90 -90 90 -1  PiMissEnrEg3     400 -200 200 -1
+Display: 2D PhiDiffPirEg4 90 -90 90 -1  PiMissEnrEg4     400 -200 200 -1
+Display: 2D PhiDiffPirEg5 90 -90 90 -1  PiMissEnrEg5     400 -200 200 -1
+Display: 2D PhiDiffPirEg6 90 -90 90 -1  PiMissEnrEg6     400 -200 200 -1
+Display: 2D PhiDiffPirEg7 90 -90 90 -1  PiMissEnrEg7     400 -200 200 -1
+Display: 2D PhiDiffPirEg8 90 -90 90 -1  PiMissEnrEg8     400 -200 200 -1
+Display: 2D PhiDiffPirEg9 90 -90 90 -1  PiMissEnrEg9     400 -200 200 -1
+Display: 2D PhiDiffPirEg10 90 -90 90 -1  PiMissEnrEg10     400 -200 200 -1
+Display: 2D PhiDiffPirEg11 90 -90 90 -1  PiMissEnrEg11     400 -200 200 -1
+Display: 2D PhiDiffPirEg12 90 -90 90 -1  PiMissEnrEg12     400 -200 200 -1
+Display: 2D PhiDiffPirEg13 90 -90 90 -1  PiMissEnrEg13     400 -200 200 -1
+Display: 2D PhiDiffPirEg14 90 -90 90 -1  PiMissEnrEg14     400 -200 200 -1
+Display: 2D PhiDiffPirEg15 90 -90 90 -1  PiMissEnrEg15     400 -200 200 -1
+Display: 2D PhiDiffPirEg16 90 -90 90 -1  PiMissEnrEg16     400 -200 200 -1
+Display: 2D PhiDiffPirEg17 90 -90 90 -1  PiMissEnrEg17     400 -200 200 -1
+Display: 2D PhiDiffPirEg18 90 -90 90 -1  PiMissEnrEg18     400 -200 200 -1
+# Decay gammas vs pion theta
+#
+#Display: 2D DEg1 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg2 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg3 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg4 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg5 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg6 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg7 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg8 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg9 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg10 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg11 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg12 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg13 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg14 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg15 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg16 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg17 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEg18 200 0 20 -1  Tthetapi     180 0 180 -1
+
+#Display: 2D DEgr1 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr2 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr3 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr4 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr5 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr6 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr7 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr8 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr9 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr10 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr11 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr12 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr13 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr14 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr15 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr16 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr17 200 0 20 -1  Tthetapi     180 0 180 -1
+#Display: 2D DEgr18 200 0 20 -1  Tthetapi     180 0 180 -1
+##
+#
+# Momentum transfer to nucleus vs pion missing energy
+#
+Display: 2D  DEg1     180 0 180 -1        MomTransEg1  200 0. 1.0 -1  
+Display: 2D  DEg2     180 0 180 -1        MomTransEg2  260 0. 1.3 -1  
+Display: 2D  DEg3     180 0 180 -1        MomTransEg3  260 0. 1.3 -1  
+Display: 2D  DEg4     180 0 180 -1        MomTransEg4  300 0. 1.5 -1  
+Display: 2D  DEg5     180 0 180 -1        MomTransEg5  300 0. 1.5 -1  
+Display: 2D  DEg6     180 0 180 -1        MomTransEg6  340 0. 1.7 -1  
+Display: 2D  DEg7     180 0 180 -1        MomTransEg7  340 0. 1.7 -1  
+Display: 2D  DEg8     180 0 180 -1        MomTransEg8  380 0. 1.9 -1  
+Display: 2D  DEg9     180 0 180 -1        MomTransEg9  420 0. 2.1 -1  
+Display: 2D  DEg10     180 0 180 -1       MomTransEg10 480 0. 2.4 -1  
+Display: 2D  DEg11     180 0 180 -1       MomTransEg11 500 0. 2.5 -1  
+Display: 2D  DEg12     180 0 180 -1       MomTransEg12 540 0. 2.7 -1  
+Display: 2D  DEg13     180 0 180 -1       MomTransEg13 580 0. 2.9 -1  
+Display: 2D  DEg14     180 0 180 -1       MomTransEg14 600 0. 3.0 -1  
+Display: 2D  DEg15     180 0 180 -1       MomTransEg15 640 0. 3.2 -1  
+Display: 2D  DEg16     180 0 180 -1       MomTransEg16 680 0. 3.4 -1  
+Display: 2D  DEg17     180 0 180 -1       MomTransEg17 700 0. 3.5 -1  
+Display: 2D  DEg18     180 0 180 -1       MomTransEg18 700 0. 3.5 -1  
+#	     				                            
+Display: 2D  DEgr1     180 0 180 -1       MomTransrEg1 200 0. 1.0 -1  
+Display: 2D  DEgr2     180 0 180 -1       MomTransrEg2 260 0. 1.3 -1  
+Display: 2D  DEgr3     180 0 180 -1       MomTransrEg3 260 0. 1.3 -1  
+Display: 2D  DEgr4     180 0 180 -1       MomTransrEg4 300 0. 1.5 -1  
+Display: 2D  DEgr5     180 0 180 -1       MomTransrEg5 300 0. 1.5 -1  
+Display: 2D  DEgr6     180 0 180 -1       MomTransrEg6 340 0. 1.7 -1  
+Display: 2D  DEgr7     180 0 180 -1       MomTransrEg7 340 0. 1.7 -1  
+Display: 2D  DEgr8     180 0 180 -1       MomTransrEg8 380 0. 1.9 -1  
+Display: 2D  DEgr9     180 0 180 -1       MomTransrEg9 420 0. 2.1 -1  
+Display: 2D  DEgr10     180 0 180 -1      MomTransrEg10  480 0. 2.4 -1 
+Display: 2D  DEgr11     180 0 180 -1      MomTransrEg11  500 0. 2.5 -1 
+Display: 2D  DEgr12     180 0 180 -1      MomTransrEg12  540 0. 2.7 -1 
+Display: 2D  DEgr13     180 0 180 -1      MomTransrEg13  580 0. 2.9 -1 
+Display: 2D  DEgr14     180 0 180 -1      MomTransrEg14  600 0. 3.0 -1 
+Display: 2D  DEgr15     180 0 180 -1      MomTransrEg15  640 0. 3.2 -1 
+Display: 2D  DEgr16     180 0 180 -1      MomTransrEg16  680 0. 3.4 -1 
+Display: 2D  DEgr17     180 0 180 -1      MomTransrEg17  700 0. 3.5 -1 
+Display: 2D  DEgr18     180 0 180 -1      MomTransrEg18  700 0. 3.5 -1 
+##
+# Decay gammas vs pion theta
+#
+#Display: 2D DEg1 200 0 20 -1  DEgTheta1     180 0 180 -1
+#Display: 2D DEg2 200 0 20 -1  DEgTheta2     180 0 180 -1
+#Display: 2D DEg3 200 0 20 -1  DEgTheta3     180 0 180 -1
+#Display: 2D DEg4 200 0 20 -1  DEgTheta4     180 0 180 -1
+#Display: 2D DEg5 200 0 20 -1  DEgTheta5     180 0 180 -1
+#Display: 2D DEg6 200 0 20 -1  DEgTheta6     180 0 180 -1
+#Display: 2D DEg7 200 0 20 -1  DEgTheta7     180 0 180 -1
+#Display: 2D DEg8 200 0 20 -1  DEgTheta8     180 0 180 -1
+#Display: 2D DEg9 200 0 20 -1  DEgTheta9     180 0 180 -1
+#Display: 2D DEg10 200 0 20 -1  DEgTheta10     180 0 180 -1
+#Display: 2D DEg11 200 0 20 -1  DEgTheta11     180 0 180 -1
+#Display: 2D DEg12 200 0 20 -1  DEgTheta12     180 0 180 -1
+#Display: 2D DEg13 200 0 20 -1  DEgTheta13     180 0 180 -1
+#Display: 2D DEg14 200 0 20 -1  DEgTheta14     180 0 180 -1
+#Display: 2D DEg15 200 0 20 -1  DEgTheta15     180 0 180 -1
+#Display: 2D DEg16 200 0 20 -1  DEgTheta16     180 0 180 -1
+#Display: 2D DEg17 200 0 20 -1  DEgTheta17     180 0 180 -1
+#Display: 2D DEg18 200 0 20 -1  DEgTheta18     180 0 180 -1
+
+#Display: 2D DEgr1 200 0 20 -1  DEgThetar1     180 0 180 -1
+#Display: 2D DEgr2 200 0 20 -1  DEgThetar2     180 0 180 -1
+#Display: 2D DEgr3 200 0 20 -1  DEgThetar3     180 0 180 -1
+#Display: 2D DEgr4 200 0 20 -1  DEgThetar4     180 0 180 -1
+#Display: 2D DEgr5 200 0 20 -1  DEgThetar5     180 0 180 -1
+#Display: 2D DEgr6 200 0 20 -1  DEgThetar6     180 0 180 -1
+#Display: 2D DEgr7 200 0 20 -1  DEgThetar7     180 0 180 -1
+#Display: 2D DEgr8 200 0 20 -1  DEgThetar8     180 0 180 -1
+#Display: 2D DEgr9 200 0 20 -1  DEgThetar9     180 0 180 -1
+#Display: 2D DEgr10 200 0 20 -1  DEgThetar10     180 0 180 -1
+#Display: 2D DEgr11 200 0 20 -1  DEgThetar11     180 0 180 -1
+#Display: 2D DEgr12 200 0 20 -1  DEgThetar12     180 0 180 -1
+#Display: 2D DEgr13 200 0 20 -1  DEgThetar13     180 0 180 -1
+#Display: 2D DEgr14 200 0 20 -1  DEgThetar14     180 0 180 -1
+#Display: 2D DEgr15 200 0 20 -1  DEgThetar15     180 0 180 -1
+#Display: 2D DEgr16 200 0 20 -1  DEgThetar16     180 0 180 -1
+#Display: 2D DEgr17 200 0 20 -1  DEgThetar17     180 0 180 -1
+#Display: 2D DEgr18 200 0 20 -1  DEgThetar18     180 0 180 -1
+##
+#
+#Display: 2D DEg1 200 0 20 -1  DEgW1     180 0 180 -1
+#Display: 2D DEg2 200 0 20 -1  DEgW2     180 0 180 -1
+#Display: 2D DEg3 200 0 20 -1  DEgW3     180 0 180 -1
+#Display: 2D DEg4 200 0 20 -1  DEgW4     180 0 180 -1
+#Display: 2D DEg5 200 0 20 -1  DEgW5     180 0 180 -1
+#Display: 2D DEg6 200 0 20 -1  DEgW6     180 0 180 -1
+#Display: 2D DEg7 200 0 20 -1  DEgW7     180 0 180 -1
+#Display: 2D DEg8 200 0 20 -1  DEgW8     180 0 180 -1
+#Display: 2D DEg9 200 0 20 -1  DEgW9     180 0 180 -1
+#Display: 2D DEg10 200 0 20 -1  DEgW10     180 0 180 -1
+#Display: 2D DEg11 200 0 20 -1  DEgW11     180 0 180 -1
+#Display: 2D DEg12 200 0 20 -1  DEgW12     180 0 180 -1
+#Display: 2D DEg13 200 0 20 -1  DEgW13     180 0 180 -1
+#Display: 2D DEg14 200 0 20 -1  DEgW14     180 0 180 -1
+#Display: 2D DEg15 200 0 20 -1  DEgW15     180 0 180 -1
+#Display: 2D DEg16 200 0 20 -1  DEgW16     180 0 180 -1
+#Display: 2D DEg17 200 0 20 -1  DEgW17     180 0 180 -1
+#Display: 2D DEg18 200 0 20 -1  DEgW18     180 0 180 -1
+
+#Display: 2D DEgr1 200 0 20 -1  DEgWr1     180 0 180 -1
+#Display: 2D DEgr2 200 0 20 -1  DEgWr2     180 0 180 -1
+#Display: 2D DEgr3 200 0 20 -1  DEgWr3     180 0 180 -1
+#Display: 2D DEgr4 200 0 20 -1  DEgWr4     180 0 180 -1
+#Display: 2D DEgr5 200 0 20 -1  DEgWr5     180 0 180 -1
+#Display: 2D DEgr6 200 0 20 -1  DEgWr6     180 0 180 -1
+#Display: 2D DEgr7 200 0 20 -1  DEgWr7     180 0 180 -1
+#Display: 2D DEgr8 200 0 20 -1  DEgWr8     180 0 180 -1
+#Display: 2D DEgr9 200 0 20 -1  DEgWr9     180 0 180 -1
+#Display: 2D DEgr10 200 0 20 -1  DEgWr10     180 0 180 -1
+#Display: 2D DEgr11 200 0 20 -1  DEgWr11     180 0 180 -1
+#Display: 2D DEgr12 200 0 20 -1  DEgWr12     180 0 180 -1
+#Display: 2D DEgr13 200 0 20 -1  DEgWr13     180 0 180 -1
+#Display: 2D DEgr14 200 0 20 -1  DEgWr14     180 0 180 -1
+#Display: 2D DEgr15 200 0 20 -1  DEgWr15     180 0 180 -1
+#Display: 2D DEgr16 200 0 20 -1  DEgWr16     180 0 180 -1
+#Display: 2D DEgr17 200 0 20 -1  DEgWr17     180 0 180 -1
+#Display: 2D DEgr18 200 0 20 -1  DEgWr18     180 0 180 -1
+##
+#
+#
+# Pion theta vs pion missing energy
+#
+###
+## Momentum transfer to nucleus vs pion missing energy
+# Modified to match ranges in ExtractQHIsts.C !!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Display: 2D MomTransEg1  200 0. 1.0 -1  PiMissEnEg1     400 -200 200 -1
+Display: 2D MomTransEg2  260 0. 1.3 -1  PiMissEnEg2     400 -200 200 -1
+Display: 2D MomTransEg3  260 0. 1.3 -1  PiMissEnEg3     400 -200 200 -1
+Display: 2D MomTransEg4  300 0. 1.5 -1  PiMissEnEg4     400 -200 200 -1
+Display: 2D MomTransEg5  300 0. 1.5 -1  PiMissEnEg5     400 -200 200 -1
+Display: 2D MomTransEg6  340 0. 1.7 -1  PiMissEnEg6     400 -200 200 -1
+Display: 2D MomTransEg7  340 0. 1.7 -1  PiMissEnEg7     400 -200 200 -1
+Display: 2D MomTransEg8  380 0. 1.9 -1  PiMissEnEg8     400 -200 200 -1
+Display: 2D MomTransEg9  420 0. 2.1 -1  PiMissEnEg9     400 -200 200 -1
+Display: 2D MomTransEg10 480 0. 2.4 -1  PiMissEnEg10     400 -200 200 -1
+Display: 2D MomTransEg11 500 0. 2.5 -1  PiMissEnEg11     400 -200 200 -1
+Display: 2D MomTransEg12 540 0. 2.7 -1  PiMissEnEg12     400 -200 200 -1
+Display: 2D MomTransEg13 580 0. 2.9 -1  PiMissEnEg13     400 -200 200 -1
+Display: 2D MomTransEg14 600 0. 3.0 -1  PiMissEnEg14     400 -200 200 -1
+Display: 2D MomTransEg15 640 0. 3.2 -1  PiMissEnEg15     400 -200 200 -1
+Display: 2D MomTransEg16 680 0. 3.4 -1  PiMissEnEg16     400 -200 200 -1
+Display: 2D MomTransEg17 700 0. 3.5 -1  PiMissEnEg17     400 -200 200 -1
+Display: 2D MomTransEg18 700 0. 3.5 -1  PiMissEnEg18     400 -200 200 -1
+Display: 2D MomTransEg19 700 0. 3.5 -1  PiMissEnEg19     400 -200 200 -1
+Display: 2D MomTransEg20 700 0. 3.5 -1  PiMissEnEg20     400 -200 200 -1
+Display: 2D MomTransEg21 700 0. 3.5 -1  PiMissEnEg21     400 -200 200 -1
+Display: 2D MomTransEg22 700 0. 3.5 -1  PiMissEnEg22     400 -200 200 -1
+Display: 2D MomTransEg23 700 0. 3.5 -1  PiMissEnEg23     400 -200 200 -1
+#
+Display: 2D MomTransrEg1  200 0. 1.0 -1  PiMissEnrEg1     400 -200 200 -1
+Display: 2D MomTransrEg2  260 0. 1.3 -1  PiMissEnrEg2     400 -200 200 -1
+Display: 2D MomTransrEg3  260 0. 1.3 -1  PiMissEnrEg3     400 -200 200 -1
+Display: 2D MomTransrEg4  300 0. 1.5 -1  PiMissEnrEg4     400 -200 200 -1
+Display: 2D MomTransrEg5  300 0. 1.5 -1  PiMissEnrEg5     400 -200 200 -1
+Display: 2D MomTransrEg6  340 0. 1.7 -1  PiMissEnrEg6     400 -200 200 -1
+Display: 2D MomTransrEg7  340 0. 1.7 -1  PiMissEnrEg7     400 -200 200 -1
+Display: 2D MomTransrEg8  380 0. 1.9 -1  PiMissEnrEg8     400 -200 200 -1
+Display: 2D MomTransrEg9  420 0. 2.1 -1  PiMissEnrEg9     400 -200 200 -1
+Display: 2D MomTransrEg10 480 0. 2.4 -1  PiMissEnrEg10     400 -200 200 -1
+Display: 2D MomTransrEg11 500 0. 2.5 -1  PiMissEnrEg11     400 -200 200 -1
+Display: 2D MomTransrEg12 540 0. 2.7 -1  PiMissEnrEg12     400 -200 200 -1
+Display: 2D MomTransrEg13 580 0. 2.9 -1  PiMissEnrEg13     400 -200 200 -1
+Display: 2D MomTransrEg14 600 0. 3.0 -1  PiMissEnrEg14     400 -200 200 -1
+Display: 2D MomTransrEg15 640 0. 3.2 -1  PiMissEnrEg15     400 -200 200 -1
+Display: 2D MomTransrEg16 680 0. 3.4 -1  PiMissEnrEg16     400 -200 200 -1
+Display: 2D MomTransrEg17 700 0. 3.5 -1  PiMissEnrEg17     400 -200 200 -1
+Display: 2D MomTransrEg18 700 0. 3.5 -1  PiMissEnrEg18     400 -200 200 -1
+Display: 2D MomTransrEg19 700 0. 3.5 -1  PiMissEnrEg19     400 -200 200 -1
+Display: 2D MomTransrEg20 700 0. 3.5 -1  PiMissEnrEg20     400 -200 200 -1
+Display: 2D MomTransrEg21 700 0. 3.5 -1  PiMissEnrEg21     400 -200 200 -1
+Display: 2D MomTransrEg22 700 0. 3.5 -1  PiMissEnrEg22     400 -200 200 -1
+Display: 2D MomTransrEg23 700 0. 3.5 -1  PiMissEnrEg23     400 -200 200 -1
+##
+##
+##
+Display: 2D   PiMissEnEg1     400 -200 200 -1   Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg2     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg3     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg4     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg5     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg6     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg7     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg8     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg9     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg10     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg11     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg12     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg13     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg14     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg15     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg16     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg17     400 -200 200 -1	Tthetapi  180 0 180 -1 
+Display: 2D   PiMissEnEg18     400 -200 200 -1	Tthetapi  180 0 180 -1 
+
+
+##
+#
+# Momentum transfer to nucleus vs pion missing energy
+#
+#Display: 2D  ThetaPiEg1     180 0 180 -1        MomTransEg1  200 0. 1.0 -1  
+#Display: 2D  ThetaPiEg2     180 0 180 -1        MomTransEg2  260 0. 1.3 -1  
+#Display: 2D  ThetaPiEg3     180 0 180 -1        MomTransEg3  260 0. 1.3 -1  
+#Display: 2D  ThetaPiEg4     180 0 180 -1        MomTransEg4  300 0. 1.5 -1  
+#Display: 2D  ThetaPiEg5     180 0 180 -1        MomTransEg5  300 0. 1.5 -1  
+#Display: 2D  ThetaPiEg6     180 0 180 -1        MomTransEg6  340 0. 1.7 -1  
+#Display: 2D  ThetaPiEg7     180 0 180 -1        MomTransEg7  340 0. 1.7 -1  
+#Display: 2D  ThetaPiEg8     180 0 180 -1        MomTransEg8  380 0. 1.9 -1  
+#Display: 2D  ThetaPiEg9     180 0 180 -1        MomTransEg9  420 0. 2.1 -1  
+#Display: 2D  ThetaPiEg10     180 0 180 -1       MomTransEg10 480 0. 2.4 -1  
+#Display: 2D  ThetaPiEg11     180 0 180 -1       MomTransEg11 500 0. 2.5 -1  
+#Display: 2D  ThetaPiEg12     180 0 180 -1       MomTransEg12 540 0. 2.7 -1  
+#Display: 2D  ThetaPiEg13     180 0 180 -1       MomTransEg13 580 0. 2.9 -1  
+#Display: 2D  ThetaPiEg14     180 0 180 -1       MomTransEg14 600 0. 3.0 -1  
+#Display: 2D  ThetaPiEg15     180 0 180 -1       MomTransEg15 640 0. 3.2 -1  
+#Display: 2D  ThetaPiEg16     180 0 180 -1       MomTransEg16 680 0. 3.4 -1  
+#Display: 2D  ThetaPiEg17     180 0 180 -1       MomTransEg17 700 0. 3.5 -1  
+#Display: 2D  ThetaPiEg18     180 0 180 -1       MomTransEg18 700 0. 3.5 -1  
+	     				                            
+#Display: 2D  ThetaPirEg1     180 0 180 -1       MomTransrEg1 200 0. 1.0 -1  
+#Display: 2D  ThetaPirEg2     180 0 180 -1       MomTransrEg2 260 0. 1.3 -1  
+#Display: 2D  ThetaPirEg3     180 0 180 -1       MomTransrEg3 260 0. 1.3 -1  
+#Display: 2D  ThetaPirEg4     180 0 180 -1       MomTransrEg4 300 0. 1.5 -1  
+#Display: 2D  ThetaPirEg5     180 0 180 -1       MomTransrEg5 300 0. 1.5 -1  
+#Display: 2D  ThetaPirEg6     180 0 180 -1       MomTransrEg6 340 0. 1.7 -1  
+#Display: 2D  ThetaPirEg7     180 0 180 -1       MomTransrEg7 340 0. 1.7 -1  
+#Display: 2D  ThetaPirEg8     180 0 180 -1       MomTransrEg8 380 0. 1.9 -1  
+#Display: 2D  ThetaPirEg9     180 0 180 -1       MomTransrEg9 420 0. 2.1 -1  
+#Display: 2D  ThetaPirEg10     180 0 180 -1      MomTransrEg10  480 0. 2.4 -1 
+#Display: 2D  ThetaPirEg11     180 0 180 -1      MomTransrEg11  500 0. 2.5 -1 
+#Display: 2D  ThetaPirEg12     180 0 180 -1      MomTransrEg12  540 0. 2.7 -1 
+#Display: 2D  ThetaPirEg13     180 0 180 -1      MomTransrEg13  580 0. 2.9 -1 
+#Display: 2D  ThetaPirEg14     180 0 180 -1      MomTransrEg14  600 0. 3.0 -1 
+#Display: 2D  ThetaPirEg15     180 0 180 -1      MomTransrEg15  640 0. 3.2 -1 
+#Display: 2D  ThetaPirEg16     180 0 180 -1      MomTransrEg16  680 0. 3.4 -1 
+#Display: 2D  ThetaPirEg17     180 0 180 -1      MomTransrEg17  700 0. 3.5 -1 
+#Display: 2D  ThetaPirEg18     180 0 180 -1      MomTransrEg18  700 0. 3.5 -1 
+#
+#
+Display: 2D MomTransEg1  200 0. 1.0 -1  CalcPiMissEnEg1     400 -200 200 -1
+Display: 2D MomTransEg2  260 0. 1.3 -1  CalcPiMissEnEg2     400 -200 200 -1
+Display: 2D MomTransEg3  260 0. 1.3 -1  CalcPiMissEnEg3     400 -200 200 -1
+Display: 2D MomTransEg4  300 0. 1.5 -1  CalcPiMissEnEg4     400 -200 200 -1
+Display: 2D MomTransEg5  300 0. 1.5 -1  CalcPiMissEnEg5     400 -200 200 -1
+Display: 2D MomTransEg6  340 0. 1.7 -1  CalcPiMissEnEg6     400 -200 200 -1
+Display: 2D MomTransEg7  340 0. 1.7 -1  CalcPiMissEnEg7     400 -200 200 -1
+Display: 2D MomTransEg8  380 0. 1.9 -1  CalcPiMissEnEg8     400 -200 200 -1
+Display: 2D MomTransEg9  420 0. 2.1 -1  CalcPiMissEnEg9     400 -200 200 -1
+Display: 2D MomTransEg10 420 0. 2.1 -1  CalcPiMissEnEg10     400 -200 200 -1
+Display: 2D MomTransEg11 480 0. 2.4 -1  CalcPiMissEnEg11     400 -200 200 -1
+Display: 2D MomTransEg12 480 0. 2.4 -1  CalcPiMissEnEg12     400 -200 200 -1
+Display: 2D MomTransEg13 500 0. 2.5 -1  CalcPiMissEnEg13     400 -200 200 -1
+Display: 2D MomTransEg14 500 0. 2.5 -1  CalcPiMissEnEg14     400 -200 200 -1
+Display: 2D MomTransEg15 540 0. 2.7 -1  CalcPiMissEnEg15     400 -200 200 -1
+Display: 2D MomTransEg16 540 0. 2.7 -1  CalcPiMissEnEg16     400 -200 200 -1
+Display: 2D MomTransEg17 580 0. 2.9 -1  CalcPiMissEnEg17     400 -200 200 -1
+Display: 2D MomTransEg18 580 0. 2.9 -1  CalcPiMissEnEg18     400 -200 200 -1
+Display: 2D MomTransEg19 600 0. 3.0 -1  CalcPiMissEnEg19     400 -200 200 -1
+Display: 2D MomTransEg20 640 0. 3.2 -1  CalcPiMissEnEg20     400 -200 200 -1
+Display: 2D MomTransEg21 680 0. 3.4 -1  CalcPiMissEnEg21     400 -200 200 -1
+Display: 2D MomTransEg22 700 0. 3.5 -1  CalcPiMissEnEg22     400 -200 200 -1
+Display: 2D MomTransEg23 700 0. 3.5 -1  CalcPiMissEnEg23     400 -200 200 -1
+#
+#Display: 2D DgTimeDiff 13 1 14 -1 DEg 250 0 25 -1 
+#
+##
+# Any wild-card stuff here
+#Misc: Not yet implemented

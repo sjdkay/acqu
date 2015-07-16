@@ -1,0 +1,213 @@
+##-----------------------------------------------------------------------
+##--Author	JRM Annand   13th Jan 2004
+##--Update	JRM Annand... 1st Dec 2004
+##--Description
+##                *** Acqu++ <-> Root ***
+## Online/Offline Analysis of Sub-Atomic Physics Experimental Data 
+##
+## Parameter File: FPcommServer.Offline
+## Configuration file for DataServer (data input for analysis)
+##
+##-----------------------------------------------------------------------
+## Number of Input streams (sources of data), Record length to write data
+## and switch 0/1 = no/yes to control data write
+##              Number streams	Record Len	Save Data
+Input-Streams:	1		32768		0
+##
+## Optional directory spec. If not specified File-Names must contain the full
+## directory path
+File-Directory:	A2Data/
+##
+## Specify each input stream
+## From disk file, ACQU (Mk1) format, save any output to file (save=1)
+## Input data record length, Output data record length
+##
+##            	Source	Format	Save?	RecLen	Buffers	Swap	MarkID
+Stream-Spec:	File	Mk1	0	32768	32	0	400
+##
+## Now the list of data files to analyse
+## Tagger test data files
+##		File Name	1st rec	Last rec
+## 2nA
+#File-Name:	Run_Deuterium.dat	 0	0
+File-Name:	CB_314.dat.xz	 0	0
+File-Name:      CB_315.dat.xz    0      0
+File-Name:      CB_316.dat.xz    0      0
+File-Name:      CB_317.dat.xz    0      0
+File-Name:      CB_318.dat.xz    0      0
+File-Name:      CB_319.dat.xz    0      0
+File-Name:      CB_320.dat.xz    0      0
+File-Name:      CB_321.dat.xz    0      0
+File-Name:      CB_322.dat.xz    0      0
+File-Name:      CB_323.dat.xz    0      0
+File-Name:      CB_324.dat.xz    0      0
+File-Name:      CB_325.dat.xz    0      0
+File-Name:      CB_326.dat.xz    0      0
+File-Name:      CB_327.dat.xz    0      0
+File-Name:      CB_328.dat.xz    0      0
+File-Name:      CB_329.dat.xz    0      0
+File-Name:      CB_330.dat.xz    0      0
+File-Name:      CB_331.dat.xz    0      0
+File-Name:      CB_332.dat.xz    0      0
+File-Name:      CB_333.dat.xz    0      0
+File-Name:      CB_334.dat.xz    0      0
+File-Name:      CB_335.dat.xz    0      0
+File-Name:      CB_336.dat.xz    0      0
+File-Name:      CB_337.dat.xz    0      0
+File-Name:      CB_338.dat.xz    0      0
+File-Name:      CB_340.dat.xz    0      0
+File-Name:      CB_341.dat.xz    0      0
+File-Name:      CB_342.dat.xz    0      0
+File-Name:      CB_343.dat.xz    0      0
+File-Name:      CB_344.dat.xz    0      0
+File-Name:      CB_346.dat.xz    0      0
+File-Name:      CB_347.dat.xz    0      0
+File-Name:      CB_348.dat.xz    0      0
+File-Name:      CB_349.dat.xz    0      0
+File-Name:      CB_350.dat.xz    0      0
+File-Name:      CB_351.dat.xz    0      0
+File-Name:      CB_352.dat.xz    0      0
+File-Name:      CB_353.dat.xz    0      0
+File-Name:      CB_354.dat.xz    0      0
+File-Name:      CB_355.dat.xz    0      0
+File-Name:      CB_356.dat.xz    0      0
+File-Name:      CB_357.dat.xz    0      0
+File-Name:      CB_358.dat.xz    0      0
+File-Name:      CB_359.dat.xz    0      0
+File-Name:      CB_360.dat.xz    0      0
+File-Name:      CB_361.dat.xz    0      0
+File-Name:      CB_362.dat.xz    0      0
+File-Name:      CB_363.dat.xz    0      0
+File-Name:      CB_364.dat.xz    0      0
+File-Name:      CB_365.dat.xz    0      0
+File-Name:      CB_366.dat.xz    0      0
+File-Name:      CB_367.dat.xz    0      0
+File-Name:      CB_368.dat.xz    0      0
+File-Name:      CB_369.dat.xz    0      0
+File-Name:      CB_370.dat.xz    0      0
+File-Name:      CB_371.dat.xz    0      0
+File-Name:      CB_372.dat.xz    0      0
+File-Name:      CB_373.dat.xz    0      0
+File-Name:      CB_374.dat.xz    0      0
+File-Name:      CB_375.dat.xz    0      0
+File-Name:      CB_376.dat.xz    0      0
+File-Name:      CB_377.dat.xz    0      0
+File-Name:      CB_378.dat.xz    0      0
+File-Name:      CB_379.dat.xz    0      0
+File-Name:      CB_380.dat.xz    0      0
+File-Name:      CB_381.dat.xz    0      0
+File-Name:      CB_382.dat.xz    0      0
+File-Name:      CB_383.dat.xz    0      0
+File-Name:      CB_384.dat.xz    0      0
+File-Name:      CB_385.dat.xz    0      0
+File-Name:      CB_386.dat.xz    0      0
+File-Name:      CB_387.dat.xz    0      0
+File-Name:      CB_388.dat.xz    0      0
+File-Name:      CB_389.dat.xz    0      0
+File-Name:      CB_392.dat.xz    0      0
+File-Name:      CB_393.dat.xz    0      0
+File-Name:      CB_394.dat.xz    0      0
+File-Name:      CB_395.dat.xz    0      0
+File-Name:      CB_396.dat.xz    0      0
+File-Name:      CB_397.dat.xz    0      0
+File-Name:      CB_398.dat.xz    0      0
+File-Name:      CB_399.dat.xz    0      0
+File-Name:      CB_400.dat.xz    0      0
+File-Name:      CB_401.dat.xz    0      0
+File-Name:      CB_402.dat.xz    0      0
+File-Name:      CB_403.dat.xz    0      0
+File-Name:      CB_404.dat.xz    0      0
+File-Name:      CB_405.dat.xz    0      0
+File-Name:      CB_406.dat.xz    0      0
+File-Name:      CB_407.dat.xz    0      0
+File-Name:      CB_408.dat.xz    0      0
+File-Name:      CB_409.dat.xz    0      0
+File-Name:      CB_410.dat.xz    0      0
+File-Name:      CB_411.dat.xz    0      0
+File-Name:      CB_412.dat.xz    0      0
+File-Name:      CB_413.dat.xz    0      0
+File-Name:      CB_414.dat.xz    0      0
+File-Name:      CB_415.dat.xz    0      0
+File-Name:      CB_416.dat.xz    0      0
+File-Name:      CB_417.dat.xz    0      0
+File-Name:      CB_418.dat.xz    0      0
+File-Name:      CB_419.dat.xz    0      0
+File-Name:      CB_420.dat.xz    0      0
+File-Name:      CB_421.dat.xz    0      0
+File-Name:      CB_422.dat.xz    0      0
+File-Name:      CB_423.dat.xz    0      0
+File-Name:      CB_424.dat.xz    0      0
+File-Name:      CB_425.dat.xz    0      0
+File-Name:      CB_426.dat.xz    0      0
+File-Name:      CB_427.dat.xz    0      0
+File-Name:      CB_428.dat.xz    0      0
+File-Name:      CB_429.dat.xz    0      0
+File-Name:      CB_430.dat.xz    0      0
+File-Name:      CB_431.dat.xz    0      0
+File-Name:      CB_432.dat.xz    0      0
+File-Name:      CB_433.dat.xz    0      0
+File-Name:      CB_434.dat.xz    0      0
+File-Name:      CB_435.dat.xz    0      0
+File-Name:      CB_436.dat.xz    0      0
+File-Name:      CB_437.dat.xz    0      0
+File-Name:      CB_438.dat.xz    0      0
+File-Name:      CB_439.dat.xz    0      0
+File-Name:      CB_440.dat.xz    0      0
+File-Name:      CB_441.dat.xz    0      0
+File-Name:      CB_442.dat.xz    0      0
+File-Name:      CB_443.dat.xz    0      0
+File-Name:      CB_444.dat.xz    0      0
+File-Name:      CB_445.dat.xz    0      0
+File-Name:      CB_446.dat.xz    0      0
+File-Name:      CB_447.dat.xz    0      0
+File-Name:      CB_448.dat.xz    0      0
+File-Name:      CB_449.dat.xz    0      0
+File-Name:      CB_450.dat.xz    0      0
+File-Name:      CB_451.dat.xz    0      0
+File-Name:      CB_452.dat.xz    0      0
+File-Name:      CB_453.dat.xz    0      0
+File-Name:      CB_454.dat.xz    0      0
+File-Name:      CB_455.dat.xz    0      0
+File-Name:      CB_456.dat.xz    0      0
+File-Name:      CB_457.dat.xz    0      0
+File-Name:      CB_458.dat.xz    0      0
+File-Name:      CB_459.dat.xz    0      0
+File-Name:      CB_460.dat.xz    0      0
+File-Name:      CB_461.dat.xz    0      0
+File-Name:      CB_462.dat.xz    0      0
+File-Name:      CB_463.dat.xz    0      0
+File-Name:      CB_464.dat.xz    0      0
+File-Name:      CB_465.dat.xz    0      0
+File-Name:      CB_466.dat.xz    0      0
+File-Name:      CB_467.dat.xz    0      0
+File-Name:      CB_468.dat.xz    0      0
+File-Name:      CB_469.dat.xz    0      0
+File-Name:      CB_470.dat.xz    0      0
+File-Name:      CB_471.dat.xz    0      0
+File-Name:      CB_472.dat.xz    0      0
+File-Name:      CB_473.dat.xz    0      0
+File-Name:      CB_474.dat.xz    0      0
+File-Name:      CB_475.dat.xz    0      0
+File-Name:      CB_476.dat.xz    0      0
+File-Name:      CB_477.dat.xz    0      0
+File-Name:      CB_478.dat.xz    0      0
+File-Name:      CB_479.dat.xz    0      0
+File-Name:      CB_501.dat.xz    0      0
+File-Name:      CB_502.dat.xz    0      0
+File-Name:      CB_503.dat.xz    0      0
+File-Name:      CB_504.dat.xz    0      0
+File-Name:      CB_505.dat.xz    0      0
+File-Name:      CB_506.dat.xz    0      0
+File-Name:      CB_507.dat.xz    0      0
+File-Name:      CB_508.dat.xz    0      0
+File-Name:      CB_509.dat.xz    0      0
+File-Name:      CB_510.dat.xz    0      0
+File-Name:      CB_511.dat.xz    0      0
+File-Name:      CB_512.dat.xz    0      0
+File-Name:      CB_513.dat.xz    0      0
+File-Name:      CB_514.dat.xz    0      0
+File-Name:      CB_515.dat.xz    0      0
+File-Name:      CB_516.dat.xz    0      0
+File-Name:      CB_517.dat.xz    0      0
+File-Name:      CB_518.dat.xz    0      0
+## END

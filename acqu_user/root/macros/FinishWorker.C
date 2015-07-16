@@ -20,7 +20,7 @@ void Finish(TString sDir = "")
   else sFile = gAR->GetTreeFile()->GetName();
   while(sFile.Contains("/")) sFile.Remove(0,1+sFile.Index("/"));
   sFile.ReplaceAll(".dat",".root");
-  sFile.Prepend("Hist_");
+  sFile.Prepend("Acqu_");
   sFile.Prepend(sDir);
 
   // Save histograms to file and close it
