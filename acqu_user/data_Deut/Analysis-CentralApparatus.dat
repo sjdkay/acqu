@@ -6,7 +6,7 @@
 #_______________________________________________________________
 # 
 Detector: NaI        TA2CalArray        Analysis-NaI.dat
-Detector: PID        TA2PlasticPID      Analysis-PID.dat
+Detector: PID        TA2PlasticPID      Analysis-PID_Calib.dat
 Detector: CylMWPC    TA2CylMwpc         Analysis-MWPC.dat
 #_______________________________________________________________
 #
