@@ -32,11 +32,11 @@ Chamber-Parameter:	16 8  4		5.	70.  500  -500	80.
 ##
 ## MWPC-1	Phi0	Cz	Cphi	Phi	dX	dY	dZ0	dZ1	dZ2	dZ3	dZ4	dZ5	dZ6	dZ7
 # Intersection:	8.02	0.	0.	4.985	0.	0.	4.	0.11    0.007   0.      0.      0.      0.      0.						
-Intersection:	6.9	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
+Intersection:	6.9	0.	0.	5.12	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
 # Intersection:	7.964	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
 ## MWPC-2	Phi0	Cz	Cphi	Phi	dX	dY	dZ0	dZ1	dZ2	dZ3	dZ4	dZ5	dZ6	dZ7
 # Intersection:	6.03	-25e-5	0.00225	4.77	0.	0.	4.61	0.095	0.0044	0.007	0.	0.	0.	0.
-Intersection:	5.77	0.	0.0028	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
+Intersection:	5.77	0.	0.0028	5.12	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
 # Intersection:	6.88	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
 ##
 ## 1st Layer: Chamber 1 "plane" of wires. dist(mm), angles(deg), corr coefs

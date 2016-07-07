@@ -729,6 +729,7 @@ void TA2CentralApparatus::MakeTracksTrue(const map<Double_t,Int_t> *tracksMwpc, 
     if (track.BuildTrack(*r[0],*r[1],-1.,fLimitsPsVertex))
     {
       // Test the track & PID combinations and find the best one
+      track=fTracksMwpc[iTrMwpc];
       fPhiTrackPid[fNtracks] = fMaxPhiTrackPid;
       iPid = kNullHit;
       for (Int_t i=0; i<fNhitsPid; ++i)

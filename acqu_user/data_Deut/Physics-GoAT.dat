@@ -26,7 +26,7 @@ Reconstruct:
 #Use-CaLib-Veto:     1       1       0
 
 #Use-CaLib-CBEnergyPerRun: 	data/CBEnergyCorrectionPerRun.txt
-#RootTree-Output-Folder:         /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/New_Acqu_Output
+#RootTree-Output-Folder:         /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/Acqu_3_2_16_Output/
 RootTree-File-Name:		Acqu
 
 # Read in and decode beam helicity ADC
