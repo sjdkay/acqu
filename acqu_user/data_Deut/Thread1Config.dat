@@ -7,7 +7,7 @@
 ########################################################################
 ##
 ## Batch mode operation...redirect output directory for log files etc.
-BatchDir: ./logfiles/
+BatchDir: /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/Acqu_3_2_16_Output/
 ##
 ##        Tree Name             # branches      Process Type
 Name:     RawEvent_AR_Save      3               Raw
@@ -17,7 +17,7 @@ Branch:   RawEvent_Scalers      4192
 Branch:   Mk1_Header            120000
 ##
 ## Directory to save any created ROOT files (include final / )
-Directory: ../../Data/New_Acqu_Output/
+Directory: /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/Acqu_3_2_16_Output/
 ##
 ## User-defined analysis class
 Analysis: TA2UserAnalysis
@@ -30,5 +30,6 @@ AnalysisSetup: Analysis.dat
 SplitScaler: 2 256 364
 ##
 ## Set up of data files
+
 
 ServerSetup: Thread1Server.dat
