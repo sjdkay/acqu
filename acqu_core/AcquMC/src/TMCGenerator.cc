@@ -95,7 +95,7 @@ TMCGenerator::TMCGenerator( const Char_t* name, Int_t seed )
   fNrun = 1;
   fRand = new TRandom( seed );
   fPDG = new TDatabasePDG();
-  char* dbname = BuildName(ENV_OR_CMAKE("ROOTSYS", CMAKE_ROOTSYS), "/etc/pdg_table.txt" );
+  char* dbname = BuildName(ENV_OR_CMAKE("ROOTSYS", CMAKE_ROOTSYS), "/pdg_table.txt" );
   fPDG->ReadPDGTable(dbname);
   delete[] dbname;
   fTargetMass = fTargetRadius = fTargetLength = 0.0;

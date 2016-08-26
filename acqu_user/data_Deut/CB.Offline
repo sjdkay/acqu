@@ -17,7 +17,7 @@ Branch:   RawEvent_Scalers      4192
 Branch:   Mk1_Header            120000
 ##
 ## Directory to save any created ROOT files (include final / )
-Directory: /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/Acqu_3_2_16_Output/
+Directory: /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/
 ##
 ## User-defined analysis class
 Analysis: TA2UserAnalysis

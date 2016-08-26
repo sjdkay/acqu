@@ -32,6 +32,14 @@ TA2GoAT::TA2GoAT(const char* Name, TA2Analysis* Analysis) : TA2AccessSQL(Name, A
                                                                     vertexX(0),
                                                                     vertexY(0),
                                                                     vertexZ(0),
+								    nChamberHitsin1(0),
+								    nChamberHitsin2(0),
+								    Chamber1X(0),
+								    Chamber1Y(0),
+								    Chamber1Z(0),
+								    Chamber2X(0),
+								    Chamber2Y(0),
+								    Chamber2Z(0),
                                                                     nTagged(0),
                                                                     taggedEnergy(0),
                                                                     taggedChannel(0),
@@ -135,6 +143,14 @@ void    TA2GoAT::LoadVariable()
     TA2DataManager::LoadVariable("vertexY",       vertexY,       EDMultiX);
     TA2DataManager::LoadVariable("vertexZ",       vertexZ,       EDMultiX);
 
+    TA2DataManager::LoadVariable("Chamber1X",       Chamber1X,       EDMultiX);
+    TA2DataManager::LoadVariable("Chamber1Y",       Chamber1Y,       EDMultiX);
+    TA2DataManager::LoadVariable("Chamber1Z",       Chamber1Z,       EDMultiX);
+
+    TA2DataManager::LoadVariable("Chamber2X",       Chamber2X,       EDMultiX);
+    TA2DataManager::LoadVariable("Chamber2Y",       Chamber2Y,       EDMultiX);
+    TA2DataManager::LoadVariable("Chamber2Z",       Chamber2Z,       EDMultiX);
+
     TA2DataManager::LoadVariable("energySum",     &energySum,    EDSingleX);
 
     return;
@@ -213,6 +229,16 @@ void    TA2GoAT::PostInit()
     vertexY          = new Double_t[TA2GoAT_MAX_PARTICLE];
     vertexZ          = new Double_t[TA2GoAT_MAX_PARTICLE];
 
+
+    Chamber1X          = new Double_t[TA2GoAT_MAX_PARTICLE];
+    Chamber1Y          = new Double_t[TA2GoAT_MAX_PARTICLE];
+    Chamber1Z          = new Double_t[TA2GoAT_MAX_PARTICLE];
+
+    Chamber2X          = new Double_t[TA2GoAT_MAX_PARTICLE];
+    Chamber2Y          = new Double_t[TA2GoAT_MAX_PARTICLE];
+    Chamber2Z          = new Double_t[TA2GoAT_MAX_PARTICLE];
+
+
     taggedChannel    = new Int_t[TA2GoAT_MAX_TAGGER];
     taggedTime       = new Double_t[TA2GoAT_MAX_TAGGER];
     taggedEnergy     = new Double_t[TA2GoAT_MAX_TAGGER];
@@ -267,6 +293,7 @@ void    TA2GoAT::PostInit()
     treeTrigger	        = new TTree("trigger",           "trigger");
     treeDetectorHits    = new TTree("detectorHits",      "detectorHits");
     treeSetupParameters = new TTree("setupParameters",   "setupParameters");
+    treeMWPCHitsChris        = new TTree("MWPCHitsChris",           "MWPCHitsChris");
 
     treeTracks->Branch("nTracks", &nParticles, "nTracks/I");
     treeTracks->Branch("clusterEnergy", clusterEnergy, "clusterEnergy[nTracks]/D");
@@ -323,6 +350,16 @@ void    TA2GoAT::PostInit()
     {
         treeDetectorHits->Branch("nMWPCHits", &nMWPCHits, "nMWPCHits/I");
         treeDetectorHits->Branch("MWPCHits", MWPCHits, "MWPCHits[nMWPCHits]/I");
+
+	treeMWPCHitsChris->Branch("nChamberHitsin1", &nChamberHitsin1, "nChamberHitsin1/I");
+	treeMWPCHitsChris->Branch("Chamber1X", Chamber1X, "Chamber1X[nChamberHitsin1]/D");
+	treeMWPCHitsChris->Branch("Chamber1Y", Chamber1Y, "Chamber1Y[nChamberHitsin1]/D");
+	treeMWPCHitsChris->Branch("Chamber1Z", Chamber1Z, "Chamber1Z[nChamberHitsin1]/D");
+
+	treeMWPCHitsChris->Branch("nChamberHitsin2", &nChamberHitsin2, "nChamberHitsin2/I");
+	treeMWPCHitsChris->Branch("Chamber2X", Chamber2X, "Chamber2X[nChamberHitsin2]/D");
+	treeMWPCHitsChris->Branch("Chamber2Y", Chamber2Y, "Chamber2Y[nChamberHitsin2]/D");
+	treeMWPCHitsChris->Branch("Chamber2Z", Chamber2Z, "Chamber2Z[nChamberHitsin2]/D");
     }
     if(fBaF2PWO)
     {
@@ -886,6 +923,32 @@ void    TA2GoAT::Reconstruct()
         nMWPCHits = fMWPC->GetNhits();
         for(Int_t i=0; i<nMWPCHits; i++)
         { MWPCHits[i] = fMWPC->GetHits(i); }
+
+	nChamberHitsin1 = fMWPC->GetNinters(0); 
+        const TA2MwpcIntersection *Chamber1Hits = fMWPC->GetInters(0); 	
+//	std::cout <<"No. of Chamber Hits in 1   "<< nChamberHitsin1 << std::endl; 
+        for(Int_t i=0; i<nChamberHitsin1; i++) //Does this work correctly???
+        {
+	    const TVector3 *SingleChamber1Hits = Chamber1Hits[i].GetPosition();
+            Chamber1X[i] = SingleChamber1Hits->X();
+            Chamber1Y[i] = SingleChamber1Hits->Y();
+            Chamber1Z[i] = SingleChamber1Hits->Z();
+	    //std::cout <<"Chamber1X =    "<< Chamber1X[i] << std::endl;
+        }
+	
+	
+	const TA2MwpcIntersection *Chamber2Hits = fMWPC->GetInters(1);
+	nChamberHitsin2 = fMWPC->GetNinters(1);
+	for(Int_t i=0; i<nChamberHitsin2; i++)
+        {
+	    
+	    const TVector3 *SingleChamber2Hits = Chamber2Hits[i].GetPosition();
+            Chamber2X[i] = SingleChamber2Hits->X();
+            Chamber2Y[i] = SingleChamber2Hits->Y();
+            Chamber2Z[i] = SingleChamber2Hits->Z();
+        }
+
+
 	}
 
 	if(fBaF2PWO)
@@ -909,9 +972,9 @@ void    TA2GoAT::Reconstruct()
         for(Int_t i=0; i<nBaF2Hits; i++)
 		{
             BaF2Hits[i] = fBaF2PWO->GetHits(i);
-            BaF2Cluster[i] = clindex[BaF2Hits[i]];
-            if(fBaF2PWO->IsEnergy()) BaF2Energy[i] = fBaF2PWO->GetEnergy(BaF2Hits[i]);
-            if(fBaF2PWO->IsTime()) BaF2Time[i] = fBaF2PWO->GetTime(BaF2Hits[i]);
+            BaF2Cluster[i] = clindex[fBaF2PWO->GetHits(i)];
+            if(fBaF2PWO->IsEnergy()) BaF2Energy[i] = fBaF2PWO->GetLGEnergy(fBaF2PWO->GetHits(i));
+            if(fBaF2PWO->IsTime()) BaF2Time[i] = fBaF2PWO->GetTime(fBaF2PWO->GetHits(i));
         }
 	}
 
@@ -1015,6 +1078,14 @@ void    TA2GoAT::Reconstruct()
     vertexY[nVertex]          = EBufferEnd;
     vertexZ[nVertex]          = EBufferEnd;
 
+    Chamber2X[nChamberHitsin2] = EBufferEnd;
+    Chamber2Y[nChamberHitsin2] = EBufferEnd;
+    Chamber2Z[nChamberHitsin2] = EBufferEnd;
+        
+    Chamber1X[nChamberHitsin1] = EBufferEnd;
+    Chamber1Y[nChamberHitsin1] = EBufferEnd;
+    Chamber1Z[nChamberHitsin1] = EBufferEnd;
+
     taggedChannel[nTagged] 	  = EBufferEnd;
     taggedTime[nTagged] 	  = EBufferEnd;
     taggedEnergy[nTagged] 	  = EBufferEnd;
@@ -1024,16 +1095,16 @@ void    TA2GoAT::Reconstruct()
     NaIEnergy[nNaIHits] 	  = EBufferEnd;
     NaITime[nNaIHits]         = EBufferEnd;
     PIDHits[nPIDHits] 	      = EBufferEnd;
-    PIDEnergy[nNaIHits] 	  = EBufferEnd;
-    PIDTime[nNaIHits]         = EBufferEnd;
+    PIDEnergy[nPIDHits] 	  = EBufferEnd;
+    PIDTime[nPIDHits]         = EBufferEnd;
     MWPCHits[nMWPCHits] 	  = EBufferEnd;
     BaF2Hits[nBaF2Hits] 	  = EBufferEnd;
     BaF2Cluster[nBaF2Hits] 	  = EBufferEnd;
-    BaF2Energy[nNaIHits] 	  = EBufferEnd;
-    BaF2Time[nNaIHits]        = EBufferEnd;
+    BaF2Energy[nBaF2Hits] 	  = EBufferEnd;
+    BaF2Time[nBaF2Hits]       = EBufferEnd;
     VetoHits[nVetoHits] 	  = EBufferEnd;
-    VetoEnergy[nNaIHits] 	  = EBufferEnd;
-    VetoTime[nNaIHits]        = EBufferEnd;
+    VetoEnergy[nVetoHits] 	  = EBufferEnd;
+    VetoTime[nVetoHits]       = EBufferEnd;
 
     errorModuleID[nErrors] 	  = EBufferEnd;
     errorModuleIndex[nErrors] = EBufferEnd;
@@ -1045,6 +1116,7 @@ void    TA2GoAT::Reconstruct()
 	if(treeTrigger)  		treeTrigger->Fill();
 	if(treeDetectorHits)	treeDetectorHits->Fill();
     if(treeVertex)          treeVertex->Fill();
+    if(treeMWPCHitsChris)	treeMWPCHitsChris->Fill();
 
 	//increment event number
 	eventNumber++;	
@@ -1349,6 +1421,13 @@ void    TA2GoAT::Finish()
 		treeDetectorHits->Write();// Write	
 		delete treeDetectorHits;  // Close and delete in memory
     }
+
+    if(treeMWPCHitsChris)
+    {
+	treeMWPCHitsChris->Write();
+	delete treeMWPCHitsChris;
+    }
+
     if(treeVertex)
     {
         treeVertex->Write();    // Write
