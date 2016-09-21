@@ -33,4 +33,5 @@ AnalysisSetup: Analysis_Calib.dat
 #SplitScaler: 2 256 364
 ##
 ## Set Server file
-ServerSetup: ServerOffline-CBTaggTAPS.dat
+
+ServerSetup: Thread6Server.dat

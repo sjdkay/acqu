@@ -17,7 +17,7 @@
 Size:	720	1	1	1
 RawHits:
 Energy-Scale:  1.0
-Shift-Coord: TZ 7
+Shift-Coord: TZ 6.5
 # Calibration factors for each crystal...one line for each crystal
 # Can optionally enter TDC-Time onfo...extra 5 parameters per line
 # low, high are energy cuts, ped is the pedestal, MeV/chan conversion gain
