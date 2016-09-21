@@ -50,10 +50,7 @@ Apparatus:      CB             	TA2CentralApparatus	Analysis-CentralApparatus_Ca
 Apparatus:      TAGG            TA2Tagger               Analysis-Tagger.dat
 #Apparatus:      CB              TA2CrystalBall          Apparatus-CB.dat
 #Apparatus:      TAPS            TA2Calorimeter          Apparatus-TAPS.dat 
-Apparatus:      TAPS            TA2Taps	 		Analysis-TAPS.dat
 Apparatus:      MWPC            TA2GenericApp           Apparatus-MWPC.dat
-
-
 
 ##
 ## Turn on apparatus-level reconstruction
