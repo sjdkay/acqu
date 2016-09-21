@@ -351,8 +351,11 @@ void    TA2GoAT::PostInit()
         treeDetectorHits->Branch("nMWPCHits", &nMWPCHits, "nMWPCHits/I");
         treeDetectorHits->Branch("MWPCHits", MWPCHits, "MWPCHits[nMWPCHits]/I");
 
+
+
 	treeMWPCHitsChris->Branch("nChamberHitsin1", &nChamberHitsin1, "nChamberHitsin1/I");
-	treeMWPCHitsChris->Branch("Chamber1X", Chamber1X, "Chamber1X[nChamberHitsin1]/D");
+
+	treeMWPCHitsChris->Branch("Chamber1X", Chamber1X, "Chamber1X[nChamberHitsin1]/D");  
 	treeMWPCHitsChris->Branch("Chamber1Y", Chamber1Y, "Chamber1Y[nChamberHitsin1]/D");
 	treeMWPCHitsChris->Branch("Chamber1Z", Chamber1Z, "Chamber1Z[nChamberHitsin1]/D");
 
@@ -925,19 +928,17 @@ void    TA2GoAT::Reconstruct()
         { MWPCHits[i] = fMWPC->GetHits(i); }
 
 	nChamberHitsin1 = fMWPC->GetNinters(0); 
-        const TA2MwpcIntersection *Chamber1Hits = fMWPC->GetInters(0); 	
-//	std::cout <<"No. of Chamber Hits in 1   "<< nChamberHitsin1 << std::endl; 
-        for(Int_t i=0; i<nChamberHitsin1; i++) //Does this work correctly???
+        Chamber1Hits = fMWPC->GetInters(0); 	
+        for(Int_t i=0; i<nChamberHitsin1; i++) 
         {
 	    const TVector3 *SingleChamber1Hits = Chamber1Hits[i].GetPosition();
             Chamber1X[i] = SingleChamber1Hits->X();
             Chamber1Y[i] = SingleChamber1Hits->Y();
             Chamber1Z[i] = SingleChamber1Hits->Z();
-	    //std::cout <<"Chamber1X =    "<< Chamber1X[i] << std::endl;
-        }
+	}
 	
 	
-	const TA2MwpcIntersection *Chamber2Hits = fMWPC->GetInters(1);
+	Chamber2Hits = fMWPC->GetInters(1);
 	nChamberHitsin2 = fMWPC->GetNinters(1);
 	for(Int_t i=0; i<nChamberHitsin2; i++)
         {
