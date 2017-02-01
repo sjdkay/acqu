@@ -32,12 +32,12 @@ Chamber-Parameter:	16 8  4		5.	700. 500. -500.	40.
 ## dPhi = dPhiEI(Zei,phi) + Phi	-- MWPC rotation as the whole [deg]
 ## dX -- MWPC x-shift as the whole [mm]
 ## dY -- MWPC y-shift as the whole [mm]
-## dZ  = dZ1 + dZ2*Zei -- MWPC z-shift as the whole [mm]
+##dZ  = -65 ## -- MWPC z-shift as the whole [mm]
 ##
 ## MWPC 0	Phi0	Phi1	Phi2	Phi	dX	dY	dZ1	dZ2	dZ3	dZ4	dZ5	dZ6
-# Intersection:	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.	0.
+Intersection:	0.	0.	0.	0.	0.	0.	65.	0.	0.	0.	0.	0.
 ## MWPC 1	Phi0	Phi1	Phi2	Phi	dX	dY	dZ1	dZ2	dZ3	dZ4	dZ5	dZ6
-# Intersection:	0.	0.	0. 	0.	0.	0.	0.	0.	0.	0.	0.	0.
+Intersection:	0.	0.	0. 	0.	0.	0.	65.	0.	0.	0.	0.	0.
 ##
 ##
 ## Detection efficiency

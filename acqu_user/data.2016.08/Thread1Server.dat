@@ -16,7 +16,8 @@ Input-Streams:	1		327680		0
 ##
 ## Optional directory spec. If not specified File-Names must contain the full
 ## directory path
-File-Directory:	/scratch/Mainz_Software/Data/Raw_Data/Moeller/
+#File-Directory: /scratch/Mainz_Software/Data/Raw_Data/Moeller/
+File-Directory: /scratch/Mainz_Software/Data/Raw_Data/Moeller/Empty_Target/
 ##
 ## Specify each input stream
 ## From disk file, ACQU (Mk1) format, save any output to file (save=1)
@@ -29,7 +30,71 @@ Stream-Spec:	File	Mk2	0	327680	32	0	400
 ## Tagger test data files
 ##		File Name	1st rec	Last rec
 ## 2nA
-#File-Name:	CBTaggTAPS_2681.dat	0	0
+
+##### MOELLER DEUTERIUM SAMPLE
+
+#File-Name:      CBTaggTAPS_14603.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14604.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14605.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14606.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14607.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14608.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14609.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14610.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14611.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14612.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14613.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14614.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14615.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14616.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14617.dat.xz    0       0
+#File-Name:      CBTaggTAPS_14618.dat.xz    0       0
+#File-Name:	CBTaggTAPS_14619.dat.xz    0      0	
+#File-Name:      CBTaggTAPS_14620.dat    0       0
+#File-Name:	CBTaggTAPS_15110.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15111.dat.xz    0       0		
+#File-Name:	CBTaggTAPS_15112.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15113.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15114.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15115.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15122.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15156.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15157.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15158.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15159.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15161.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15163.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15164.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15167.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15168.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15169.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15171.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15172.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15173.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15215.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15216.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15217.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15218.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15220.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15221.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15222.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15223.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15225.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15226.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15227.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15230.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15232.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15251.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15289.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15293.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15294.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15295.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15296.dat.xz    0       0
+#File-Name:	CBTaggTAPS_15297.dat.xz    0       0
+
+###EMPTY TARGET BELOW 
+
+
 ## END
 
-File-Name: CBTaggTAPS_14616.dat.xz 0 0
+File-Name: CBTaggTAPS_15880.dat.xz 0 0

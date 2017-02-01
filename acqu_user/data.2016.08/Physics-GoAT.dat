@@ -40,7 +40,7 @@ RootTree-File-Name:		Calib
 # Old setting
 #Beam-Helicity: 6 I H L L H
 # New setting
-#Beam-Helicity: 7 H I H L
+Beam-Helicity: 7 H I H L
 
 Initialise:
 

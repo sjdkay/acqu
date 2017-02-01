@@ -10,6 +10,7 @@ Size:	720	1	1	1
 Max-Cluster:	16			15.0
 #
 #
+#Shift-Coord: TZ 6.5
 ##	        ADC#    low high(MeV)	ped(ch) MeV/ch	TDC stuff       		Pos
 Element: 	  0     0.5 1200.0	0.00	0.08	0 -500 500 -2200 0.11771	3.619	45.214	2.629	
 Element: 	  1     0.5 1200.0	0.00	0.0783	0 -500 500 -2200 0.11771	7.322	44.51	5.32	

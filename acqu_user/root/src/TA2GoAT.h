@@ -44,7 +44,6 @@ private:
         TTree*		treeScalers; 		// Scaler read information (filled each scaler read)
         TTree*      treeMoeller;        // Moeller information (filled each moeller read)
         TTree*      treeSetupParameters;// Calibration parameters (filled once)
- 	TTree*	    treeMWPCHitsChris;	// Hit positions in the wire chambers
 
     	char        outputFolder[256];
     	char        inputName[64];

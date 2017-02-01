@@ -2,7 +2,7 @@
 ########################################################################
 ##
 ## Batch mode operation...redirect output directory for log files etc.
-BatchDir: /scratch/Mainz_Software/Data/Acqu_Output/
+BatchDir: /scratch/Mainz_Software/Data/Acqu_Output/Empty_Target_Moeller_31_10_16/
 ##
 ##        Tree Name     	# branches	Process Type
 Name:     RawEvent_AR_Save	3		Raw
@@ -12,7 +12,7 @@ Branch:	  RawEvent_Scalers	4192
 Branch:	  Mk1_Header        120000
 ##
 ## Directory to save any created ROOT files (include final / )
-Directory: /scratch/Mainz_Software/Data/Acqu_Output/
+Directory: /scratch/Mainz_Software/Data/Acqu_Output/Empty_Target_Moeller_31_10_16/
 ##
 ## Normally don't attempt to set eventsize manually
 ##EventSize: 32768

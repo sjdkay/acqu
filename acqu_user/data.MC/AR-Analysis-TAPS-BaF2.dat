@@ -24,6 +24,7 @@ Theta-Resolution: 2.5
 #
 # Phi Resolution in Degrees (divided by sin(theta) for res @ specific theta)
 Phi-Resolution: 2.0
+Shift-Coord: TZ 6.5
 #
 #-------------------------------------------------------------------------
 #

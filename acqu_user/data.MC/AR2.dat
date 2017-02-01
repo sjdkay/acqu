@@ -14,32 +14,32 @@
 #         Tree Name     No. of branches   Process Type
 Name:     h12           34                MC
 #         Branch Name   Buffer size (bytes)
+Branch:   nhits         4
 Branch:   npart         4
-Branch:   dircos        4096
+Branch:   ntaps         4
+Branch:   nvtaps        4
+Branch:   vhits         4
 Branch:   plab          2048
-Branch:   elab          2048
-Branch:   idpart        2048
+Branch:   tctaps        2048
 Branch:   vertex        12
 Branch:   beam          16
-Branch:   nhits         4
+Branch:   dircos        4096
 Branch:   ecryst        2048
-Branch:   icryst        2048
-Branch:   enai          4
-Branch:   vhits         4
-Branch:   eveto         2048
-Branch:   iveto         2048
-Branch:   etot          4
-Branch:   eleak         4
-Branch:   ntaps         4
-Branch:   ictaps        2048
-Branch:   ectapsl       2048
-Branch:   ectapfs       2048
-Branch:   tctaps        2048
-Branch:   evtaps        2048
-Branch:   nvtaps        4
-Branch:   ivtaps        2048
 Branch:   tcryst        2048
+Branch:   ectapfs       2048
+Branch:   ectapsl       2048
+Branch:   elab          2048
+Branch:   eleak         4
+Branch:   enai          4
+Branch:   etot          4
+Branch:   eveto         2048
 Branch:   tveto         2048
+Branch:   evtaps        2048
+Branch:   icryst        2048
+Branch:   ictaps        2048
+Branch:   ivtaps        2048
+Branch:   idpart        2048
+Branch:   iveto         2048
 Branch:   nmwpc         4
 Branch:   imwpc         1024
 Branch:   mposx         1024
@@ -48,12 +48,13 @@ Branch:   mposz         1024
 Branch:   emwpc         1024
 Branch:   mc_evt_id     8
 Branch:   mc_rnd_id     8
+
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ROOT file(s) (GEANT4 output) to be analysed. Add more lines for more files
 #
-TreeFile: /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/Geant_Output/Geant_300_400_10e6_pn_Displaced_Target_NoPol.root
+TreeFile: /scratch/Mainz_Software/Data/Geant_10e7_PN_300_1557_1.root
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -63,7 +64,7 @@ BatchDir: ./
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Directory to save any created ROOT files (include final '/')
-Directory: /Disk/ds-sopa-group/np/thehubdata/thehub4/SKay/Data/Acqu_Geant_Output/
+Directory: /scratch/Mainz_Software/Data/
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -17,6 +17,7 @@ Size:   438               1       1       1
 #resolution is in ns.
 #Energy-Resolution:  0.10  1
 #Time-Resolution:    0.5   1
+Shift-Coord: TZ 6.5
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Global (all Veto elements) scaling parameter for energy correction
 Energy-Scale:  1.00
