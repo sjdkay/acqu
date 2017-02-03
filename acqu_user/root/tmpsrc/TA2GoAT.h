@@ -84,17 +84,15 @@ private:
 	//Wire Chamber Hits Info
 	Int_t       nChamberHitsin1;
         const TA2MwpcIntersection *Chamber1Hits;
-
+	Double_t*   Chamber1X;
+	Double_t*   Chamber1Y;
+        Double_t*   Chamber1Z;
 
 	Int_t       nChamberHitsin2; 
 	const TA2MwpcIntersection *Chamber2Hits;
-	Double_t* MWPC0PosX;
-	Double_t* MWPC1PosX;
-	Double_t* MWPC0PosY;
-	Double_t* MWPC1PosY;
-	Double_t* MWPC0PosZ;
-	Double_t* MWPC1PosZ;
-
+        Double_t*   Chamber2X;
+        Double_t*   Chamber2Y;
+        Double_t*   Chamber2Z;
 
 
     	//Tagger
