@@ -292,6 +292,7 @@ void    TA2GoAT::PostInit()
     treeTrigger	        = new TTree("trigger",           "trigger");
     treeDetectorHits    = new TTree("detectorHits",      "detectorHits");
     treeSetupParameters = new TTree("setupParameters",   "setupParameters");
+    treeMWPCHitsChris        = new TTree("MWPCHitsChris",           "MWPCHitsChris");
 
     treeTracks->Branch("nTracks", &nParticles, "nTracks/I");
     treeTracks->Branch("clusterEnergy", clusterEnergy, "clusterEnergy[nTracks]/D");
@@ -356,6 +357,17 @@ void    TA2GoAT::PostInit()
     {
         treeDetectorHits->Branch("nMWPCHits", &nMWPCHits, "nMWPCHits/I");
         treeDetectorHits->Branch("MWPCHits", MWPCHits, "MWPCHits[nMWPCHits]/I");
+
+	treeMWPCHitsChris->Branch("nChamberHitsin1", &nChamberHitsin1, "nChamberHitsin1/I");
+
+	treeMWPCHitsChris->Branch("Chamber1X", Chamber1X, "Chamber1X[nChamberHitsin1]/D");  
+	treeMWPCHitsChris->Branch("Chamber1Y", Chamber1Y, "Chamber1Y[nChamberHitsin1]/D");
+	treeMWPCHitsChris->Branch("Chamber1Z", Chamber1Z, "Chamber1Z[nChamberHitsin1]/D");
+
+	treeMWPCHitsChris->Branch("nChamberHitsin2", &nChamberHitsin2, "nChamberHitsin2/I");
+	treeMWPCHitsChris->Branch("Chamber2X", Chamber2X, "Chamber2X[nChamberHitsin2]/D");
+	treeMWPCHitsChris->Branch("Chamber2Y", Chamber2Y, "Chamber2Y[nChamberHitsin2]/D");
+	treeMWPCHitsChris->Branch("Chamber2Z", Chamber2Z, "Chamber2Z[nChamberHitsin2]/D");
     }
     if(fBaF2PWO)
     {
@@ -1102,6 +1114,7 @@ void    TA2GoAT::Reconstruct()
 	if(treeTrigger)  		treeTrigger->Fill();
 	if(treeDetectorHits)	treeDetectorHits->Fill();
     if(treeVertex)          treeVertex->Fill();
+    if(treeMWPCHitsChris)	treeMWPCHitsChris->Fill();
 
 	//increment event number
 	eventNumber++;	
@@ -1405,6 +1418,11 @@ void    TA2GoAT::Finish()
 	{
 		treeDetectorHits->Write();// Write	
 		delete treeDetectorHits;  // Close and delete in memory
+    }
+    if(treeMWPCHitsChris)
+    {
+	treeMWPCHitsChris->Write();
+	delete treeMWPCHitsChris;
     }
     if(treeVertex)
     {

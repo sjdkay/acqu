@@ -1,7 +1,6 @@
 #ifndef __TA2GoAT_h__
 #define __TA2GoAT_h__
 
-
 #include "TFile.h"
 #include "TTree.h"
 #include "TA2AccessSQL.h"
@@ -44,6 +43,7 @@ private:
         TTree*		treeScalers; 		// Scaler read information (filled each scaler read)
         TTree*      treeMoeller;        // Moeller information (filled each moeller read)
         TTree*      treeSetupParameters;// Calibration parameters (filled once)
+ 	TTree*	    treeMWPCHitsChris;	// Hit positions in the wire chambers
 
     	char        outputFolder[256];
     	char        inputName[64];
@@ -94,8 +94,6 @@ private:
 	Double_t* MWPC1PosY;
 	Double_t* MWPC0PosZ;
 	Double_t* MWPC1PosZ;
-
-
 
     	//Tagger
     	Int_t		nTagged;
